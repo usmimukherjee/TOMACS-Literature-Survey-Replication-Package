@@ -1,0 +1,1350 @@
+MANUSCRIPT
+Using realistic trading strategies in an agent-based
+stock market model
+Ba`rbara Llacay 1,2 • Gilbert Peffer 1,2
+Published online: 29 August 2017
+/C211 Springer Science+Business Media, LLC 2017
+Abstract The use of agent-based models (ABMs) has increased in the last years to
+simulate social systems and, in particular, ﬁnancial markets. ABMs of ﬁnancial
+markets are usually validated by checking the ability of the model to reproduce a set
+of empirical stylised facts. However, other common-sense evidence is available
+which is often not taken into account, ending with models which are valid but not
+sensible. In this paper we present an ABM of a stock market which incorporates this
+type of common-sense evidence and implements realistic trading strategies based on
+practitioners literature. We next validate the model using a comprehensive approach
+consisting of four steps: assessment of face validity, sensitivity analysis, calibration
+and validation of model outputs.
+Keywords Agent-based simulation /C1 Validation /C1 Calibration /C1 Stylised
+facts /C1 Technical trading
+JEL Classiﬁcation C63 /C1 G1 /C1 G20 /C1 G11
+& Ba`rbara Llacay
+llacay@cimne.upc.edu
+1 Centre Internacional de Me`todes Nume`rics en Enginyeria (CIMNE), Campus Nord UPC, Gran
+Capita`, s/n, 08034 Barcelona, Spain
+2 Department for Economic, Financial, and Actuarial Mathematics, Faculty of Economics and
+Business, University of Barcelona, Av. Diagonal 690, 08034 Barcelona, Spain
+123
+Comput Math Organ Theory (2018) 24:308–350
+https://doi.org/10.1007/s10588-017-9258-0
+
+1 Introduction
+1.1 Background
+In recent times, an increasing effort has been devoted to building agent-based
+models (ABMs) of social systems and, in particular, of ﬁnancial markets, as ABM is
+a ﬂexible paradigm to study the individual and social behaviour of agents and its
+effect on the dynamics of the system. Many models of the stock market have been
+developed that focus on a broad range of market mechanisms and price dynamics
+(LeBaron 2006; Hommes 2006; Chakraborti et al. 2011). A usual way to validate
+these models is the analysis of their ability to replicate some of the statistical
+stylised facts identiﬁed in ﬁnancial markets (Janssen and Ostrom 2006), such as the
+lack of return autocorrelation or the clustering of volatility.
+However, other information about ﬁnancial markets is available, such as the level
+of market volatility or the volumes moved by different types of agents, which can be
+used in the validation of an ABM but is often neglected in favour of the stylised
+facts. Even ‘ ‘common sense’ ’ evidence should be taken into account if possible
+without ignoring it only to achieve a more parsimonious model (Edmonds and Moss
+2005). For this reason, we advocate in this article that it is also necessary to look at
+other basic empirical data, such as the volume moved by ﬁnancial traders or their
+performance, to assess the validity of a model. If we only focus on the stylised facts
+reproduced by the model, we run the risk of having a model which is valid but not
+sensible.
+It is precisely the problem we encountered when re-implementing a previous
+ﬁnancial market model as a starting point of our research. We chose the model
+developed by Farmer and Joshi ( 2002)—henceforth, the ‘FJ model’—because it is
+simple, a thorough analysis is provided by its authors, and it is able to reproduce a
+variety of empirical stylised facts. So, it is a valid model according to the usual
+criteria. However, when we looked at other model outputs, such as the performance
+of the different strategies, we found out that one of the trading strategies—the trend-
+following one—was systematically losing money. This situation would not make
+any sense in real markets, as a loss-making strategy would soon fall out of favour
+and ceased to be used. For this reason, we decided to enhance the model by re-
+designing the trend-following strategy. To this aim, we turned to the practitioners
+literature and implemented a realistic strategy based on a technical strategy widely
+used in real markets.
+The model we present here makes a threefold contribution to the agent-based
+modelling literature: (1) we present the results of a model-to-model exercise where
+we have re-implemented the FJ model; (2) after reasoning that the results obtained
+from the FJ model do not satisfy certain common sense properties, we provide an
+enhanced model with a realistic technical trading strategy that builds on the
+practitioners literature; (3) we apply a four-step validation process to the new model
+which allows us to assess its validity in a more complete way than what is available
+in the related literature.
+Using realistic trading strategies in an agent-based … 309
+123
+
+1.2 Empirical validation of agent-based models
+Despite the potential of agent-based modelling, it has not been adopted yet as a
+mainstream tool by orthodox economists. One possible explanation draws on the
+lack of methodology standards in agent-based modelling, and an important aspect
+here is the diversity in calibration and validation procedures used by agent-based
+modellers (Fagiolo et al. 2007). The process of validation assesses how accurately a
+model or simulation represents the real world system in light of its objectives.
+Validation is preceded by the process of calibration, where model parameters are
+determined building on real world data. Calibration and validation are currently one
+of the most important challenges in agent-based modelling (Ngo and See 2012;
+Bianchi et al. 2007).
+Beyond the difﬁculty of validation in general modelling and simulation
+(available resources are surveyed for example in Balci ( 1995) or Sargent ( 1998)),
+calibration and validation of ABMs are specially challenging due to the inherent
+complexity of this type of models, where non-linearities, heterogeneity, stochastic
+dynamics, non-trivial interaction among agents and micro–macro feedback loops
+are usually present (Fagiolo et al. 2006). This has led to intensive discussions on
+how to validate ABMs, as a result of which a variety of validation levels have been
+distinguished (Carley 1996; Bianchi et al. 2007) and different validation method-
+ologies have been proposed (Fagiolo et al. 2007; Moss 2008) (specially remarkable
+here are the three empirical calibration and validation procedures surveyed by
+Windrum et al. ( 2007): the indirect calibration approach (Dosi et al. 2006), the
+Werker–Brenner approach (Werker and Brenner 2004) and the history-friendly
+approach (Malerba et al. 1999)).
+When reviewing the literature on model validation, the reader comes across a
+diversity of validation types—such as internal, external, conceptual or cross-model
+validation (Carley 1996), which can be subsumed under the overall classiﬁcation
+provided by Zeigler ( 1985):
+• Replicative validity The model outputs are compared to data already acquired
+from the real system.
+• Predictive validity The model is able to reproduce system behaviour before it is
+observed in the real system.
+• Structural validity The model ‘ ‘not only reproduces the observed real system
+behaviour, but truly reﬂects the way in which the real system operates to
+produce this behaviour’ ’ (Zeigler 1985, p. 5).
+One advantage of agent-based modelling is that it has the potential to replicate
+the microstructure and mechanisms that give rise to social phenomena under study
+and thus ABMs can be structurally validated—which is the highest type of validity
+according to Zeigler.
+Following Klu¨ gl ( 2008), structural validation can be decomposed in the
+following processes:
+• Face validation studies if initial model outcomes are plausible.
+310 B. Llacay, G. Peffer
+123
+
+• Sensitivity analysis studies the effect of the model parameters on results. When
+implementing a large model, this allows to identify the crucial parameters.
+• Calibration identiﬁes for which parameter values the model presents a better ﬁt
+with real world.
+• Output validation studies whether model outputs match real-world data, usually
+through graphical or statistical comparison.
+These processes are seldom wholly implemented in agent-based modelling (Ngo
+and See 2012)—a fact that we will conﬁrm in the next subsection in the particular
+case of ABM of ﬁnancial markets. This paper makes a contribution to the ABM
+literature presenting a model of an artiﬁcial stock market fully validated by
+following these four steps to assess its structural validity. Our emphasis on the
+realistic modelling of agent strategies increases the structural validity of the model
+and moreover responds to the calls made by some researchers to adequately capture
+both the macro-level patterns and the micro-level behaviours and relationships
+(Gilbert 2004)—this two-level validation is what Moss and Edmonds call cross-
+validation (Moss and Edmonds 2005).
+1.3 Agent-based models of fundamentalist 1 technical traders
+In stock markets, two main investment approaches can be identiﬁed (Bonenkamp
+2010):
+• Fundamentalist trading Fundamentalist investors argue that assets have an
+intrinsic value, which can be determined with a detailed analysis of the
+characteristics of the asset, its issuer and the market (Murphy 1999). The price is
+expected to move around the fundamental value, so when both diverge an
+investment opportunity appears: if the value exceeds the price the asset is said to
+be overvalued and it should be bought; if the value is lower than the price, then it
+should be sold (Malkiel 1973).
+• Technical analysis This approach builds on the analysis of past price movements
+to infere its future evolution. It claims that markets are driven by psychological
+factors—which reﬂect investors’ hopes and fears—rather than fundamentals
+(O’Neill 2011). Technical analysis is much more recent than fundamentalist
+trading; its use largely spread since the 1960s and it has come to dominate the
+most modern and liquid markets (Johnson et al. 2003).
+Given that the main trading approaches in real markets are the fundamentalist
+and technical strategies, it makes sense to combine these two approaches when
+building a model of a ﬁnancial market, to better resemble the behaviour of real
+investors (Menkhoff 2010; Moss and Edmonds 2005). Many authors in the
+agent-based arena have also used stylised versions of the fundamentalist and the
+technical strategies to build models which are able to reproduce different
+statistical properties observed in real markets. For example, Farmer and Joshi
+(2002) study the role that these strategies have in market dynamics, LiCalzi and
+Pellizzari ( 2006) focus on the fundamentalist strategy, Wei et al. ( 2013) analyse
+Using realistic trading strategies in an agent-based … 311
+123
+
+the effect of momentum traders, and Raberto et al. ( 2003) use the Genoa
+Artiﬁcial Stock Market to study the proﬁts made by these two main strategies.
+Some articles add features from the behavioural ﬁnance ﬁeld to enrich the
+behaviour of agents: for example, the model by Pascual et al. ( 2006) includes
+psychological traders which are based on the research by Kahneman and Tversky
+(1979), and Shimokawa et al. ( 2007) also build on the work by Kahneman and
+Tversky and study the effect of risk aversion. Other models focus on the impact
+of learning algorithms: the traders in the Santa Fe Stock Market (Arthur et al.
+1996; LeBaron et al. 1999) use a genetic algorithm to update their price
+prediction rules, and Martı ´nez-Jaramillo and Tsang ( 2009) also explore different
+procedures to update the decision rules of artiﬁcial traders. Finally, a number of
+articles focus on the effect of imitation mechanisms, allowing the agents to
+improve their strategies by looking at other agents, or adopting the main strategy
+in the market (LeBaron and Yamamoto 2007; Alfarano et al. 2005; Lux and
+Marchesi 1999; Westerhoff 2010).
+Also building on these two trading approaches, we implement a model with two
+types of investors: fundamentalist traders (FUND) and technical traders (TREND).
+Our model makes a contribution to the previous literature in two aspects: (1)
+implementation of realistic trading strategies based on practitioners literature, and
+(2) complete assessment of the model structural validity. Building on the FJ model
+mentioned above (Farmer and Joshi 2002), we will modify the technical strategy to
+avoid certain features that run counter to common sense evidence, and for that aim
+we will turn to the practical trading literature to implement a sound, realistic
+strategy for technical investors. Next, we will assess the validity of the model
+following the four-step procedure proposed by Klu ¨ gl ( 2008).
+The ﬁnancial market models reviewed above are cross-validated (Moss and
+Edmonds 2005), as they all compare the statistical properties of the simulated time
+series with the stylised facts observed in r eal markets—so a macr o-level validation
+is applied—and the agent strategies inspire on the most popular trading
+approaches in real world—so the micro level is informed by the behaviour of
+real traders. This two-level validation is an improvement on the models one can
+ﬁnd in other ﬁelds. However, if we turn to the four-step validation procedure
+proposed by Klu ¨ gl ( 2008), we realise that some processes are usually missing.
+Table 1 summarises which validation steps are addressed in the models reviewed
+above, and it becomes clear that although the outputs are always validated, no
+sensitivity analysis is usually undertak en, and calibration is also a weak point of
+some models. In contrast to this, we ha ve applied the complete validation
+procedure to our model, as described later.
+In Sect. 2 we present our ABM and describe how we have implemented both
+trading strategies, founding on empirical usual practice. In Sect. 3 we describe the
+validation procedure, consisting of four steps: assessment of face validity,
+sensitivity analysis, calibration and output validation. Section 4 then concludes
+our discussion.
+312 B. Llacay, G. Peffer
+123
+
+2 Model description
+2.1 Starting point: reimplementation of FJ model
+One methodological issue in agent-based modelling is the high diversity in model
+objectives, structure and theoretical context that hinders the comparison between
+developed models (Fagiolo et al. 2006). For this reason, the comparison of models
+has been advocated as a way to increase the credibility and the validity of a model
+(North and Macal 2007).
+Following the model-to-model approach (Hales et al. 2003), we decided to build
+on a previous ﬁnancial market model instead of developing yet another model from
+scratch. This incremental procedure is in line with the Take A Previous model and
+Add Something (TAPAS) approach, which improves the validity of new models by
+building on existing, tested, well-understood and accepted models (Frenken 2005).
+In particular, we chose the FJ model as it is simple but able to reproduce different
+empirical stylised facts, a good description is available and a deep analysis is
+provided by its authors.
+Due to space limitations, we do not include here any detailed description of the
+FJ model, but only a brief summary. For further details, we refer the reader to the
+original paper.
+Two types of traders are considered:
+Table 1 Validation steps used in agent-based models of fundamentalist ? technical traders, following
+Klu¨ gl ( 2008)
+Model Face
+validation
+Sensitivity
+analysis
+Calibration Output
+validation
+Alfarano et al. ( 2005) sd d
+Arthur et al. ( 1996) ss d
+Farmer and Joshi ( 2002) ds d
+LeBaron et al. ( 1999) ss s d
+LeBaron and Yamamoto ( 2007) d
+LiCalzi and Pellizzari ( 2006) sd
+Lux and Marchesi ( 1999) sd
+Martı´nez-Jaramillo and Tsang
+(2009)
+ss s d
+Pascual et al. ( 2006) d
+Raberto et al. ( 2003) ss d
+Shimokawa et al. ( 2007) sd
+Wei et al. ( 2013) sd d
+Westerhoff ( 2010) ss d
+A dark circle indicates that the step is fully satisﬁed; a blank circle indicates that the step is partially
+addressed; no circle indicates that the validation step is not addressed at all
+Using realistic trading strategies in an agent-based … 313
+123
+
+• Value investors , who take positions proportional to the difference between the
+price and their perception of the fundamental value, in the belief that the price
+will tend to the value.
+• Trend-following investors , who take positions proportional to the difference
+between the current and a past price, in the belief that prices move in trends.
+Both types of agents use thresholds to enter and exit a position, what can be
+understood as a way to reduce the trading frequency motivated by excessive
+transaction costs. The net order submitted by all traders is ﬁlled by a market maker
+that sets the new price.
+The model exhibits face validity, as the time series of simulated prices show a
+qualitative correspondence to the real series of prices. The statistical analysis of
+results reveals that the model replicates different empirical stylised facts—fat tails
+of log-return distribution, volume skewness, strong autocorrelation of volume and
+volatility—so outputs are validated.
+In our reimplementation of the FJ model we not only looked at the results
+reported in the paper by Farmer and Joshi—Fig. 1 reproduces the statistical analyses
+displayed in the FJ paper using our own data to assess the correctness of the
+reimplementation exercise—but took a deep exploration of other variables and
+features, such as agent orders, positions or performance. Figure 2 provides a
+Fig. 1 Illustration of statistical facts obtained in the replication of the FJ model, using the same type of
+plots than displayed in the paper by Farmer and Joshi for better comparability. Upper left Q–Q plot of
+return distribution. Upper right histogram of volume distribution. Lower left autocorrelation function of
+volume. Lower right autocorrelation function of volatility as absolute returns
+314 B. Llacay, G. Peffer
+123
+
+summary of market dynamics, and brings to light a particular fact that attracted our
+attention: trend traders get negative proﬁts. This is a recurring feature, robust under
+different parameter conﬁgurations. This situation is clearly not realistic, as a
+systematically loss-making strategy would soon disappear from real markets.
+This type of stylised fact is perhaps so blatantly obvious that one may fail to even
+take it into account. With the present paper we want to point at the need to
+incorporate this type of common-sense evidence into agent-based models. With this
+aim in mind, we decided to enhance the FJ model by implementing a realistic
+technical strategy that is competitive against the fundamentalist strategy while
+keeping the many virtues of the FJ model. We describe next the several model
+components, where the price formation process and the fundamentalist strategy
+build on the FJ paper, and the technical strategy builds on the practitioners
+literature.
+2.2 Model description
+We consider a market for multiple assets—stocks—in unrestricted supply, where
+traders—who have no cash nor short-selling constraints—place orders at discrete
+Fig. 2 Illustration of market dynamics obtained in the replication of the FJ model
+Using realistic trading strategies in an agent-based … 315
+123
+
+trading intervals, changing the composition of their investment portfolios in
+accordance with their respective valuation model. At each time step, all the agents
+trade in random order, and a new price is set based on the aggregated order
+submitted by traders. 1
+2.2.1 Price formation
+The price Pt for the stock is set by a market maker in accordance to a linear price
+formation rule. Although other formulations are possible (see e.g. Madhavan ( 2000)
+for a survey), we use the simplest one, which states that prices have to rise (fall) in
+the presence of over-demand (over-supply) by an amount that is inversely
+proportional to the liquidity of the traded security. Here, we do not take into
+account the inventory of the market maker nor the presence of information
+asymmetries in the market, and thus assume bid-ask spreads to be zero. Stock price
+is updated according to:
+Pt ¼ Pt/C0 1 þ 1
+k /C1 Ht/C0 1 þ nt; ð1Þ
+where Ht-1 is the total excess order, that is the sum of all orders emitted in t - 1, k
+is a constant liquidity factor that accounts for the depth of the market, nt is a random
+term, nt /C24 Nð0; rPÞ, that accounts for the random perturbations—such as the arrival
+of new information—that can possibly affect the market-maker’s decision making
+process.
+One disadvantage of this linear formulation is that prices can become negative,
+which could be avoided by using a log-price formulation for the price discovery
+rule. Outstanding orders in any given trading interval are always ﬁlled at the quoted
+prices and the market maker absorbs the excess or covers the shortfall, adjusting the
+prices according to the impact function (Eq. 1).
+2.2.2 Fundamentalist traders (FUND)
+Our implementation of the fundamentalist strategy is based on the FJ model.
+Fundamentalist investors derive the intrinsic value of the stock from a private,
+exogenous signal they receive before each trading period. This exogenous signal is
+modelled as a random walk Vt, plus an agent-speciﬁc constant vf that accounts for
+the variability in the perception of the fundamental value:
+Vf
+t ¼ Vt þ vf ; where Vt ¼ Vt/C0 1 þ gt; ð2Þ
+where gt is drawn from a normal distribution with constant variance, gt /C24 N 0; rVðÞ ,
+and the agent-speciﬁc constant vf is set at the start of the simulation from a uniform
+distribution, vf /C24 Uðvmin; vmaxÞ, with vmin =- vmax.
+The positions of fundamentalist traders are proportional to the difference of
+actual price Pt to perceived fundamental value Vf
+t . However, an agent only enters a
+1 Code is available at https://libraries.io/github/gitwitcho/var-agent-model. Our code is implemented in
+Java and uses the scheduler from Repast simphony ( https://repast.github.io/repast_simphony.html).
+316 B. Llacay, G. Peffer
+123
+
+position when the difference between price and value is above a given threshold,
+jVf
+t /C0 Ptj [ Tf . In that case, the position is determined as:
+posf
+t ¼ Vf
+t /C0 Pt: ð3Þ
+Let’s note that when the price lies above the fundamental value, the asset is
+overpriced and the agent decides to sell; when the price lies below the fundamental
+value, then the agent decides to buy.
+Fundamentalist investors keep their positions open until the price and the
+fundamental value converge, that is, until their difference is smaller than a given
+threshold. In that case, the agents liquidate their position:
+If posf
+t/C0 1 [ 0 & Vf
+t /C0 Pf
+t \sf then posf
+t ¼ 0:
+If posf
+t/C0 1\0 & Vf
+t /C0 Pf
+t [ /C0 sf then posf
+t ¼ 0:
+ð4Þ
+In case an agent has an open position, but the liquidation condition is not
+satisﬁed, then it simply updates its position based on the difference between price
+and value: if this difference has reduced (widened) since the position was opened,
+then the investor also reduces (increments) its position:
+posf
+t ¼ Vf
+t /C0 Pt: ð5Þ
+Fundamentalist investors are heterogeneous in their entry and exit thresholds:
+Tf /C24 UðTmin; TmaxÞ; sf /C24 Uðsmin; smaxÞ
+Once determined the new position, the agent calculates the order to be sent to the
+market-maker:
+hf
+t ¼ posf
+t /C0 posf
+t/C0 1: ð6Þ
+Figure 3 summarises how the fundamentalist strategy works.
+2.2.3 Technical traders (TREND)
+Technical traders exploit price trends, and for that aim we have implemented two of
+the most common techniques in real markets (Taylor 2005): to detect the start of a
+trend in prices, agents compare a short- and a long-term moving average of past
+prices; to detect the end of a price trend, agents rely on the technique of channel
+breakouts. To implement these rules, we have built on the practitioner literature,
+mainly on the description provided in Kestner ( 2003).
+At each time step, technical investors calculate two simple moving averages
+(MA) of past prices: one short-term MA that responds quickly to recent price
+movements, and a long-term MA that responds more slowly. Let wtr
+S and wtr
+L be the
+windows used by the technical agent tr to calculate his short- and long-term moving
+averages, respectively. The moving averages are then given by:
+Using realistic trading strategies in an agent-based … 317
+123
+
+MAðwtr
+S Þt ¼ 1
+wtr
+S
+/C1
+Xt
+i¼t/C0 wtr
+S þ1
+Pi:
+MAðwtr
+L Þt ¼ 1
+wtr
+L
+/C1
+Xt
+i¼t/C0 wtr
+L þ1
+Pi:
+ð7Þ
+When the two moving averages cross, it is the key time to buy or sell: if the short-
+term MA crosses the long-term MA from below, the agent interprets it as the
+beginning of an upward trend and opens a long position; if the short-term MA
+crosses the long-term MA from above, the agent interprets it as the start of a
+downward trend and opens a short position (Fig. 4).
+When the MA’s cross and the agent opens a position, it is proportional to the
+difference in slope between the two moving averages, because it is assumed that the
+greater this difference, the steeper the upward or downward price trend.
+Equations ( 8) and ( 9) specify the formula used by technical investors to calculate
+their position:
+• If MA(wtr
+S )t crosses MA(wtr
+L )t from below, then the agent opens a long position:
+postr
+t ¼ 25 /C1 Dincltr
+t
+/C12/C12 /C12/C12 ð8Þ
+• If MA(wtr
+S )t crosses MA(wtr
+L )t from above, then the agent opens a short position:
+postr
+t ¼/C0 25 /C1 Dincltr
+t
+/C12/C12 /C12/C12 ; ð9Þ
+Fig. 3 State diagram of the fundamentalist strategy
+318 B. Llacay, G. Peffer
+123
+
+where
+• 25 is a normalisation factor aimed at having the same order of magnitude in the
+orders from fundamentalist and technical agents. 2
+• Dincltr
+t is the difference between the slope of the two MA’s:
+Dincltr
+t ¼ arctan MAðwtr
+S Þt /C0 MAðwtr
+S Þt/C0 1
+/C0/C1
+/C0 arctan MAðwtr
+L Þt /C0 MAðwtr
+L Þt/C0 1
+/C0/C1
+Technical investors keep their positions open until they think that the price trend has
+begun to reverse. In order to detect a trend reversal, the agents use a channel breakout
+rule: if the current price is the lowest in the last wtr
+C days, then the technical trader
+interprets that the price is going down, and any long position should be liquidated; if
+the current price is the highest in the last wtr
+C days, then the technical trader interprets
+that the price is going up, and any short position should be liquidated.
+Fig. 4 Illustration of the behaviour of long- and short-term moving averages along time
+2 As the fundamentalist and technical agents use quite different indicators for their positions—one based
+on the difference between price and fundamental value, and the other one based on the difference of slope
+between moving averages—the model runs the risk of having one group of traders moving far major
+volumes and biasing the market dynamics. To give fundamentalist and technical agents the a priori
+opportunity to impact prices in a balanced way, we have added this normalisation factor. To calculate it,
+we have repeatedly run the model and calculated the ratio of average maximum fundamentalist and
+technical positions obtained after each run. The normalisation factor has been selected as the value for
+which the ratio of maximum fundamentalist/technical positions lies around 1, as this indicates that
+fundamentalist and technical positions take similar values and so both groups of traders have a priori a
+similar impact in price formation.
+Using realistic trading strategies in an agent-based … 319
+123
+
+If postr
+t/C0 1 [ 0 & Pt ¼ Min
+j2½t/C0 wtr
+C þ1; t/C138
+Pj
+/C8/C9
+then postr
+t ¼ 0:
+If postr
+t/C0 1\0 & Pt ¼ Max
+j2½t/C0 wtr
+C þ1; t/C138
+Pj
+/C8/C9
+then postr
+t ¼ 0: ð10Þ
+Note that when drawing the minimum and the maximum of the price over a period,
+a channel appears, which is why the method is called ‘ ‘channel breakout’ ’ (Fig.5).
+As happens with the fundamentalist investors, when a technical agent has an
+open position, but the channel breakout condition is not satisﬁed, then he simply
+updates his position keeping the same sign:
+If postr
+t/C0 1 [ 0 then postr
+t ¼ 25 /C1 Dincltr
+t
+/C12/C12 /C12/C12
+If postr
+t/C0 1\0 then postr
+t ¼/C0 25 /C1 Dincltr
+t
+/C12/C12 /C12/C12 : ð11Þ
+Technical investors are heterogeneous in the windows of the moving averages
+and breakout channel:
+wtr
+S /C24 Uðwtr
+S;min; wtr
+S;maxÞ; wtr
+L /C24 Uðwtr
+L;min; wtr
+L;maxÞ; wtr
+C /C24 Uðwtr
+C;min; wtr
+C;maxÞ:
+Once set the new position, the agent calculates the order to be sent to the market-
+maker:
+htr
+t ¼ postr
+t /C0 postr
+t/C0 1: ð12Þ
+Figure 6 summarises how the technical strategy works:
+Fig. 5 Illustration of the behaviour of the channel used as exit condition
+320 B. Llacay, G. Peffer
+123
+
+3 Description of model validation
+We describe next the validation procedure used to assess the validity of the model
+described in Sect. 2. Although the four steps are presented in a linear way, it is
+rather an iterative process, with movements back and forth between the different
+steps. For example, a temptative calibration can be done before conducting the
+sensitivity analysis, or calibration is often undertaken with the aim of replicating the
+stylised facts used later in the validation of outcomes.
+In all the graphics shown throughout this section, we have used the parameter
+values listed in Table 2, unless otherwise indicated. All simulations have a duration
+of 2000 time steps (we assume that each time step is equivalent to 1 day, and so
+each run has an equivalent duration of 8 years). Average results shown next are
+based on 200 runs with different seeds for random processes.
+3.1 Face validation
+In this section we will look at different variables to understand how the model works
+and which types of results are produced.
+3.1.1 Price and fundamental value
+The price moves around the fundamental value. While it may be that the price and
+fundamental value do not cross for a long time period, they end up converging due
+to the action of traders (Fig. 7). The action of fundamentalist investors prevents the
+price from going too far away from the fundamental value, since when the price
+falls below the value, fundamentalist agents buy and push the price up, and vice
+Fig. 6 State diagram of the technical strategy
+Using realistic trading strategies in an agent-based … 321
+123
+
+versa. Technical investors propel the trends in price: when the price begins to
+increase, they buy and strengthen the price rise (analogously when the price begins
+to drop). The joint action of fundamentalist and technical investors cause the price
+trends to be temporary, and the price always ends up moving around the
+fundamental value. Therefore, the price has a stable dynamic and shows no bubbles
+nor crashes.
+Fig. 7 Average of price and fundamental value over 200 runs
+Table 2 Table of parameters used in the simulations
+Parameter Value Parameter description
+Nticks 2000 Number of ticks of each run
+k 400 Liquidity
+P0 100 Initial price
+rP 0.4 Standard deviation for random term in price formation
+NFUND 200 Number of fundamentalist traders
+NTREND 200 Number of technical traders
+rV 0.25 Standard deviation for random term in fundamental value formation
+[vmin, vmax][ -8, 8] Boundaries of the uniform distribution that sets the difference between the
+fundamental value and the value perceived by each fundamentalist trader
+[Tmin, Tmax] [2, 5] Boundaries of the uniform distribution that sets the entry thresholds of
+fundamentalist traders
+[smin, smax][ -0.5,
+1]
+Boundaries of the uniform distribution that sets the exit thresholds of
+fundamentalist traders
+[wtr
+S;min, wtr
+S;max] [5, 15] Boundaries of the uniform distribution that sets the window of short-term
+moving average used by technical traders
+[wtr
+L;min, wtr
+L;max] [35,
+50]
+Boundaries of the uniform distribution that sets the window of long-term
+moving average used by technical traders
+[wtr
+C;min, wtr
+C;max] [5, 30] Boundaries of the uniform distribution that sets the window of exit channel
+used by technical traders
+322 B. Llacay, G. Peffer
+123
+
+Figure 8 shows the time series of annualised volatility, which does not show
+important variations during the course of the simulation. Note that the level of volatility
+is reasonably close to the empirical volatility observed in stock markets during calm
+periods (for example, the average volatility of S&P500 during 2014 was 11%).
+3.1.2 Orders from investors
+By construction, the positions of fundamentalist and technical investors have the
+same order of magnitude [precisely we have added a normalisation factor to the
+expression of technical positions to prevent a group from having far superior
+positions than the other group, see Eqs. 8 and 9].
+Note that the aggregate positions of technical investors usually move in the
+direction of prices—if the price rises, technical investors buy—whereas the aggregate
+positions of fundamentalist investors tend to move in the opposite direction—if the
+price rises and exceeds the fundamental value, fundamentalist investors sell (hence the
+technical investors induce a positive autocorrelation in returns, and fundamentalist
+investors induce a negative autocorrelation). This can be clearly seen when doing a
+zoom in the graphic of price and aggregate positions of agents.
+In Fig. 9 we can see that the positions of technical investors suffer higher
+variations than those of fundamentalist investors, because when the trend in the
+price reverts, technical investors liquidate their portfolio and pass from long to short
+positions (or vice versa), while fundamentalist agents do not necessarily liquidate
+their portfolio because the difference between the price and the fundamental value
+does not need to change sign (Fig. 10). The fact that the positions of technical
+traders suffer higher changes between two time steps translates into higher orders
+(see Fig. 11), and so the impact of the technical group in price formation is more
+noticeable. This is consistent with the volume patterns observed in real world:
+although there is no data on which volume is moved by fundamentalist and
+technical investors in real markets, there is indeed evidence that most mutual funds
+behave as technical investors in short-term trades (Menkhoff 2010), and technical
+strategies have a higher weight in stock price dynamics (Feng et al. 2012).
+Fig. 8 Average volatility of returns over 200 runs
+Using realistic trading strategies in an agent-based … 323
+123
+
+3.1.3 Investor performance
+Both the fundamentalist and the technical group are able to make proﬁts (although
+not all of the agents make proﬁts, the average performance is positive). This was
+precisely one of the goals when designing our model: it does not make sense from
+an empirical point of view to use strategies that are not proﬁtable, so we have not
+used exactly the FJ model, but we have modiﬁed the technical strategy so that it is
+more sophisticated and does not consistently lose money.
+Because of their greater positions, technical investors have a bigger weight in
+price dynamics. Being able to drive trends helps them make money, because
+entering long (short) positions when the price starts to rise (decrease) is proﬁtable,
+and moreover their own orders strengthen the price trend. However, fundamentalist
+investors are also able to take advantage of these price dynamics, because when the
+difference between price and fundamental value increases their positions become
+also bigger, and they can earn more money when the price ﬁnally converges to the
+value (Fig. 12).
+3.2 Sensitivity analysis
+To study the effect of parameters on model results, we have performed a sensitivity
+analysis using the one-factor-at-a-time methodology (ten Broeke et al. 2016),
+varying one parameter at a time to observe its impact on results. This has allowed us
+to identify the parameters with a most important impact on model dynamics and
+which will require a specially accurate calibration.
+Fig. 9 Average positions of fundamentalist and technical investors over 200 runs
+324 B. Llacay, G. Peffer
+123
+
+Fig. 10 Zoom for t = 1500…1750 of the average of price and aggregate positions of fundamentalist and
+technical investors over 200 runs
+Fig. 11 Average orders from fundamentalist and technical investors for 200 runs
+Using realistic trading strategies in an agent-based … 325
+123
+
+To give an idea of the sensitivity of results, we show below the behaviour of a
+subset of model outputs under three different parameter values. The selected outputs
+provide information on several aspects: time evolution of price versus fundamental
+value, as an indicator of the overall market dynamics; proﬁts accumulated by
+fundamentalist and technical traders, as an indicator of agent performance—this
+indicator is specially relevant given that a new technical strategy has been
+implemented with the aim of making it competitive; the autocorrelation function of
+returns and volatility, to gain insight on when the model is able to replicate the lack
+of return autocorrelation and the clustering of volatility—we have chosen these
+particular stylised facts with an eye on the posterior phase of output validation
+because they turn to be the most sensitive ones; and the boxplot of return excess
+kurtosis and volatility (calculated as the standard deviation of log-returns, without
+annualising the resulting value), as an indicator of market stability and return non-
+normality.
+We provide next a summary of the results of the sensitivity analysis for each
+parameter:
+• Parameters associated to price formation
+– Liquidity is coupled to the number of agents (the more agents in the market,
+the higher the liquidity), and when these parameters move in tandem no
+signiﬁcant change is observed in market results.
+– Standard deviation of noise term When rP increases, the price gets more
+volatile as the random term added to the price formation process (see Eq. 1)
+takes higher values. Figure 13 shows that this has a special impact on
+FUNDs’ performance: as the price takes a wider range of values (Fig. 13a),
+its difference with respect to the fundamental value rises, and in
+consequence the fundamentalist positions also increase. The weight of
+Fig. 12 Average proﬁts of fundamentalist and technical investors over 200 runs. Proﬁts obtained by
+agent i are calculated as the beneﬁts accumulated since the start of the simulation due to changes in price:
+Benit ¼ Benit/C0 1 þ posit/C0 1 /C1ð Pt /C0 Pt/C0 1Þ
+326 B. Llacay, G. Peffer
+123
+
+Fig. 13 Sensitivity of model outputs to parameter rP. a Average of price (in black) and fundamental
+value (in red). b Average proﬁts of fundamentalist (in orange) and technical (in green) traders. c Average
+autocorrelation of returns. d Average autocorrelation of squared returns. e Boxplot of return kurtosis.
+f Boxplot of return standard deviation. All averages are calculated over 200 runs. (Color ﬁgure online)
+Using realistic trading strategies in an agent-based … 327
+123
+
+fundamentalist agents in price formation gets higher, which results
+advantageous to this type of traders and translates in better proﬁts (Fig. 13b).
+• Parameters associated to fundamental value formation
+– Standard deviation The model outputs are not much sensitive to the standard
+deviation of the process of fundamental value formation, the parameter rV.
+As shown in Fig. 14, an increase in rV has an obvious effect on the volatility
+of the fundamental price process (in red in Fig. 14a). This leads fundamen-
+talist traders to move a higher volume as the difference between price and
+fundamental value increases, and this has a positive effect in their proﬁts.
+The higher orders sent by fundamentalist agents rise the range of price
+movements (volatility increases in Fig. 14f) but has a small effect in their
+pattern, so the autocorrelation of returns and volatility barely change
+(Fig. 14c, d).
+• Parameters associated to the fundamentalist strategy
+– Entry threshold simulation results are not much sensitive to the parameters
+associated to the FUND strategy (entry threshold, exit threshold and the
+offset that accounts for the variability in the agent perception of the
+fundamental value). Among these three parameters, the entry threshold is the
+one with a most signiﬁcant impact on outputs: when the entry threshold
+increases, it is more difﬁcult for fundamentalist traders to enter a position, as
+they need to wait for a bigger divergence between the price and the
+perceived fundamental value. This reduces the volume of fundamentalist
+orders and their proﬁts (Fig. 15b), but the effect in other model outputs is not
+remarkable.
+– Exit threshold when the exit threshold increases, it is easier for fundamen-
+talist traders to close a position. However, their volume does not change too
+much, because with a low exit threshold fundamentalist agents do not close
+their positions that often, but reduce them gradually until the difference
+between price and fundamental value is small enough and so in the end the
+volume is similar in both cases. For this reason, the model results show a low
+sensitivity to this parameter (Fig. 16).
+– Value offset when the value offset rises, it gets easier for the fundamentalist
+traders to open a position, because the difference between the price and their
+perceived fundamental value is higher and so it is more likely to surpass the
+entry threshold. For this reason, the volume moved by fundamentalist agents
+tends to increase, but their net effect in price dynamics is not signiﬁcant
+because of the symmetry in the range of values of the offset: as
+fundamentalist traders have the same probability to have a positive or a
+negative offset, they are approximately equally likely to enter long or short
+positions and so the aggregated orders do not show a big variation when the
+328 B. Llacay, G. Peffer
+123
+
+Fig. 14 Sensitivity of model outputs to parameter rV. a Average of price (in black) and fundamental
+value (in red). b Average proﬁts of fundamentalist (in orange) and technical (in green) traders. c Average
+autocorrelation of returns. d Average autocorrelation of squared returns. e Boxplot of return kurtosis.
+f Boxplot of return standard deviation. All averages are calculated over 200 runs. (Color ﬁgure online)
+Using realistic trading strategies in an agent-based … 329
+123
+
+Fig. 15 Sensitivity of model outputs to FUND entry threshold [ Tmin, Tmax]. a Average of price (in black)
+and fundamental value (in red). b Average proﬁts of fundamentalist (in orange) and technical (in green)
+traders. c Average autocorrelation of returns. d Average autocorrelation of squared returns. e Boxplot of
+return kurtosis. f Boxplot of return standard deviation. All averages are calculated over 200 runs. (Color
+ﬁgure online)
+330 B. Llacay, G. Peffer
+123
+
+Fig. 16 Sensitivity of model outputs to FUND exit threshold [ smin, smax]. a Average of price (in black)
+and fundamental value (in red). b Average proﬁts of fundamentalist (in orange) and technical (in green)
+traders. c Average autocorrelation of returns. d Average autocorrelation of squared returns. e Boxplot of
+return kurtosis. f Boxplot of return standard deviation. All averages are calculated over 200 runs. (Color
+ﬁgure online)
+Using realistic trading strategies in an agent-based … 331
+123
+
+offset goes up. As a result, the model outputs show a small sensitivity to this
+parameter (Fig. 17).
+• Parameters associated to the technical strategy
+– Window of short -term moving average When the value of the short-term
+moving average is low—specially, when it is close to 1,—then the price
+shows a more volatile behaviour (Fig. 18a): when the short-term window is
+small, the technical entry indicator (given by the difference in slopes of the
+short- and the long-term moving averages of prices) becomes quite sensitive,
+as any movement up or down in the price can induce a change in the slope of
+the short-term moving average, and the joint action of technical traders can
+cause a marked movement in the price. This notable effect in prices results in
+higher proﬁts for technical traders (Fig. 18b), but fundamentalists also take
+advantage of the situation because the higher divergence of price with
+respect to fundamental value results in higher fundamentalist positions
+which lead to more substantial proﬁts when the price reverts. When the
+short-term window increases, it has a smoothing effect that prevents the
+peaks in the price series (Fig. 18c, d) and so the kurtosis and volatility of
+returns go down (Fig. 18e, f).
+– Window of long -term moving average A variation in the window of the long-
+term moving average has a less noticeable effect in the results than the short-
+term window, as the smoothing effect obtained when increasing the window
+is less signiﬁcant for larger values of this window (Fig. 19).
+– Window of exit channel When the window of the exit channel increases,
+technical traders are forced to keep their positions for longer. When they ﬁnally
+are ‘allowed’ to close a position after keeping it open during a long period of
+time, it is likely that the price trend which left them to enter their current positions
+has reversed, and so technical traders liquidate their portfolios. If they do so more
+or less simultaneously, they move the price and make higher proﬁts (Fig. 20b),
+but increase the kurtosis and volatility of returns (Fig. 20e, f). The price
+movements concentrated in short intervals of time also increase the autocor-
+relation of returns (Fig. 20c) and the clustering of volatility (Fig. 20d).
+• Proportion of fundamentalist/technical traders We could study the effect of the
+total number of agents, but as said above it is insigniﬁcant as long as it increases
+or decreases at the same time than the liquidity parameter. A more interesting
+situation is obtained when the proportion of fundamentalist to technical agents is
+altered. Figure 21 shows that when the market is dominated by technical traders
+(that is, when the proportion of fundamentalist agents is 25%) the price exhibits
+high jumps3: when there is an incipient trend in price series, the technical traders
+3 The average price in Fig. 21a seems to oscillate, but this is only due to the averaging. In the price series
+obtained from individual runs, there are jumps in the price process that look like oscillations in the
+average price series.
+332 B. Llacay, G. Peffer
+123
+
+Fig. 17 Sensitivity of model outputs to FUND offset [ vmin, vmax]. a Average of price (in black) and
+fundamental value (in red). b Average proﬁts of fundamentalist (in orange) and technical (in green)
+traders. c Average autocorrelation of returns. d Average autocorrelation of squared returns. e Boxplot of
+return kurtosis. f Boxplot of return standard deviation. All averages are calculated over 200 runs. (Color
+ﬁgure online)
+Using realistic trading strategies in an agent-based … 333
+123
+
+propel it until the distance from the fundamental value is high enough for the
+minority of fundamentalist agents to be able to reverse it. This scenario directly
+leads to higher return kurtosis and volatility (Fig. 21e, f), and also has an impact
+334 B. Llacay, G. Peffer
+123
+
+on the proﬁts obtained by the agents (Fig. 21b): technical traders take advantage
+of the momentum they induce in prices, whereas when the price reverts
+fundamentalist traders also proﬁt from the higher positions accumulated due to
+the marked divergences between price and fundamental value. The effect of a
+technical dominance is also noticeable in the ACF curves, which show bulges
+due to the anticorrelation induced by the technical strategy.
+When the proportion of fundamentalist agents is equal or higher than the
+proportion of technical agents, then price dynamics get a more realistic
+appearance as the action of fundamentalist traders induce a dynamic similar to
+that of a random walk.
+3.3 Calibration
+A handful of quantitative methods have been proposed to calibrate agent-based
+ﬁnancial models. For example, Fabretti ( 2013) uses the optimisation method put
+forward by Gilli and Winker ( 2003) and a genetic algorithm to calibrate parameters,
+and Alfarano et al. ( 2005) propose to use the method of maximum likelihood to
+estimate the parameters of a model for which a closed-form return distribution can
+be derived.
+In contrast to these technical methods, the approach we have used to calibrate the
+parameters of our model is far more straightforward and intuitive. As there is a
+direct correspondence between the behaviour of artiﬁcial traders and real traders,
+most model parameters can be calibrated by looking at their empirical counterpart.
+In Sect. 3.2 we have seen that results show a higher sensitivity with respect to the
+parameters associated to the technical strategy than to the fundamentalist strategy or
+the noise used in price or fundamental value formation process. It is thus specially
+important to accurately calibrate these parameters, but the realism with which we
+have implemented this strategy greatly facilitates the task. The entry and exit rules
+employed by technical agents are the same than used by real traders, and we can get
+information on which parameter values are usually employed in real markets by
+turning again to practitioners literature.
+Table 2 summarises the value of all the model parameters used in the results
+described in the rest of sections. Next, we describe how these values have been
+determined.
+• Parameters associated to price formation The impact of traders in price
+formation is normalised with the liquidity parameter k, so this parameter is
+linked to the number of agents (the higher the trader population size, the higher
+the liquidity). Although this parameter has an empirical interpretation, its value
+is not observable, and it has then been calibrated by looking at the face validity
+b Fig. 18 Sensitivity of model outputs to TREND short-term MA window [ wtr
+S;min, wtr
+S;max]. a Average of
+price (in black) and fundamental value (in red). b Average proﬁts of fundamentalist (in orange) and
+technical (in green) traders. c Average autocorrelation of returns. d Average autocorrelation of squared
+returns. e Boxplot of return kurtosis. f Boxplot of return standard deviation. All averages are calculated
+over 200 runs. (Color ﬁgure online)
+Using realistic trading strategies in an agent-based … 335
+123
+
+Fig. 19 Sensitivity of model outputs to TREND long-term MA window [ wtr
+L;min, wtr
+L;max]. a Average of
+price (in black) and fundamental value (in red). b Average proﬁts of fundamentalist (in orange) and
+technical (in green) traders. c Average autocorrelation of returns. d Average autocorrelation of squared
+returns. e Boxplot of return kurtosis. f Boxplot of return standard deviation. All averages are calculated
+over 200 runs. (Color ﬁgure online)
+336 B. Llacay, G. Peffer
+123
+
+Fig. 20 Sensitivity of model outputs to TREND exit channel window [ wtr
+C;min, wtr
+C;max]. a Average of
+price (in black) and fundamental value (in red). b Average proﬁts of fundamentalist (in orange) and
+technical (in green) traders. c Average autocorrelation of returns. d Average autocorrelation of squared
+returns. e Boxplot of return kurtosis. f Boxplot of return standard deviation. All averages are calculated
+over 200 runs. (Color ﬁgure online)
+Using realistic trading strategies in an agent-based … 337
+123
+
+Fig. 21 Sensitivity of model outputs to the percentage of fundamentalist traders. a Average of price (in
+black) and fundamental value (in red). b Average proﬁts of fundamentalist (in orange) and technical (in
+green) traders. c Average autocorrelation of returns. d Average autocorrelation of squared returns.
+e Boxplot of return kurtosis. f Boxplot of return standard deviation. All averages are calculated over 200
+runs. (Color ﬁgure online)
+338 B. Llacay, G. Peffer
+123
+
+of simulation outputs (e.g. a small value of liquidity can result in diverging price
+patterns) and the stylised facts replicated by the model.
+• The random term in price formation (see Eq. 1) is governed by the standard
+deviation parameter rP, whose value has been set to obtain an overall price
+volatility value in line with empirical daily volatility of S&P500 in the last years
+(assuming here that one time step is equivalent to one trading day).
+• Parameters associated to fundamental value formation The fundamental value
+process depends on the standard deviation term rV. As seen in Sect. 3.2, model
+outputs are not sensitive to this parameter, and its value has been set by looking
+at the face validity of simulation outputs.
+• Parameters associated to the fundamentalist strategy Although we do not have
+empirical evidence on which thresholds are used by fundamentalist traders, we
+have used plausible values for the mispricing level required to enter and exit a
+position ( Tf, sf), and we have ﬁne-tuned these values—together with the
+unobservable parameter mf—by looking at the stylised facts replicated by the
+model.
+• Parameters associated to the technical strategy These are the parameters which
+need a ﬁner calibration because they have a more noticeable impact on
+simulation results. To implement the technical trading strategy, we have built on
+techniques widely used in real markets, and so when it came to setting the values
+of the different windows we turned to the practitioner literature. The windows
+for the short- and long-term moving averages ( wtr
+S , wtr
+L ) move around 10 and 40
+as these are the values usually employed by real technical investors (Kestner
+2003); the window for the exit channel moves around 20 as this is the typical
+period (Milton 2016).
+3.4 Output validation
+The application of computational methods to the rich collection of ﬁnancial data has
+allowed to identify different statistical regularities that repeatedly appear in many
+different markets and at different times (Giardina and Bouchaud 2003; Taylor
+2005). These statistical regularities—known as stylised facts —are often used to
+assess the validity of ﬁnancial market models, including ABMs: the better a model
+reproduces one or more of these stylised facts, the more valid the model is.
+The models reviewed in Sect. 1.3 reproduce some of the statistical properties
+repeatedly observed in ﬁnancial markets, but there is no model capable of
+reproducing all the stylised facts. Our model is not an exception: it replicates some
+of these stylised facts but not all of them. Given the simplicity of our model, we can
+deduce that the mechanism leading to these properties is the interaction between the
+fundamentalist and technical agents: fundamentalist traders induce a dynamic
+similar to that of a random walk (which is linked to properties such as the lack of
+return autocorrelations or the unit roots), but technical traders induce correlations in
+price movements (which are linked to properties such as volatility clustering). The
+interaction of both groups allows to replicate in a greater or lesser degree some of
+the stylised facts of stock markets.
+Using realistic trading strategies in an agent-based … 339
+123
+
+We will study next to what extent our artiﬁcial market satisﬁes the main stylised
+facts, in order to evaluate the output validity of the model. As in Sect. 3.1, average
+results are based on 200 runs.
+3.4.1 Lack of return autocorrelation
+The autocorrelations of the time series of asset returns are usually insigniﬁcant,
+except for very small time scales (Slanina 2014). This indicates that it is not possible
+to know if the price of an asset will rise or fall in the next period (Cristelli 2014),
+which is consistent with the efﬁcient market hypothesis.
+In Fig. 22 we present the average autocorrelation function of the return series
+obtained from our simulations. We can see that the autocorrelations tend to 0 when
+the lag increases, although this decay is not as quick as observed in real markets.
+3.4.2 Fat tails
+Financial returns are commonly modelled with a normal distribution due to its
+simplicity, but the empirical distribution of returns does not adjust to a Gaussian
+bell, as it is more peaked and has more probability mass in the tails (Cont 2001).
+The presence of fat tails implies that the price of an asset suffers extreme booms and
+busts more often than predicted by a normal distribution.
+As in real markets, the distribution of the return series obtained with our model is
+more leptokurtic than the normal distribution. The histogram of returns (Fig. 23) has
+more mass in the center and the tails than a normal distribution with the same mean
+and variance (bell curve). Further evidence of fat tails is observed in the QQ-plot of
+the return distribution (Fig. 24), which moves away from the diagonal—corre-
+sponding to a normal distribution—in the queues. Furthermore, the mean of excess
+kurtosis, which measures the size of the probability in the queues (Tsay 2005)i s
+0.57 (with values comprised between 0.13 and 1.1), what indicates again that the
+distribution of returns is leptokurtic.
+Fig. 22 Average
+autocorrelations of returns over
+200 runs
+340 B. Llacay, G. Peffer
+123
+
+3.4.3 Volatility clustering
+Although returns are not autocorrelated, further analysis reveals that they are not
+independent, either (Slanina 2014): the absolute value or the square of returns
+exhibit signiﬁcant autocorrelation over days or even weeks for a variety of stocks
+and indices (Cont 2001). This implies that big price changes are usually followed by
+big changes (of any sign), and small changes are usually followed by small changes
+(Chakraborti et al. 2011). When plotting the autocorrelation function of volatility—
+where volatility can be estimated both as the absolute value or the square of
+returns—we can see that it remains positive for several lags (Fig. 25), but decays to
+0 faster than in real markets.
+Although the autocorrelation function of volatility (Fig. 25) seems to decay to 0
+at the same rate that the autocorrelation function of returns (Fig. 22), when studying
+the long-term memory of both series we can observe a different internal structure.
+Their Hurst exponent 4 reveals that the absolute value or the squared returns have
+Fig. 23 Histogram of return
+distribution for a single run
+Fig. 24 QQ plot of return
+distribution for a single run
+4 When the decay of the autocorrelation function of a process follows a power law with exponent b \ 1,
+the process is said to have long-term memory (Bouchaud et al. 2009), implying that events that occurred
+long ago still have an impact on the current values (Thompson 2011). The Hurst exponent can be used to
+ﬁnd out if a process has long-term memory, and is calculated as H ¼ 1 /C0 b
+2 (Rickles 2011). A process with
+long-term memory is characterised by having a Hurst exponent H 2 0:5; 1ðÞ (empirical studies have
+found values H 2 0:7; 0:9ðÞ for equity markets (Oh et al. 2006; Yang et al. 2013)). The exponent of a
+Using realistic trading strategies in an agent-based … 341
+123
+
+longer-term memory: the average Hurst exponent of volatility is H = 0.72 for the
+absolute value of returns and H = 0.77 for the square of returns, what indicates that
+these series have long-term memory, whereas the average Hurst exponent for the
+returns is close to 0.5 ( H = 0.53), what indicates that this series has no long-term
+memory. Even though these values are consistent with the Hurst values observed
+empirically, it should be noted that it is difﬁcult to accurately measure the Hurst
+exponent, specially if the series is affected by noise (Clegg 2006). Therefore, the
+values shown here for the Hurst exponent 5 should be taken with some caution.
+Having said this, it is anyway interesting to observe that the volatility series
+invariably has a greater exponent than the return series—an indication that its
+persistence or long-term memory is higher.
+All these analyses reveal that it is not clear whether our model reproduces the
+clustering of volatility: if we only based on the autocorrelation function, we would
+say that the model does not replicate this property because the decay is faster than
+observed in real markets, but when analysing the long-term memory of the volatility
+series we can see that it has an underlying structure different from the return series
+and displays long-term dependence as the empirical volatility.
+3.4.4 Correlation between volume and volatility
+The correlation between trading volume (calculated as the sum of orders issued by
+all the agents in absolute value) and volatility is positive, as observed in real markets
+(Cont 2001). Figure 26 shows the range of values of correlation between volume
+and absolute value of returns, which moves between 0.57 and 0.70.
+Fig. 25 Average autocorrelation of absolute value ( left) and square ( right) of returns over 200 runs
+Footnote 4 continued
+process with short-term memory (such as the series of returns) is H ¼ 0:5; and its autocorrelation function
+decays faster (Bouchaud et al. 2009).
+5 The Hurst exponent reported here has been calculated with the ‘hurstSpec’ function of the ‘fractal’
+package of R. There are several functions available in R to calculate the Hurst exponent, and ‘hurstSpec’
+has been reported to be the most accurate one (Stroe-Kunold et al. 2009).
+342 B. Llacay, G. Peffer
+123
+
+3.4.5 Unit root
+It cannot be statistically rejected that the series of stock prices follows a random walk
+[which is a particular case of an AR(1) process with a unit root (Tsay 2005)],
+consistently with the efﬁcient market hypothesis. The Dickey–Fuller test (see (Taylor
+2005) for a description of the test) is the standard tool to detect whether an AR (1)
+process is a random walk, and when applied to the time series of real or logarithmic
+prices of an asset usually cannot reject the null hypothesis (Lux and Marchesi 2000).
+When running the augmented Dickey–Fuller test with the time series of log-
+prices obtained from simulations, the null hypothesis is accepted in 76% of runs, an
+indication that the unit root property is satisﬁed in most simulations.
+3.4.6 Leverage effect
+The correlation between returns and future volatility of an asset is negative and
+decays slowly to 0 (Cont 2001). This effect indicates that price movements have an
+asymmetric impact on volatility: when the price falls (i.e., when the return is
+negative), then the volatility increases, whereas if the price goes up (i.e., when the
+return is positive), then the volatility is reduced (Dudukovic 2013). However, the
+inverse relationship is not satisﬁed: the correlation between volatility and future
+returns is nearly negligible (Cont 2001).
+The plot of the cross-correlation function between the series of returns and past or
+future volatility (Fig. 27) reveals that the model does not satisfy the leverage effect,
+since the two series have no signiﬁcant correlations for any lag. In fact, in the case that
+the two series were correlated, the leverage effect could not be satisﬁed, since the
+behaviour of our model is perfectly symmetrical for both a price increase or a decrease.
+3.4.7 Taylor effect
+The autocorrelations of the absolute value of returns are usually higher than those
+obtained with the squared returns (Cont 2001). More generally, the autocorrelation
+of the series | rt|d reaches a maximum when d is around 1 (Ding et al. 1993).
+Fig. 26 Boxplot of the
+correlation between volume and
+volatility over 200 runs
+Using realistic trading strategies in an agent-based … 343
+123
+
+To study if our model exhibits the Taylor effect we include in Fig. 28 the graph
+of the autocorrelation function of | rt|d as a function of d for different lags. The
+Taylor effect is satisﬁed when these curves reach their maximum value around
+d = 1 (marked with a vertical dashed line). As illustrated in Fig. 28, the Taylor
+effect is not met, because the maximum autocorrelation for some lags is achieved in
+d = 2 or even d = 3.
+3.4.8 Volume autocorrelation
+The empirical time series of volume (number of shares purchased and sold during a
+time interval) is autocorrelated (Covrig and Ng2004)—as happens with the time series
+of volatility—and has long-term memory (Rossi and Santucci de Magistris 2013).
+The autocorrelation function of the volume series obtained from simulations
+remains positive for several lags and decays slowly to 0, as shown in Fig. 29.
+Moreover, the Hurst exponent proves that the series of volume has long-term
+memory (its average value is H = 0.93).
+Fig. 27 Cross-correlation
+function between the series of
+volatility and returns for a single
+run
+Fig. 28 Taylor effect:
+autocorrelation function of | rt|d
+as a function of d for a single run
+344 B. Llacay, G. Peffer
+123
+
+3.4.9 Volatility skewness
+The distribution of volatility (absolute or squared returns) is very asymmetric, with
+higher frequency of large values than a normal distribution (Sinclair 2013). In fact,
+the distribution of volatility ﬁts to a log-normal, although the tails seem to follow a
+power law (Slanina 2014).
+The histogram of the absolute value of resulting returns (Fig. 30) reveals that the
+distribution is asymmetrical, with the bulk of observations lying on the right as
+observed in real markets. The skewness is positive in all the runs (its mean value is
+1.3), what indicates that the left tail has a greater mass than the right one.
+Fig. 29 Average
+autocorrelation of volume over
+200 runs
+Table 3 Graphical summary of stylised facts satisﬁed by the model
+Stylised fact Test/analysis Is the test satisﬁed?
+Lack of return autocorrelation Autocorrelation plot Partially
+Hurst exponent Yes
+Fat tails Histogram Yes
+QQ plot Yes
+Excess kurtosis Yes
+Volatility clustering Autocorrelation plot Partially
+Hurst exponent Yes
+Correlation volume-volatility Correlation between volume and volatility Yes
+Unit root Dickey–Fuller test Yes
+Leverage effect Cross-correlation between returns and volatility No
+Taylor effect Taylor plot No
+Volume autocorrelation Autocorrelation plot Yes
+Hurst exponent Yes
+Volatility skewness Histogram Yes
+Skewness Yes
+Using realistic trading strategies in an agent-based … 345
+123
+
+3.4.10 Summary
+We summarise next in a graphical way which stylised facts are reproduced by our
+model. We can observe that the model does not perfectly replicate the whole set of
+stylised facts. In this regard, it is in line with the other ABMs of ﬁnancial markets
+available in the literature, as there is no model that is able to reproduce all statistical
+properties listed in Table 3.
+4 Conclusions
+In this article we have presented an ABM of a stock market populated by
+fundamentalist and technical traders, which are the most popular trading approaches
+in ﬁnancial markets. The implementation of this model has allowed us to reﬂect on
+some aspects related to the validation and calibration of ABMs.
+Instead of building the model from scratch, we have replicated the model of
+Farmer and Joshi ( 2002), which is one of the most relevant and well-known ABM of
+ﬁnancial markets. This model-to-model exercise—also considered a type of
+validation by some authors—has allowed us to detect a recurring behaviour against
+common sense in the FJ model: the technical strategy never makes any proﬁt, and
+this situation is non-sensible given that a loss-making strategy would soon disappear
+from real markets.
+In our review of ABMs of ﬁnancial markets we have realised that this type of
+obvious behaviours are seldom checked, so one runs the risk of having models
+which are valid according to the usual criteria but not sensible. For this reason, we
+have argued that it is also necessary to look at common-sense evidence and
+incorporate it into models, instead of only looking at the statistical stylised facts as
+usually done in artiﬁcial markets.
+Following this line of argumentation, we have modiﬁed the FJ model by
+implementing a new technical strategy that is competitive. To do so, we have turned
+to the practitioners literature and reproduced one of the most widely used technical
+Fig. 30 Histogram of volatility
+distribution for a single run
+346 B. Llacay, G. Peffer
+123
+
+strategies. Here lies another contribution of this paper: we advocate for the
+implementation of agent behaviours close to the real ones, as this greatly facilitates
+the calibration of the model and the interpretation of results. We are aware that the
+feasibility of this task depends on the subject area: in the ﬁnancial arena, many
+traders use mechanistic rules which can be seamlessly translated to coded agent
+rules. However, in other areas it can be more difﬁcult to achieve such a level of
+homeomorphism between artiﬁcial and real behaviour; even in this case, we
+encourage the modelling of realistic agent behaviours, either by drawing on relevant
+literature as done in this paper or by directly involving stakeholders [as done for
+example under the companion modelling approach (Barreteau et al. 2014)].
+After building the model, we have validated it in an extensive way. The usual
+practice in ABMs of ﬁnancial markets is to validate the simulation outputs
+comparing them with a set of statistical stylised facts. Here, we have used an
+extended validation procedure consisting of four steps—face validation, sensitivity
+analysis, calibration and output validation—which has allowed us to provide a more
+comprehensive assessment of the model validity. It would be beneﬁcial to
+generalise the adoption of an extended validation method as the one used here as
+this would provide valuable information on some aspects which are usually
+neglected, such as the sensitivity of the model to its parameters, or the calibration
+method.
+The stock market model presented here is a ﬁrst step in the construction of a more
+ambitious ABM. The work described in this paper ensures that our fundamental-
+ist ? technical model is a realistic, sensible and valid testbed with which to test the
+effect of other market mechanisms, such as the inclusion of risk management
+practices (work reported elsewhere).
+Acknowledgements We would like to thank the anonymous reviewers for their insightful and
+constructive comments.
+References
+Alfarano S, Lux T, Wagner F (2005) Estimation of agent-based models: the case of an asymmetric
+herding model. Comput Econ 26:19–49
+Arthur W, Holland J, LeBaron B, Palmer R, Tayler P (1996) Asset pricing under endogenous expectations
+in an artiﬁcial stock market. SFI working paper
+Balci O (1995) Principles and techniques of simulation validation, veriﬁcation, and testing. In:
+Proceedings of the 1995 winter simulation conference, pp 147–154
+Barreteau O, Bousquet F, E´tienne M, Souche`re V, d’Aquino P (2014) Companion modelling: a method of
+adaptive and participatory research. In: E ´tienne M (ed) Companion modelling. E ´ditions Quae,
+Versailles, pp 13–40
+Bianchi C, Cirillo P, Gallegati M, Vagliasindi P (2007) Validating and calibrating agent-based models: a
+case study. Comput Econ 30:245–264
+Bonenkamp U (2010) Combining technical and fundamental trading strategies. Gabler, Heidelberg
+Bouchaud P, Farmer J, Lillo F (2009) How markets slowly digest changes in supply and demand. In:
+Hens T, Schenk-Hoppe´ K (eds) Handbook of ﬁnancial markets: dynamics and evolution. North
+Holland/Elsevier, Amsterdam, pp 57–160
+Carley K (1996) Validating computational models. Working paper: social and decision sciences, Carnegie
+Mellon University, Pittsburgh
+Using realistic trading strategies in an agent-based … 347
+123
+
+Chakraborti A, Toke I, Patriarca M, Abergel F (2011) Econophysics review: I. empirical facts. Quant
+Financ 11(7):991–1012
+Clegg R (2006) A practical guide to measuring the Hurst parameter. In: 21st UK performance engineering
+workshop, school of computing science technical report series, CSTR-916, Newcastle, pp 43–55
+Cont R (2001) Empirical properties of asset returns: stylized facts and statistical issues. Quant Financ
+1:223–236
+Covrig V, Ng L (2004) Volume autocorrelation, information, and investor trading. J Bank Financ
+28:2155–2174
+Cristelli M (2014) Complexity in ﬁnancial markets. Springer, New York
+Ding Z, Granger C, Engle R (1993) A long memory property of stock market returns and a new model.
+J Empir Financ 1:83–106
+Dosi G, Fagiolo G, Roventini A (2006) An evolutionary model of endogenous business cycles. Comput
+Econ 27:3–34
+Dudukovic S (2013) Capturing stylized facts of stock market volatility and higher order cumulant
+function. In: Cambridge business & economics conference (CBEC), Cambridge
+Edmonds B, Moss S (2005) From KISS to KIDS—an ‘anti-simplistic’ modelling approach. In: Davidsson
+P, Logan B, Takadama K (eds) Multi-agent and multi-agent-based simulation, vol 34. Springer,
+Heidelberg, pp 130–144
+Fabretti A (2013) On the problem of calibrating an agent based model for ﬁnancial markets. J Econ
+Interact Coord 8:277–293
+Fagiolo G, Windrum P, Moneta A (2006) Empirical validation of agent-based models: a critical survey.
+LEM working paper2006/14, Pisa
+Fagiolo G, Moneta A, Windrum P (2007) A critical guide to empirical validation of agent-based models
+in economics: methodologies, procedures, and open problems. Comput Econ 30:195–226
+Farmer J, Joshi S (2002) The price dynamics of common trading strategies. J Econ Behav Organ
+49:149–171
+Feng L, Li B, Podobnik B, Preis T, Stanley E (2012) Linking agent-based models and stochastic models
+of ﬁnancial markets. Proc Natl Acad Sci USA 109(22):8388–8393
+Frenken K (2005) History, state and prospects of evolutionary models of technical change: a review with
+special emphasis on complexity theory. Utrecht University
+Giardina I, Bouchaud J (2003) Volatility clustering in agent based market model. In: Gallegati M, Kirman
+A, Marsili M (eds) The complex dynamics of economic interaction. Springer, Berlin, pp 171–196
+Gilbert N (2004) Open problems in using agent-based models in industrial and labor dynamics. In:
+Leombruni R, Richiardi M (eds) Industry and labor dynamics: the agent-based computational
+approach. World Scientiﬁc, Singapore, pp 401–405
+Gilli M, Winker P (2003) A global optimization heuristic for estimating agent based models. Comput Stat
+Data Anal 42:299–312
+Hales D, Rouchier J, Edmonds B (2003) Model-to-model analysis. J Artif Soc Soc Simul 6(4):5
+Hommes C (2006) Heterogeneous agent models in economics and ﬁnance. In: Tesfatsion K, Judd K (eds)
+Handbook of computational economics, vol 2. North Holland/Elsevier, Amsterdam, pp 1109–1186
+Janssen M, Ostrom E (2006) Empirically based, agent-based models. Ecol Soc 11(2):37
+Johnson N, Jefferies P, Ming Hui P (2003) Financial market complexity. Oxford University Press, New York
+Kahneman D, Tversky A (1979) Prospect theory: an analysis of decisions under risk. Econometrica
+47:313–327
+Kestner L (2003) Quantitative trading strategies. McGraw-Hill, New York
+Klu¨ gl F (2008) A validation methodology for agent-based simulations. In: SAC’08, Fortaleza
+LeBaron B (2006) Agent-based computational ﬁnance. In: Tesfatsion L, Judd K (eds) Handbook of
+computational economics, vol 2. North Holland/Elsevier, Amsterdam, pp 1188–1233
+LeBaron B, Yamamoto R (2007) Long-memory in an order-driven market. Physica A 383:85–89
+LeBaron B, Arthur W, Palmer R (1999) Time series properties of an artiﬁcial stock market. J Econ
+Dynam Control 23:1487–1516
+LiCalzi M, Pellizzari P (2006) Breeds of risk-adjusted fundamentalist strategies in an order-driven
+market. Physica A 359:619–633
+Lux T, Marchesi M (1999) Scaling and criticality in a stochastic multi-agent model of a ﬁnancial market.
+Nature 397:498–500
+Lux T, Marchesi M (2000) Volatility clustering in ﬁnancial markets: a microsimulation of interacting
+agents. Int J Theor Appl Financ 3(4):675–702
+Madhavan A (2000) Market microstructure: a survey. Marshall School of Business, Los Angeles
+348 B. Llacay, G. Peffer
+123
+
+Malerba F, Nelson R, Orsenigo L, Winter S (1999) ‘History-friendly’ models of industry evolution: the
+computer industry. Ind Corp Change 8(1):3–40
+Malkiel B (1973) A random walk down Wall Street. Norton, New York
+Martı´nez-Jaramillo S, Tsang E (2009) Evolutionary computation and artiﬁcial ﬁnancial markets. In:
+Brabazon A, O’Neill M (eds) Natural computing in computational ﬁnance, vol 2. Springer, Berlin,
+pp 137–179
+Menkhoff L (2010) The use of technical analysis by fund managers: international evidence. J Bank
+Finance 34:2573–2586
+Milton A (2016) Day trading with Donchian channels. From the balance: https://www.thebalance.-
+com/day-trading-with-donchian-channels-1031186. Retrieved 20 Feb 2017
+Moss S (2008) Alternative approaches to the empirical validation of agent-based models. J Artif Soc Soc
+Simul 11(1):5
+Moss S, Edmonds B (2005) Sociology and simulation: statistical and qualitative cross-validation. Am J
+Sociol 110(4):1095–1131
+Murphy J (1999) Technical analysis of the ﬁnancial markets. New York Institute of Finance, Paramus
+Ngo T, See L (2012) Calibration and validation of agent-based models of land cover change. In:
+Heppenstall A, Crooks A, See L, Batty M (eds) Agent-based models of geographical systems.
+Springer, Dordrecht, pp 181–197
+North M, Macal C (2007) Managing business complexity—discovering strategic solutions with agent-
+based modeling and simulation. Oxford University Press, New York
+Oh G, Kim S, Eom C (2006) Long-term memory and volatility clustering in daily and high-frequency price
+changes. http://www.long-memory.com/returns/OhUmKim2006.pdf. Arxiv preprint physics/0601174
+O’Neill B (2011) Fundamentals of the stock market. McGraw-Hill, New York
+Pascual J, Pajares J, Lo ´pez-Paredes A (2006) Explaining the statistical features of the Spanish stock
+market from the bottom-up. In: Bruun C (ed) Advances in artiﬁcial economics: the economy as a
+complex dynamic system. Springer, Berlin, pp 283–294
+Raberto M, Cincotti S, Focardi S, Marchesi M (2003) Traders’ long-run wealth in an artiﬁcial ﬁnancial
+market. Comput Econ 22:255–272
+Rickles D (2011) Econophysics and the complexity of ﬁnancial markets. In: Hooker C (ed) Philosophy of
+complex systems. North Holland/Elsevier, Oxford, pp 531–566
+Rossi E, Santucci de Magistris P (2013) Long memory and tail dependence in trading volume and
+volatility. J Empir Financ 22:94–112
+Sargent R (1998) Veriﬁcation and validation of simulation models. In: Proceedings of the 1998 Winter
+Simulation Conference, pp. 121–130
+Shimokawa T, Suzuki K, Misawa T (2007) An agent-based approach to ﬁnancial stylized facts. Physica A
+379:207–225
+Sinclair E (2013) Volatility trading, 2nd edn. Wiley, Hoboken
+Slanina F (2014) Essentials of econophysics modelling. Oxford University Press, Oxford
+Stroe-Kunold E, Stadnytska T, Werner J, Braun S (2009) Estimating long-range dependence in time
+series: an evaluation of estimators implemented in R. Behav Res Methods 41(3):909–923
+Taylor S (2005) Asset price dynamics, volatility, and prediction. Princeton University Press, Princeton
+ten Broeke G, van Voorn G, Ligtenberg A (2016) Which sensitivity analysis method should i use for my
+agent-based model? J Artif Soc Soc Simul 19(1):5
+Thompson S (2011) The stylised facts of stock price movements. N Z Rev Econ Financ 1:50–77
+Tsay R (2005) Analysis of ﬁnancial time series, 2nd edn. Wiley, Hoboken
+Wei J, Huang J, Hui P (2013) An agent-based model of stock markets incorporating momentum investors.
+Physica A 392:2728–2735
+Werker C, Brenner T (2004) Empirical calibration of simulation models. Max Planck Institute, Papers of
+economics and evolution #0410
+Westerhoff F (2010) A simple agent-based ﬁnancial market model: direct interactions and comparisons of
+trading proﬁts. In: Bischi G, Chiarella C, Gardini L (eds) Nonlinear dynamics in economics, ﬁnance
+and the social sciences. Springer, Berlin, pp 313–332
+Windrum P, Fagiolo G, Moneta A (2007) Empirical validation of agent-based models: alternatives and
+prospects. J Artif Soc Soc Simul 10(2):8
+Yang C, Wang R, Hu S (2013) Modeling and analysis of an agent-based model for Chinese stock market.
+Phys Lett A 377:2041–2046
+Zeigler B (1985) Theory of modelling and simulation. Krieger, Malabar
+Using realistic trading strategies in an agent-based … 349
+123
+
+Ba`rbara Llacay holds a degree in Mathematics from the Polytechnic University of Catalonia and a Ph.D.
+from the University of Barcelona. She is Associate Professor of mathematics at the University of
+Barcelona and is doing research on agent-based simulation of ﬁnancial markets. She has managed several
+EC funded projects in ICT at CIMNE.
+Gilbert Peffer is heading an effort at CIMNE to promote and advance quantitative and computational
+methodologies focusing particularly on ﬁnancial, socio-economic and organisational problems. He has
+managed a number of European projects in the area of ICT simulation (eLearning, and eBusiness).
+Previously vice-president in the ﬁxed-income quantitative research division at Salomon Brothers, a US
+investment bank (now Citigroup), he has participated extensively in scientiﬁc simulation and application/
+technology integration projects in the ﬁnancial industry. Mr. Peffer holds a degree in Aerospace
+Engineering.
+350 B. Llacay, G. Peffer
+123

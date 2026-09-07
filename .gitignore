@@ -1,0 +1,4 @@
+# ignore folder
+all-papers/*
+.venv/
+supplementary-materials/*

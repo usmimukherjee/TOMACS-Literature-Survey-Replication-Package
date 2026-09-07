@@ -1,0 +1,1139 @@
+Comput Econ (2016) 48:607–625
+DOI 10.1007/s10614-015-9539-y
+V olatility Analysis of Financial Agent-Based Market
+Dynamics from Stochastic Contact System
+Di Xiao1 · Jun Wang1 · Hongli Niu1
+Accepted: 23 November 2015 / Published online: 27 November 2015
+© Springer Science+Business Media New Y ork 2015
+Abstract A ﬁnancial agent-based time series model is developed and investigated
+by the stochastic contact systems. Multicolor contact system, as one of statistical
+physics systems, is applied to model a random stock price process for investigating
+the ﬂuctuation dynamics of ﬁnancial market. The interaction and dispersal of different
+types of investment attitudes in a ﬁnancial market is imitated by viruses spreading
+in a multicolor contact system, and we suppose that the investment attitudes of mar-
+ket participants contribute to the volatilities of ﬁnancial time series. We introduce a
+volatility duration analysis to detect the duration and intensity relationship of time
+series for both SSECI and the ﬁnancial model. Furthermore, the empirical research is
+also presented to study the nonlinear behaviors of returns for the actual data and the
+simulation data.
+Keywords Financial agent-based price model · Stochastic contact system · Nonlinear
+analysis · V olatility analysis· Statistical physics
+1 Introduction
+There has been a considerable interest in the simulation of ﬁnancial market dynam-
+ics in the ﬁeld of statistical physics. A variety of models have been proposed, based
+on the competition between supply and demand, to model the main observed fea-
+tures of price dynamics, or the so called “stylized facts”: heavy-tailed distribution of
+returns, volatility clustering, aggregational gaussianity and multifractality ( Bouchaud
+B Jun Wang
+wangjun@bjtu.edu.cn
+1 Institute of Financial Mathematics and Financial Engineering, School of Science,
+Beijing Jiaotong Universitly, Beijing 100044, People’s Republic of China
+123
+
+608 D. Xiao et al.
+and Potters 2000 ; Cont 2001 ; Gabaix et al. 2003 ; Gaylord and Wellin 1995 ; Ilinski
+2001; Lo 1991; Lux 2008; Mantegna and Stanley 1999; Mills 1999; Plerou 1999)e t c .
+Capturing these features of ﬁnancial markets is crucial for many purposes including
+but not limited to: derivatives pricing, hedging, forecasting volatility, portfolio man-
+agement, regulatory issues, value-at-risk, etc. Some of these approaches come from
+the ﬁeld of interacting particle systems ( Fang and Wang 2012 ; Lux and Marchesi
+1990; Niu and Wang 2013 ; Plerou et al. 2000 ; Stauffer and Penna 1998 ; Wang and
+Wang 2012; Wang et al. 2010 ; Wang et al. 2011 ; Xiao and Wang 2012 ; Zhang and
+Wang 2010). Plerou et al. (2000) pointed out that economic systems such as ﬁnancial
+markets are similar to physical systems in that they are comprised of a large number
+of interacting “agents”. These economic agents are “thinking” units and they interact
+in complicated ways. One of the famous model is Stauffer–Penna model ( Stauffer
+and Penna 1998 ). They developed a price model by the lattice percolation system,
+the local interaction or inﬂuence among traders in a stock market is constructed, and
+a cluster of percolation was applied to deﬁne the cluster of traders sharing the same
+opinion about the market. Their model was based on the herding effect ( Lux and
+Marchesi 1990; Bannerjee 1992; Cont and Bouchaud 2000 ) by which traders follow
+trends without considering any economic data. The existence of heavy tail behavior
+for the returns is found when the inﬂuence rate of the model is around or at a critical
+value.
+This current interest in the subject stems from a recent simulation of ﬁnancial mar-
+ket dynamics ( Zhang and Wang 2010 ). At the root of that study is a microscopic
+model based on the contact process, a model for epidemic spreading in a continuous
+time Markov process with state space {0, 1}Zd
+, where Zd is d-dimensional integer
+lattice. One interpretation of the contact process is often regarded as a crude model
+for the spread of a disease. If the state of the process at a given time s is ηs , then
+a site x in Zd is healthy if ηs(x) = 0 or infected if ηs(x) = 1. Healthy individu-
+als become infected at a rate proportional to the number of the infected neighbors,
+and infected individuals recover at a constant rate. A brief introduction of the theory
+of contact process could be seen in Liggett (1985) and some generalizations could
+be seen in Liggett (1999), Divakaran and Dutta (2007). The ﬁnancial model from
+contact process ( Zhang and Wang 2010 ) is able to produce some desirable charac-
+teristics of real ﬁnancial markets, including the heavy tail phenomena, the power law
+distribution and the long range correlation. In this paper, we present a new ﬁnan-
+cial model based on the multicolor contact process (also named multitype contact
+process). The multicolor contact process, as its name implies, is different from the
+ordinary contact process for it has more than one type of particles in the process. It
+is the result of generalizing the state space from {0, 1}Zd
+to {0, 1,..., k}Zd
+.F o rm o r e
+theories of multicolor contact process, one may consider ( Cox and Schinazi 2009 ;
+Krone 1999; Liu and Wang 1994 ; Neuhauser 1992). Speciﬁcally in this paper, there
+are two types of infected particles, which can be interpreted as a model for the spread-
+ing of two kinds of diseases, one heavy ηs(x) = 2 and one slight ηs(x) = 1. They
+spread at different rates, proportional to the number of heavily and slightly infected
+neighbors respectively, and both types of infected individuals recover at a constant
+rate. The interesting part of the rule is that, a heavily infected individual can affect
+123
+
+V olatility Analysis of Financial Agent-Based Market Dynamics... 609
+its slightly infected neighbors, changing them into heavily infected ones, while the
+converse is not possible. The ﬁnancial model for the price evolution possesses the
+following features: (i) investment attitudes of various levels of strength, which are
+referred to strong attitude, weak attitude and neutral attitude respectively represented
+by the three types of particles with different spreading rates in the multicolor con-
+tact model; (ii) random birth of “well informed” traders (market leaders) with new
+attitudes; (iii) dispersal of three types of attitudes at different rates with different inter-
+action mechanism. To better understand the spread of a type of attitude in this model,
+we can refer to a chartist strategy, since in both cases decisions are based on informa-
+tion of market future movements. While a chartist infers this information from past
+price movements, an attitude holder in the proposed model relies on certain signals he
+receives.
+The motivation of proposing this multicolor contact process originates from an
+observation of the structure of Chinese stock markets. According to the data from
+China Securities Depository and Clearing Company Limited (CSDCC), up to April
+2012, of all accounts with stock holding on A-share market, more than 85% are less
+than ¥ 100,000 in market value and more than 97 % are less than ¥ 500,000. This
+indicates that retail private investors are still the majority in A share market. And
+these retail investors have records of their following behavior (Li et al. 2015). Though
+both institutional investor and retail investor demonstrate herding behavior in Chi-
+nese markets, the latter is much more notorious for a lack of proper information
+and are easily inﬂuenced by market sentiment. We believe that the multicolor con-
+tact process, with multitype particles, is able to imitate the interaction of retail and
+institutional investors to some extent. Just like other numerous agent-based models
+emerging in the past two decades (see Chakraborti et al. 2011 ; Samanidou et al. 2007
+for a review), which aim at behavioral explanations of the stylized facts from various
+ways, the present model intends to offer an alternative perspective of distinguishing
+investment attitudes into strong and weak. We hope that this new approach can be
+helpful for the understanding of price dynamics in Chinese stock markets to some
+extent.
+In the present work, the proposed model is applied to investigate the price dynam-
+ics with a focus on three types of “stylized facts”. (i) Heavy tails: the distribution
+of returns seems to display a power law tail, ﬁnite variance and the normal distrib-
+ution; (ii) Aggregational Gaussianity: as one increases the time interval over which
+returns are calculated, their distributions look more and more like a normal distribu-
+tion; (iii) V olatility clustering: as noted by Mandelbrot (1963), “large changes tend to
+be followed by large changes, of either sign, and small changes tend to be followed by
+small changes”. Furthermore, we introduce a new analysis method transferring volatil-
+ity series into volatility duration series, and apply it to investigate the corresponding
+duration patterns. And the comparison between the simulation data and the empirical
+data is also exhibited by the volatility duration analysis. For the empirical research,
+the daily closing prices of Shanghai Stock Exchange Composite Index (SSECI) from
+5th Jan. 1998 to 31th Jan. 2012, and Hang Seng Index (HSI) from 5th Jan. 1998 to
+31th Oct. 2011 are selected as the empirical data.
+123
+
+610 D. Xiao et al.
+2 Financial Agent-Based Time Series Model
+2.1 Description of Multicolor Contact System
+In this section, we introduce the mathematical description of the multicolor contact
+process, for details see ( Gabaix et al. 2003 ; Liggett 1985 ; Liggett 1999 ; Liu and
+Wang 1994; Chen 1992). The multicolor contact process on Zd is a continuous time
+Markov process {ηs, s > 0} with infection parameters λ1 and λ2 on the conﬁgu-
+ration space {0, 1, 2}Zd
+. A conﬁguration ηs is often identiﬁed with two subsets A1
+and A2 via A1 ={ x ∈ Zd : ηs(x) = 1} and A2 ={ x ∈ Zd : ηs(x) = 2}
+respectively. We can interpret elements in Ai (i = 1, 2) as i type of particles. For
+simplicity, we consider the one-dimensional multicolor contact model, the process
+evolves according to the following rules: (i) particles die at rate 1; (ii) particles
+of type i give birth at rate λi (i = 1, 2); (iii) a new particle from x is sent to
+y chosen at random from {y :| y − x|= 1}; (iv) when ηs(y)>η s(x),t h e
+birth is suppressed. As a metaphor, the relationship of “tree, bush and grass” can
+be applied to describe this dynamic system. In this interpretation, 2 = tree, 1 =
+bush and 0 = grass, tree and bush die at the same rate, after death they become
+grasses. And they also have different birth rates, if a new tree is born and sent to
+the site of a bush, then at that site, a tree grows up and the bush dies. But if a
+new bush, is born and sent to the site of a tree, then no action is taken at that site,
+the tree is still alive (at each site, only one plant is allowed to grow up). If a new
+tree (or bush) is born and sent to the site of a grass, then at that site, a new tree
+(or bush) grows up. Next, we introduce the graphical representation of the one-
+dimensional multicolor contact model on {0, 1, 2}Z, which is useful to illustrate
+and simulate the model. Considering Z × R+ as the space-time, for all x ∈ Z,
+let T(x,y)
+1n , T(x,y)
+2n , U x
+n (n ≥ 1) be jump points of Poisson processes with rates
+λ1, λ2, 1 respectively, where y ∈{ y :| x − y|= 1, x, y ∈ Z}. For each pair
+x, y ∈ Z with |x − y|= 1, (a) place a “ δ”a t (x, U x
+n ); (b) place a dashed directed
+arrow from (x, T(x,y)
+1n ) to (y, T(x,y)
+1n ); (c) place a directed arrow from (x, T(x,y)
+2n ) to
+(y, T(x,y)
+2n ), see Fig. 1b. Figure illustrations of construction of graphical representa-
+tions for one-dimensional contact model and multicolor contact model are given in
+Fig. 1.
+Let ηA1,A2
+s denote the state at time s with initial states ηA1
+0 = A1 and ηA2
+0 = A2.
+More generally, we consider the initial distributions as vθ1 and vθ2 , that is, each site
+is independently occupied by type “1” particles with probability θ1 and by type “2”
+particles with probability θ2 (θ1 + θ2 ≤ 1). Let ηθ1,θ2
+s denote the contact process
+with initial distributions vθ1 and vθ2 . For all x, y ∈ Z and s > 0, we say that there
+is a “2’s” active path from (x, 0) to (y, s), if there is a sequence 0 = s0 < s1 <
+s2 < ··· < sn < sn+1 = s, and x = x0, x1,..., xn = y such that (a) from xi−1
+to xi , there is a directed arrow at time si , i = 1,..., n; (b) there is no symbol “ δ”
+on the line segment xi × (si, si+1),f o r i = 0, 1,..., n. Similarly, we can deﬁne
+the “1’s” active path. Then, from the above deﬁnitions, ηA1,A2
+s (y) = 2 if there is a
+“2’s” active path from (x, 0) to (y, s), where x ∈ A2; and ηA1,A2
+s (y) = 1 if there
+123
+
+V olatility Analysis of Financial Agent-Based Market Dynamics... 611
+5
+4
+3
+2
+1
+0
+−3 −2 −1 0 1 2 3
+time
+sites
+(a)
+5
+4
+3
+2
+1
+0
+−3 −2 −1 0 1 2 3
+time
+sites
+(b)
+Fig. 1 Graphical representations of a one-dimensional contact system and b one-dimensional multicolor
+contact system. The directed arrows represent the spread of type “2” particles ( red ones), while the dashed
+directed arrows are for type “1” particles ( yellow ones). (Color ﬁgure online)
+is a “1’s” active path from (x, 0) to (y, s), and this active path does not contain the
+points in {(z, s′)|ηA1,A2
+s′ (z) = 2, z ∈ Z, 0 ≤ s′ < s}, where x ∈ A1. In the above
+one-dimensional nearest neighbor multicolor contact system, the key characteristic of
+the system is the critical phenomenon for the type “2” particles, which depends on the
+value of λ2. It is easily seen that ζ A2
+s ={ z : ηA1,A2
+s (z) = 2} is a contact system which
+is independent of A1, and let ζ{0}
+s be the corresponding process at time s with the
+initial point {0}. Then there exists a “critical value” for the process which is deﬁned
+as
+λ2c = inf{λ2 : P(ζ{0}
+s ⁄=∅ , for all s ≥ 0)> 0}. (1)
+For one dimension case, assuming λ2 >λ 2c, then there is a convex set C so that on
+/Omega12∞ ={ ζ{0}
+s ⁄=∅ , for all s ≥ 0}, for any ϵ> 0 and for all s sufﬁciently large, we
+have (1 − ϵ)sC ∩ Z ⊂ ζ{0}
+s ⊂ (1 + ϵ)sC ∩ Z. This shows that, when λ2 large enough
+and as s →∞ , if “2” particles survive then “1” particles die out ( Liggett 1999 ). If
+λ2 <λ 2c, for some positive ρ(λ2),w eh a v eP(ζ{0}
+s ⁄=∅ ) ≤ e−ρs , then “2” particles
+of the process die out exponentially fast ( Liggett 1985, 1999). For higher dimension
+cases, the situation becomes more complicated.
+2.2 Price Model for a Stock Market
+In the present work, we assume that the stock price ﬂuctuations result from the traders’
+investment decisions towards the stock market, and suppose that the investment atti-
+tudes are represented by the particles of the multicolor contact model. We classify
+the attitudes into three categories according to levels of strength: strong attitude, weak
+attitude and neutral attitude, corresponding to type 2, type 1 and type 0 particles respec-
+tively. This is also reasonable in real world, the investment attitudes in real market are
+123
+
+612 D. Xiao et al.
+not always of the same, that is, some investors are more conﬁdent in their decisions
+while others are not so sure and relatively easy to alter. Now we consider a ﬁnancial
+model of auctions for a single stock or stock indexes in a ﬁnancial market. We sup-
+pose that strong and weak attitudes coexist in the ﬁnancial market just as two kinds of
+viruses in the multicolor contact system. In the model, strong attitude and weak attitude
+spread at different propagation rates, and strong attitude holder can affect both weak
+attitude holders and neutral ones, while weak attitude holder can only affect neutral
+ones but not strong ones. Still, both strong and weak attitude followers can change
+their attitudes to neutral independently at a constant rate. According to the theory of
+multicolor contact process, if the propagation rate of strong attitude, compared with
+that of the weak attitude, is large enough, the weak attitude may quickly die out ( Liu
+and Wang 1994). This happens in the real stock market. If, on the contrary, the prop-
+agation rate of strong attitude is small enough, the strong attitude and weak attitude
+may coexist for some time.
+More speciﬁcally, suppose that this stock consists of N + 1( N is large enough)
+traders, who are located on a straight line {−N/2,..., 0, 1,..., N/2}, see Fig. 1b
+where x-axis represents the sites of traders and y-axis denotes the time. The assump-
+tion of the straight line structure here is to make the the structure as simple and clear
+as possible, since this simplest structure is already able to generate simulation data
+with most characteristics of interests. At the very beginning of each trading day, there
+is a possibility p ( p > 0) of an emergence of traders with the strong attitude, and
+we call p as the leader birth rate. Then, we select a certain fraction of traders (with
+the initial distribution vθ2 ) randomly in the system as leaders of the market by setting
+them as strong attitude holders. Assume that each trader can spread his attitude sev-
+eral times at each day t = 1, 2,... . In each trading day, weak attitude holders acquire
+some news, which is represented by a random variable ξt(θ1) from the standard uni-
+form distribution on (−1, 1). Meanwhile, strong attitude holders also acquire some
+different news by an uniformly distributed ξt(θ2) from (−1, 1), independent of ξt(θ1).
+However, since strong attitude holders are much conﬁdent in their information, their
+decisions on trading positions are more aggressive. Thus we suppose that their deci-
+sions are ampliﬁed by some exponent α in response to their information received, and
+is represented by αξt(θ2). The remaining traders will hold a neutral attitude toward
+the market. Let l be the time length of trading time in each trading day, we denote the
+stock price at time s in the t-th trading day by Pt(s) where s ∈[ 0, l]. We may ﬁx s at
+a proper value, and take Pt(s) as the representative of price Pt at day t. First, we let
+Bt(θ1,θ 2, s) =
+(
+ξt(θ1)|
+∑
+φ1(ηθ1,θ2
+s (x))|+ αξt(θ2)|
+∑
+φ2(ηθ1,θ2
+s (x))|
+)
+/2N
+(2)
+where φ1(z) = 1 when z = 1, otherwise, φ1(z) = 0; φ2(z) = 1 when z = 2,
+otherwise, φ2(z) = 0, and |C| is the cardinality of set C. Then we deﬁne the formula
+of stock prices as follows (Lamberton and Lapeyre 2000; Ross 1999; Wang 2007), for
+t = 1, 2,... ,
+Pt = Pt−1 exp{βBt(θ1,θ 2, s)} (3)
+123
+
+V olatility Analysis of Financial Agent-Based Market Dynamics... 613
+where β> 0 represents the depth parameter of the market. Then we have
+Pt = P0 exp
+{
+β
+t∑
+k=1
+Bk(θ1,θ 2, s)
+}
+(4)
+where P0 is the initial stock price at time t = 0. The formula of the single-period stock
+logarithmic returns from t to t + 1 is given by
+Rt = ln Pt+1 − ln Pt. (5)
+3 Statistical Analysis and Empirical Research
+3.1 Financial Time Series
+We perform numerical analysis for the ﬁnancial time series. For the parameter setting
+of N = 500, α = 2, θ1 = 0.1, θ2 = 0.01, s = 20, λ1 = 2, λ2 = 1.2 and p = 0.05,
+Fig. 2a displays a typical evolution of market price Pt (where P0 is taken as 10), and
+the corresponding return time series Rt . The numbers of two different attitude holders
+at each trading day are shown in Fig. 2b. For the following sections, we are mainly
+interested in the inﬂuence from spreading rates λ1, λ2 and emergence of new leaders
+p, and we let the rest parameters take ﬁxed values as above.
+From Fig. 2, besides a ﬁgure expression of the return and price series and the
+different evolutions of two types of traders, we may also wonder if there is any dif-
+ference between the proﬁtabilities of them. Therefore, we evaluate their proﬁtabilities
+in Table 1. Since traders can switch type or change their attitudes between records of
+price movements in our model, we could not compare proﬁtabilities between different
+types by just recording the proﬁts of each trader in a simulation. Therefore, we imag-
+ine two pseudo traders to each represent a type. The pseudo strong attitude holder is
+a trader that takes on strong attitude for every trade, while the pseudo weak attitude
+0 2000 4000 6000 8000 100000
+50
+100
+150
+200
+trading day
+price
+0 2000 4000 6000 8000 10000−0.1
+−0.05
+0
+0.05
+0.1
+trading day
+return
+(a)
+0 2000 4000 6000 8000 100000
+50
+100
+150
+200
+trading day
+number of traders
+0 2000 4000 6000 8000 100000
+50
+100
+150
+200
+trading day
+number of traders
+strong attitude holder
+weak attitude holder
+(b)
+Fig. 2 a Time series of a typical evolution of market price Pt and plot of the corresponding returns Rt .
+b Numbers of strong attitude holders ( blue) and weak attitude holders ( green). (Color ﬁgure online)
+123
+
+614 D. Xiao et al.
+Table 1 Statistics of representative proﬁtabilities of two type of attitudes
+Type of attitudes Mean Median SD Skew. Kurt. Number of loss
+Strong 0.0359 0.0198 0.0451 2.0585 8.9415 897
+Weak 0.0073 0.0033 0.0433 0.1666 7.7807 4139
+holder is the one with weak attitude always. As we record daily price movements in our
+simulation, we then focus on a comparison of daily proﬁtabilities. For simpliﬁcation,
+we just assume each pseudo trader takes position in proportion to the signal it receives
+according to its attitude type. Again we normalize the position to the range(−1, 1) for
+comparison. And the daily proﬁt is the product of position and daily return. A positive
+proﬁt means a gain while a negative proﬁt means a loss.
+In Table 1, we list some statistics of the proﬁtabilities of two representative traders
+described as above. It is quite obvious, the proﬁtability of pseudo strong attitude holder
+outperforms that of pseudo weak attitude holder. The mean of proﬁt of this strong
+attitude holder is 0.0359 which is nearly 5 times of that of the weak attitude holder of
+0.0073. The median of the strong attitude holder is 0 .0198 which is also much higher
+than that of the weak attitude holder. The standard deviation does not show much
+difference between two types of proﬁtabilities. However, the strong attitude holder’s
+proﬁt distribution is higher in skewness and kurtosis. The strong attitude holder also
+experiences less number of loss, which is less than a quarter of that of the weak attitude
+holder. In general, the signal received by a strong attitude holder is more in line with
+price movements and thus making a strong attitude holder more likely to experience
+gain rather than loss from a trade, and consequently increases his proﬁtability.
+3.2 Statistical Behaviors of Return Time Series
+A study of the distribution of return time series can show the insights into heavy tail
+and aggregational Gaussianity phenomena. In order to discuss the parameter setting
+and its inﬂuence on the distribution of return series, we simulate 3000 replications
+on the probability behaviors of returns for different values of parameters. In Table 2,
+for N = 500 and α = 2, the empirical study on the distribution of return series is
+made for different values of three parameters λ1 (spreading rate of weak attitudes),
+λ2 (spreading rate of strong attitudes) and p (leader birth rate). Kurtosis is a measure
+of peakedness of probability distribution, and a higher kurtosis means more of the
+variance which is due to infrequent extreme deviations, as opposed to frequent modest
+deviations. According to the empirical research, the kurtosis of the real stock returns
+is usually lager than 3 (the kurtosis of the Gaussian distribution), and high kurtosis is
+usually related to heavy tails.
+Table 2 gives a description of some statistics for 45 samples of returns, parameters
+p, λ1 and λ2 as a combination have effects on the kurtosis. When p = 1, for all λ1,
+λ2 combinations in the table, kurtosis is smaller than 3. As p gets smaller, kurtosis is
+larger than 3 for some sets of data. When p is relatively large, kurtosis are relatively
+larger for parameter setting of λ1 <λ 2. However, when p is relatively small, kurtosis
+123
+
+V olatility Analysis of Financial Agent-Based Market Dynamics... 615Table 2 Statistics of returns for different parameter settings
+λ2 λ1 p Min Max Mean V ariance Kurtosis Skewness
+0.6 1 1.00 −0.0518 0.0558 3 .5757e−004 3 .3332e−004 2.6154 −0.0007
+0.8 1 1.00 −0.0506 0.0563 −7.3724e−005 3 .3344e−004 2.5981 −0.0073
+1.0 1 1.00 −0.0559 0.0520 6 .5419e−004 3 .3302e−004 2.5718 0 .0116
+1.2 1 1.00 −0.0560 0.0494 −8.4243e−005 3 .3344e−004 2.5318 −0.0079
+1.4 1 1.00 −0.0504 0.0512 −1.4435e−004 3 .3342e−004 2.4787 0 .0625
+0.6 1 0.50 −0.0604 0.0713 1 .8625e−004 3 .3341e−004 2.5862 0 .0364
+0.8 1 0.50 −0.0578 0.0633 3 .4951e−005 3 .3344e−004 2.5695 0 .0506
+1.0 1 0.50 −0.0563 0.0544 2 .7696e−005 3 .3344e−004 2.7159 −0.0068
+1.2 1 0.50 −0.0579 0.0560 −1.2667e−004 3 .3343e−004 2.6212 0 .0574
+1.4 1 0.50 −0.0701 0.0624 −3.4951e−004 3 .3332e−004 2.8406 −0.0102
+1.2 2 1.00 −0.0548 0.0596 −2.2467e−004 3 .3339e−004 2.4604 0 .0107
+1.6 2 1.00 −0.0556 0.0462 1 .9222e−004 3 .3341e−004 2.4393 −0.0240
+2.0 2 1.00 −0.0523 0.0593 −5.1995e−004 3 .3317e−004 2.5734 0 .0140
+2.4 2 1.00 −0.0493 0.0503 5 .4991e−006 3 .3344e−004 2.4576 0 .0051
+2.8 2 1.00 −0.0546 0.0478 4 .4067e−004 3 .3325e−004 2.4689 −0.0440
+1.2 2 0.50 −0.0565 0.0601 −1.5946e−004 3 .3342e−004 2.6661 −0.0054
+1.6 2 0.50 −0.0689 0.0817 3 .8651e−004 3 .3330e−004 3.1152 −0.0001
+2.0 2 0.50 −0.0776 0.0733 3 .4692e−004 3 .3332e−004 3.5758 −0.0132
+2.4 2 0.50 −0.0914 0.1026 −1.7349e−004 3 .3341e−004 4.5646 0 .0200
+2.8 2 0.50 −0.0791 0.0910 −1.3896e−004 3 .3343e−004 4.2882 0 .1075
+1.2 2 0.10 −0.0744 0.0846 3 .2614e−005 3 .3344e−004 3.4544 0 .0360
+1.6 2 0.10 −0.0690 0.0829 3 .9506e−004 3 .3329e−004 4.6053 0 .1223
+2.0 2 0.10 −0.0564 0.0613 −4.6514e−004 3 .3323e−004 3.7616 −0.0196
+2.4 2 0.10 −0.0505 0.0494 3 .4486e−004 3 .3333e−004 3.1043 −0.0208
+123
+
+616 D. Xiao et al.
+Table 2 continued
+λ2 λ1 p Min Max Mean V ariance Kurtosis Skewness
+2.8 2 0.10 −0.0499 0.0499 1 .2107e−004 3 .3343e−004 2.9439 −0.0823
+1.8 3 1.00 −0.0444 0.0469 −2.3671e−004 3 .3339e−004 2.3251 0 .0294
+2.4 3 1.00 −0.0513 0.0529 −2.1604e−004 3 .3340e−004 2.4024 −0.0026
+3.0 3 1.00 −0.0527 0.0487 2 .8410e−004 3 .3336e−004 2.5170 0 .0309
+3.2 3 1.00 −0.0537 0.0579 −2.8540e−004 3 .3336e−004 2.5108 −0.0186
+3.4 3 1.00 −0.0490 0.0491 4 .4045e−005 3 .3344e−004 2.4885 −0.0181
+1.8 3 0.50 −0.0660 0.0698 −3.5771e−004 3 .3332e−004 2.8188 0 .0937
+2.4 3 0.50 −0.0964 0.0698 −2.2589e−004 3 .3339e−004 4.0491 −0.2155
+3.0 3 0.50 −0.0829 0.1038 2 .6492e−004 3 .3337e−004 4.3536 0 .1079
+3.2 3 0.50 −0.0820 0.0762 −7.2932e−005 3 .3344e−004 3.8714 −0.0455
+3.4 3 0.50 −0.0837 0.0834 −9.7652e−004 3 .3249e−004 4.4018 −0.2012
+1.8 3 0.10 −0.0865 0.0819 −1.5132e−005 3 .3344e−004 5.4889 0 .0863
+2.4 3 0.10 −0.0593 0.0588 −1.4394e−004 3 .3342e−004 3.7676 0 .0171
+3.0 3 0.10 −0.0484 0.0483 5 .7877e−004 3 .3311e−004 3.1046 0 .0560
+3.2 3 0.10 −0.0484 0.0487 3 .0046e−004 3 .3335e−004 2.9342 −0.0713
+3.4 3 0.10 −0.0456 0.0460 5 .7014e−004 3 .3312e−004 2.8543 −0.0269
+1.8 3 0.05 −0.0641 0.0632 −4.2260e−004 3 .3327e−004 4.0082 −0.0674
+2.4 3 0.05 −0.0491 0.0495 1 .2463e−004 3 .3343e−004 3.0811 0 .0379
+3.0 3 0.05 −0.0409 0.0410 −5.0834e−005 3 .3344e−004 2.5189 0 .0003
+3.2 3 0.05 −0.0387 0.0386 −7.7075e−005 3 .3344e−004 2.3269 0 .0116
+3.4 3 0.05 −0.0416 0.0415 −1.5958e−004 3 .3342e−004 2.5468 0 .0253
+123
+
+V olatility Analysis of Financial Agent-Based Market Dynamics... 617
+10−2 10−1
+10
+−3
+10
+−2
+10
+−1
+x
+P(R>x)
+λ2=1
+λ2=1 .2
+λ2=1 .4
+λ2=1 .6
+λ2=1 .8
+Gaussian
+(a)
+10−2 10−1
+10
+−3
+10
+−2
+10
+−1
+x
+P(R<−x)
+λ2=1
+λ2=1 .2
+λ2=1 .4
+λ2=1 .6
+λ2=1 .8
+Gaussian
+(b)
+−0.08 −0.06 −0.04 −0.02 0 0.02 0.04 0.06 0.08
+0
+5
+10
+15
+20
+25
+30
+35
+returns
+frequencies
+λ2=1
+λ2=1 .2
+λ2=1 .4
+λ2=1 .6
+λ2=1 .8
+Gaussian
+(c)
+−0.06 −0.04 −0.02 0 0.02 0.04 0.06
+10
+−3
+10
+−2
+10
+−1
+10
+0
+10
+1
+10
+2
+returns
+frequencies
+ 
+(d)
+10
+−4
+10
+−3
+10
+−2
+10
+−110
+−4
+10
+−3
+10
+−2
+10
+−1
+10
+0
+x
+P(|R|>x)
+ 
+ 
+0 0.02 0.04 0.06
+10
+−4
+10
+−2
+10
+0
+ 
+ 
+(e)
+Fig. 3 a , b Positive tail behavior and negative tail behavior of daily returns respectively for different values
+of λ2 = 1, 1.2, 1.4, 1.6, 1.8, λ1 = 2a n d p = 0.05. c PDF of daily returns with comparison to a Gaussian
+distribution. d PDF of normalized returns in semi-log ande PDF of absolute returns in semi-log and log–log,
+for different time intervals /Delta1t = 1, 5, 20, 60, 120, 250, and λ1 = 2, λ2 = 1.4, p = 0.05
+are relatively larger for λ1 >λ 2. When λ1 >λ 2, it means that the number of weak
+attitude holders is larger than the number of strong attitude holders, and vice verse.
+In fact, the simulations are changing with the variations of the combination of λ1, λ2
+and p, but they are robust to small speciﬁcation changes of each parameters.
+We also show an empirical research of returns in Fig. 3.I nF i g .3a–c, we present
+the ﬂuctuation behaviors of daily returns with the parameters λ2 = 1, 1.2, 1.4, 1.8,
+λ1 = 2, p = 0.05, with comparison to a Gaussian distribution. Figure 3a, b show that
+all simulation data demonstrate the power law tails. Whenλ2 is close to λ1 (λ2 = 1.8),
+the tails are close to a Gaussian one, while in other cases whenλ2 is much smaller than
+λ1, the tails are signiﬁcantly deviate from a Gaussian one. Figure 3c exhibits that the
+distributions of all simulation returns have signiﬁcantly higher peak than a Gaussian
+one. In Fig. 3d, e, we also show the probability distributions of normalized returns,
+for a parameter setting of λ1 = 2, λ2 = 1.4, p = 0.05 and different time intervals
+/Delta1t = 1, 5, 20, 60, 120, 250, which respectively stands for daily, weekly, monthly,
+quarterly, semi-yearly and yearly returns in terms of business days. Figure 3di sa
+linear-log plot of the PDF, and Fig. 3e shows the PDF of absolute returns in both
+linear-log (inset ﬁgure) and double-log plot. With an increasing time interval /Delta1t,a
+crossover from heavy tail towards a Gaussian distribution (aggregational Gaussianity)
+is shown from Fig. 3d, e, in agreement with empirical ﬁnancial data.
+3.3 V olatility Duration Analysis
+In this section, we introduce a new method to analyze stock volatility series, to be
+speciﬁc, the absolute return series. We are interested in the duration of stock volatility
+123
+
+618 D. Xiao et al.
+50 100 150
+−0.04
+−0.02
+0
+0.02
+0.04
+0.06
+0.08
+0.1
+0.12
+0.14
+0.16
+Days
+Absolute returns
+I(t)
+I(t)
+(a)
+0 500 1000 1500 2000 2500 3000
+−50
+−40
+−30
+−20
+−10
+0
+10
+20
+30
+40
+Days
+Volatility durations
+0 500 1000 1500 2000 2500 3000
+0
+0.05
+0.1
+Absolute returns
+(b)
+Fig. 4 a Illustration of two types of durations. b Absolute return series of SSECI and the corresponding
+volatility duration series
+consistently above or below a given data point in the volatility series. It is similar to
+the extant return interval analysis ( Wang et al. 2006; Bogachev and Bunde 2009; Ren
+and Zhou 2010 ) that it characterizes the occurrence of volatilities in certain range.
+However, it is different in the way of choosing threshold, since the threshold is not
+predetermined but is changing with the volatility intensity along the series. In the
+present model, we build a link between volatility intensity and duration in order to
+gain some insights by this linkage. Actually, our approach proposed here share much
+similarity with the ideas embodied in intensity-duration-frequency relationship (Chow
+1964), which is a method widely used in description of data records of precipitation,
+climate, ﬂood and wave etc. We believe that an application of this method to stock
+volatility series analysis is a new and interesting trial.
+We begin by generating a volatility duration series. We deﬁne{Dt , t = 1, 2,..., T}
+from an absolute return series {|Rt|, t = 1, 2,..., T}. At each day t, we ﬁrst consider
+the absolute return on the next day |Rt+1|.I f |Rt+1| > |Rt|, we assume that the
+volatility series is locally rising at t, and have the time duration of volatility intensity
+exceeding |Rt| as the volatility duration length I(t) at day t. Namely, I(t) = max{τ :
+Rt+i > Rt, i ≤ τ}. If |Rt+1| < |Rt|, we assume that the volatility series is locally
+falling at t, and have I(t) = max{τ : Rt+i < Rt, i ≤ τ}. For rare case |Rt+1|=| Rt|,
+we have I(t) = 0. See Fig. 4a for illustration, a duration of exceedance I(t) of a
+particular volatility intensity level |Rt|,s a y0.01 on day 74, begins with an upcrossing
+of |Rt|= 0.01 and ends before the next down-crossing of the same intensity level at
+day 99. Similarly, a duration below a certain intensity level|Rt|, begins with an down-
+crossing at intensity level at day 81 and ends at day 115. Also, in order to moderate
+extreme values in volatility duration series, we take the square root of I(t) as the ﬁnal
+value of each data point in volatility duration series, and assign each one a positive
+or negative sign. Dt = I(t)
+1
+2 if I(t) describes a duration of exceedance, otherwise,
+Dt =− I(t)
+1
+2 . An entire series of absolute returns can be scanned in this way, and we
+obtain duration series {Dt, t = 1, 2,..., T} consequently. We plot a period of real
+stock volatility series from SSECI and the corresponding volatility duration series in
+Fig. 4b.
+123
+
+V olatility Analysis of Financial Agent-Based Market Dynamics... 619
+−20−15−10−505101520
+0
+0.05
+0
+10
+20
+30
+40
+50
+60
+70  
+ 
+ 0
+10
+20
+30
+40
+50
+60
+(a)
+−20−15−10−505101520
+0
+0.05
+0
+10
+20
+30
+40
+50
+60  
+ 
+ 0
+5
+10
+15
+20
+25
+30
+35
+40
+45
+50
+(b)
+Fig. 5 Joint histograms of volatility intensity and duration for a SSECI and b the ﬁnancial model with
+λ1 = 3, λ2 = 1.2a n d p = 0.008
+We now consider the series of volatility intensity and volatility duration pairs
+{|Rt|, Dt}. We show an estimate of joint distribution fD,R(d, r) by a joint relative
+frequency histogram of observational data pairs. Figure 5a, b show the surfaces of
+joint frequency histograms derived from SSECI data and the simulation data respec-
+tively (where the real data and the simulation data have the same length). The joint
+histogram of SSECI shows a pattern that is repeated in many other real stock mar-
+kets, i.e., the intense and long duration volatilities are rare. The joint distribution is
+divided into two parts according to the sign of volatility duration since the number
+of duration of value 0 is extremely rare. Both the two parts seem to peak at a very
+short duration with an intensity below the average of absolute returns. The declines
+from the two peaks are very sharp in every direction. However, there are some slight
+differences between these two parts of histogram distribution. In the part includ-
+ing only positive duration data, the peak of the conditional distribution of volatility
+intensity moves toward 0 as the length of the given duration increases, while in the
+other part, this same peak moves away from 0 as duration length increases. Also, the
+decline from peak alone the duration dimension in the latter part seems to be more
+rapid than in the former part when volatility intensity is of very small value. These
+characteristic patterns can also be observed in ﬁnancial model in Fig. 5b. To quanti-
+tatively observe the distributions of volatility duration for SSECI and the simulation
+data, we perform the Kolmogorov–Smirnov test that is used to check whether the two
+data samples come from the same distribution. The statistic, marked with p,i st h e
+asymptotic p value of the test. The results of the K-S test with duration series for
+SSECI and the simulation data are both 0, which indicates that they share the same
+distributions.
+Furthermore, we focus on the volatility duration series to study its corresponding
+statistical features, such as long range dependence shown by a slow decay in autocor-
+relation function, which have been observed in volatility intensity series. However,
+volatility duration series seem to show an absence of long term dependence detected by
+autocorrelation approach, yet display some types of dependence when we investigate
+the data pairs at some special ranges. We use three ways to discuss the dependence
+on some certain ranges. First, we show that the volatility duration of tomorrow is in
+123
+
+620 D. Xiao et al.
+−30 −20 −10 0 10 20 30
+−30
+−20
+−10
+0
+10
+20
+30
+(a)
+−30 −20 −10 0 10 20 30
+−30
+−20
+−10
+0
+10
+20
+30
+(b)
+−30 −20 −10 0 10 20 30
+−30
+−20
+−10
+0
+10
+20
+30
+(c)
+−30 −20 −10 0 10 20 30
+−30
+−20
+−10
+0
+10
+20
+30
+(d)
+−30 −20 −10 0 10 20 30
+−30
+−20
+−10
+0
+10
+20
+30
+(e)
+−30 −20 −10 0 10 20 30
+−30
+−20
+−10
+0
+10
+20
+30
+(f)
+Fig. 6 a , d Today’s volatility duration versus tomorrow’s for SSECI and the simulation data respectively.
+b, e The ending duration versus the following duration beginning at the ending day for SSECI and the
+simulation data respectively. c, f The ending duration versus the following duration beginning at the next
+day of the ending day for SSECI and the simulation data respectively
+some way depending on today’s value. Second, we show that, for each ending day of
+a certain volatility duration, the ending of this duration has some inﬂuence on a dura-
+tion which starts at this day. Third, similar to the second way, at each ending day of a
+duration, this ending duration also affects the duration starting at the next day. We use
+D(0) to denote the volatility duration observation at a given dayi0, then D(1) = Di0+1,
+D(2) = Di0+I(i0) and D(3) = Di0+I(i0)+1 correspond respectively to the observation
+at the speciﬁc ranges described by the above three ways. Here the deﬁnition of I(i0)
+is the same as I(t) at the beginning of this section. In Fig. 6, we show the scatter plots
+of D(0) with respect to D(1), D(2) and D(3) for volatility duration series of SSECI
+and the ﬁnancial model ( λ1 = 3, λ2 = 1.2 and p = 0.008). Some similar patterns
+which are shared in the real market data and the simulation one are obvious. In all the
+scatter plots, the scattering shape of points indicate an approximate central symmetry.
+These imply that the relationships of dependence are identical whether the value of
+volatility duration is positive or negative. For the two plots of Fig. 6a, d, we conclude
+from the shape of scattering points that tomorrow’s volatility duration has either the
+opposite sign of today’s duration or the same sign but less length. Also, only very
+short durations may be possibly followed by long durations, and the average length
+of the following duration is quickly shortened as today’s duration increases in length.
+In Fig. 6b, e, we see that two consecutive durations always have opposite signs. This
+is quite self evident, since every duration ends with a trend of opposite direction from
+the one at its beginning. From Fig. 6c, f, we ﬁnd that the latter duration beginning at
+the next day when its former duration ends, in most cases has the same sign as the
+123
+
+V olatility Analysis of Financial Agent-Based Market Dynamics... 621
+0 50 100 150 200 250 300 350 400 450 500
+−0.1
+−0.05
+0
+0.05
+0.1
+0.15
+0.2
+0.25
+0.3
+0.35
+0.4
+Lags
+The autocorrelation coefficient
+ 
+ 
+10
+1
+10
+2
+10
+−4
+10
+−3
+10
+−2
+10
+−1
+(a)
+0 50 100 150 200 250 300 350 400 450 500
+−0.1
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+Lags
+The autocorrelation coefficient
+ 
+ 
+10
+1
+10
+2
+10
+−3
+10
+−2
+10
+−1
+10
+0
+(b)
+0 50 100 150 200 250 300 350 400 450 500
+−0.1
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+Lags
+The autocorrelation coefficient
+ 
+ 
+10
+1
+10
+2
+10
+−1
+ 
+ 
+(c)
+0 50 100 150 200 250 300 350 400 450 500
+−0.1
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+Lags
+The autocorrelation coefficient
+ 
+ 
+10
+1
+10
+2
+10
+−1
+ 
+ 
+(d)
+Fig. 7 Autocorrelation coefﬁcients of different lags for simulation data with a p = 0.5, b p = 0.1,
+c p = 0.05 and d p = 0.01. Propagation parameters λ1 = 2a n d λ2 = 1.2. The two horizontal dashed
+lines in plots show the marginal value level of 95 % conﬁdence interval
+former duration. However, if the former duration is short in length, the latter duration
+may occur with an opposite sign and a very short length.
+3.4 V olatility Clustering
+One of the most important characteristics of a ﬁnancial time series is its volatility
+evolvement (Bollerslev 1986; Bouchaud and Potters 2000 ; Cont 2001; Mantegna and
+Stanley 1999; Samanidou et al. 2007; Wang 2007; Liao and Wang 2010). Most ﬁnan-
+cial market time series exhibit volatility clustering, which means that periods of large
+ﬂuctuations tend to be followed by periods of large ﬂuctuations, while periods of calm
+tend to be followed by periods of calm. One quantitative manifestation of this fact is
+that, while returns themselves are uncorrelated, absolute returns |Rt| (or their squares
+R2
+t ) display a positive, signiﬁcant and slowly decaying autocorrelation function C(τ)
+= corr(|Rt|,|Rt+τ |) for the lag τ increasing. The plots of autocorrelation coefﬁcient
+sequences of returns for the ﬁnancial model are given in Fig. 7. We observe clearly
+the pattern changes of autocorrelation coefﬁcient sequences for absolute return series
+with different birth rate values of p. When p = 0.5, Fig. 7a can hardly tell the dif-
+ference between returns and absolute returns from the corresponding autocorrelation
+sequence. As the p decreases, the difference between the ﬂuctuation patterns of these
+123
+
+622 D. Xiao et al.
+two autocorrelation sequences grow more and more obvious: the one from absolute
+returns is signiﬁcantly different from zero at ﬁrst but weakens then as the lag increas-
+ing, while the other one does not display this decaying pattern, but falls generally
+in the 95 % conﬁdence interval. It seems to take longer lag for the autocorrelation
+sequence to decay into the conﬁdence interval as p gets smaller, see Fig. 7b–d. The
+above results point to a link between the origin of volatility clustering and the new
+leader birth mechanism in the proposed model. A possible explanation is that, when
+strong attitude holders dominate the market, market behave more sensible to news and
+consequently more likely to have large ﬂuctuations in price, meaning large volatilities
+of returns. Therefore, when strong attitude holders dominate the market, we are likely
+to observe the large volatility clustering together, while when weak ones dominate the
+market, we may observe small volatility clustering. Each time when new leaders are
+born, the fractions of strong and weak attitude holders are rearranged. This rearrange-
+ment should not be too frequent (birth rate p should not be too high), so that the two
+type of investors both have chance to dominate the market for a considerable period
+through evolution process. This give an explanation to some extent, that the return time
+series of the model show the volatility clustering phenomena when the parameters are
+set at proper values.
+3.5 GARCH Analysis
+Another numerical approach to volatility clustering is the popular autoregressive con-
+ditional heteroscedastic (ARCH) model, ﬁrst proposed by Engle (1982). There are
+also many generalized forms, such as GARCH ( Engle 1982), TARCH (Glosten et al.
+1993; Rabemananjara and Zakoian 1993 , etc). In the GARCH speciﬁcation, the cur-
+rent volatility level is a function of past squared shocks to the returns and past lagged
+levels of itself. The GARCH( p, q) speciﬁcation for the volatility σ 2
+t at time t can be
+described by the following equation
+σ 2
+t = ω +
+q∑
+i=1
+αiϵ2
+t−i +
+p∑
+i=1
+βiσ 2
+t−i (6)
+where q and p are the maximum lags allowed by the model for past shocks and
+volatility levels respectively, and ϵt−i is the return shock (about the mean) at lag i.
+Here we focus on the GARCH(1 , 1) model, which can be written as
+σ 2
+t = ω + αϵ2
+t−1 + βσ 2
+t−1. (7)
+Table 3 displays the estimate of variablesω, α and β, followed by their standard errors
+in parentheses and their t statistics in square brackets, for the returns of the ﬁnancial
+model, SSECI and HSI, where one parameters set is λ1 = 3, λ2 = 1.2, p = 0.05
+and another parameters set is λ1 = 2, λ2 = 1.2, p = 0.01 (λ1, λ2 are the spreading
+rate of weak attitudes and strong attitudes respectively, p is the leader birth rate in
+the price model). From the observation, every variable is statistically signiﬁcant at
+the 5 % signiﬁcance level. Compared to the real data, the β value for the simulation
+123
+
+V olatility Analysis of Financial Agent-Based Market Dynamics... 623
+Table 3 GARCH model test
+Simulation 1 Simulation 2 SSECI HSI
+ω 8.9789e−005 1 .5168e−05 4 .6094e−006 1 .414e−006
+SE (2 .199e−005) (6 .642e−06) (6 .393e−007) (3 .799e−007)
+t [4.0832] [2.2836] [7.2101] [3.7220]
+α 0.13963 0.127081 0.094753 0.073558
+SE (0.019614) (0.0140674) (0.0062778) (0.0062494)
+t [7.1190] [9.0338] [15.0933] [11.7703]
+β 0.8175 0.87292 0.89218 0.92362
+SE (0.024643) (0.0123398) (0.0065052) (0.0065512)
+t [33.1739] [70.7403] [137.1487] [140.9849]
+Note Simulation 1 are for the parameter set λ1 = 3, λ2 = 1.2, p = 0.05 and Simulation 2 are for the
+parameter set λ1 = 2, λ2 = 1.2, p = 0.01
+Table 4 Statistics of GARCH estimates of 500 simulation data sets
+Estimates Mean Median SD Skew. Kurt.
+ω −8.1642e − 05 −0.00014 0.00169 0 .0795 3 .5258
+α 0.0539 0 .0438 0.0317 1 .1477 3 .7358
+β 0.8670 0 .9176 0.1486 −3.1330 15 .4900
+data is most close to the real SSECI, while the coefﬁcient ω value and α value are
+also around the ones of the real data. We also generate 500 sets of the simulation
+data with parameters λ1 = 2, λ2 = 1.2, p = 0.01 to see that the signiﬁcance in
+GARCH estimates in Table 3 is robust. The statistics of these estimates are shown in
+Table 4. We see the means of GARCH estimates, especially the ones for ω and β do
+not fail to show signiﬁcance over our 500 times of simulations. Through this analysis
+of volatility dynamics, the proposed model returns display GARCH behavior similar
+to some extent with the real returns.
+4 Conclusion
+Multicolor contact system is applied to a stock price model, in order to investigate
+price ﬂuctuation dynamics for the stock market. We suppose that investment attitudes
+are of different strength levels, and the propagation of different attitudes follows a
+multicolor contact process. The dispersal of different attitudes is evolved according
+to the interaction between neighbors at different rates, which is measured by propa-
+gation rates λ1 and λ2. The birth of new leaders in the ﬁnancial market, controlled by
+the birth rate parameter, results in attitude changes which will dominate the type of
+market attitudes. Through computer simulation and numerical calculation, we study
+the price dynamic behaviors with different parameter settings. The empirical results
+show that, with a proper combination of parameters, the proposed model produces
+123
+
+624 D. Xiao et al.
+qualitatively the similar distributions observed in empirical data: heavy tail, aggrega-
+tional Gaussianity phenomena and volatility clustering. Furthermore, we introduce a
+volatility duration analysis to investigate the intensity-duration relationship and the
+duration dependence in volatility dynamics. The comparing results of real data and
+simulation data also demonstrate the signiﬁcant similarity. These results show that the
+proposed model may be helpful to the investigation of market dynamics.
+Acknowledgments The authors were supported in part by National Natural Science Foundation of China
+Grant Nos. 71271026 and 10971010.
+References
+Bannerjee, A. (1992). A simple model of herd behavior. Quarterly Journal of Economics , 107, 797–818.
+Bogachev, M. I., & Bunde, A. (2009). Improved risk estimation in multifractal records: Application to the
+value at risk in ﬁnance. Physical Review E, 80, 026131.
+Bollerslev, T. (1986). Generalized autoregressive conditional heteroskedasticity. Journal of Econometrics,
+31, 307–327.
+Bouchaud, J. P ., & Potters, M. (2000). Theory of ﬁnancial risk . Cambridge: Cambridge University Press.
+Chakraborti, A., Toke, I. M., Patriarca, M., & Abergel, F. (2011). Econophysics review: II. Agent-based
+models. Quantitative Finance, 11, 1013–1041.
+Chen, M. F. (1992). From Markov chains to non-equilibrium particle systems. Singapore: World Scientiﬁc.
+Chow, V . T. (1964).Handbook of applied hydrology. New Y ork, NY: McGraw-Hill.
+Cont, R. (2001). Empirical properties of asset returns: Stylized facts and statistical issues. Quantitative
+ﬁnance, 1, 223–236.
+Cont, R., & Bouchaud, J. P . (2000). Herd behaviors and aggregate ﬂuctuations in ﬁnancial markets. Macro-
+economic Dynamics, 4, 170–197.
+Cox, J. T., & Schinazi, R. B. (2009). Survival and coexistence for a multitype contact process. The Annals
+of Probability, 37, 853–876.
+Divakaran, U., & Dutta, A. (2007). Long-range connections, quantum magnets and dilute contact processes.
+Physica A, 384, 39–43.
+Engle, R. F. (1982). Autoregressive conditional heteroscedasticity with estimates of variance of United
+Kingdom inﬂation. Econometrica, 50, 987–1007.
+Fang, W., & Wang, J. (2012). Statistical properties and multifractal behaviors of market returns by ising
+dynamic systems. International Journal of Modern Physics C , 23, 1250023.
+Gabaix, X., Gopikrishnan, P ., Plerou, V ., & Stanley, H. E. (2003). A theory of power-law distributions in
+ﬁnancial market ﬂuctuations. Nature, 423, 267–270.
+Gaylord, R., & Wellin, P . (1995). Computer simulations with mathematica: Explorations in the physical
+biological and social science . NewY ork: Springer.
+Glosten, L., Jaganathan, R., & Runkle, D. E. (1993). On the relation between the expected value and the
+volatility of the nominal excess return on stocks. Journal of Finance, 48, 1779–1801.
+Ilinski, K. (2001). Physics of ﬁnance: Gauge modeling in non-equilibrium pricing . New Y ork: Wiley.
+Krone, S. M. (1999). The two-stage contact process. The Annals of Applied Probability , 9, 331–351.
+Lamberton, D., & Lapeyre, B. (2000). Introduction to stochastic calculus applied to ﬁnance . London:
+Chapman and Hall/CRC.
+Li, W., Wang, S. S., & Rhee, G. (2015). Differences in herding: Individual vs. institutional investors, Asian
+ﬁnance association 2015 conference paper .
+Liao, Z., & Wang, J. (2010). Forecasting model of global stock index by stochastic time effective neural
+network. Expert Systems with Applications , 37, 834–841.
+Liggett, T. M. (1985). Interacting Particle Systems. New Y ork: Springer.
+Liggett, T. M. (1999). Stochastic interacting systems: Contact, voter and exclusion processes .N e wY o r k :
+Springer.
+Liu, X. F., & Wang, J. (1994). A sufﬁcient condition for non-coexistence of one dimensional multicolor
+contact processes. Acta Mathematicae Applicatae Sinica , 10, 169–176.
+Lo, A. W. (1991). Long-term memory in stock market prices. Econometrica, 59, 1279–1314.
+123
+
+V olatility Analysis of Financial Agent-Based Market Dynamics... 625
+Lux, T. (2008).Financial power laws: Empirical evidence, models and mechanisms. Cambridge: Cambridge
+University Press.
+Lux, T., & Marchesi, M. (1990). Scaling and criticality in a stochastic multi-agent model of a ﬁnancial
+market. Nature, 397, 498–500.
+Mandelbrot, B. B. (1963). The variation of certain speculative prices. Journal of Business, 36, 394–419.
+Mantegna, R. N., & Stanley, E. (1999). An introduction to econophysics: Correlations and complexity in
+ﬁnance. Cambridge: Cambridge University Press.
+Mills, T. C. (1999). The econometric modeling of ﬁnancial time series (2nd ed.). Cambridge: Cambridge
+University Press.
+Neuhauser, C. (1992). Ergodic theorems for the multitype contact process. Probability Theory and Related
+Fields, 91, 467–506.
+Niu, H. L., & Wang, J. (2013). V olatility clustering and long memory of ﬁnancial time series and ﬁnancial
+price model. Digital Signal Processing, 23, 489–498.
+Plerou, V . (1999). Scaling of the distribution of ﬂuctuations of individual companies. Physical Review E ,
+60, 6519–6529.
+Plerou, V ., Rosenow, B., Amaral, L. A. N., & Stanley, H. E. (2000). Econophysics: Financial time series
+from a statistical physics point of view. Physica A, 279, 443–456.
+Rabemananjara, R., & Zakoian, J. M. (1993). Threshold arch models and asymmetries in volatility. Journal
+of Applied Econometrics, 8, 31–49.
+Ren, F., & Zhou, W. X. (2010). Recurrence interval analysis of high-frequency ﬁnancial returns and its
+application to risk estimation. New Journal of Physics , 12, 075030.
+Ross, S. M. (1999). An introduction to mathematical ﬁnance . Cambridge: Cambridge University Press.
+Samanidou, E., Zschischang, E., Stauffer, D., & Lux, T. (2007). Agent-based models of ﬁnancial markets.
+Reports on Progress in Physics , 70, 409–450.
+Stauffer, D., & Penna, T. (1998). Crossover in the Cont-Bouchaud percolation model for market ﬂuctuations.
+Physica A, 256, 284–290.
+Wang, J. (2007). Stochastic process and its application in ﬁnance . Beijing: Tsinghua University Press and
+Beijing Jiaotong University Press.
+Wang, F., & Wang, J. (2012). Statistical analysis and forecasting of return interval for SSE and model by
+lattice percolation system and neural network. Computers & Industrial Engineering , 62, 198–205.
+Wang, J., Wang, Q. Y ., & Shao, J. G. (2010). Fluctuations of stock price model by statistical physics systems.
+Mathematical and Computer Modeling , 51, 431–440.
+Wang, T. S., Wang, J., Zhang, J. H., & Fang, W. (2011). V oter interacting systems applied to Chinese stock
+markets. Mathematics and Computers in Simulation , 81, 2492–2506.
+Wang, F., Y amasaki, K., Havlin, S., & Stanley, H. E. (2006). Scaling and memory of intraday volatility
+return intervals in stock markets. Physical Review E, 73, 026117.
+Xiao, D., & Wang, J. (2012). Modeling stock price dynamics by continuum percolation system and a relevant
+complex systems analysis. Physica A, 391, 4827–4838.
+Zhang, J. H., & Wang, J. (2010). Modeling and simulation of the market ﬂuctuations by the ﬁnite range
+contact systems. Simulation Modelling Practice and Theory , 18, 910–925.
+123

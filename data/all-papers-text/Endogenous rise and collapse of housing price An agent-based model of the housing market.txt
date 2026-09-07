@@ -1,0 +1,1594 @@
+Computers, Environment and Urban Systems 62 (2017) 182–198
+Contents lists available at ScienceDirect
+Computers, Environment and Urban Systems
+journal homepage: www.elsevier.com/locate/ceus
+Endogenous rise and collapse of housing price/H22845
+An agent-based model of the housing market
+Jiaqi Ge
+The James Hutton Institute, Craigiebuckler, Aberdeen, UK
+ARTICLE INFO
+Article history:
+Received 27 May 2015
+Received in revised form 10 November 2016
+Accepted 12 November 2016
+Available online 6 December 2016
+Keywords:
+Agent-based model
+Housing market
+Housing bubble
+Lenient lending
+Speculation
+ABSTRACT
+Onthebasisofinterviewswithlocalrealestateagents,thisstudydevelopsanagent-basedmodelofhousing
+market to determine the cause of rise and collapse of US housing price during the years immediately pre-
+ceding the US ﬁnancial crisis (2007–2009). We study the key factors affecting housing price volatility, such
+as lenient ﬁnancing and speculation. The dynamic simulation ﬁndings in the study show in concrete terms
+how lenient lending practices combined with speculation can lead to increased volatility in housing price,
+including sharp rises immediately followed by collapses. The exploratory work in this study will contribute
+to the understanding of the causes of housing bubbles and inform policy decisions.
+© 2016 Elsevier Ltd. All rights reserved.
+1. Introduction
+The US housing bubble started in about 2000. Average housing
+price almost doubled in just a few years before it immediately col-
+lapsed at the end of 2006. The housing market crash triggered the
+global ﬁnancial and economic crises, and eventually led to the dis-
+appearance of approximately US $11 trillion in household wealth.
+Similarly, when Japan’s housing bubble crashed in the early 1990s, it
+caused tremendous loss and an economic slowdown that lasted for
+many years. Housing bubbles have taken place all over the world, in
+bothdevelopedcountries,suchasAustralia,France,Spain,Ireland,and
+the UnitedKingdom (Fig. 1), and emerging economies,such as South
+Korea,Russia,China,andIndia,causingeconomicturmoileverytime.
+Kindleberger (1987)deﬁned a bubble as:
+“A bubble is a sharp rise in asset price in a continuous process,
+with the initial rise generating expectations of further rises and
+attracting new buyers – generally speculators interested in proﬁt
+from trading in the asset rather than its use or earning capacity.
+Theriseisthenfollowedbyareversalofexpectationsandasharp
+/H22845I would like to give special thanks to Prof. Leigh Tesfatsion at Iowa State Univer-
+sity for her advice and support throughout the writing of the paper. I would like to
+thank Prof. Steve Kautz at Iowa State University for his generous help. I would like
+to thank Prof. Catherine Kling, Prof. Joseph Herrige and Prof. John Schroeter at Iowa
+StateUniversityfortheircommentsandsuggestions.Finally,Iwouldliketothanktwo
+anonymous reviewers for their helpful and constructive feedback.
+decline in price, often resulting in severe ﬁnancial crisis in short,
+the bubble bursts. ”
+Thedeﬁnitioncapturesthetwodistinguishingcharacteristicsofa
+bubble: (1) it features a continuous steep rise of asset price followed
+by a sudden steep fall in asset price and (2) it involves speculation
+behavior that causes a disconnection between change in asset price
+during a bubble and change in fundamentals. The recent US housing
+bubble ﬁts both characteristics.
+The housing market differs from other commodity markets in
+many ways. First, it is highly leveraged: most houses are purchased
+with borrowed money. Property purchased with mortgage loans are
+then used as the collateral for the loan, which creates a close link
+between the housing and the ﬁnancial market. Second, properties
+provide both services and investment values. A typical housing mar-
+ket is made up of both investor and non-investor buyers. Third,
+the housing market is a “thin market,” meaning the number of
+transactions in a given period can be low, and buyers and sellers
+often have to wait on the market to secure a deal. Moreover, they
+often engage in negotiations and other strategic interactions (Merlo
+& Ortalo-Magn, 2004). As a result, the initial listed price is rarely
+the ﬁnal price. Finally, the housing market is made up of multi-
+ple submarkets or neighborhoods, and price across neighborhoods
+can vary enormously within the same metropolitan area (Goodman,
+1978; Palm, 1978). Neighborhoods also interact with each other
+through relocation of residents (Rosenthal, 2008), shared public
+services (Glaeser, Kahn, & Rappaport, 2008) and environment (Ellen,
+Schill, Susin, & Schwartz, 2002). These characteristics have made
+http://dx.doi.org/10.1016/j.compenvurbsys.2016.11.005
+0198-9715/© 2016 Elsevier Ltd. All rights reserved.
+
+J. Ge / Computers, Environment and Urban Systems 62 (2017) 182–198 183
+Fig. 1. Housing bubble in selected countries.
+Source: Graph source:Commission et al. (2011)
+the housing market highlycomplex,whichmay renderconventional
+approaches inadequate in dealing with it.
+This study develops an agent-based model of the housing market
+that is able to account for the aforementioned unique characteristics
+and complex nature. In addition to the agents typical in an agent-
+based housing model, such as households and developers, we also
+include speculators and a lending agent, which enables us to study
+the role of speculation and leverage in the rise of a housing bubble.
+We attempt to answer the following research questions: can hous-
+ing price rise and collapse endogenously without external shocks? If
+so, what is the mechanism that causes the endogenous rise and col-
+lapseofhousingprice?Weﬁndinthesimulationresultsthathousing
+prices will rise and collapse endogenously without external shocks,
+andthetwonecessaryconditionsfortheriseofahousingbubbleare
+lenient lending and speculation.
+The paper is organized as follows. Section 2 reviews various
+approachestothehousingmarketintheexistingliterature. Section3
+describes the agent-based housing market model. Section 4 dis-
+cusses treatment factors of the model and the experimental design.
+Section 5shows the model results. Finally,Section 6concludes the
+study.
+2. Approaches to the housing market
+In the economic literature, classic frameworks such as asset-
+pricing theory, trade theory, hedonic price model, prospect theory,
+life cycle model, and business cycle model have been applied to
+the housing market. For example,Poterba (1984)applied an asset-
+pricing model to derive equilibrium housing price based on rent
+and maintenance cost.Stein (1995) used a trade model to explain
+pricevolatilityandtradingvolumeinthehousingmarket. Can(1992)
+reviewed various types of hedonic price models, which decompose
+housing price as the sum of the values provided by the house’s var-
+ious attributes.Genesove, Mayer, et al. (2001)used prospect theory
+in behavioral economics to explain seller behavior in the hous-
+ing market. Ortalo-Magne and Rady (2006)developed a life cycle
+model with credit constraint for ﬁrst-time buyers to explain hous-
+ing price volatility. Finally,Silos (2007) and Sommervoll, Borgersen,
+and Wennemo (2010)developed business cycle models to study the
+effect of wealth distribution, portfolio composition, heterogeneous
+expectations, and other factors on the acquisition of housing.
+More recently, equilibrium sorting models have been devel-
+oped to study heterogeneous location preferences under market
+equilibrium condition (Banzhaf & Walsh, 2008; Bayer, Ferreira, &
+McMillan, 2007; Calabrese, Epple, Romer, & Sieg, 2006; Kuminoff,
+Smith, & Timmins, 2013). Equilibrium sorting models study the pro-
+cess that households sort themselves into different neighborhoods
+accordingtotheirheterogeneouspreferencesandhouseholdcharac-
+teristics. Similar to equilibrium sorting models, agent-based housing
+models also consider heterogeneity and study the dynamic pro-
+cess that individual households sort themselves into neighborhoods
+based on their preferences and socio-demographic characteristics.
+However,unlikeequilibriumsortingmodels,agent-basedmodelsdo
+not impose market equilibrium conditions to settle the sorting pro-
+cess. Rather, sorting emerges because of interactions between all
+types of market participants in agent-based models.
+Researchers have been developing agent-based models to study
+emergent spatial phenomena, such as segregation (Crooks, 2010;
+Feitosa, Le, & Vlek, 2011; Fossett, Dietrich, et al., 2009), urban sprawl
+(Brown & Robinson, 2006) and gentriﬁcation (Torrens & Nara, 2007).
+Sofar,fewerstudieshavefocusedonhousingpriceandhousingbub-
+ble per se. One exception is the study byGeanakoplos et al. (2012),
+who studied systemic risk using an agent-based model of the hous-
+ing market. Another exception is the study byGilbert, Hawksworth,
+and Swinney (2009), which proposed an agent-based model of the
+English housing market. Some models have adopted a highly simpli-
+ﬁed market representation. In fact, after reviewing 51 agent-based
+models of urban residential choice,Huang, Parker, Filatova, and Sun
+(2014) found that only 11 have represented the market price for-
+mation process using some form of competitive bidding, meaning
+agents make a bid for the ideal property that maximizes their objec-
+tives, and the highest bid is accepted. An increasing number of
+researchers have been arguing for better representation of the mar-
+ket process in agent-based land use and housing models (Filatova,
+Parker, & Van der Veen, 2009; Parker et al., 2012; Polhill, Parker, &
+Gotts, 2007). In particular,Parker and Filatova (2008)argued that,
+in order to properly model land and housing market, agent-based
+models need to represent price formation in a more realistic way.
+A number of agent-based models have used competitive bidding
+as a price settling mechanism, in which buyers search for a hous-
+inggoodthatmaximizestheirobjectives,andthentradewithsellers
+via bilateral bidding and negotiation. The implementation of com-
+petitive bidding differs in the number of actors included, the level
+of empiricism, and expectation formation. For example, inFilatova
+(2014),agentsderivetheirpriceexpectationfromanempiricalhedo-
+nic
+pricemodel.In Magliocca,Saﬁrova,McConnell,andWalls(2011) ,
+the bilateral bidding takes place between both households and
+developers, and developers and land owners. InEttema (2011),b u y -
+ers and sellers update market perceptions using a Bayesian update
+rules. Finally, inChen, Irwin, Jayaprakash, et al. (2011), households
+derive their optimal bid using an auction model.
+Regardingagentheterogeneity,householdscanbeheterogeneous
+in budget (almost all do), preference (Filatova, Parker, & Van der
+Veen, 2009; Gaube & Remesch, 2013; Haase, Lautenbach, & Seppelt,
+2010; Wu, Birkin, & Rees, 2008), and risk attitudes (Filatova, 2014;
+Ligmann-Zielinska, 2009). In terms of land heterogeneity, land can
+be heterogeneous in location, such as distance to central business
+district (Brown & Robinson, 2006; Filatova, Van Der Veen, & Parker,
+2009), ﬂood risks (Filatova, Van Der Veen, & Parker, 2009), and
+access to green space (Filatova, Parker, & Van der Veen, 2009). It can
+also have heterogenous land quality (Augustijn-Beckers, Flacke, &
+Retsios, 2011).
+Onecontributionofthisstudyisthatweincludethelendingagent
+(bank) in the model, which enables us to study the role of leverage
+and lenient lending in the rise of housing bubbles. Leverage is cen-
+tral in the housing crises in the 2000s: after examining the historical
+relationship between interest rate and housing price,Dokko et al.
+(2011) concluded that it is credit regulation and leverage, not low
+interestrate,thatisbehindtherecenthousingboomandcrashinthe
+
+184 J. Ge / Computers, Environment and Urban Systems 62 (2017) 182–198
+2000s.Inaddition, Iacoviello(2005) foundthatleveragedramatically
+magnify the response of aggregate demand to housing price shocks.
+In this study, we will use the simulation model to investigate the
+effect of various lending practices on housing price.
+3. The agent–based model of the housing market
+In this section, we describe the agent-based housing market
+model following Grimm et al.’s (2010) overview, design concepts,
+and details (ODD) protocol.
+3.1. Entities and scales
+The designofthehousingmarket isbasedonour interviewswith
+two local real estate companies and several independent real estate
+agents. The housing market sits on a spatial landscape. There are
+ﬁve classes of market participating agents: the real estate agent, the
+developer, the bank, buyers, and homeowners. Time is discrete and
+each time period represents a month in real time. We start from
+the landscape and then move on to the market participants. Finally,
+we summarize the agent class structure using a uniﬁed modeling
+language (UML) class diagram (Booch, 2005).
+3.1.1. The landscape
+The housing market sits on a two dimensional, symmetric land-
+scape that contains 25 (5× 5) regions. In the center of the landscape
+is downtown, surrounding downtown are suburbs, and surround-
+ing suburbs are rural regions. The landscape is shown inFig. 2.W e
+choose this stylized morphology, because we want the landscape to
+remain general, but still able to capture the effect of neighborhood
+interactions through residents relocation (Rosenthal, 2008), shared
+public services (Glaeser et al., 2008), and environment (Ellen et al.,
+2002). Moreover, we assume that houses within the same neigh-
+borhood are standard and homogenous, comparable to the “typical
+property” in a neighborhood described in Owusu-Ansah, Roberts,
+Schulz,andWersing(2013).Thedevelopmentwithinneighborhoods
+is non-spatial, and residences in each neighborhood have no unique
+location. We make these simpliﬁcations because we are more inter-
+ested in the submarket price index than individual property prices.
+We use the emergent submarket housing price to represent the
+regional housing price index, and derive the aggregate housing price
+index.
+Each neighborhood in the landscape has an exogenous location
+quality index, which incorporates all exogenous factors that deter-
+mine the attractiveness of the neighborhood,such as distance to city
+center or accessibility to natural services. We assume that suburbs
+have better location qualities than the city center, which has better
+location quality than rural areas. The assignment of location quality
+Fig. 2. The landscape.
+is based on the general observation that households value both cen-
+tralityandspace.Therefore,suburbswithaccesstobothareassigned
+a higher value than the city center and rural areas (seeFig. 2).
+Apart from the exogenous location quality, each neighborhood
+also has an endogenous neighborhood quality. Neighborhood qual-
+ity incorporates all endogenous factors that affect the attractiveness
+of the neighborhood, such as public school quality and the qual-
+ity of other amenities. Neighborhood quality is endogenous because
+it is the emerging outcome of the endogenous choices made by
+the households. As households move in and out of the neighbor-
+hoods, they change the neighborhood quality simultaneously. In
+this study, neighborhood index is measured by the mean income in
+the neighborhood, normalized by the highest mean income across
+the neighborhood during the period, so is bounded between zero
+and one. Eq. (1) is the formula to calculate neighborhood index for
+neighborhood g at timet,
+nbhdQg
+t =
+∑
+r∈Rg
+t
+yr
+∑
+r∈Rg
+t
+1
+max
+g∈G
+⎧
+⎨
+⎩
+∑
+r∈Rg
+t
+yr
+∑
+r∈Rg
+t
+1
+⎫
+⎬
+⎭
+(1)
+where Rg
+t is the set of all residents in neighborhood g at time t,
+and yr is the income of residentr. The numerator in Eq. (1)i st h e
+mean income of residents living in regiong, and the denominator
+is maximum mean income of residents across all regions. Thus the
+neighborhoodindexistheratioofmeanincomeintheregionandthe
+maximummeanincomeacrossregions,andisbydeﬁnitionbetween
+0 (exclusive) and 1 (inclusive).
+3.1.2. The mortgage contract and credit accessibility
+A mortgage contract between the bank and buyer agent i for
+a property in region g at time t is made up of the following
+components:
+• eligibility requirements
+– maximum debt-to-income ratio, MaxDTI
+– minimum down payment rate, down
+• value of loan for agenti at timet in regiong, Li
+t(g)
+• loan maturity in months,M
+• annual mortgage rate set by bank for agentiat timet, mi
+t
+• the associated property in regiongas the collateral of the loan.
+Agent i is only eligible for a mortgage contract to buy a property
+in region g at time of the loan application,t, if both the following
+conditions are met:
+pg
+t − Li
+ti(g)=d o w n• pg
+t ≤ savingi (2)
+mpi
+t(g)
+incomei ≡ DTIi
+t(g) ≤ MaxDTI (3)
+where pg
+t is the price of property in regiong at the timet, incomei
+is agent i′s monthly income, and savingi is agent i′s savings, which
+is assumed exogenous and positively related to monthly income.
+The ﬁrst condition ensure that the agent must have enough sav-
+ingsforminimumdownpayment.Thesecondconditionensuresthat
+the ratio of an agent’s monthly payment to income cannot exceed
+the maximum debt-to-income ratio. The eligibility conditions are
+an assumption in the model. They are consistent with business-as-
+usual practices, according to the real estate agents we interviewed.
+Monthly income is ﬁxed and heterogeneous across agents.
+
+J. Ge / Computers, Environment and Urban Systems 62 (2017) 182–198 185
+Loanmaturityissetto20 yearsor240 periods.Ineachperiodthe
+remainingloanmaturityofagent iisdeductedbyone.Agent i′smort-
+gage rate equals bank’s mortgage rate at the time the mortgage is
+issuedanditdoesnotchangethroughoutthemortgagematurity(we
+assume ﬁxed-rate mortgage). Agenti′s outstanding loan in regiong
+at timetis deﬁned as,
+Li
+t =
+⎧
+⎪⎨
+⎪⎩
+(1 −down) • pg∗
+t if t = t(
+1+ mt
+12
+)
+•
+(
+Li
+t−1 − mpi
+t
+)
+if t < t ≤ t+ M
+0 otherwise
+(4)
+where t is the time when the mortgage is issued,mpi
+t is agent i′s
+monthly mortgage payment, which is calculated as follows:Li
+t(g),
+mpi
+t(g)
+mpi
+t =
+⎧
+⎨
+⎩
+mt
+12
+• Lit
+1−( mt
+12 )
+M if t ≤ t ≤ t+ M
+0 otherwise
+(5)
+3.1.3. Bank
+The role of the bank is to give loans to homeowners at the agreed
+mortgage terms described inSection 3.1.2. The bank also takes over
+foreclosure houses and resells them in the housing market. We
+assumethatthebankisrisk-neutral.Ineachperiod,thebankadjusts
+the mortgage rate that it charges new borrowers, according to mort-
+gagerisksinthepastandtherisk-freeinterestratesetbythecentral
+bank. Although the model has only one representative bank agent, it
+isassumedtorepresentsalargenumberofsmallhomogenousbanks.
+Moreover, we do not consider other bank practices, such as reﬁ-
+nance, mortgage bundling, and mortgage-backed securities, to avoid
+over-complication. Because the bank is risk-neutral, the expected
+return on the mortgage loans should equal the exogenous risk-free
+return,
+probD
+t
+• cot +(1− probD
+t ) • (1+ mt)=1+ rF
+t (6)
+where probD
+t is the default probability estimated by bank from his-
+torical data, cot is the mean collateral rate of all the bank clients,
+mt is the mortgage rate, andrF
+t is risk-free return rate at timet.T h e
+variable probD
+t is deﬁned as follows:
+probD
+t =
+∑
+i∈C
+I(client iwent into foreclosure)
+∑
+i∈C
+1 (7)
+where Cisthesetofallclientsborrowingfromthebank, Iistheindi-
+cator function. The numerator in the above equation is the number
+of clients who has gone into foreclosure, and the denominator is the
+total number of clients. Thus the ratio of the two is the estimated
+default probability of the bank at timet.
+The mean collateral rate,cot is, is deﬁned as
+cot =m i n
+⎧
+⎪⎪⎨
+⎪⎪⎩
+1+ rF
+t ,
+∑
+i∈C
+(
+coi
+t
+• Li
+t
+)
+∑
+i∈I
+Li
+t
+⎫
+⎪⎪⎬
+⎪⎪⎭
+(8)
+where coi
+t is the collateral rate of clienti, which is deﬁned as
+coi
+t =m i n
+{
+pi
+t
+Li
+t
+,1+ mi
+}
+(9)
+where pi
+t is value of client i′s property at time t, Li
+t is agent i′s
+outstandingloanvalueattime tand mi isclient i′sthemortgagerate.
+The mortgage rate a bank charges at periodttherefore equals,
+mt = 1+r F
+t −probD
+t
+• cot
+1 −probD
+t
+−1( 1 0 )
+As cot ≤ 1+rF
+t bydeﬁnition,thereisamonotonicincreasingrelation-
+ship between mortgage rate and expected default probability. The
+higher the expected default probability among existing borrowers,
+the higher mortgage rate the bank will charge new borrowers.
+3.1.4. Developer
+The role of the developer is to supply new houses in each
+neighborhood, endogenously determined by the current construc-
+tion costs and housing price. We assume a 6-month construction
+period for any new development. Although the model has only one
+representative developer, it is designed to represent the aggregate
+result of a large number of small, homogenous, competing develop-
+ers in a competitive market. The representative developer behaves
+in the same way a small proﬁt-maximizing developer would in a
+competitive market. As indicated by classic economic theory, the
+representative developer will supply the amount of new houses so
+thatthemarginalcostofbuildingthenewhouseequalsthepricethe
+house is expected to be sold. As a result, the number of houses being
+built in each period differs in each region. More houses will be built
+in regions with relatively high housing prices and low construction
+costs.
+We start with an empty city with no house or residents. There
+is an initial burnout period where developers build new houses and
+homeowners move into the city as houses are being built (output
+from the burnout period is excluded in the analysis). Therefore, the
+number of residents in each region, i.e. density, is the emergent out-
+come of the process. The model is an open city model, meaning
+people can enter and exit the city. We assume that regular house-
+holds enter the market at the same rate as they leave the city (for
+exogenous reasons such as job move). Investors, on the other hand,
+decide when they want to buy or sell properties based on market
+conditions. Therefore, the number of active investors is endogenous
+in the model.
+Moreover, in this model we choose not to impose a cap on the
+numberofhousesineachregion.Instead,weintroduceanincreasing
+marginal construction cost to constrain the number of houses being
+built in a region. We assume that the cost of building an additional
+house is higher if more houses have already been built in the area,
+because of land scarcity, congestions and regulations. The advantage
+of this approach is that it allows the developer to respond to price
+inﬂation by building more houses and increasing housing supply.
+The market therefore is able to adjust to a price inﬂation by increas-
+ing supply. Endogenous developer supply is also found in the model
+of Magliocca et al. (2011), where developer’s willingness to pay for
+farmland depends on the level of rent in the housing market.
+Inthispaperwedonotexplicitlymodeltheinteractionsbetween
+the developer and land owners, as inMagliocca et al. (2011).F o r
+simplicity, we draw from conventional economic theory that in a
+competitive market, marginal production cost should equal price.
+To avoid over-complication, we decide not to explicitly represent
+individual developers and the internal competition in the devel-
+oper market. Instead, we model one representative developer as the
+sum of many small, homogenous developers in a competitive mar-
+ket. We choose competitive market behavior because it is the most
+standard,andevidencehasshownthatcompetitivemarketoutcome
+
+186 J. Ge / Computers, Environment and Urban Systems 62 (2017) 182–198
+can emerge from more generous conditions (Gode & Sunder, 1993;
+Sunder,2003).We cautionthattheresultsfromthemodelshouldbe
+applied to areas with a relatively competitive developer market.
+More speciﬁcally, the total construction cost of buildingq houses
+in regiongin periodtis assumed a quadratic function in the number
+of houses being constructed in that period:
+TCg
+t (qg
+t )= c1h+ c2
+2
+(
+qg
+t
+)2
++ c3
+2
+(
+Qg
+t−1
+)2
+(11)
+where c1, c2,a n dc3 are parameters for construction cost, which are
+positive real numbers. Qg
+t−1 is the total number houses existing in
+region g at periodt −1; whileqg
+t is the number of houses being con-
+structed in regiong during period t. We assume that the more the
+number of houses existing in the region, the more expensive it is to
+build new constructions due to land scarcity, regulations, and so on.
+qg
+t for all regionsg ∈ Gis updated at the beginning of periodt,
+Qg
+t =
+{0 for t =0
+Qg
+t−1 + qg
+t for t >0 (12)
+The marginal cost, which is the ﬁrst derivative of total cost with
+respect toqg
+t , therefore is
+MCg
+t (qg
+t )= c1 + c2qg
+t + c3Qg
+t−1 (13)
+The developer’s supply in regiong in period t is set where price
+equals marginal cost T Dev periods ago, because the decision was
+made T Dev periods ago, whereT Dev is the number of periods it takes
+forthedevelopertobuildhouses,whichissettobesixmonthsinthe
+model initialization:
+pg
+t−TDev = MCg
+t
+(
+qg
+t
+)
+= c1 + c2qg
+t + c3Qg
+t−TDev (14)
+Hence qg
+t equals,
+qg
+t =
+pg
+t−TDev − c1 − c3Qg
+t−TDev
+c2
+−qStockg
+t (15)
+where stockg
+t is housing stock in regiong at periodt that is updated
+at the beginning of periodt,
+qStockg
+t =
+{0 for t =0
+qStockg
+t−1 + qg
+t −qSoldg
+t for t >0 (16)
+where soldg
+t is the number of houses sold in regiong during period
+t, which is given by
+qSoldg
+t =m i n
+{
+qg
+t ,
+pg
+t − c1 − c3Qg
+t−TDev
+c2
+}
+(17)
+The asking price for a newly constructed housej at periodt is its
+marginal construction cost:
+ask j,g
+t = c1 + c2 • j+ c3Hg
+t ∀j =1 ,2 ,... , qg
+t (18)
+Existinghousingstocksinregion gattime tarelistedforsaleatprice
+c1 + c2 + c3Hg
+t−1.
+3.1.5. Real estate agent and housing price index
+Weassumethereisonecentralizedrealestateagent,whosejobis
+to settle market price in each period for all neighborhoods. The way
+therealestateagentsettlesthepriceinthemodelisasfollows:First,
+buyerssubmitbidsforahouseintheregionoftheirchoicetothereal
+estate agent;at the same time,sellers submit an ask for the property
+theyown.Thebidsandasksareprivateinformationavailableonlyto
+therealestateagentandtheonewhosubmitsit.Aftertherealestate
+agent has collected all the bids and asks for each region, it orders
+Fig. 3. Price formation process of the real estate agent.
+
+J. Ge / Computers, Environment and Urban Systems 62 (2017) 182–198 187
+the bids from high to low, and the asks from low to high. The mar-
+ket price is found at where the descending bids meet the ascending
+asks. All the bids higher than the market prices are successful, and
+soarealltheaskslowerthanthemarketprice.Transactionsarethen
+carried out between successful buyers and sellers. In the process the
+number of transactions is maximized.
+Fig. 3 shows four possible cases in the price formation process
+of the real estate agent.Fig. 3a shows the case where descending
+bids cross ascending asks. Price is found where the two curves meet.
+Fig.3bshowsthecasewheredescendingbidsdonotcrossascending
+asks,andthenumberofoffersequalsthenumberofasks.Inthiscase
+price is found by taking the average of the lowest offer and the high-
+est ask.Fig. 3c shows the case where descending bids do not cross
+ascending asks, and the number of bids exceeds the number of asks.
+Since there are more bids than asks and buyers compete for sellers,
+price is settled at then′s highest bid, wheren is the number of sell-
+ers.Fig. 3d shows a mirror case ofFig. 3c, where the descending bids
+do not cross the ascending asks, and the number of asks exceeds the
+number of bids. Because there are more asks than bids and sellers
+would have to compete for buyers, price is settled at then′s lowest
+asks, wherenis the number of buyers.
+Bids and asks to the right of the vertical lines in Fig. 3 are
+unsuccessful and will remain in the market in the next period. The
+price-settling process is consistent with economic principles, where
+the descending bids and the ascending asks form the demand and
+supply curves essentially. The buyers’ gain from trade is the area
+between the (blue curve) descending bids and price (green dotted
+line), whereas the seller’s gain from trade is the area between the
+ascending asks (red curve) and price. As shown inFig. 3,t h ed i v i s i o n
+ofgainsfromtradeisdeterminedbytherelativemarketpowerofthe
+two sides. In a balanced market (Fig. 3a and b), the gains of trade are
+approximatelyequalforbuyersandsellers.However,inasellermar-
+ket (Fig. 3c), the sellers get most of the gains from the transaction,
+whereas in a buyer market (Fig. 3d), the opposite is true.
+Compared with competitive bilateral bidding mechanism used in
+Parker and Filatova (2008), Filatova (2014), Magliocca et al. (2011)
+and others, the price settling mechanism use in this paper will in
+generalresultinalowerpricevolatility 1.Thereasonisthatinabilat-
+eral bidding, every buyer’s willingness to pay (WTP) is reﬂected in
+the price, which is settled between individual buyers and sellers;
+whereas in this paper, a buyer’s willingness to pay is only reﬂected
+in the order of all buyers, but only the last buyer’s willingness to
+pay is used tosettle theprice.Therefore, price ﬂuctuationsfrom het-
+erogonous WTP is removed using the above mechanism, resulting
+in lower price volatility.Filatova, Van Der Veen, and Parker (2009)
+discussed that buyers with the highest WTP for high-risk proper-
+ties are more likely to win in a competitive bidding, and they are
+the ones who drive the market outcomes. However, in spite of the
+likely dampened price ﬂuctuations, the model is able to produces
+volatile cycles of housing price (housing bubbles) from the existing
+mechanism, which we will discuss inSection 5.
+Finally, the aggregate housing price index is the average of all
+submarkethousingpricesweightedbythenumberoftransactionsin
+each submarket. The aggregate housing price index is derived as
+pt =
+∑
+g∈G
+(
+ng
+t
+nt
+)(
+pg
+t
+pg
+0
+)
+(19)
+where pt is the aggregate price index, ng
+t is the number of
+transactions in neighborhood g during period t, nt is the total
+number of transactions during periodt, pg
+t is the housing price in
+1 We give special thanks to an anonymous reviewer for pointing out this
+observation.
+neighborhood g during periodt,a n dpg
+0 is the initial housing price in
+neighborhood g.
+3.1.6. Regular buyer’s property search
+In every period t, a few thousand buyers start searching for a
+property. When searching for a house, regular buyers care about
+neighborhood quality such as school quality, location quality such
+as centrality, and the house’s affordability. The objective of regu-
+lar buyer b is to maximize the utility he/she gains from housing
+consumption
+max
+g∈Fb
+Ub
+t (g) ≡ max
+g∈Fb
+(
+nbhdQg
+t
+)bb
+1 •
+(
+locQg )bb
+2 •
+(
+compositeb,g
+t
+)bb
+3
+where Fb is the feasible choice set of regions for buyer b, which
+includes a random subset of all regions the buyer can afford (buyer’s
+eligibility for loans deﬁned in Eq. (2)), and the null option of not
+buying.Althoughbuyershaveheterogeneouspreferenceparameters,
+someattributeslikegoodlocation,goodneighborhood,andlowprice
+are regarded as attractive factors by all. As a result, their bids tend
+to be concentrated in a few neighborhoods if they can choose over
+all regions. In reality, though, buyers have other constraints when
+they choose their ideal location: for example, they may want to stay
+in certain areas to be close to work or family. Therefore, I have the
+buyers choose from a random subset, instead of all the regions, to
+avoid over-concentration of bids and to account for buyers’ hetero-
+geneous preferences for neighborhoods due to factors outside of the
+model.
+The variable nbhdQg is the neighborhood qualify in regiong,a n d
+locQg isthelocationqualityinregion g.Theparameter,composite b,g
+t ,
+is the composite good buyer b is left to consume after buying a
+property in regiong at timet, which is deﬁned as
+compositeb,g
+t = incomeb − mpi
+t(g)( 2 0 )
+where incomeb is buyerb′s monthly income, andmpi
+t(g)i sb u y e rb′s
+monthly payment derived in Eq. (5). The monthly payment calcula-
+tionisbasedonthelast-periodmarketpriceoftheregion.Composite
+good thus measures how affordable a house is in regiong.
+The preference parameter vectorbb are the weights regular buy-
+ers put on neighborhood quality, location quality, and affordability.
+Preference parameters bs are conﬁned between zero and one; the
+higher the relative value, the more important the element is in
+determining the house of choice. Preference is heterogeneous across
+buyers. For example, buyers who values neighborhood most highly
+will have a large value forb1.
+Once a regular buyer b has chosen g∗, the region that gives
+him/herthehighestutility,shewillsubmitabidforahouseinregion
+g∗ to the real estate agent. Buyerb′s bid depends on the last period
+price, and his/her time on market (TOM),
+bidb,g∗
+t =( 1− g+ d • TOMb
+t ) • pg∗
+t−1 (21)
+where g is a buyer’s initial discount on current price, assumed to be
+10% in this study,d is the increase in bid for each period the buyer’s
+bid is not accepted and the buyer stays on market, which is assumed
+to be 2% in this study,pg∗
+t−1 is the last periodprice in buyerb′sc h o s e n
+region g∗,andTOM b
+t istheperiodoftimebuyer bhasalreadybeenon
+market at periodt. We assume that the longer a buyer has been on
+market and not able to obtain a successful bid, the more competitive
+his/her bid will be.
+
+188 J. Ge / Computers, Environment and Urban Systems 62 (2017) 182–198
+Oncethepriceissettledbytherealestateagent,regularbuyer b′s
+action in periodt, ab
+t , is deﬁned as
+ab
+t =
+⎧
+⎪⎪⎪⎪⎪⎨
+⎪⎪⎪⎪⎪⎩
+buy a house and become a homeowner if bidb,g∗
+t ≥ pg∗
+t
+enter period t+1, TOMb
+t+1 =T O Mb
+t +1 ifbid b,g∗
+t < pg∗
+t and TOMb
+t <MaxTOM
+exit market if bid b,g∗
+t < pg∗
+t and TOMb
+t ≥ MaxTOM
+where MaxTom is the maximum time on market. A buyer will con-
+tinue to increase his/her bid until the time he/she has been on the
+market exceeds the maximum waiting period. Then, the buyer will
+leave the market.
+3.1.7. Speculative buyer’s property search
+The number of speculative buyers can range from zero to a few
+thousand, depending on the speculation index, which is a key treat-
+mentfactorinthemodel.Speculativebuyersbuyapropertytomake
+proﬁt from housing price inﬂation and from the rental income it
+generates. When searching for a house for investment, a specula-
+tive buyer is looking for the highest expected annual return he/she
+can ﬁnd, which is determined by the expected price inﬂation in the
+region and the mortgage rate. In particular, expected annual return
+rate of speculative buyerbfor a property in regiongequals
+ERb
+t (g)=( 1 − yb)
+(
+pg
+t
+pg
+t−12
+−1
+)
+− mt − rH (22)
+where yb isthediscountratethatspeculativebuyer bassignstoprice
+appreciation, which is heterogeneous across buyers andyb ∈ (0,1).
+The term
+pg
+t
+pg
+t−12
+is the appreciation in housing price in regiongduring
+the last 12 months. We assume a speculator’s expectation regarding
+future price appreciation to be a fraction of the past price appre-
+ciation. In other words, we assume that speculators are backward-
+looking and adopt an adaptive expectation for future housing price
+(Evans & Honkapohja, 2001).
+Apart from expectation of future price, a speculator’s expected
+annual return also depends on the annual mortgage rate at timet
+(denoted mt),andtheannualholdingcosts(denoted rH),whichisthe
+sum of property tax rate, transaction cost as percentage of property
+value, and depreciation rate, subtracted by rental income as a per-
+centage of property value. Transaction costs are costs payable to
+the real estate agent when a transaction is carried out. Although a
+property may not be traded every year, we believe that the transac-
+tion costs should be included in calculating annual return, because
+speculators expect to trade a property in the short run and proﬁt is
+only realized after a property is sold. Finally, annual rental income
+is assumed a ﬁxed percentage of the property value, partly because
+it is consistent with the economic theory that the rent/price ratio
+should be stationary at the equilibrium in the long run (Poterba,
+1984). Empirical evidence also shows that housing prices and rents
+move in the same direction (Davis, Lehnert, & Martin, 2008; Engsted
+&Pedersen,2015).However,weacknowledgethatduringaperiodof
+rapidpriceappreciation,therent/priceratiocandepartfromitslong-
+term equilibrium. However, we do not think that the rental market
+is the main driver of housing price bubbles.
+Thus, speculative buyerb′s objective function is,
+max
+g∈Fb
+ERb
+t (g) (23)
+where Fb is the feasible choice set of regions for speculative buyerb,
+which includes a random subset of all regions the buyer can afford
+(buyer’s eligibility for loans is deﬁned in Eq. (2)), and the null option
+of not buying. We assumeER(null) = rF
+t
+• down, the risk-free return
+on down payment.
+Fig. 4. Main agent classes in the agent-based housing market model.
+
+J. Ge / Computers, Environment and Urban Systems 62 (2017) 182–198 189
+During month t, speculative buyerb searches each region in the
+feasible choice set, and choosesg∗, the region that gives him/her the
+highest expected return. Regular buyerb′s bid at periodtfor a house
+in regiong∗ equals,
+bidb,g∗
+t =
+⎧
+⎨
+⎩
+(
+1+ER b
+t (g∗)/12
+)
+• pg∗
+t−1 ifg∗ ⁄=n u l l
+0i f g∗ =n u l l
+(24)
+Once the price is settled by the real estate agent, for a speculative
+buyer b, his/her action at timetequals,
+ab
+t =
+{
+buy a house and become a homeowner if bidb,g∗
+t ≥ pg∗
+t
+exit market if bidb,g∗
+t < pg∗
+t
+3.1.8. Regular homeowner’s selling and default rules
+Once a regular buyerb has succeeded in the purchase of a house
+in the chosen regiong∗, he/she becomes a regular homeownerh in
+region g(b).There are about 20,000regular homeownersin theland-
+scape. At the beginning of each period, homeownerh can hold, list,
+or default on the property. Thus, a regular homeownerh′sa c t i o na t
+period t, ah
+t ,i s
+ah
+t =
+⎧
+⎪⎪⎪⎪⎪⎪⎪⎨
+⎪⎪⎪⎪⎪⎪⎪⎩
+default on the property if pg∗
+t−1 +DC h < Lh
+t
+list the property, if h sells house for external reasons
+ask = (1+g − d • TOMh
+t )pg∗
+t−1
+hold the property otherwise
+where Lh
+t is homeowner h′s outstanding loan at timet, DCh is the
+default cost of homeownerh, g is the targeted margin over current
+price,whichissettobe10%inthisstudy, disthepercentagedecrease
+in price each period a seller’s bid is not accepted, which is set to 2%
+in this study,ph,g∗
+t−1 is the price in the region in periodt −1, and TOMh
+t
+is sellerh′s time one market at periodt.
+Aregularhomeownerwilldefaultifthepriceofthepropertyplus
+thedefaultcostsfallbelowthevalueoftheoutstandingloan.Default
+costs are costs associated with default and foreclosure, such as legal
+cost,lossofcredibility,andmentalstress.Defaultcostofhomeowner
+h is assumed proportional to the monthly income of homeownerh
+in this study. Moreover, there is a small probability that any home-
+owner will need to sell the house for exogenous reasons such as job
+move.Ifthathappens,homeowner hwilllisttheproperty.Otherwise
+the homeowner will hold it.
+Fig. 5. Activity diagram of the agent-based housing market model.
+
+190 J. Ge / Computers, Environment and Urban Systems 62 (2017) 182–198
+3.1.9. Speculative homeowner’s selling and default rules
+The number of speculative buyers can range from zero to tens
+of thousands, depending on the speculation index, which is a key
+treatment factor in the model. A speculative homeowner will sell
+the property if it is no longer proﬁtable to keep it. In particular,
+speculative homeownerh′s objective is
+max
+default, hold, list
+ERh,g∗
+t (25)
+where Rh,g∗
+t is speculative buyer h′s expected return rate on the
+property he/she currently owns in regiong∗ at timet.
+Thus, speculative buyerh′s action at periodtis,
+ah
+t =
+⎧
+⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎨
+⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎩
+default on the property if pg∗
+t−1 +DC h < Lh
+t
+list the house, ask =
+(
+1+ ERh,g∗
+t /12
+)
+pg∗
+t−1 if hdoes not default and
+ERh,g∗
+t < ER(null)
+hold the property if hdoes not default and
+ERh,g∗
+t ≥ ER(null)
+where as we deﬁned before, ER(null) = rF
+t
+• down, the risk-free
+return on down payment. Unlike a regular homeowner who lists
+the house for exogenous reasons, a speculative homeowner will list
+the house only if the expected return on the property is negative,
+which depends on the market conditions and is endogenous. Similar
+toaregularhomeowner,aspeculativehomeownerwilldefaultifthe
+priceofthepropertyplusthedefaultcostsfallbelowthevalueofthe
+outstanding loan.
+Fig. 4 summarizes the main agent classes in the model using a
+UML class diagram.
+3.2. Process overview and scheduling
+In this section, we discuss the process and scheduling of the
+agent-basedmodel.Atthebeginningofeveryperiod,existinghome-
+owners would decide to list their property on the market. At the
+sametime,afewhundrednewbuyerswouldenterthehousingmar-
+ket.Weassumeabalancedregionscenariowherethenumberofnew
+comers approximately equals the number of people who want to
+leave.Wefurtherdistinguishbuyersandhomeownersasregularand
+speculative. The number of speculative buyers versus the number
+of non-speculative buyers represents the level of speculation in the
+market,whichisoneofthetreatmentfactorsandwillvaryaccording
+to the experimental design described inSection 4.
+The model starts with an empty landscape with no houses built
+and no homeowners. Each period in the model represents a month
+in real time. The ﬁrst 300 periods are treated as burnout periods,
+during which developers build new houses and homeowners grad-
+ually populate the city. The city is open, meaning new homeowners
+are created and move into the landscape, while existing homeown-
+ers move out and exit the model. At the beginning of each period,
+a number of heterogeneous speculative and nonspeculative buy-
+ers are newly created to enter the market in search of a house.
+Meanwhile, existing homeowners in the region can decide whether
+tolisttheirhousesforsale,todefaultortoremainstatusquo,accord-
+ing to the decision rules described inSection 3. This process can be
+summarized in the following ﬂow chart:
+Step 1 At the beginning of period t (each period represents a
+month in real time),The Real Estate Agent : Update set-
+tled housing prices in all neighborhoods from last period
+The Bank: Update asset portfolio and mortgage rate for
+new borrowers
+Step 2 The Developer: Decide the number of new houses to
+build in each neighborhood, depending on the housing
+price in the last periodA Homeowner: Decides whether
+to default on their houses, list their houses in the hous-
+ing market and submit an ask to the real estate agent, or
+remain status quo and pay monthly payment to the bank
+AB u y e r: Searches a selected number of neighborhoods,
+decide whether to purchase, if so in which neighborhood,
+and submit a bid to the real estate agent accordingly
+Step 3 The Real Estate Agent: Collects all the bids and asks, and
+settles the market price
+Step 4 A Homeowner: If the ask is accepted, sells the house, and
+exits the market AB u y e r: If the bid is accepted, buys a
+house, becomes a homeowner and a borrower from the
+bank
+Step 5 Updatetto t+1. Go to Step 1.
+In order to illustrate the process in the context of agent classes,
+Fig. 5summarizes the activity ﬂow of each agent class and the inter-
+actionsbetweenthemusinganUMLactivitydiagram.Theredarrows
+represent information ﬂows, and the black arrows represent action
+ﬂows.
+3.3. Initialization
+Inthissection,weshowtheinitializationoftheparametersinthe
+agent-based model.Table 1lists the parameters, the corresponding
+symbols used inSection 3.1, the type and range of the parameters,
+and the value or distribution used.
+4. Treatment factors and experimental design
+We identify two treatment factors we believe that are key to the
+rise and collapse of housing price: leniency index,l, and speculation
+index, s. The ﬁrst treatment factor, leniency index (l), is deﬁned as
+one minus the down payment rate required. It measures the degree
+of leniency or leverage in mortgage loans.
+l =1 −down (26)
+Leverage, deﬁned as the ratio of debt to collateral, has a positive
+one-to-one relationship with leniency:
+leverage = 1
+1 − l −1 (27)
+When down payment is 100%, leniency and leverage are zero; when
+down payment is 0%, leniency is 1, and leverage becomes inﬁnity.
+As previously stated, leverage plays an important role in housing
+market. Since the US housing market crises, researchers have been
+studying the role of leverage in the formation of housing bubbles
+(Bernanke,2010;Dokkoetal.,2011 ).Inthisstudy,weinvestigatethe
+relationship between leniency (or leverage) and the rise of housing
+bubble.
+The second treatment factor, speculation index (s), is deﬁned as
+the percentage of speculative buyers in all buyers. The higher the
+s, the more speculative buyers exist relative to regular buyers, and
+the higher the degree of speculation in the market. By making the
+numberofspeculativebuyersatreatmentfactor,however,wedonot
+control the number of active speculators who participate in buying
+or selling properties, because it is buyer’s decision based on market
+conditions and expectation. The speculation index is used to control
+the number of potential speculators, who could be inactive unless
+they spot a proﬁtable buying or selling opportunity.
+As there are two treatment factors, our experimental design is
+two dimensional. By deﬁnition, leniency index is bounded between
+
+J. Ge / Computers, Environment and Urban Systems 62 (2017) 182–198 191
+Table 1
+Parameters initialization.
+Parameter Symbola Type/range Value/distribution
+Construction cost part i c1 R+b 50.0
+Construction cost part ii c2 R+ 1.0
+Construction cost part iii c3 R+ 0.5
+Default cost as number of monthly income R+ 12
+Inﬂation discount rate y R, y ∈ (0,1) U(0,1)c
+Loan maturity in periods M I+b 240
+Maximum debt to income ratio MaxDTI R+ 0.5
+Maximum time on market in months MaxTOM I+ 12
+Monthly income income R+ exp(N(0,1))d
+Number of construction periods TDev R+ 6
+Number of regions in feasible set I+ 13
+Number of regular buyers as percentage of regular
+homeowners
+R+ 0.05
+Preference parameter for neighborhood quality b1 R, b1 ∈ [0,1] U(0,1)
+Preference parameter for location quality b2 R, b2 ∈ [0,1] U(0,1)
+Preference parameter for composite good b3 R, b3 ∈ [0,1] U(0,1)
+Property tax rate R+ 1%
+Regular homeowner’s probability to sell for external
+reasons
+R+ 0.05
+Rent/price ratio R+ 5%
+Risk-free return rate at time at time 0 rF
+t R 0
+Savings as number of monthly income R+ U(3,21)
+Transaction cost rate R+ 4%
+a As inSection 3.1.
+b R:r e a ln u m b e r s ;I: integers.
+c U(a, b): uniform distribution with lower bounda and upper boundb.
+d N(l, s): normal distribution with meanl and standard deviations.
+zero and one. Yet our sampling has not been uniformly distributed
+between zero and one. The sampling is denser in a more realistic
+range and less so in the rest. We believe that a realistic range for
+leniency index should be between 0.6 and 1, which corresponds
+to the down payment range between 40% and 0%. This will be the
+densely sampled region for leniency index. The second treatment
+factor, speculation index, is also bounded between zero and one by
+design. We believe that a more realistic range for speculation index
+would be between 0 and 0.75, meaning that the number of specu-
+lative buyers as a percentage of total number of buyers ranges from
+0% and 75%. This will be the densely sampled region for speculation
+index.
+Husslage, Rennen, van Dam, and den Hertog (2011)showed that
+a design for computer experimentsshould satisfy two criteria: space
+ﬁllingandnoncollapsing.Theﬁrstcriteria,spaceﬁlling,indicatesthat
+the experiment should be designed to obtain information from the
+entireparameterspace,whichisaone-by-onesquareinourcase.The
+second criteria, noncollapsing, shows that there should be no irrel-
+evant parameters, whose value does not affect the function values.
+Both our parameters signiﬁcantly affect the function values, as will
+be shown inSection 5. Therefore, our experimental design satisﬁes
+both criteria.
+Fig.6 showsourexperimentaldesign.Eachcellrepresentsacom-
+bination of parameter values. With parameter combination, we run
+the model 20 times. Each run consists of 800 time steps, with the
+ﬁrst 300 as the burnout period and the last 500 used for analysis.
+We then calculate the mean and standard deviation of the function
+values generated from the parameter combination. In order to test
+the robustness of sample size, we randomly pick 20% of all param-
+eter combinations and run the model 100 times. In all cases, the
+difference in mean functional values between 20 and 100 runs
+is <5%.
+We also identify two key functional values or model results. The
+ﬁrst functional value is housing price volatility, deﬁned as the ratio
+of standard deviation to mean of housing prices. Price volatility is
+used here as an indicator for the extent of housing bubble that exists
+in the market. When a housing bubble is present, price volatility is
+high and vice versa. Although economists have not agreed on the
+measure of the existence and extent of housing bubble ex-ante yet
+(Case & Shiller, 2003; Krugman, 2005, 2009), in the agent-based
+model we can measure the extent of housing bubble by calculat-
+ing price volatility ex-post. The second functional value is the total
+numberofregularhomeownersinthearea,asanindicatorforhome-
+ownershiprate.Becauseoneofthemainmotivationandjustiﬁcation
+forlenientlendingpolicyisthatitenableslow-incomehouseholdsto
+becomehomeowners,wewillanalyzetheactualeffectofsuchpolicy
+on homeownership rate in this study.
+5. Results
+In this section, we present simulation results of the agent-based
+simulation. First, we present illustrated results for single-simulation
+runs, and then for the full experiment.
+Fig. 6. Experimental design for two treatments: speculation (s) and leniency (l).
+
+192 J. Ge / Computers, Environment and Urban Systems 62 (2017) 182–198
+low leniency high leniency
+Fig. 7. Housing price under different level of leniency (l).
+5.1. Illustrated results for single simulation runs
+For single simulation runs, we show the housing price, foreclo-
+surerate,mortgagerateandbank’sexpectedproﬁtatdifferentlevels
+of leniency and speculation. The time span is 500 months. We start
+with the effect of leniency in the presence of speculation. Fig. 7
+showssimulatedhousingpricewithlow(0.8)andhigh(0.9)leniency
+indicesinthepresenceofspeculation(speculationindexﬁxedat0.5).
+It shows that leniency leads to the rise and collapse of housing price.
+Fig.8 showshousingpriceandthecorrespondingforeclosurerate,
+deﬁnedasthepercentageofforeclosuresinallhomes,withlow(0.8)
+andhigh(0.9)leniencyindicesinthepresenceofspeculation(specu-
+lation index ﬁxed at 0.5). The results show that when leniency index
+is low, foreclosure is very rare; on the contrary, when leniencyindex
+is high and when the price collapses, foreclosure is wide-spread.
+Fig. 9shows housing price and mortgage rate under low and high
+leniency indices in the presence of speculation (speculation index
+ﬁxed at 0.5). With low leniency index, mortgage rate remains sta-
+ble. With high leniency index, however, mortgage rate is low when
+the housing price rises, but increases rapidly when housing price
+collapses.
+Fig.10 showshousingpriceandbank’sexpectedproﬁtunderlow
+andhighleniencyindicesinthepresenceofspeculation(speculation
+index ﬁxed at 0.5). With low leniency index, bank’s expected proﬁt
+is stable and does not ﬂuctuate much over time. With high leniency
+index,however,itsexpectedproﬁtbecomeshighlyvolatile.Interest-
+ingly, under lenient lending practice, bank’s expected proﬁt is much
+higher than under prudent lending, until the bubble bursts. The rea-
+son that the bank can have higher proﬁt under lenient practices is
+because by pursuing loan quantity instead of quality, the bank stim-
+ulates the market and increases the price. Although the bank may
+attract riskier borrowers by doing so, it can still expect higher proﬁt
+as long as the property price remains high. However, such growth
+is not sustainable. When the bubble collapses, the bank will suffer
+signiﬁcantlosses,whichhashappenedthreetimesinthesimulation.
+If the bank is suﬃciently long-term minded, it will choose pru-
+dent over lenient lending to avoid long-term losses. However, the
+average CEO tenure in the US ﬁnancial industry is around ﬁve years
+(Stuart, 2004). In comparison, in simulation the ﬁrst big loss does
+not happen until the 11th year since the lenient lending policy. Until
+then, bank has been getting tripled proﬁt.
+We have shown the effect of lenientlendingpractices on housing
+price,foreclosurerate,mortgagerate,andbankproﬁtinthepresence
+of speculation. We will now show the effect of speculation on hous-
+ing price and foreclosure rate in the presence of leniency (leniency
+index ﬁxed at 0.9).Fig. 11 shows housing price where speculative
+demand equals zero (s= 0) and where speculative demand equals
+half of the total demand (s=0 .5), in the presence of leniency. We
+ﬁnd that with no speculative demand, price does not ﬂuctuate much
+even in the presence of leniency. We conclude that lenient lend-
+ing practice will only lead to housing bubbles if there is speculative
+demand in the market.
+Fig. 12shows foreclosure rate with and without speculative buy-
+ers, with leniency index ﬁxed at 0.9. The foreclosure rate is close to
+zero without speculative buyers; whereas it can become as high as
+15% with speculative buyers. However, it does not necessarily mean
+that only speculative homeowners are responsible for mortgage
+default. In fact, both speculative and regular homeowners are prone
+to default when housing price is more volatile. The high foreclosure
+rate is a direct result of large volatility in housing price.
+Speculation index could be affected by culture, regional hous-
+ing market history, and the availability of alternative investment
+low leniency high leniency
+Fig. 8. Foreclosure rate (red) and housing price under different levels of leniency (l).
+
+J. Ge / Computers, Environment and Urban Systems 62 (2017) 182–198 193
+low leniency high leniency
+Fig. 9. Mortgage rate (red) and housing price under different level of leniency (l).
+opportunities.Incountrieswheresocialvaluesareattachedtohome-
+ownership (An Englishman’s house is his castle), it is more common
+for people to invest in the property market. In countries where the
+property market has produced good returns in the past, people are
+more likely to invest, and vice versa. Finally, in countries without
+a mature ﬁnancial market, people rely on the housing market for
+investment opportunities, which are diﬃcult to ﬁnd elsewhere.
+5.2. Full experiment results for the densely sampled region
+So far, we have shown results from single simulation runs. We
+will now show results for the full experiment. In order to save space,
+we only show the mean functional values for the densely-sampled
+parameter space here. The mean and standard deviation of the two
+functional values for the complete parameter space can be found in
+AppendixA. Fig.13 presentsaheatmapforhousingpricevolatilityat
+differentcombinationsofleniencyandspeculation.Thevaluesinthe
+cellsarethemeanhousingpricevolatilityfromsimulation.Cellswith
+higher values are in darker shades, representing a “hot” market with
+high price volatility; on the contrary, cells with lower values are in
+lightershades,representinga“cool”marketwithlowpricevolatility.
+We show that volatility is low when both leniency and speculation
+arelow,andviceversa,andweconcludethathousingpricevolatility
+is increasing as both leniency and speculation increase.
+low leniency high leniency
+Fig. 10. Bank’s expected proﬁt (red) and housing price under different level of leniency (l).
+low speculation high speculation
+Fig. 11. Housing price under different levels of speculation (s).
+
+194 J. Ge / Computers, Environment and Urban Systems 62 (2017) 182–198
+low speculation high speculation
+Fig. 12. Foreclosure rate (red) and housing price under different level of speculation (s).
+Fig. 14plots leniency, speculation, and housing price volatility on
+thethree-dimensional(3D)space.Weseethatthepeakoccursinthe
+northeast corner where both leniency and speculation indices are
+high. The increase in volatility with regard to leniency and specula-
+tion is nonlinear. Volatility remains low and ﬂat in most areas and
+increases sharply in the northeast corner. In particular, price volatil-
+ity stays ﬂat until leniency index is about 0.85, and then it increases
+sharply. We will further explore the nonlinear relationship between
+leniency and volatility by looking at an intersecting surface with
+speculation index ﬁxed at a certain level, which is shown inFig. 15.
+Fig. 15shows the relationship between leniency index and price
+volatility, with speculation index ﬁxed at 0.5. We ﬁnd that the rela-
+tionship is nonlinear: Volatility remains low until leniency index
+reaches 0.85. After that, it increases quickly as leniency index
+increases. Therefore, we argue that lending policies do not need
+to be prohibitively restrictive to prevent housing price bubbles. A
+moderate down payment requirement of 15% should be suﬃcient
+to prevent a housing bubble from forming, and still allow regular
+households to obtain a mortgage and become homeowners.
+Fig. 16 presents a heat map for the number of nonspeculative
+homeowners. The value in each cell is the mean number of nonspec-
+ulative homeowners, an indicator for the level of home-ownership.
+We ﬁnd that homeownership rate is maximum when speculation
+is low and leniency is also relatively low. As speculation demand
+dominates the market, homeownership rate among nonspeculative
+households decreases rapidly as they are crowded out of the market
+byspeculativebuyersthroughinﬂatedhousingprice.Therefore,poli-
+cies that aim to help low-income home buyers by lowering lending
+criteria may have the opposite effect under certain conditions.
+As we have discussed inSection 3, a number of model assump-
+tions could dampen price volatility. For instance, the price set-
+tling mechanism in this study is likely to produce smaller price
+Fig. 13. Housing price volatility in the densely sampled region.
+Fig. 14. Leniency, speculation, and housing price volatility.
+
+J. Ge / Computers, Environment and Urban Systems 62 (2017) 182–198 195
+Fig. 15. Leniency and housing price volatility.
+ﬂuctuations than competitive bidding. Speculators in the model are
+conservative in that they assume future appreciation rate to be a
+fraction of the previous one, i.e. a slowing market trend. In addi-
+tion, interest rate remains ﬁxed for the duration of the mortgage,
+and there is no external income shock, both of which would greatly
+increase price volatility. We have shown that, despite the conser-
+vative settings that we assume, the model has produced cyclical
+behavior in housing price and large price volatility under certain
+conditions.
+5.3. Submarket variations
+In this section we will describe variations in housing price and
+price volatilityacross 25submarkets. InSection3.1.1,weintroduced
+a symmetric landscape with 25 neighborhoods. Each neighborhood
+has the exogenous nature index and the endogenous neighborhood
+index. Fig. 17a shows the nature index, which is exogenous and
+ﬁxed; whereas, Fig. 17b shows the neighborhood index, which is
+endogenousandevolvesfromthemodel.Wefoundthat,asexpected,
+neighborhood index highly correlates with nature index. The corre-
+lation emerges through the sorting process in which high-income
+households outbid low-income ones and move into the most attrac-
+tive suburban neighborhood. As high-income households move into
+those neighborhoods, neighborhood quality also increases, which
+makes those neighborhoods even more attractive.
+Fig.18 showsthemeanhousingpriceacrossneighborhood,when
+leniency index equals 0.8 and 0.9. We keep speculation index at 0.5.
+In Fig. 18, the darker the shade, the higher the housing price in that
+neighborhood. As expected, we ﬁnd that prices are higher in more
+attractive suburbs than in urban or rural regions. We also ﬁnd that,
+under lenient ﬁnancing, housing price inﬂates more in the most and
+least expensive areas than in middle-ranged areas.
+Fig. 19shows the housing price volatility or the standard devi-
+ation over mean housing price across regions, when leniency index
+equals 0.8 and 0.9. We keep speculation index at 0.5. The darker the
+shade inFig. 19, the more volatile housing price is in that neighbor-
+hood. We ﬁnd that in all submarkets, housing price becomes much
+more volatile under lenient ﬁnancing (l = 0.9) than under prudent
+ﬁnancing (l = 0.8). Price volatility in all submarkets increases sub-
+stantiallyinthepresenceoflenientﬁnancing.Moreover,weﬁndthat
+prices are less volatile in the more expensive neighborhoods, and
+more volatile in less expensive ones.
+5.4. Qualitative comparison with historical home price index
+Finally, we make a qualitative comparison of the quarterly US
+home price index (Index, 2013) from 1970 to 2012 and the simula-
+tion results over the same period of time. In the simulation, before
+2000,downpaymentandmarketinterestratesaresetat15%and4%,
+respectively. In January 2000, we introduced lenient lending prac-
+tices into simulation and decreased down payment from 15% to 4 %.
+We also decreased the risk-free interest rate from 4% to 1% to rep-
+resent the low risk-free interest rate in the United States over the
+same period of time. We then let the model run without other inter-
+vention.Fig. 20shows a comparison of real US home price index and
+simulated index. We use price in 1970 as the baseline.
+The two pictures share similar patterns. Both show rise of hous-
+ing price around 2000 when regulation was loosened and lenient
+lendingpracticesstartedtobecameprevalent.Bothgraphsshowthat
+prices collapse without apparent sign of economic shocks. However,
+we are cautious not to overstate the forecasting power of the model,
+because the model is not designed forecast the future price move-
+ment, but to provide a theoretical framework. We compared the
+simulated and historic housing price indices to show that our model
+is able to generate aggregate price patterns observed in reality.
+6. Concluding remarks
+This study develops an agent-based model of the housing mar-
+ket. We attempt to answer the research questions: Will housing
+bubbles rise endogenously in a housing market without external
+shocks?Ifso,whatarethecausesoftheendogenousriseandcollapse
+of housing price? We ﬁnd that housing price can indeed rise and
+collapse endogenously in the absence of exogenous shocks. The two
+Fig. 16. Number of non-speculative homeowners in the densely sampled region.
+Fig. 17. Nature and emerged neighborhood index.
+
+196 J. Ge / Computers, Environment and Urban Systems 62 (2017) 182–198
+low leniency high leniency
+Fig. 18. Mean housing price across submarkets.
+necessary conditions for a housing bubble to rise are leniency and
+speculation. The simulation results in this paper is consistent with
+stylized facts and patterns in the real world. For example, although
+the United States and Canada are similar in economic and cultural
+conditions,thelattermaintainedlesslenientlendingpracticesinthe
+2000s and did not experience a boom and crash as the former did
+Crawford (2015).
+We ﬁnd that a bank may prefer lenient lending practice even
+without risk shifting schemes like mortgage securitization. Results
+show that in the short run the bank’s proﬁt increases rapidly under
+lenient lending policy. Only in the long run will it suffer losses as
+a consequence of its aggressive lending practices. Given the typical
+short tenure of management in the ﬁnancial sector, it is unsurpris-
+ingthatbankswouldchooselenientlendingforhigherreturnsinthe
+shortrun.Wethereforeconcludethatregulationonmortgagesecuri-
+tization alone is insuﬃcient to prevent aggressive lending practices,
+and reforms should be aimed at aligning banks’ objectives with its
+long-run performance.
+We show that policy intended to promote homeownership
+among low-income households can have unintended consequences.
+Beginning in the early 2000s, government sponsored entities in the
+United States such as Frannie Mae and Freddie Mac decided to
+lower lending criteria as a way to promote homeownership among
+low-income households. However, our simulation shows that such
+policy can lead to large inﬂation in housing price and more specula-
+tive behavior. In contrast to the goal of the policy, homeownership
+rate among regular buyers become lower under such policy, as low-
+income households are crowded out of the market through inﬂated
+housing price.
+We conclude that speculators play an essential role in the rise of
+ahousingbubble.Weﬁndthattheexistenceofspeculatorsisneeded
+for a housing bubble to rise. In a market without speculative buy-
+ers, housing price is more stabilized regardless of lending criteria.
+Therefore, to avoid a housing bubble, policy interventions such as
+land transfer tax or property tax can be used to discourage specula-
+tive demand. For example, a foreign buyers tax recently introduced
+in Vancouver, Canada has led to stalled prices in the previously hot
+market Pearson, (2016). The model developed in this paper can be
+used to study the effect of such policy interventions.
+Finally, we have made several simpliﬁcations in the paper due to
+scope and computational constraints. For example, we do not dis-
+tinguish houses within a neighborhood.We assume a representative
+developer and bank that operates under competitive market prin-
+ciple, while in reality banks and developers can engage in strategic
+games. The model can be extended in several ways. For instance,
+the stylized city landscape can be adapted to a real-world city and
+individual houses modeled, given suitable data. We will leave the
+potential extensions for future research.
+low leniency high leniency
+Fig. 19. Housing price volatility across submarkets.
+Fig. 20. Actual and simulated home price index, 1970=100.
+
+J. Ge / Computers, Environment and Urban Systems 62 (2017) 182–198 197
+Fig. 21. Housing price volatility in complete parameter space (standard deviation in parenthesis, densely sampled region in red square).
+Fig. 22. Number of non-speculative homeowners in complete parameter space (standard deviation in parenthesis, densely sampled region in red square).
+Appendix A. Full experiment results
+Housing price volatility for complete parameter space is shown inFig. 21, and the Number of non-speculative homeowners for complete
+parameter space is shown inFig. 22.
+References
+Augustijn-Beckers, E.-W., Flacke, J., & Retsios, B. (2011). Simulating informal set-
+tlement growth in Dar es Salaam, Tanzania: An agent-based housing model.
+Computers, Environment and Urban Systems, 35(2), 93–103. Geospatial Analysis
+and Modeling.
+Banzhaf, H. S., & Walsh, R. P. (2008).Do people vote with their feet? An empirical test
+of Tiebout’s mechanism.The American Economic Review, 843–863.
+Bayer, P., Ferreira, F., & McMillan, R. (2007). A uniﬁed framework for measuring
+preferences for schools and neighborhoods, Tech. rep. ,
+Bernanke, B. S. (2010).Monetary policy and the housing bubble.Speech at the annual
+meeting of the American Economic Association, Atlanta, Georgia . Vol. 3.
+Booch, G. (2005).The uniﬁed modeling language user guide, Pearson Education India.
+Brown, D. G., & Robinson, D. T. (2006). Effects of heterogeneity in residen-
+tial preferences on an agent-based model of urban sprawl.Ecology and society ,
+11(1), 46.
+Calabrese, S., Epple, D., Romer, T., & Sieg, H. (2006).Local public good provision: Vot-
+ing, peer effects, and mobility.Journal of Public Economics, 90(6), 959— 981.
+Can,A.(1992). Speciﬁcationandestimation ofhedonichousingpricemodels. Regional
+science and urban economics, 22(3), 453–474.
+Case, K. E., & Shiller, R. J. (2003).Is there a bubble in the housing market?Brookings
+Papers on Economic Activity, 2003(2), 299–362.
+Chen, Y., Irwin, E. G., & Jayaprakash, C. (2011).An agent-based model of exurban land
+development. Agricultural and applied economics association: 2011 annual meeting.
+Commission, F. C. I. (2011). The ﬁnancial crisis inquiry report: The ﬁnal report of the
+national commission on the causes of the ﬁnancial and economic crisis in the United
+States including dissenting views, Cosimo, Inc.
+Crawford, A. (2015).Building stable mortgage markets: Lessons from Canada’s expe-
+rience. Journal of Money, Credit and Banking , 47(S1), 81–86.
+Crooks, A. T. (2010).Constructing and implementing an agent-based model of res-
+idential segregation through vector GIS. International Journal of Geographical
+Information Science, 24(5), 661—67 5.
+Davis, M. A., Lehnert, A., & Martin, R. F. (2008).The rent-price ratio for theaggregate
+stock of owner-occupied housing.Review of Income and Wealth, 54(2), 279–284.
+Dokko, J., Doyle, B. M., Kiley, M. T., Kim, J., Sherlund, S., Sim, J., & Van den Heuvel, S.
+(2011). Monetary policy and the global housing bubble.Economic Policy, 26(66),
+237—28 7.
+
+198 J. Ge / Computers, Environment and Urban Systems 62 (2017) 182–198
+Ellen, I. G., Schill, M. H., Susin, S., & Schwartz, A. E. (2002).Building homes, reviv-
+ing neighborhoods: Spillovers from subsidized construction of owner-occupied
+housing in New York city.Low income homeownership: Examining the unexamined
+goal, 447–477.
+Engsted, T., & Pedersen, T. Q. (2015).Predicting returns and rent growth in the hous-
+ing market using the rent-price ratio: Evidence from the OECD countries.Journal
+of International Money and Finance, 53, 257–275.
+Ettema, D. (2011).A multi-agent model of urban processes: Modelling relocation pro-
+cesses and price setting in housing markets.Computers, Environment and Urban
+Systems, 35(1), 1–11.
+Evans, G. W., & Honkapohja, S. (2001).Learning and expectations in macroeconomics ,
+Princeton University Press.
+Feitosa, F. F., Le, Q. B., & Vlek, P. L. (2011).Multi-agent simulator for urban segregation
+(MASUS):Atooltoexplorealternativesforpromotinginclusivecities. Computers,
+Environment and Urban Systems, 35(2), 104—11 5.
+Filatova,T.(2015). Empiricalagent-basedlandmarket:Integratingadaptiveeconomic
+behavior in urban land-use models.Computers, Environment and Urban Systems,
+54, 397–413.
+Filatova, T., Parker, D., & Van der Veen, A. (2009a).Agent-based urban land mar-
+kets: Agent’s pricing behavior, land prices and urban land use change.Journal of
+Artiﬁcial Societies and Social Simulation, 12(1), 3.
+Filatova, T., Van Der Veen, A., & Parker, D. C. (2009b). Land market interac-
+tions between heterogeneous agents in a heterogeneous landscape—Tracing the
+macro-scale effects of individual trade-offs between environmental amenities
+and disamenities. Canadian Journal of Agricultural Economics/Revue canadienne
+d’agroeconomie, 57(4), 431–457.
+Fossett, M., & Dietrich, D. R. (2009).Effects of city size, shape, and form, and neigh-
+borhood size and shape in agent-based models of residential segregation: Are
+Schelling-style preference effects robust?Environment and planning. B, Planning
+&d e s i g n, 36(1), 149.
+Gaube, V., & Remesch, A. (2013).Impact of urban planning on household’s residential
+decisions: An agent-based simulation model for Vienna.Environmental Modelling
+& Software, 45, 92–103.
+Geanakoplos, J., Axtell, R., Farmer, J. D., Howitt, P., Conlee, B., Goldstein, J., Hendrey,
+M., Palmer, N. M., & Yang, C.-Y. (2012). Getting at systemic risk via an
+agent-basedmodelofthehousingmarket. The American Economic Review, 102(3),
+53–58.
+Genesove,D.,&Mayer,C.(2001). Lossaversionandsellerbehavior:Evidencefromthe
+housing market.The Quarterly Journal of Economics, 116(4), 1233 —1260.
+Gilbert, N., Hawksworth, J. C., & Swinney, P. A. (2009).An agent-based model of the
+Englishhousingmarket.. AAAI Spring symposium: Technosocial predictive analytics.
+(pp. 30–35).
+Glaeser, E. L., Kahn, M. E., & Rappaport, J. (2008).Why do the poor live in cities? The
+role of public transportation.Journal of urban Economics, 63(1), 1–24.
+Gode,D.K.,&Sunder,S.(1993). Allocativeeﬃciencyofmarketswithzero-intelligence
+traders:Marketasapartialsubstituteforindividualrationality. Journal of political
+economy, 119–137.
+Goodman, A. C. (1978).Hedonic prices, price indices and housing markets.Journal of
+Urban Economics, 5(4), 471–484.
+Grimm, V., Berger, U., DeAngelis, D. L., Polhill, J. G., Giske, J., & Railsback, S. F. (2010).
+The ODD protocol: A review and ﬁrst update. Ecological Modelling , 221(23),
+2760–2768.
+Haase, D., Lautenbach, S., & Seppelt, R. (2010). Modeling and simulating residen-
+tial mobility in a shrinking city using an agent-based approach.Environmental
+Modelling & Software, 25(10), 1225–1240.
+Huang, Q., Parker, D. C., Filatova, T., & Sun, S. (2014).A review of urban residential
+choice models using agent-based modeling.Environment and Planning B Planning
+and Design,
+Husslage, B. G., Rennen, G., van Dam, E. R., & den Hertog, D. (2011).Space-ﬁlling
+latin hypercube designs for computer experiments.Optimization and Engineering,
+12(4), 611–630.
+Iacoviello, M. (2005).House prices, borrowing constraints, and monetary policy in the
+business cycle.The American Economic Review, 95(3), 739–764.
+Index, S. C.-S. H. P. (2013).S&P Case-Shiller home price index.Accessed: 2013-11-12
+Kindleberger,C.(1987). InJ.Eatwell,M.Milgate,&P.Newman(Eds.), Bubbles, the new
+palgrave: A dictionary of economics. New York: Stockton Press.
+Krugman, P. (2005).Greenspan and the bubble.The New York Times, 29(8), 2005.
+Krugman, P. (2009).How did economists get it so wrong?New York Times, 6(09),
+Kuminoff, N. V., Smith, V. K., & Timmins, C. (2013).The new economics of equilib-
+rium sorting and policy evaluation using housing markets.Journal of Economic
+Literature, 51(4), 1007 —1062.
+Ligmann-Zielinska,A.(2009). Theimpactofrisk-takingattitudesonalandusepattern:
+An agent-based model of residential development.Journal of Land Use Science ,
+4(4), 215–232.
+Magliocca,N.,Saﬁrova,E.,McConnell,V.,&Walls,M.(2011). Aneconomicagent-based
+model of coupled housing and land markets (CHALMS).Computers, Environment
+and Urban Systems, 35(3), 183—19 1.
+Merlo, A., & Ortalo-Magn, F. (2004).Bargaining over residential real estate: Evidence
+from England.Journal of Urban Economics, 56(2), 192–216.
+Ortalo-Magne, F., & Rady, S. (2006).Housing market dynamics: On the contribution
+of income shocks and credit constraints.The Review of Economic Studies, 73(2),
+459—48 5.
+Owusu-Ansah, A., Roberts, D., Schulz, R., & Wersing, M. (2013).Developing a local
+house price index: The case of Aberdeen, Scotland.
+Palm, R. (1978).Spatial segmentation of the urban housing market.Economic Geogra-
+phy, 210–221.
+Parker, D. C., Brown, D. G., Filatova, T., Riolo, R., Robinson, D. T., & Sun, S. (2012).Do
+land markets matter? A modeling ontology and experimental design to test the
+effectsoflandmarketsforanagent-basedmodelofex-urbanresidentialland-use
+change. .Agent-based models of geographical systems,(pp. 525–542). Springer.
+Parker,D. C.,&Filatova, T. (2008).A conceptual design forabilateral agent-based land
+market with heterogeneous economic agents.Computers, Environment and Urban
+Systems, 32(6), 454–463. GeoComputation: Modeling with spatial agents.
+Pearson, N. (2016).Foreign buying plummets in vancouver after New property tax,
+bloomberg markets.
+Polhill, J. G., Parker, D. C., & Gotts, N. M. (2007).Effects of land markets on competi-
+tionbetweeninnovatorsandimitatorsinlanduse:ResultsfromFEARLUS-ELMM.
+Social simulation: Technologies, advances and new discoveries, 81–97.
+Poterba, J. M. (1984). Tax subsidies to owner-occupied housing: an asset-market
+approach. The Quarterly Journal of Economics, 99(4), 729— 752.
+Rosenthal, S. S. (2008).Old homes, externalities, and poor neighborhoods. a model of
+urban decline and renewal.Journal of Urban Economics, 63(3), 816–840.
+Silos, P. (2007).Housing, portfolio choice and the macroeconomy.Journal of Economic
+Dynamics and Control, 31(8), 2774—2 801.
+Sommervoll, D. E., Borgersen, T.-A., & Wennemo, T. (2010). Endogenous housing
+market cycles.Journal Of Banking & Finance, 34(3), 557—56 7.
+Stein, J. C. (1995).Prices and trading volume in the housing market: A model with
+down-payment effects.The Quarterly Journal of Economics, 110(2), 379–406.
+Stuart, S. (2004). 2004 CEO study: A statistical snapshot of leading CEOs,Accessed:
+2016-11-08
+Sunder, S. (2003). Markets as artifacts: Aggregate eﬃciency from zero-intelligence
+traders.
+Torrens,P.M.,&Nara,A.(2007). Modelinggentriﬁcationdynamics:Ahybridapproach.
+Computers, Environment and Urban Systems, 31(3), 337—36 1.
+W u ,B . ,B i r k i n ,M . ,&R e e s ,P .( 2 0 0 8 ) .A spatial microsimulation model with student
+agents. Computers, Environment and Urban Systems, 32(6), 440—45 3.

@@ -1,0 +1,1992 @@
+Journal of Economic Interaction and Coordination (2023) 18:5–57
+https://doi.org/10.1007/s11403-021-00324-7
+REGULAR ARTICLE
+The impact of social inﬂuence in Australian real estate:
+market forecasting with a spatial agent-based model
+Benjamin Patrick Evans 1 · Kirill Glavatskiy 1 · Michael S. Harré 1 ·
+Mikhail Prokopenko 1
+Received: 10 September 2020 / Accepted: 19 February 2021 / Published online: 22 March 2021
+© The Author(s), under exclusive licence to Springer-Verlag GmbH Germany, part of Springer Nature 2021
+Abstract
+Housing markets are inherently spatial, yet many existing models fail to capture this
+spatial dimension. Here, we introduce a new graph-based approach for incorporat-
+ing a spatial component in a large-scale urban housing agent-based model (ABM).
+The model explicitly captures several social and economic factors that inﬂuence the
+agents’ decision-making behaviour (such as fear of missing out, their trend-following
+aptitude, and the strength of their submarket outreach), and interprets these factors in
+spatial terms. The proposed model is calibrated and validated with the housing market
+data for the Greater Sydney region. The ABM simulation results not only include
+predictions for the overall market, but also produce area-speciﬁc forecasting at the
+level of local government areas within Sydney as arising from individual buy and
+sell decisions. In addition, the simulation results elucidate agent preferences in sub-
+markets, highlighting differences in agent behaviour, for example, between ﬁrst-time
+home buyers and investors, and between both local and overseas investors.
+Keywords Agent-based modelling · Spatial models · Housing markets ·
+Decision-making · Social inﬂuence · Trend following
+JEL Classiﬁcation H31 · R31 · C63 · O18 · D91
+The authors are thankful to Paul Ormerod, Adrián Carro and Markus Brede for many helpful discussions
+of the baseline model. The authors acknowledge the HPC service at The University of Sydney for
+providing HPC resources that have contributed to the research results reported within this paper. The
+authors would also like to acknowledge the Securities Industry Research Centre of Asia-Paciﬁc (SIRCA)
+and CoreLogic, Inc. (Sydney, Australia) for their data on Greater Sydney housing transactions.
+B Benjamin Patrick Evans
+benjamin.evans@sydney.edu.au
+1 Centre for Complex Systems, The University of Sydney, Sydney, NSW, Australia
+123
+
+6 B. P. Evans et al.
+1 Introduction
+Within economic markets, housing markets are unique for a variety of reasons.
+The combination of durability, heterogeneity, and spatial ﬁxity ampliﬁes the role of
+the dwellings’ perceived value and the buyers and sellers’ expectations (Alhashimi
+and Dwyer 2004). The extremely high cost of entry and exit into the market (with
+moving fees, agent fees, etc.) further complicates the decision-making of partici-
+pating households (Huang and Ge 2009). There are long time delays in the market
+response as houses cannot be erected instantaneously to accommodate an increase
+in demand (Bahadir and Mykhaylova 2014). The fact that real estate can be seen as
+both an investment asset and a consumption good (Piazzesi et al. 2007) [and even
+a status good, Wei et al. ( 2012)] magniﬁes the impact of social inﬂuence on both
+decision-making and resultant market dynamics and structure.
+Consequently, housing markets are notoriously difﬁcult to model as the ensuing
+market dynamics generates volatility, with nonlinear responses, and “boom–bust”
+cycles (Sinai 2012; Miles 2008; Burnside et al. 2016), making traditional time series
+analysis insufﬁcient. Nonlinear dynamics of housing markets are ubiquitous, being
+observed throughout the world, from Tokyo (Shimizu et al. 2010) to Los Angeles
+(Cheng et al. 2014).
+Traditional economic modelling methods, such as dynamic stochastic general equi-
+librium models (DSGE), typically use representative aggregated agents while making
+strong assumptions about the behaviour of the markets (rational and perfect competi-
+tion). Such representative agents may be limiting for economic models (Gallegati and
+Kirman 1999). Furthermore, these assumptions (and many other traditional economic
+assumptions) are known to be inadequate in housing markets, motivating a well-
+recognised need for change in housing market modelling (McMaster and Watkins
+1999). In addressing this need, a speciﬁc type of models, called agent-based models
+(ABM) has been applied. ABMs aim to capture markets from the “bottom up” (Tesfat-
+sion 2002), i.e. by focusing on the decision-making of individual agents in the market,
+possibly inﬂuenced by non-economic factors. In this sense, ABMs are capable of
+modelling macroeconomies from micro (i.e. agent-speciﬁc) behaviour (LeBaron and
+Tesfatsion 2008) and analysing the economic decision-making in counterfactual set-
+tings. While ABMs have shown promise in housing market modelling (Geanakoplos
+et al. 2012) [and wider economic modelling, Poledna et al. ( 2019)], current ABMs
+themselves are not exempt from some limitations. Many of the existing housing ABMs
+tend to introduce at least one of the following constraints: the spatial structure of mar-
+kets is neglected (meaning submarkets are not considered), perfect information is still
+assumed, and/or the impact of social inﬂuence on decision-making of individual agents
+is underestimated.
+A ﬁne-resolution model of spatiotemporal patterns within such markets is desirable:
+it would give an understanding of how market dynamics shape within local areas,
+explaining how the pricing structure directly affects the agents’ mobility over time
+(i.e. by forcing households out of certain regions due to gentriﬁcation and higher cost
+of living). Furthermore, within such housing markets [and in fact, many economic
+markets, Conlisk ( 1996)], it is also known that agents do not act perfectly rational
+(Wang et al. 2018, instead following bounded rationality Simon 1955, 1957). Firstly,
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 7
+humans are often inﬂuenced by social pressure (e.g. herd mentality), with the decisions
+being made purely based on social pressure rather than a perfectly rational choice.
+Secondly, it is difﬁcult to process all the relevant information in the market (i.e. it is
+impractical for an agent to be able to view every dwelling listing within the housing
+market). Thus, it is unreasonable to assume that agents act in a perfectly rational
+manner, yet this is what many current housing market models assume (despite ABMs
+not intrinsically requiring these assumptions to be made).
+To address these limitations, we introduce a spatial agent-based model, in which
+the constraints imposed by various search and mobility costs create effective spatial
+submarkets. These submarkets are modelled graph-theoretically, with a graph-based
+component used in both representing imperfect information and modulating social
+inﬂuences. The spatial ABM is then capable of capturing the “boom–bust” cycles
+observed in Australia (in particular, Greater Sydney) over the last 15 years as arising
+from individual agent decisions. That is, we show complex nonlinear market dynamics
+as arising through individual buy and sell decisions in the market, with introduced
+factors which affect and explain the decision-making behaviour. The model succeeds in
+forecasting nonlinear pricing and mobility trends within speciﬁc submarkets and local
+areas. In exploring the pricing dynamics, we focus on the inﬂuence of imperfect spatial
+information and the role of social inﬂuence on agent decision-making. In doing so, we
+identify the salient parameters which drive the overall dynamics and decision-making,
+and pinpoint the parameter thresholds, beyond which the resultant dynamics exhibit
+strong nonlinear responses. These thresholds allow us to distinguish between different
+conﬁgurations of the market (e.g. markets with supply or demand dominating) and
+differences in agent behaviour. In addition, we identify and trace speciﬁc interactions
+of parameters, in particular the interplay of social inﬂuences, such as the fear of missing
+out and the trend-following aptitude, in the presence of imperfect spatial information.
+The remainder of the paper is organised as follows. In Sect. 2, we provide an
+overview of agent-based models of housing markets. In Sect.3, we outline the baseline
+model, while in Sect.4 we outline the proposed spatial extensions and new parameters.
+In Sect. 5, we analyse the sensitivity and parameters of the model, before presenting
+the results and discussion in Sect. 6. In Sect. 7, we provide conclusions and highlight
+future work.
+2 Background
+2.1 Agent-based models of housing markets
+One of the pioneering works for agent-based modelling (ABM) of the housing markets
+was by Geanakoplos et al. ( 2012) [and extended further in Axtell et al. ( 2014), Gold-
+stein (2017)], where the Washington DC market was modelled from 1997 to 2009 in
+an attempt to understand the housing boom and crash. Macroeconomic experiments
+were then conducted to see how changing underlying factors, such as interest rates or
+leverage rates, would affect this pricing trend.
+Baptista et al. ( 2016) model the UK housing market to see the effects that various
+macroprudential policies have on price cycles and price volatility. Gilbert et al. (2009)
+123
+
+8 B. P. Evans et al.
+also look at the English housing market, varying exogenous parameters and policies,
+and tracking the effect these have on median house prices. Likewise, Carstensen (2015)
+explores the Danish housing market and macroprudential regulations, such as income
+and mortgage rate shocks.
+Ge (2017) analyses how housing market bubbles can form (and bust) purely endoge-
+nously without external shocks, due to leniency and speculation of agents. Kouwenberg
+and Zwinkels (2015) also show an ABM can “endogenously produce boom-and-bust
+cycles even in the absence of fundamental news”.
+A recent ABM of the Australian housing market proposed by Glavatskiy et al.
+(2020) explained the volatility of prices over three distinct historic periods, charac-
+terised by either steady trends or trend reversals and price corrections. This model
+highlighted the role of the agents’ trend-following aptitude in accurately generating
+distinct price dynamics, as detailed in Sect. 3. In this paper, we further develop this
+model by introducing several features directly capturing social inﬂuences and bounded
+rationality in agent decision-making, as elaborated in Sect. 4.
+Traditionally, the modelling goal is to explain the housing market pricing (rather
+than predict its trajectory) and trace how possible macroeconomic policy changes
+may have affected the dynamics. Here, instead, we focus on predicting the pricing
+dynamics beyond the period covered by the current datasets (i.e. presenting out-of-
+sample forecasting) as arising from individual buy and sell decision-making behaviour
+in the market (as opposed to a black box technical analysis machine learning-based
+approach), as well as illuminating agent preferences within speciﬁc housing submar-
+kets. This motivation is aligned with the growing suggestions that agent-based models
+should be predictive (Polhill 2018) [which has admittedly been met with some resis-
+tance, Edmonds and ní Aodha ( 2018)]. Agent-based models have recently been shown
+to outperform traditional economic models, such as vector autoregressive models and
+DSGE models for out-of-sample forecasting of macrovariables (GDP , inﬂation, inter-
+est rates, etc.) (Poledna et al. 2019). For example, it was demonstrated that an ABM
+can outperform standard benchmarks for out-of-sample forecasting in the US housing
+market (Kouwenberg and Zwinkels2014), while successful out-of-sample forecasting
+was carried out by Geanakoplos et al. ( 2012) as well.
+2.1.1 Spatial models
+Spatial distribution of houses and dependencies between market trends on spatial
+patterns have been recognised as important and desirable features (Goldstein 2017).
+For example, Baptista et al. ( 2016) describe the spatial component as one that is
+“highly desirable”, yet “this approach greatly increases the complexity of the models
+and hence most spatial ABMs in the ﬁeld listed below make use of a highly simpliﬁed
+representation of the environment, often in the shape of small grids”.
+Spatial agent-based models have also shown to be useful in a variety of other
+areas such as epidemic modelling (Chang et al. 2020; Cliff et al. 2018), cooperative
+behaviour (Power 2009), and symbiotic processes (Raimbault et al. 2020). Despite
+the promise shown by housing ABMs, there are currently only relatively few spa-
+tial housing market models with the capacity to accurately forecast nonlinear price
+dynamics.
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 9
+The seminal works in spatial housing ABMs are by Ge ( 2013) and Ustvedt
+(2016). Both use a matrix-based approach, with the region being arranged on a two-
+dimensional grid. In Ge ( 2013), each cell (row/column) in the grid is assigned a
+neighbourhood quality (endogenous) and a nature quality (exogenous). The neigh-
+bourhood quality is a measure of attractiveness which aims to capture concepts such
+as safety, and is dependent on agents that live in that region (which can change in the
+model, thus endogenous). In contrast, nature quality is based on outside factors not
+changed by the model, such as distance to a beach or weather (thus exogenous). Data
+used in this work are abstract; that is, it is not calibrated to a particular city, but rather
+used to trace how these factors affect the trends.
+Ustvedt (2016) also uses a two-dimensional grid for a NetLogo model. However,
+an important additional spatial step is made: district borders are incorporated using
+GIS data (somewhat similar to what we propose in our model with the graph-based
+approach, however, there are important differences which we outline below), and the
+model is calibrated based on Oslo, Norway.
+Another work is Pangallo et al. (2019), which models theoretical (i.e. not calibrated
+to any speciﬁc region) income segregation and inequality, using a spatial agent-based
+model, and the effect this may have on house prices. Again, this approach uses a two-
+dimensional grid for the spatial component. This model assumes a monocentric city,
+and measures the “attractiveness” of a location, based on the distance to the (generic)
+city centre. The main contribution of this work is a mathematically tractable spatial
+model for capturing income segregation. The effects are related to the house prices,
+where unequal income is shown to lower the house price globally.
+Unexplored Extensions The spatial work outlined above provide strong models which
+achieve their purpose of policy understanding and effect of market shocks in Ge (2013)
+and Ustvedt (2016). However, the spatial component is often considered a secondary
+point of the models, which means there are some key additional insights which have
+yet been unexplored. Particularly, the presence of area-speciﬁc submarkets have not
+been explicitly modelled, and analysis into the spatial preferences of agents within the
+market (and submarkets) have not been explored.
+For example, in studies of Ge ( 2013) and Ustvedt ( 2016) the spatial contribution
+affects the initial price and the supply of dwellings for a given grid cell (location and
+population). However, at every simulated step the effects of the spatial component do
+not extend to varying search costs or probability of listing for agents. Furthermore,
+the spatial component is not utilised to initialise agent characteristics (such as income,
+wealth, etc.), based on the areas in which they reside. These area-speciﬁc agent char-
+acteristics and behaviours become particularly important for capturing submarkets
+across various areas, especially when real-world data are available.
+Another assumption of existing spatial models is that of a monocentric city, meaning
+a distance metric such as “distance to centre” is used for measuring attractiveness,
+which becomes problematic for polycentric cities or with agents who have no desire
+to live within the “centre” when analysing agent preferences. Furthermore, computing
+these distances in a 2d grid can often be misinformative, as moving across a region
+border (i.e. into a new zone) often incurs a far larger cost than moving a cell inward
+into the same zone. To address this, we explicitly capture this feature in the proposed
+graph-based spatial extension. Distances are measured as the shortest path through
+123
+
+10 B. P. Evans et al.
+the graph, with nodes representing various regions (contained within boundaries).
+The graph-based approach is particularly useful, as no monocentric assumption is
+made.
+Furthermore, as detailed area-speciﬁc analysis remains largely unexplored, the dis-
+tributions of prices within individual areas is often not considered, instead, using a
+representative mean or median rather than sampling from the actual underlying dis-
+tributions for each area, which may fail to capture certain area trends. This is often
+caused by the lack of underlying data. In our work, we use several contemporary
+datasets, such as SIRCA–CoreLogic and the Australian Census datasets, constructing
+the relevant pricing probability density functions for each area.
+In summary, in contrast to the grid-based approach commonly used, in this work,
+we propose an extensible graph-based approach which is described in Sect. 4. Such an
+approach allows us to further exploit the spatial component by introducing submarkets
+with graph-based search costs and initialisation of agent characteristics based on areas,
+giving insights into area-speciﬁc submarkets which have not yet been explored. In
+addition, the graph-based approach does not assume a monocentric region, allowing
+for polycentric cities [which Greater Sydney is developing towards Greater Sydney
+Commission (2018), Crosato et al. ( 2021)] to be modelled more effectively.
+3 The Baseline model
+This work extends the work of Glavatskiy et al. ( 2020), which we will refer to as the
+“Baseline” method. In this section, we describe basic features of the baseline model,
+which the present work carries over.
+3.1 Agents
+There are three key agent types in the model: dwellings, households, and the bank.
+A dwelling is a “physical” property, e.g. a house, apartment or condo. Each dwelling
+has an intrinsic quality, which reﬂects its hedonic value (e.g. large house or existence of
+a pool). The quality is ﬁxed during the simulation. The quality of a dwelling is used as
+a reference for determining its listing price and dwelling payments. All dwellings have
+an owner. Dwellings can be rented or sold. A rental contract is a binding agreement
+between the owner and renting household. Dwellings may be vacant at any period
+(which means that they are not rented out).
+A household represents a person or group of people (i.e. a family), which reside
+within Greater Sydney. Additionally, the model contains overseas agents, which can
+participate in the market but do not reside in the Greater Sydney region. Households
+have heterogeneous monthly incomes and liquid cash levels. Households can own
+several dwellings, but can only reside in one (overseas agents do not reside in any
+dwelling). When purchasing a dwelling, households always choose the most expensive
+dwelling they can afford. If they can afford to buy a dwelling, they always attempt to
+do so, putting a market bid (see below). Households that own more than one dwelling
+attempt to rent the additional dwellings out, and, if successful, receive rental payments
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 11
+as a contribution to their liquid cash. Households that do not own a dwelling rent one.
+Households pay tax based on their income and ownership.
+The bank combines the functions of a commercial bank and the regulatory body,
+controlling various ﬁnancial characteristics, such as income tax rates, mortgage rates,
+overseas approval rates, mortgage approvals, and mortgage amounts (how much can
+be lent to a particular household).
+3.2 Behavioural rules
+The agents’ behaviour is governed by the price they are willing to sell their dwelling
+for, the listing price, and the price they can afford to buy a new dwelling, the bid price.
+The basis for the pricing equations comes from the pioneering housing market ABM
+of Axtell et al. ( 2014).
+The household bid price, i.e. their desired expenditure, is modulated by the house-
+hold’s monthly income I[t] according to Eq. ( 3.1). Following Axtell et al. ( 2014),
+the desired expenditure formulation is the result of an analysis into income dynamics,
+motivated by the 1
+3 of income on housing expenses heuristic, with modiﬁcations to
+capture a wider range of heterogeneity and expenditures.
+B[t]= H Ub[t]φb I[t]φI
+φM[t]+ φH − h ∗ /Delta1HPI[t] (3.1)
+H is a uniformly random value between 1 ± bh/2 for each bid, where bh = 0.1i s
+the listing heterogeneity parameter. This allows variation in bid prices around a central
+value (i.e. uniform prices within a range around the centre, in this case, ±5%). Ub[t]
+is the urgency of a household to buy a dwelling, which is equal to 1 if the household
+has recently not sold any dwelling, and is larger than 1 by a term proportional to the
+number of months since the last sale otherwise. Furthermore,φI and φb are the income
+modulating parameters, which are calibrated from the mortgage-income regression for
+that period of interest. The resulting expenditures are sublinear with income, meaning
+high-income agents spend a lower percentage of their income on housing than their
+lower-income counterparts. In addition, φM[t] is the mortgage rate at time t, while φH
+is the annual household maintenance costs. Finally, h is the trend-following aptitude
+and /Delta1HPI[t] is the change in house price index (HPI) over the previous year.
+The bid price of the overseas investors is determined as an average, given the total
+volume and quantity of the approved overseas investments by the Foreign Investment
+Review Board. Several aspects of the overseas investments are detailed in “Appendix
+K”.
+The dwelling list price P[t] at time t is modulated by the quality of the dwelling
+Q according to Eq. ( 3.2). Again, the basis for the listing price equation comes from
+the estimation results of Axtell et al. ( 2014), where the formulation arose from a
+comprehensive set of real estate transaction data.
+P[t]= H b𝓁Qh S[t]bs(1 + Dh[t])bd
+U𝓁[t] (3.2)
+123
+
+12 B. P. Evans et al.
+H is again a uniformly random parameter that behaves the same as in Eq. ( 3.1).
+b𝓁 = 1.75 is the listing price factor, showing the extent to which the seller tends to
+increase the listing price. Furthermore, Qh is the average sale price of the 10 dwellings
+with the most similar quality to the dwelling h for sale. In addition, S[t] is the market
+average of the sold-to-list price ratio, bs = 0.22 is the sold to list exponent parameter,
+Dh[t] is the number of months the dwelling has been on the market, and bd =− 0.01
+is the number of months exponent parameter. Finally, U𝓁[t] is the urgency to sell the
+dwelling, which is equal to 1 if the household is not in ﬁnancial stress, and increases
+proportionally to the number of months in ﬁnancial stress otherwise.
+Banks approve households desired expenditure based on the bank’s lending crite-
+ria. The bank uses the households liquidity and monthly income for determining an
+appropriate amount to lend and offers the corresponding loan to the household. If the
+loan amount is greater than pd × B[t] (with pd = 0.6), then the household accepts
+the loan; otherwise, the household skips this round of the market.
+The parameters from the baseline method are presented in Table 2, and sensitivity
+analysis around the default values of these parameters is given in “Appendix B”, and
+more in-depth explanation is given in the study of Glavatskiy et al. ( 2020).
+3.3 Market algorithm
+An equilibration period is run at the start of the simulation to build up a “history”
+of the market, allowing for sales etc. to take place before the true simulation begins.
+Household and housing characteristics (such as income or construction) are smoothly
+extrapolated in the equilibration period, to match the corresponding values at the
+beginning of the actual simulation.
+The model runs in sequential steps, with each step representing one month of actual
+time. That is, one sequential step (or tick) in the simulation corresponds to one month
+in the actual housing market. During every step, the model makes several market
+updates:
+1. The city demographics are updated (new dwellings and households created to
+match the actual projected numbers for the Greater Sydney region).
+2. Each household receives income and pays its living costs: non-housing expenses,
+maintenance fees and taxes (if owning a dwelling), rent (if renting). The balance
+is added to or subtracted from the household’s liquid cash.
+3. Expiring rental contracts are renewed.
+4. Dwellings are placed on sale.
+5. Households put their bids for buying.
+6. The buyers and sellers are matched (described below)
+7. The households receive mortgages and mortgage contracts from the bank, and the
+balance sheets of both buyers and sellers are updated.
+To match buyers and sellers, bids and listings are sorted in descending order. Each
+listed dwellings is then attempted to match with the highest bid. If the bid price is higher
+than the list price, then the deal is made with probability pm = 0.8. Otherwise, the
+listing is considered unattended and the next one attempts to match. The pseudo-code
+for the process is given in “Appendix C”.
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 13
+(a) LGA Boundary Map
+CANTERBURY-BANKSTOWN
+FAIRFIELD
+GEORGES RIVER
+CAMDEN
+LAKE MACQUARIE
+NORTHERN BEACHES
+HORNSBY
+THE HILLS SHIRE
+PENRITH
+LIVERPOOL
+CAMPBELLTOWN
+CENTRAL COAST
+WOLLONDILLY
+UPPER LACHLAN SHIRE
+CANADA BAY
+BAYSIDE
+SUTHERLAND SHIRE
+BLACKTOWN
+HAWKESBURY
+WILLOUGHBY
+LANE COVE
+STRATHFIELD
+WAVERLEY
+RYDE
+NORTH SYDNEY
+LITHGOW
+BURWOOD
+BLUE MOUNTAINS
+MOSMAN
+CITY OF SYDNEY
+WOOLLAHRA
+KU-RING-GAI
+HUNTERS HILL
+RANDWICK
+INNER WEST
+WINGECARRIBEE
+CUMBERLAND
+CITY OF PARRAMATTA
+(b) LGA Network
+Fig. 1 Greater Sydney LGAs. On the left, we see the raw GIS data. On the right, the processed graph (with
+nodes scaled based on population size)
+4 Model extension
+In this section, we develop the spatial component of an ABM housing market, effec-
+tively introducing submarkets into the model. Speciﬁcally, we investigate how social
+aspects inﬂuence selling a dwelling, as well as account for the agents’ preferences to
+buy in a nearby neighbourhood when purchasing a dwelling. In doing so, we inves-
+tigate how pricing dynamics are driven by individual agent decisions. The spatial
+component also affects how households are initialised (i.e. what neighbourhood they
+should belong to), and how the prices of nearby dwellings may affect the listing price.
+4.1 Spatial component
+Greater Sydney is composed of 38 local government areas (LGAs), each of which
+contains several suburbs (and postcode areas). The data provide sales at a postcode
+level and the LGA level. However, the postcode data may be too granular as the number
+of listings in a given time period for small areas could be low or even zero. For this
+reason, we analyse the data at the LGA level, but the proposed approach is general and
+can be used at any level of granularity (i.e. over countries, states, cities, government
+areas, postcodes, suburbs, or even individual streets) assuming the data are available.
+The LGAs are visualised in Fig. 1a.
+4.1.1 Graph-based topology
+To incorporate the LGA areas into the ABM, the data must be converted to an appro-
+priate data structure. This is achieved by converting the map (from Fig. 1a) into an
+undirected graph G, with equal edge weights of 1 (i.e. unweighted, the weighted
+extensions are discussed below) shown in Fig. 1b. In doing so, the topology of the
+123
+
+14 B. P. Evans et al.
+spatial relationships of the suburbs is preserved but not the exact locations, i.e. the x,
+y coordinates of latitude and longitude are not needed.
+Each of the N LGAs (shaded polygon) in Fig. 1a is converted into a vertex vi ,
+i ∈[ 1,..., N]. The cardinality of the set of all vertices V is |V|= 38 corresponding
+to the 38 LGAs. Two LGA areas vi and v j are adjacent to one another if they share
+a border (darker lines in Fig. 1a) and these borders are converted to the set of edges
+E all of weight one that form an adjacency matrix G for the LGAs. Formally there
+is a 2-D spatial region for Sydney (the map of Sydney): M, composed of the N non-
+overlapping LGAs that form a complete cover of Sydney and each LGA shares at least
+one border with another LGA. LGA( x) associates a graph vertex x with an LGA, and
+Adj(li ,l j ), deﬁned for two LGAs li and l j , is a function measuring the length of their
+common border in M:
+V ={ vi | i ∈[ 1,..., N], LGA(vi) ∈ M}, (4.1)
+E ={ ei, j = 1 | vi,v j ∈ V, i ⁄= j, Adj(LGA(vi), LGA(v j)) > 0}. (4.2)
+This deﬁnition implies G(E, V) is a connected undirected graph, there are no discon-
+nected subgraphs. An important edge is also added that represents the Sydney harbour
+bridge connecting Northern Sydney with the City of Sydney.
+To calculate the distance between vertices vi and v j , the minimum path length (i.e.
+the path with the lowest number of edges) between the two vertices is used as edges
+are equally weighted: δ(vi,v j) denotes this shortest path. Because the edges have unit
+weighting the shortest paths are found using a simple breadth-ﬁrst search. However,
+future extensions could consider edge weightings based on metrics such as real distance
+between centroids, travel time between centroids, or even adding additional edges for
+public transport links. In cases of weighted edges, Dijkstra’s algorithm could be used
+to compute δ(vi,v j) instead.
+4.1.2 Spatial submarkets
+Dwellings are allocated initial prices based on the distribution of recent sales within
+their LGA and also populated according to the census data for dwellings in each
+LGA. A full description of the process is given in “Appendix I.2”. Households are
+also distributed into LGAs based on census data, with renters then moving to LGAs
+in which they can afford, as described in “Appendix D”.
+The original dwelling list pricing equation from Eq. ( 3.2) is also now updated
+to be based on each dwelling’s LGA. Rather than Qh being the average of the 10
+most similar quality dwellings in the model, it is the average of the 10 most similar
+within the LGA. Likewise, S[t] is the average sold-to-list price ratio for the dwelling’s
+LGA (not overall). In this sense,spatial submarkets (LGAs) (Watkins2001) capable of
+exhibiting their own dynamics are introduced. Recent research Bangura and Lee (2020)
+has shown the importance of submarkets in the Greater Sydney market, so capturing
+such microstructure is a key contribution of the proposed approach, as trends can be
+localised to speciﬁc submarkets (a feature not prominent in existing ABMs of housing
+markets).
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 15
+(a) Overview (b) Zoomed
+Fig. 2 Probability of viewing a listing based on buyers location (in this case the City of Sydney). Dark red
+indicates high probability, and light yellow indicates low probability (colour ﬁgure online)
+4.2 Spatial outreach
+In an actual housing market, a typical buyer does not review every listing in the
+entire city due to the high search costs and desire to live in certain areas. Rather,
+the buyer targets particular spatial submarkets, relating to a given area. In particular,
+listings immediately around the buyer’s location are likely to be viewed with a higher
+probability than listings which are further away.
+Therefore, it is unrealistic to assume perfect knowledge in an ABM of the housing
+market. To model this imperfect spatial information, we introduce an outreach term
+O, which determines the likelihood for a buyer located atvi to view a listing located at
+v j , as described by Eq. ( 4.3). According to this expression, the likelihood of viewing
+the listing decreases with the distance between the buyer and the listed dwelling. The
+outreach factor is illustrated in Fig. 2 for a buyer located in the LGA “City of Sydney”.
+O(vi,v j) = 1 − δ(vi,v j)
+max
+k∈V
+δ(vi,v k) (4.3)
+While the spatial outreach makes sense for ﬁrst-time home buyers, for investors,
+the outreach becomes uniform, as they do not necessarily desire rental properties near
+where they reside. So for investors, we use O(vi,v j) = 1,∀i, j .
+To control the strength of the outreach, we introduce a new parameter α ∈ (0, 1),
+so the probability of viewing a listing Pview(vi,v j) is given in Eq. ( 4.4).
+Pview(vi,v j) = α O(vi,v j)2 (4.4)
+where α modulates the spatial information on dwelling listings: the higher the α,t h e
+more the listings are viewed by a potential buyer. That is, α adjusts the likelihood of
+viewing a listing, based on the distance to that listing. The effect α has on resulting
+decisions is further discussed in “Appendix L”.
+123
+
+16 B. P. Evans et al.
+4.3 Spatial FOMO
+In the baseline model, dwellings have a ﬁxed probability of being listed, pb = 0.01.
+Here, we consider a spatial probability to list a dwelling located in a certain LGA li ,
+which depends on the number of recent sales in li . For this, we introduce the “fear of
+missing out” (FOMO) parameter, denoted by β, which modulates the probability of
+listing a dwelling situated in li by the number of recent sales in li altering the agents’
+decision-making behaviour. In particular, if a high number of dwellings inli have been
+sold, then the owners of dwellings in li will be more likely to list their dwelling on the
+market. This will account for the possibility that if a certain LGA becomes a popular
+location for selling a dwelling, the owners of dwellings in this LGA would not want
+to miss an opportunity to sell their dwelling.
+The spatial listing probability plist(li) is expressed by considering the difference in
+the fraction of dwellings currently in li ’s submarket (fli = listingsli /dwellingsli ) with
+respect to the Greater Sydney average. A higher fli means dwellings in li have been
+less likely to sell in the previous months (since all begin with a ﬁxed probability of
+selling pb) compared to the regions average. This spatial listing probability 1 is given
+by Eq. ( 4.5).
+plist(li) = pb + pbβ
+[ fli∑
+a∈V fa/|V| − 1
+]
+(4.5)
+The magnitude of β controls the strength of li ’s spatial submarket contribution to
+the listing probability. Rewriting Eq. (4.5) by denoting the term in the square brackets
+as x, i.e.
+pb + pbβx
+we see that if both β and x are negative, then the listing probability will be higher than
+the baseline level pb. Therefore, if the number of dwellings for sale in a particular
+LGA is less than the average in the whole city, this means that this particular LGA ’s
+submarket has been clearing fast, and homeowners in this LGA will be more likely
+to list their dwelling. In contrast, if x is positive, then dwellings in the current LGA
+are not clearing as fast as in the other LGAs, so homeowners in this LGA will be
+less likely to list. Conversely, a positive β results in an opposite effect. If an LGA has
+comparatively few listings, the homeowner from this LGA will be less likely to list
+a dwelling for sale, whereas if this LGA has many listings, the probability to list a
+dwelling there increases. In this way, β has a direct effect on the supply of dwelling
+listings and alters the decision-making behaviour of sellers.
+5 Optimisation and sensitivity analysis
+The selection of appropriate parameters is an important step in agent-based modelling,
+and in most existing work, parameters are selected over the entire period of interest.
+1 plist can technically be < 0o r > 1, so plist is capped to be between 0 and 1, in order to be a true
+probability, although this is exceptionally rare and does not appear to occur in Fig. 4.
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 17
+Here, we instead adopt a machine learning approach whereby we split the time series
+into a training and a testing portion; this ensures the model also performs well for the
+unseen (i.e. the testing) portion of data, and avoids biasing the selection of parameters
+by considering the entire time period.
+We use Bayesian hyperparameter optimisation (Snoek et al. 2012) to ﬁnd appro-
+priate combinations of parameters. The training set is used for parameter selection,
+whereas the test set is only used to evaluate the goodness of ﬁt of the model after
+the optimisation process is completed (in Sect. 6). We stress that the test set is never
+seen by the optimisation process. This is an important distinction from previous work
+(Glavatskiy et al. 2020), which constructs the models by considering all time points,
+and as such cannot be considered true predictions, unlike here where the model can
+be seen as a true predictor of future pricing trends. Optimisation details are given in
+“Appendix E”.
+5.1 Optimisation results
+We run several optimisation processes in order to quantify the contribution of each
+component on agent decision-making and the effect these decisions have on resulting
+market dynamics. Each method follows the same optimisation process.
+A “baseline” method is run, where there is only a single area (Greater Sydney),
+and only h is optimised for (with perfect knowledge 2 and no β optimisation). A
+spatial version of the baseline, with the 38 Greater Sydney LGAs as areas. Again,
+only h is optimised for (with perfect knowledge and no β). We then run pairwise
+combinations, so h and α, and h and β. We never run without optimisingh,a st h i sw a s
+the key decision-making parameter in the original model. Finally, we run the proposed
+extensions in their entirety—that is, we optimise over all three parameters ( h, β, and
+α). We then apply a global constraint (on the result of the training optimisation) that
+2006–2010 must exhibit a peak, with details outlined in “Appendix E.3”. The results
+are presented visually in Fig. 3. We also provide additional analysis into the network
+architecture itself in “Appendix G”.
+Looking at the resulting plots, we can see that with the introduction of each new
+component, the resulting values of the loss function 𝓁(see Eq. E.1) over the training
+period is reduced at each step, with the proposed extensions achieving the minimal 𝓁,
+indicating that the predictions arising from the resulting agent decisions follow more
+closely to those in the actual market. From this point forward, we focus on the proposed
+extension in its entirety, due to the improved performance in all three periods.
+5.2 Resulting parameters
+Exploring the entire parameter search space would be computationally prohibitive.
+Bayesian optimisation intelligently explores this search space, balancing exploration
+and exploitation with the use of an acquisition function allowing more emphasis to
+be placed on well-performing or unexplored regions of the space (Shahriari et al.
+2 Perfect knowledge in this paper is assumed to mean α = 1, O(vi ,v j ) = 1, i.e. ability to view every
+listing across all of Greater Sydney, i.e. M in 4.1.1.
+123
+
+18 B. P. Evans et al.
+𝓁= 45726) 𝓁= 187549) 𝓁= 459482)
+Baseline. No spatial component. Optimising h only.
+𝓁= 41613) 𝓁= 100745)
+(a) 2006–2010 ( (b) 2011–2015 ( (c) 2016–2019 (
+(d) 2006–2010 ( (e) 2011–2015 ( (f) 2016–2019 (𝓁= 392208)
+Spatial. Optimising h only.
+𝓁= 37523) 𝓁= 81553) 𝓁= 236476)
+Spatial. Optimising h and α.
+𝓁= 43459) 𝓁= 20321) 𝓁= 23674)
+Spatial. Optimising h and β.
+𝓁= 39786) 𝓁= 20106) 𝓁= 22492)
+Spatial. Optimising h, β and α.
+𝓁= 64334) 𝓁= 20106)
+(g) 2006–2010 ( (h) 2011–2015 ( (i) 2016–2019 (
+(j) 2006–2010 ( (k) 2011–2015 ( (l) 2016–2019 (
+(m) 2006–2010 ( (n) 2011–2015 ( (o) 2016–2019 (
+(p) 2006–2010 ( (q) 2011–2015 ( (r) 2016–2019 (𝓁= 22492)
+Spatial. Optimising h, β and α with global constraint in 2006–2010.
+Fig. 3 Optimisation of the goodness of ﬁt for dwelling prices across all models (for the training period).
+The orange lines are from the SIRCA–CoreLogic data (the solid line represents the rolling median, and
+the dotted line represents the month-to-month median). The black line shows the best ﬁtted path from the
+model
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 19
+(a) 2006–2010
+(b) 2011–2015
+(c) 2016–2019
+Fig. 4 Univariate parameter analysis. The x-axis represents the parameter value, and the y-axis represents
+the loss (with logarithmic colours for consistency across the various loss plots). The other parameters are
+averaged over to provide the one-dimensional view (colour ﬁgure online)
+2015). The resulting exploration is visualised in Fig. 12. From this, we can see the
+regions of interest, with dark sections indicating areas with the lowest loss𝓁(and more
+sample points being present in such areas). We can see the search space is fairly well
+explored in all cases, with obvious regions of well-performing parameter combinations
+(pairwise combinations are visualised in Fig. 13). While the 3D plot gives a high-level
+overview, it is difﬁcult to visualise the contribution of each component. To facilitate
+this, we present a ﬂattened one-dimensional view of each parameter, where the results
+123
+
+20 B. P. Evans et al.
+Table 1 Selected ABM
+parameters from the training
+period with Bayesian
+optimisation, rounded to 2
+decimal places
+2006–2010 2011–2015 2016–2019
+h − 0.80 − 0.11 − 0.005
+β 0.08 − 1.03 − 2.73
+α 0.28 0 .59 0 .24
+are averaged over the other 2 parameters to view the loss for 1 parameter at a time.
+This is shown in Fig. 4. From these plots, it can be seen how each parameter behaves
+in isolation (noting that such plots do not capture the parameter interactions). The
+selected ABM parameters (the ones which had the lowest 𝓁) are presented in Table 1.
+A sensitivity analysis for the parameters is performed in “Appendix F”.
+The parameter search space is uniform across the ranges given in Table 3,s oa n
+uninformative parameter would be sampled uniformly as well (since there would be
+no Bayesian preference the sampling would be approximately uniformly random);
+instead, we see clear unimodal peaks in almost all cases in Fig. 13, with the h and β
+parameters being normally distributed around the optimal value found, and α with a
+clear peak but non-normally distributed. This indicates each parameter seems to have
+a useful range, which is further veriﬁed in the sensitivity analysis in “Appendix F”.
+h: Recall that the HPI aptitude h directly inﬂuences the agents’ bid price [given in
+Eq. (3.1)] and serves as the key trend-following parameter in the original model. We
+can see the value of h controls the contribution of the HPI over the previous year and
+as such it affects the bid price based on the markets state. This relationship depends
+on both the current HPI and the yearly difference in /Delta1HPI.
+The absolute value of h controls the magnitude of the contribution, and we can
+see 2006–2010 had the highest contribution indicating the largest market effect on
+bidding. In the original model, h also had a large magnitude but the opposite sign. The
+value for 2011–2015, h =− 0.11, is very close to that chosen in the original model
+h =− 0.10, which reﬂects the relatively consistent price dynamics, with agents mostly
+ignoring the market trend.
+Interestingly, in 2016–2019, the chosen h is near zero. This means the denominator
+of Eq. ( 3.1) simpliﬁes to:
+φM[t]+ φh − h ∗ /Delta1HPI[t]≃ φM[t]+ φH
+meaning the price is dependent on the mortgage rate and homeownership rate, as φH
+is set based on the current value of HPI, this means the historical values are not being
+used, and instead, a much more “forgetful” market based only on the previous month’s
+HPI is used for setting the price, with agents paying less attention to historical trends.
+The HPI aptitude h also has clear optimal ranges for each period, with 2006–2010 in
+the range [−0.75... 0], 2011–2015 in the range [−0.5... 0.25] (which are of similar
+widths), and 2016–2019 in the much narrower range [−0.2 ... 0.05]. We can see a
+sharp transition occurring in 2016–2019 around 0.1, in which case the loss begins
+increasing drastically for any higher values.
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 21
+β: This parameter (the right-hand column in Fig. 4) exhibits a very sharp transition
+around 0 for all years. This is because β has a direct relation to the supply and demand
+in the model, which drastically changes the dynamics based on the availability of
+properties. We see increasing contributions of β throughout the years, with 2016–
+2019 indicating the highest levels of β. This is perhaps reﬂective of the market, where
+people are increasingly following trends when it comes to the decision to sell a dwelling
+(perhaps an indicator of a “bursting” bubble, with a large cascading sell-off). This
+indicates sharper peaks and dips are likely to occur in the future, with decision-making
+being made increasingly under the pressure of social inﬂuence.
+α: This parameter does not present as clear of a transition, or deﬁned range of
+optimal vales as h or β. This indicates the value ofα has less of an impact on the results
+when compared to h and β (as is conﬁrmed in the sensitivity analysis in “Appendix
+F”). The likely reason for this is since the buyer always attempts to purchase the most
+expensive viewed dwelling, the varying levels of α do not have as large of an effect
+on the outcome as the other parameters, since the most expensive dwellings still have
+a higher preference. Discussion on the effect α has on agent utilities and decisions is
+given in “Appendix L”.
+We can see a general preference towards various α ranges for each period, based
+on higher density of samples in these areas. The preference is never for “perfect”
+information, i.e. α = 1, reinforcing that such agents often act in a boundedly rational
+manner (with α< 1). In the 2006–2010 period, there is a general preference towards
+sampling lower levels of α (within ≈[ 0.05,... 0.3], with the optimal value being
+0.28), resulting in buyers acting with less information. In 2011–2015, during the
+economic recovery in Australia, buyers may have been more cautious and considering
+a wider range of available dwellings when purchasing, reﬂected in higher values of α
+(≈[ 0.5,... 0.7], with the optimised value being 0.59). In 2016–2019, the cautiousness
+of buyers appears to revert again (within ≈[ 0.05,... 0.3], with optimised value of
+0.24), showing buyers making less “informed” choices perhaps due to the rapidly
+increasing dwelling prices and buyer’s desires to partake, at the expense of making
+“optimal” choices with larger α values.
+6 Results
+In this section, we present results of ABM simulations in terms of (i) price forecasting
+over three historic periods, aligned with the Australian Census years (2006, 2011 and
+2016), and (ii) resultant agent preferences in terms of household mobility patterns.
+We also identify market trends across the three periods. The considered periods 2006–
+2010 and 2011–2015 include 48 months, while the contemporary period, 2016–2019,
+covers 42 months (our SIRCA–CoreLogic dataset includes the market data until 31
+December 2019). Each time period compromises a separate set of simulations (with
+varying optimised parameters). Discussion on the chosen time periods is given in
+“Appendix I.3”. For each period, we run 100 Monte Carlo simulations, using the model
+parameters optimised for the corresponding training set, as described in Sect. 5, and
+then obtain predictions for the remaining (testing) part of the data. For the ﬁrst two
+periods, the ﬁrst 3
+4 of the time series is the training part (e.g. 36 months from 1 July
+123
+
+22 B. P. Evans et al.
+Fig. 5 Actual trends of Greater Sydney house prices from June 2006 to December 2019. Source: SIRCA–
+CoreLogic. The orange line represents the rolling mean, and the red line the rolling median. The raw monthly
+data points are also visualised (dotted lines). We use the median price trend as a more robust measure in all
+cases in this paper
+2006 to 30 June 2009), and the remaining 1
+4 is the testing portion not used by any
+optimisation process (e.g. 12 months from 1 July 2009 to 30 June 2010). For the last
+period, the training part includes 30 months (from 1 July 2016 to 31 December 2018),
+with the remaining 12 months of 2019 used for testing.
+6.1 Price forecasting
+We visualise the forecasting results in Fig. 6. It is evident that the model can success-
+fully capture the key trends across the entire time series as emerging from individual
+buy and sell decisions, correctly identifying the peak and dip in 2006–2010, the steady
+growth during 2011–2015, and the growth and slow decline in 2016–2019.
+The time period beginning in 2006 was a period of substantial uncertainty, triggered
+by the Global Financial Crisis (GFC). Tracing predictions for the last quarter of the
+period (i.e. the testing part of the dataset), shown in Fig. 6a, d, we observe that the
+average market rebound pattern is not fully followed. However, when considering the
+range of the simulations runs, i.e. the possibilistic regions of the simulation (as deﬁned
+by Edmonds and ní Aodha ( 2018), and visualised by the blue boundaries in Fig. 6),
+we see that these contain the ﬁrst segment of the fast rebound, and capture the market
+recovery to a good degree. In other words, the model is able to show the possibility
+of such a rebound. The discrepancy indicates that there was a catalyst underpinning a
+signiﬁcant price appreciation during 2010 that was not solely driven by social inﬂuence
+and endogenous regulatory factors such as interest rates. It is well accepted that the
+market was reignited in 2009–2010 by exogenous factors, most notably by post-GFC
+government stimulus initiatives, such as the First Home Owners Boost (Randolph et al.
+2013).
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 23
+(a) Median: 2006–2010 (b) Median: 2011–2015 (c) Median: 2016–2019
+(d) Mean: 2006–2010 (e) Mean: 2011–2015 (f) Mean: 2016–2019
+Fig. 6 ABM simulation predictions. The top row shows the median of the simulations (black lines), every
+individual run (blue lines), and the minimum and maximum of every run with the light blue ﬁll. The bottom
+row shows the mean of the simulations (black line), and ± 1 and 2 standard deviations (dark blue and light
+blue respectively). The vertical dashed lines separate training and testing parts of the time series. The orange
+lines show the actual trend obtained from SIRCA–CoreLogic data (colour ﬁgure online)
+For the period beginning in 2011, the predicted time series correctly follows the
+actual trend, while slightly underestimating the slope of the growth towards the end
+of the period, as shown in Fig. 6b, e. It can be argued that the social inﬂuence factors,
+estimated during the optimisation phase, continue to affect the market dynamics during
+the last quarter of the period. In other words, the inﬂuence of these factors on decision-
+making, coupled with endogenous factors (e.g. interest rates), results in a steady growth
+of the market, predicted until the end of the period.
+In the last considered period, starting in 2016, the model captures both the testing
+and training portions very well, correctly predicting the dip from 2019 onward, as
+shown in Fig. 6c, f. The notable decline occurs only in the testing period, and yet, the
+model is able to accurately predict both the peak and the correction. This indicates
+that the underlying reasons for the market reversal have developed during the ﬁrst part
+of the period, and have been adequately captured by the parameter optimisation.
+Overall, in all three time periods, the possibilistic output of the model contains
+most of the actual market dynamics. Speciﬁcally, during 2006–2010, 96% of the
+actual monthly prices are within the possibilistic range boundaries of the simulation
+(i.e. between the minimum and maximum output for each time period, the top row in
+Fig. 6), for 2011–2015: 84%, and 2016–2019: 100%. When using the mean ± 1( 2 )
+123
+
+24 B. P. Evans et al.
+standard deviations (bottom row in Fig. 6) as possibilistic boundaries, we observed
+the following probabilities of falling within the boundaries, during 2006–2010: 78%
+(92%), 2011–2015: 27% (63%), and 2016–2019: 86% (100%).
+6.2 Area-specific price forecasting
+The model was not directly optimised for spatial submarkets. However, in this section,
+we evaluate the predictive capacity of the model in terms of area-speciﬁc forecasting.
+During initialisation, some area-speciﬁc information for LGAs is drawn from available
+distributions, for example, the recent sale price of dwellings in that LGA. Likewise,
+households are also distributed into LGAs based on the actual population sizes of the
+LGAs. However, no additional optimisation is applied across different LGAs with
+respect to actual area-speciﬁc trends. In other words, the spatial component is used
+only for initialising relevant distributions, leaving the market dynamics to develop
+through agent-to-agent interactions.
+In Fig. 7, we visualise the predicted area-speciﬁc pricing at the end of the testing
+period. We can see that these predictions closely follow actual data in general, despite
+not being directly optimised for, with all predictions characterised by high R2 values.
+For the period 2006–2010 (with the end of the testing period mapping to June
+2010), the simulations slightly overestimate the ﬁnal price of the cheaper LGAs, but
+underestimate the resulting price of the most expensive LGAs, as shown in Fig. 7a.
+However, the perfect model (orange line) tends to be within the error margin (standard
+deviation) of the predictions of the simulation.
+For 2011–2015 (with the end of the testing period being June 2015), the slopes of
+both actual and predicted regressions are almost identical ( m = 0.98), as shown in
+Fig. 7b. However, the additive constant of the regression (i.e. y-axis intercept) for the
+predicted line is greater than 0 (of the perfect model): as a result, we are predicting
+slightly higher values across the LGAs on average. Considering the LGAs that were
+most overpriced with respect to the spatial trend (such as Kuringai, Waverly, Northern
+Beaches, and North Sydney), we can compare their resultant predicted prices in June
+2015, Fig. 7b, with the actual prices depicted in Fig. 7c. The 2016–2019 plots show
+that this growth did eventually happen, and so the simulations produced for 2011–2015
+merely predicted this appreciation for an earlier time than the actual scenario.
+The predictions for the period 2016–2019 (the end of the testing period: December
+2019) produce a regression strongly aligned with the actual ﬁt, particularly for the
+higher-priced LGAs. Again, there is some overestimation in the cheaper LGAs, but
+this seems to highlight the increasing popularity of these suburbs. Analogously to the
+previous period, this may be indicative of some future price growth for these areas,
+not yet reﬂected in the current actual pricing.
+Overall, we observe that the resulting area-speciﬁc price predictions at the end of
+each testing period ﬁt closely to the actual resulting prices. This indicates that the
+model successfully captured the spatial submarkets, despite having been optimised
+for the overall market dynamics of the Greater Sydney region as a whole.
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 25
+Fig. 7 Predicted LGA pricing at
+the end of the testing period.
+The actual prices
+(SIRCA–CoreLogic) are shown
+on the x-axis, with the predicted
+prices on the y-axis. Error bars
+represent the standard deviation
+of the prediction across
+simulation runs. The orange line
+shows the perfect model
+(y = x), and the blue line shows
+the least-squares line of best ﬁt
+for the predictions (equation
+given on plot) (colour ﬁgure
+online)
+(a)
+(b)
+(c)
+6.3 Agent preferences and mobility patterns
+Analysing the households’ movements produced by the simulation is another key
+insight the spatial agent-based model can provide. In this section, we consider various
+agent movement patterns (which we refer to as household mobility), aiming to iden-
+tify the salient trends in agent preferences. There are several key areas we focus on:
+123
+
+26 B. P. Evans et al.
+(a) First-time home buyers (b) Overseas Investors (c) Local Investors
+Fig. 8 Comparison of price inﬂuenced mobility between the three periods. The x-axis represents the afford-
+ability (most affordable locations on the left). They-axis represents the (smoothed) percentage of movements
+to the area. Darker colours represent later years. A full breakdown of household mobility is provided in
+“Appendix J”
+ﬁrst-time home buyers, investors, and new households (i.e. migrations or households
+splitting). Again, no direct optimisation was applied to the movements, and so the iden-
+tiﬁed preferences are intrinsic results of the model, and not attributed to some actual
+data. However, we show that such mobility preferences are supported by evidence,
+thus arguing that the model is able to produce sensible local patterns for which it was
+not explicitly optimised for, based only on the global calibration data and proposed
+spatial structure.
+The mechanisms shaping the process of settlement formation and generating intra-
+urban mobility speciﬁcally include transitions driven by critical social dynamics,
+transformations of labour markets, changes in transport networks, as well as other
+infrastructural developments (Kim et al. 2005; Simini et al. 2012; Barthelemy et al.
+2013; Louf and Barthelemy 2013; Arcaute et al. 2016; Barthelemy 2016; Crosato et al.
+2018; Barbosa et al. 2018; Piovani et al. 2018; Slavko et al. 2019; Barthelemy 2019).
+Types of homeownership, in particular, are known to affect mobility patterns (Crosato
+et al. 2021). In this work, we focus solely on the movements resulting from the hous-
+ing market dynamics, which in turn incorporate the imperfect spatial information and
+other subjective factors such as the FOMO and trend-following aptitude. We do not
+model any structural changes across the regions, i.e. the LGAs boundaries, transport
+and other infrastructure topologies, remain ﬁxed.
+6.3.1 New households/migrations
+New households are those which are added throughout the simulation based on the
+projected household growth. New households can result from a variety of sources,
+such as people moving to Greater Sydney (migration), or households from Greater
+Sydney splitting, e.g. in the case of divorce or young adults moving out of home. We
+make no distinction between the two types in the simulation, and for simplicity, refer
+to both intercity and intra-city migration types as migrants.
+The most common LGAs into which the new households move are shown in
+Fig. 22.3 The simulation produces a clear trend for migration towards the cheaper
+3 All movements are scaled by the population size to allow a fair comparison, as outlined in “Appendix J”.
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 27
+areas, as the price begins to increase throughout the Greater Sydney region over time.
+This is most apparent for the 2016–2019 period, during which we can detect only a
+minority of the new households that purchased a dwelling in the expensive areas upon
+moving to the Greater Sydney. This is markedly different when in comparison with the
+2006–2010 period. Furthermore, there is a clear peak in the more affordable LGAs,
+comprising Western Sydney (such as Campbelltown, Penrith, Blacktown, Fairﬁeld,
+and Liverpool), and LGAs further away from the metropolitan area (such as Central
+Coast, Lake Macquarie, and Hawkesbury). A similar trend can be seen with the new
+renters. This agrees with the discussion in Bangura and Lee ( 2019), which names
+Western Sydney as “the ﬁrst port of call for new arrivals, immigrants and refugees”.
+This observations also agree with the study of Slavko et al. ( 2020a), which shows the
+outward sprawl from the densely populated Sydney metropolitan area.
+6.3.2 First-time home buyers
+Homeownership has long been a goal of many Australians (Bessant and Johnson2013),
+so simulating the forecasted feasibility in Sydney—the largest and most expensive
+(Y etsenga and Emmett2020), Australian city—is essential. The ﬁrst-time home buyers
+are deﬁned here as those who have resided in Sydney but have previously been renters,
+and then purchased their own dwelling. This is in contrast to the analysis in Sect.6.3.1,
+where the new owners are deﬁned as those that had just entered the simulation (by
+moving to Sydney).
+The ﬁrst home purchases are visualised in Fig. 24. The main diagonal represents
+an agent purchasing in the same LGA as the one where the household is currently
+renting. The area below the main diagonal (which we refer to as lower triangle) shows
+households purchasing in cheaper LGAs in comparison with those where they are
+renting, and the area above the main diagonal (the upper triangle) shows the agents
+purchasing in LGAs more expensive than those where they are currently renting. In the
+earlier years (i.e. the 2006–2010 period), we can see that the densities in the heatmaps
+are relatively evenly distributed. Over time, however, the density of the upper triangle
+begins to decrease, meaning that the agents are purchasing in the LGAs cheaper than
+those where they are renting, as the expensive LGAs become increasingly out of reach.
+This is also reﬂected in Fig. 8a: a comparison between the 2006–2010 and the 2016–
+2019 periods clearly shows that many suburbs are simply becoming out of reach for
+the ﬁrst-time home buyers, with a larger percentage of them needing to purchase in
+the more affordable areas.
+This result is in line with (Randolph et al.2013) which shows the distribution of First
+Home Owner Grants within Sydney statistical districts, over the period 2000–2010,
+pointing out that such grants were increasingly likely in the lower-income housing
+markets, such as Western and Southern Sydney. Likewise, in La Cava et al. ( 2017), it
+is shown that the average distance to the CBD of dwellings that ﬁrst-time home buyers
+can afford has been increasing from 2006 through 2016. Furthermore, La Cava et al.
+(2017) show that the purchasing capacity of ﬁrst-time home buyers has been limited
+to the bottom (i.e. most affordable) 10–30% of dwellings, where in 2016 the median
+ﬁrst-time home buyer could afford only around 10% of the available dwellings. A
+similar conclusion is reached in Kupke and Rossini ( 2011) which ﬁnd key workers
+123
+
+28 B. P. Evans et al.
+being able to afford fewer dwellings and commute longer distances between 2001 and
+2009, a trend which seems to have been followed ever since, as shown by the mobility
+patterns here.
+6.3.3 Investors
+Investors are deﬁned as households which own multiple dwellings, or households
+which live overseas yet own a property in Greater Sydney. We make an explicit distinc-
+tion between local (residing in Sydney) and overseas investors, since price increases
+within Sydney are often attributed to the latter category (Rogers et al. 2015, 2017;
+Wong2017; Guest and Rohde2017). This distinction is visualised in Fig.23. The over-
+seas investment approvals are regulated by the Australian government, and details of
+the approval data are provided in “Appendix K”.
+During the 2006–2010 period, based on the overseas approvals granted, the simu-
+lation produces a clear preference for the overseas buyers towards the most expensive
+regions, purchasing properties almost exclusively in the highest priced regions. In
+later periods, we begin to observe a relatively wider range of preference, although
+still with a clear trend towards the mid-high-range areas. This is reﬂected in Fig. 8b.
+A driving factor behind this is the higher average government approval for overseas
+investment given during 2006–2007 years, in comparison with later years, reﬂected
+in our simulation (as displayed in Fig. 25). While the foreign investment data in the
+Greater Sydney housing market is sparse and not ﬁne-grained, this purchasing pattern
+is in concordance with the recent literature. For example, the study of (Gauder et al.
+2014) mentions that foreign investors tend to prefer inner-city dwellings within Syd-
+ney (which tend to correspond to higher-priced LGAs); however, recently “foreign
+investment has started to broaden out into other areas of Sydney”.
+These ﬁndings are in sharp contrast to mobility patterns of the local investors, for
+which the simulation produces a far wider distribution across areas. For 2011–2015,
+and 2016–2019 periods, the most expensive LGAs become out of reach for local
+investors, which is most apparent during 2016–2019 (as shown in Fig. 8c). Local
+investors can be seen buying properties in many of the cheaper LGAs, which also
+falls in line with the simulation showing many renters in these areas. Due to the
+affordability, these LGAs also exhibit higher population growth rates than other areas.
+This also agrees with existing studies, for example (Pawson and Martin 2020), which
+ﬁnd that many high-income Australian landlords are investing in dwellings in lower
+socioeconomically developed regions of Sydney.
+7 Conclusions and future work
+In this work, we have introduced a spatial element to a model of a large, well-developed
+housing market (the Greater Sydney region) using an adjacency matrix based on the
+spatial composition of the city, and introduced several factors which affect agent
+decision-making within the market. We have shown the model is capable of predicting
+housing price dynamics as arising from individual buy and sell decisions in the market.
+The proposed model is capable of capturing a large variety of spatial topologies, for
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 29
+example, monocentric and polycentric cities. Furthermore, the graph-based approach
+is ﬂexible allowing for any level of granularity, for example, over the differing scales
+of countries, cities, or suburbs, and extendable to weighted versions which could
+incorporate transport times between areas.
+Using this model, we have demonstrated the usefulness of spatial analysis when
+it is calibrated to the Australian house price data for the Greater Sydney region. The
+38 LGAs of Greater Sydney were simulated, and agents (households) were calibrated
+based on the LGA in which they live. We have shown that the spatial component allows
+an additional level of ﬁne-tuning that results in better overall ﬁtting of the model to
+data, as well as producing strong out-of-sample predictions for each individual LGA
+by optimising only for the overall trend. That is, spatial areas add an additional layer
+of predictions, while also improving the overall aggregate trend.
+We investigated the agent’s spatial awareness of the market, where buyers only have
+limited knowledge of the market, based on the area in which they reside (imperfect
+spatial information). We demonstrated through varying α (a parameter that controls
+how much of the market each agent is able to perceive) that lower values ofα capture the
+true trend better than perfect (whole of market) knowledge, indicating the usefulness
+of modelling this imperfect spatial information in a housing market and showing that
+agents often act in a boundedly rational manner.
+The spatial component also allows for the analysis of agent preferences in terms
+of movement patterns, where we have shown differences in mobility and purchase
+locations between various agent types, for example differences between ﬁrst-time
+home buyers and investors, where ﬁrst-time home buyers are limited to the more
+affordable locations, with investors being able to purchase higher-priced properties,
+and likewise between local and overseas investors, where overseas investors are shown
+to have a strong preference towards mid to high valued areas. We also model new
+migrations to the city, showing such agents becoming increasingly pushed towards
+cheaper areas of the city.
+We have also introduced a novel fear of missing out component which alters sellers
+decision-making behaviour. With this parameter, we model how sellers become more
+likely to sell a listing if many surrounding listings have recently sold, and show a
+strongly localised fear of missing out occurring throughout the market. This indicates
+agents’ decisions are often motivated by their neighbour’s decisions rather than by
+strict optimisation of their own beneﬁts, i.e. real households are only partially rational
+in this regard.
+While in this work we addressed some key concerns in a housing market, there
+are still several areas of improvement we would like to focus on in future work. The
+spatial component opens up a range of additional possibilities, such as overlaying
+public transport maps on the network, allowing for the distance to key work areas,
+schools, beaches, etc., and further modelling and capturing agent mobility within the
+simulation. The demographics and household types could be sampled from actual data,
+which would allow analysis into subgroups of people (i.e. young singles vs. retirees
+vs. families), and allow us to model any spatial trends that arise between demographic
+groups. The internal optimisation functions (for example, what neighbourhood to
+move to, what kind of dwelling to choose) of agents could also be investigated further,
+as currently, agents will purchase the most expensive dwelling they can afford based
+123
+
+30 B. P. Evans et al.
+on their knowledge and outreach. There are also three key equations which drive the
+model that could be further investigated: the bid prices, the listing prices, and the bank
+approval process. These are currently predeﬁned equations but they could be treated
+as optimisation problems themselves, ﬁnding expressions that match most closely to
+the training period.
+A: Implementation
+The model is written from scratch in Python3, based on the C++ code from Glavatskiy
+et al. (2020).
+B: Baseline model parameters
+The work extends the model of Glavatskiy et al. ( 2020) (the baseline). For complete-
+ness, all parameters of the baseline method with explanations are given in Table 2.
+Local sensitivity analysis of these parameters is presented in Fig. 9, where we vary
+the internal values around their default ranges (within a range of ±20%) one at a
+time while keeping the other parameters at their default values. The resulting analysis
+shows the model is robust to small changes in the parameters. The only parameters
+that stand out from the analysis deserving additional discussion are the listing price
+factor, the expectation downshift ratio, and the amount quality reference.
+The listing price factor b𝓁 has relatively large variation in prices, but as shown in
+Eq. (3.2) this is because it acts as a linear scaler on the list prices, so scales the output
+within the ±20% range too, which means the parameter is behaving as expected. The
+expectation downshift ratio pd highlights the willingness of agents to downgrade the
+pre-purchase expectation based on the amount offered by the bank. For higher values,
+this indicates buyers wanting more from banks, and we see this increases prices overall.
+It is interesting to note, however, that higher values also increase the volatility of the
+market, with larger ﬂuctuations seen for example in late 2017 (at the peak of the
+market). This conﬁrms the discussion in the study of Glavatskiy et al. ( 2020) which
+highlighted the propensity to borrow as a key explanatory factor of volatility. For
+the amount quality reference ¯Qh, this is an integer parameter which explains why
+there are fewer comparison lines than the continuous parameters, but we still observe
+well-behaved outputs in the ±20% range.
+For all other parameters, the outputs only result in small variations from the default
+value indicating the robustness of the model to variations around the internal param-
+eters.
+C: market matching
+The market matching process where buyers and sellers are matched is relatively simple
+and given in Algorithm 1. We can see the highest bidding buyer gets preference to
+the listings, and every buyer attempts to purchase the most expensive listing they can
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 31
+Table 2 Baseline model parameters
+Parameter Symbol V alue
+External paramaters
+Mortgage rate φM 2006–2010: 7.3–9.45%
+2011–2015: 5.53–7.79%
+2016–2019: 4.95–5.35%
+Tax rate 2006–2010: 0%, 15%, 30%, 40%, 45%
+2011–2015: 0%, 15%, 30%, 37%, 45%
+2016–2019: 0%, 19%, 32.5%, 37%, 45%
+Tax brackets 2006–2010: $0, $6k, $25k, $75k, $150k
+2011–2015: $0, $6k, $37k, $80k, $180k
+2016–2019: $0, $18.2k, $37k, $87k, $180k
+Income expenditure φI,φ b 2006–2010: [49.37, 0.81]
+2011–2015: [76.76, 0.75]
+2016–2019: [81.75, 0.80]
+Mortgage duration 30 years
+Annual house tax and fees 1.7%
+Stamp duty 2.5%
+House care φH 2.5% ± 0.5%
+Purchase fees 2.5%
+Loan to value ratio 80% ± 10%
+Income growth rate 1 .002 ± 0.001
+Income consumption 60%
+Liquid consumption 2.5%
+Internal paramaters
+Listing probability pb 1%
+Amount of houses for reference Qh 10
+List price factor b𝓁 1.75
+Sold to list power bs 0.22
+Months on market power bd − 0.01
+Urgency stress 0.2
+Urgency rental 0.02
+Urgency cash 0.2
+Probability of accepting highest bidder pm 80%
+Expectation downshift ratio pd 60%
+The external parameters are exogenous, sourced from, the Australian Bureau of Statistics, The Household,
+Income and Labour Dynamics in Australia Survey (Wilkins and Lass 2015). The internal parameters are
+endogenous, and the default values tend to come from the analysis of (Axtell et al.2014). Sensitivity analysis
+around the internal parameters is given in Fig. 9, and a full outline is given in Glavatskiy et al. ( 2020)
+123
+
+32 B. P. Evans et al.
+Fig. 9 Local sensitivity analysis showing variation in output based on varying the baseline model input
+parameters one at a time ±20% around their default value (with others ﬁxed at their default). The red lines
+represent the output for the default value, and the grey lines represent for the varying values (with shade
+indicating the distance to the default, black meaning very near the default, and light grey being further away).
+All show relatively small variations in the output based on the input parameters, indicating the robustness
+of the parameters (colour ﬁgure online)
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 33
+afford. In certain cases, deals are rejected due to external inﬂuences (modelled by a
+random 20% chance of rejection). This matching process is performed once every
+simulation step, with bids and listings that did not clear persisting into the next step.
+Algorithm 1 Market Matching
+1: procedure match(bids , listings )
+2: sort bids ⊿ From highest bid price to lowest
+3: sort listings ⊿ From highest list price to lowest
+4: for bidder in bids do
+5: best listing ← max listing buyer can afford
+6: if no deal breaker then
+7: Make deal between buyer and seller
+8: listings − best listing ⊿ Remove this listing from the available listings
+9: end if
+10: end for
+11: endp rocedure
+D: Rental market
+In the baseline model, there was no concept of rental matching. Households were
+randomly assigned a rental, with no regard to the cost of the dwelling or income of
+the household. Here, we add in an additional matching process based on the idea that
+households should spend maximum 30% of their income on housing when possible
+to avoid housing stress (Thomas and Hall 2016; Fernald 2020).
+New households are randomly assigned a “local” area (weighted by the population
+of each area), where they begin and have their characteristics (wealth, income, cash
+ﬂow, etc.) assigned. From there, every household attempts to ﬁnd a vacant rental in
+their price range (which will likely result in various households moving out of ﬁnancial
+requirements). Households with extremely high incomes, where all dwellings are less
+than 10% of their income, get the most expensive rental available. Households with
+extremely low income, where all dwellings are at least 30% of their income, get the
+cheapest one they can afford. All other households randomly choose a rental they can
+afford (in the 10–30% of income range).
+Households remain in their rentals for the duration of the simulation. In this work,
+we do not attempt to capture the rental market in its entirety and leave this for future
+work where we would like to model the relationship between renters and investors.
+The changes were made to ensure the cash ﬂow situations of each household match
+closer to those seen in the real world, where in the previous model many households
+would be in a poor cash ﬂow situation due to the rental price. Other work such as Mc
+Breen (2010) looks more in depth at modelling the rental market.
+123
+
+34 B. P. Evans et al.
+E: Bayesian optimisation
+E.1 Details
+Bayesian optimisation is performed using the Tree of Parzen Estimators approach
+with hyperopt from Bergstra et al. ( 2013). The optimisation process was run for 2000
+iterations in all cases. The loss was measured as the average loss over several stochastic
+runs for each set of parameters, to minimise the effect of randomisation in the model
+and resulting loss.
+E.2 Loss function
+For measuring the goodness of ﬁt, we use a loss function with two terms—a shape
+and temporal term to try and capture the nonlinearities overtime when predicting
+housing price trends. This loss function is a modiﬁcation of DILA TE (Vincent and
+Thome 2019) which was introduced as a loss function for neural networks for time
+series predictions, although DILA TE has been simpliﬁed here (with the removal of
+smoothing parameters) as Bayesian optimisation does not require the loss function to
+be differentiable.
+The loss function is given in Eq. ( E.1).
+𝓁= λ ∗ shape + (1 − λ) ∗ temporal (E.1)
+λ = 0.5 was used throughout since this was the most common in the original paper
+of Vincent and Thome ( 2019). However, as the terms are not normalised, the two do
+not have an equal contribution; instead, the temporal term serves more like a penalty
+on the shape (with λ controlling the strength of the penalty).
+The shape term is based on dynamic time warping (DTW) which has commonly
+been used in speech recognition tasks (Sakoe and Chiba 1978; Myers et al. 1980)
+and, however, has a wide range of applications in time series data (Berndt and Clifford
+1994). Dynamic time warping can be expressed recursively as a minimisation problem
+as in Eq. ( E.2)
+shape = DTW = d(x, y) + min
+⎡
+⎣
+DTW(x − 1, y),
+DTW(x − 1, y − 1),
+DTW(x, y − 1)
+⎤
+⎦ (E.2)
+This can be read as minimising the cumulative distance (using distance measure d,
+in this case, euclidean distance) on some warped path between x and y, by taking the
+distance between the current elements and the minimum of the cumulative distances
+of neighbouring points.
+Unlike the common applications in speech recognition, where words can be spo-
+ken at varying speeds (so the peaks do not necessarily match up), in ﬁnancial markets,
+timing such peaks is important. This motivates the introduction of a temporal term,
+for trying to align such peaks and dips. The temporal term is based on Time Distortion
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 35
+(a) Shifted Predictions (b) Linear Predictions
+Fig. 10 Motivation of time series-based loss using a constructed example. We can see the line on the right
+is a very poor predictor of the true trend, failing to capture any of the peaks or dips. However, the MSE is
+signiﬁcantly lower than the line on the left. DTW captures the shifts, and incorporating a penalty on time
+can penalise these shifts. The light grey lines show how DTW matches points together, even if they do not
+occur at the same time period
+Index (TDI) (Frías-Paredes et al. 2016, 2017), which can be thought of as the nor-
+malised area between the optimal path and the identity path (where the identify path
+is (1, 1), (2, 2).., (N, N)) (V allance et al. 2017) and aims to minimise the impact of
+shifting and distortion in time series forecasting (Frías-Paredes et al. 2016).
+Pl =
+∫ il+1
+il
+(
+x − (x − il)( jl+1 − jl)
+(il+1 − il) + jl
+)
+dx (E.3)
+temporal = TDI = 2 ∑ |Pl
+N 2 (E.4)
+To see the usefulness over a more standard approach loss function such as MSE for
+time series, consider the example in Fig. 10. We can see the MSE can be a problematic
+approach, and in some cases (as in the example where the linear line Fig.10b has a lower
+loss) be a misleading measure of goodness of ﬁt. DTW helps to match points in the
+two time series, while TDI helps minimise the offset of the predictions. (Graphically,
+in the example this corresponds to shortening the dotted grey lines.) For a full analysis,
+we refer you to the original DILA TE paper of Vincent and Thome (2019), noting that
+all smoothing terms have been removed in the modiﬁcation here.
+E.3 Global constraints
+We can see 2011–2015 and 2016–2019 ﬁt the trend very closely, although despite
+having a low loss, the 2006–2010 simulation path does not follow the dip well, as no
+distinction is made about being above or below the trend in the loss function. Looking
+123
+
+36 B. P. Evans et al.
+(a) Without Constraints (b) Red shows the paths
+which will be removed.
+(c) Paths matching con-
+straint
+Fig. 11 Global constraint process
+at the individual paths from every run, we can see that a peak and dip is predicted in
+many of the cases, although the distance is greater than the path with the lowest loss
+which was perfectly matching across a large portion of the training data but missing
+the dip. We apply a post-optimisation global constraint to 2006–2010, again only using
+this training period, that the midpoint of the simulation must be higher than the start
+and ending points (i.e. a peak must occur), and take the parameters with the lowest
+loss matching this criterion. The process is shown in Fig. 11 and the result is shown in
+Fig. 5p. We can see for 2006–2010, the 𝓁is higher than before the constraint, however,
+clearly, the constraint allows for a closer overall trend following in the training period.
+The visualisation in Fig. 11 can also begin to show the wide range of possible market
+outcomes, for various combinations of the parameters. If a certain section occurs from
+many parameter outcomes (i.e. with the peak), we can deduce that such dynamics
+were likely to occur just due to the agent characteristics, regardless of the parameters
+used. This shows many combinations lead to a peak and dip, perhaps due to mortgage
+rates and worrying mortgage vs income ratios. This is more in line with suggestions
+in Edmonds and ní Aodha ( 2018), which suggest ABMs be used to determine a range
+of potential future outcomes, which in this case shows a variety of paths leading to a
+peak and dip.
+E.4 Parameter space
+The parameter space is deﬁned in Table 3.
+Even though there are only three parameters to tune, the number of potential com-
+binations exceeds 4 million (this is assuming values are discretised values, so the true
+number is far greater), making a grid search impractical.
+The three parameters are h, α, and β.
+F: Sensitivity analysis
+While in Sect. 5.1 we analysed the contribution of each new component by comparing
+the resulting optimised time series after introducing the components one at a time,
+here we verify and rank the importance of each of the contributions explicitly using
+global sensitivity analysis (GSA).
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 37
+Table 3 Three tunable hyperparameters
+Search space Explanation
+α [0, 1] Probability of viewing a listing, scaled by the outreach
+β [−10, +10] The contribution of surrounding listing sales when considering selling a dwelling
+h [−1, +1] Trend-following aptitude
+All parameters are sampled uniformly within these ranges
+123
+
+38 B. P. Evans et al.
+(a) 2006–2010 (b) 2011–2015 (c) 2016–2019
+Fig. 12 Search space exploration. Colour indicates the loss
+(a) (b) (c)
+Fig. 13 Parameter interactions and parameter sampling
+Table 4 Morris method for sensitivity analysis
+2006–2010 2011–2015 2016–2019
+μ∗ σμ ∗ σμ ∗ σ
+h 692,019 708,678 1 ,390,890 1 ,693,784 871,388 882,436
+β 434,626 843,830 714 ,507 961 ,618 623,839 650,213
+α 317,806 573,236 467 ,376 729 ,330 325,056 475,900
+Speciﬁcally, we analyse the importance of the trend-following aptitude ( h), the
+social contribution (β), and the role of α in minimising the loss function.
+We use the Morris method (Morris 1991) for a GSA and present the revised μ∗ as
+suggested in Saltelli et al. ( 2004) and σ . μ∗ represents the mean absolute elementary
+effect and can be used to rank the contribution of each parameter, and this solves the
+problem of μ where elementary effects can cancel out. We also analyse σ , i.e. the
+standard deviation of the elementary effects, as a measure of the interactions.
+For parameters for the Morris Method, we use r = 20 trajectories, p = 10 levels,
+and step size /Delta1= p/[2( p − 1)], i.e. /Delta1≈ 0.52 with p = 10. These are within the
+range of commonly used parameters, e.g. in Campolongo et al. ( 2007).
+The results are presented in Table 4, and visualised in Figs. 15 and 14.
+Checking the importance of each parameter, or μ⋆, we can see h consistently ranks
+the most important, showing its changes have the largest effect on 𝓁. This is followed
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 39
+(a) (b) (c)
+Fig. 14 Importance plot showing μ⋆. Error bars are displayed at the 95% conﬁdence level
+(a) (b) (c)
+Fig. 15 Global sensitivity analysis with Morris plots. Diagonal lines represent the ranges for σ/μ⋆.O n e
+classiﬁcation strategy proposed by Sanchez et al. ( 2014) says factors which are almost linear should be
+below the 0.1 line, factors which are monotonic between 0.1 and 0.5 lines, or almost monotonic between
+the 0.5 and 1 line, and factors with non-monotonic nonlinearities or interactions with other factors above
+the 1 line
+in importance by β, and then α each year. However, we see that conﬁdence bars do
+overlap in Fig. 14.
+Viewing the Morris plots in Fig.15, we can see all parameters are deemed important,
+where unimportant parameters would show up in the bottom leftmost portion of the
+plot. Using the classiﬁcation strategy of Sanchez et al. ( 2014), all parameters are all
+considered to be non-monotonic and/or with high levels of interaction, since σ
+μ⋆ > 1
+in all cases.
+This analysis agrees with the preliminary parameter analysis in Sect. 5.2.
+While the Morris method gives us the overall sensitivity across the parameter ranges
+(in a global way) and allows us to rank the factors in terms of importance, we also
+provide a ﬁne-grained sensitivity analysis around the default values, i.e. a local sensi-
+tivity analysis (LSA). For this, we use p = 100 levels, but vary only one parameter at
+a time while keeping the others ﬁxed at their default values. This is shown in Fig. 16.
+This analysis shows how robust the resulting default values are to small perturba-
+tions, but as this is a local method, the results should be interpreted with caution (and
+only in conjunction with the GSA method above), since this does not account for any
+parameter interactions as warned in Saltelli et al. ( 2019).
+Viewing h (the left column), we can see all values surrounding the default have a
+similar loss, showing the model is robust to small changes in the aptitude. Looking
+across the entire search space, we can see choosing from within an appropriate range for
+the aptitude is important though, but the surrounding parameters are always relatively
+smooth to the resulting loss. Viewing β (the middle column), we can see the sharp
+123
+
+40 B. P. Evans et al.
+(a) (b) (c)
+Fig. 16 Univariate LSA of default parameters, varying one factor at a time with others at their optimised
+values. The plots give the change in parameter value ( x-axis) versus 𝓁(y-axis). The dotted vertical black
+line shows the optimised value
+transition above zero. There is a clear optimal range for β, where the default lies.
+However, again, the area surrounding the default values is smooth showing robustness
+to the default parameters (assuming we do not vary past the sharp transition). Looking
+at α (the ﬁnal column), the plots initially seem somewhat jagged, although when
+looking at the scale of the y-axis it becomes clear these are very small shifts in
+loss (as veriﬁed by the plotted time series with varying α levels). α was deemed
+the least important of the three parameters by the Morris method screening, but was
+still important based on the positioning on the Morris plot. We can verify this here,
+where changes in α do not have a huge impact on 𝓁.
+GSA was performed using SALib from Herman and Usher ( 2017).
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 41
+GREATER SYDNEY
+(a) No Spatial
+Component
+CANTERBURY-BANKSTOWN
+FAIRFIELD
+GEORGES RIVER
+CAMDEN
+LAKE MACQUARIE
+NORTHERN BEACHES
+HORNSBY
+THE HILLS SHIRE
+PENRITH
+LIVERPOOL
+CAMPBELLTOWN
+CENTRAL COAST
+WOLLONDILLY
+UPPER LACHLAN SHIRE
+CANADA BAY
+BAYSIDE
+SUTHERLAND SHIRE
+BLACKTOWN
+HAWKESBURY
+WILLOUGHBY
+LANE COVE
+STRATHFIELD
+WAVERLEY
+RYDE
+NORTH SYDNEY
+LITHGOW
+BURWOOD
+BLUE MOUNTAINS
+MOSMAN
+CITY OF SYDNEY
+WOOLLAHRA
+KU-RING-GAI
+HUNTERS HILL
+RANDWICK
+INNER WEST
+WINGECARRIBEE
+CUMBERLAND
+CITY OF PARRAMATTA
+(b) LGAs
+WINGECARRIBEE
+RANDWICK
+CANADA BAY
+CAMPBELLTOWN
+LANE COVE
+CUMBERLAND
+BLUE MOUNTAINS
+BAYSIDE
+UPPER LACHLAN SHIRE
+KU-RING-GAIGEORGES RIVERHUNTERS HILLSUTHERLAND SHIRE
+WILLOUGHBY
+FAIRFIELD
+LIVERPOOL
+NORTH SYDNEY
+CITY OF PARRAMATTA
+BURWOOD
+HORNSBY
+CANTERBURY-BANKSTOWN
+THE HILLS SHIRE
+WOOLLAHRA
+LITHGOW
+PENRITH
+MOSMAN
+WAVERLEY
+STRATHFIELDBLACKTOWNLAKE MACQUARIEINNER WEST
+CENTRAL COAST
+CAMDEN
+NORTHERN BEACHES
+HAWKESBURY
+WOLLONDILLY
+CITY OF SYDNEY
+RYDE
+(c) Complete
+Fig. 17 V arious potential network architectures. The left represents a single node (i.e. no spatial component).
+The middle is the proposed graph-based approach constructed from the topological layout of the region.
+The right is a complete graph, with individual areas, but no concept of spatial neighbours (due to the fully
+connected nature)
+G: Network topology
+In Sect. 4, we introduced a novel graph-based structure for representing the region,
+at the same time introducing spatial submarkets into the simulation (based on nodes
+in the graph). In Sect. 5.1 and “Appendix F”, we have validated the usefulness of the
+newly introduced parameters and performed a sensitivity analysis of the parameters,
+whereas in this section, we look to validate the usefulness of the network structure
+itself.
+To do this, we compare the newly proposed model (with all parameters included),
+against an identical model with only a single node. We also compare to a fully con-
+nected network, i.e. where the spatial element (in terms of neighbourhoods) is not
+considered directly, but speciﬁc areas still exist. These structures are visualised in
+Fig. 17.
+G.1 Topologies
+G.1.1 No spatial component
+To remove submarkets and all spatial components, we use a graph composed of a single
+node representing the overall Greater Sydney region. That is, agent characteristics and
+dwelling prices are assigned based on the overall Greater Sydney distributions, rather
+than speciﬁc area distributions. To implement this, rather than G being deﬁned as
+in Sect. 4.1.1, instead, G contains a single node (i.e. a singleton graph) where the
+node represents the overall Greater Sydney region, i.e. it is the graph K1. With this
+single-node conﬁguration, the spatial outreach from Eq. ( 4.3) is removed, as there is
+no concept of space. Likewise, β is no longer deﬁned, as this is expressed in spatial
+123
+
+42 B. P. Evans et al.
+Fig. 18 V arious network architectures (visualised as the mean± standard deviation range), the actual trend
+is given in orange. We see the individual submarket methods perform well, whereas in this case the single
+area (meaning no submarkets) method fails to adequately capture the overall trends
+terms. However,α remains, which controls the boundedness of the agent as discussed
+in “Appendix L”, and h keeps the same interpretation.
+G.1.2 Fully connected graph
+To represent the fully connected areas, we use a complete graph where every LGA
+is connected to every other LGA, i.e. G = K38. Again, outreach [from Eq. ( 4.3)]
+need not be considered, since now every area is directly connected to one another.
+With this representation, the introduced parameters still remain (i.e α, β,h). Note that
+α again directly corresponds to the boundedness (discussed in “Appendix L”) and
+does not encompass outreach. β and h have no change to their original meanings
+introduced in Sect. 4. This introduces individual submarkets (based on LGAs) into
+the simulation, but does not enforce any spatial-based search costs within the market.
+As in the proposed approach, agent calibration is also based on the area in which they
+reside, so agent characteristics match that of their area.
+G.1.3 Analysis
+The resulting comparisons are visualised in Fig. 18 which shows the models which
+include individual areas signiﬁcantly outperforming the overall Greater Sydney model,
+indicating the usefulness of area-speciﬁc submarkets. Between the two area models,
+there was little difference in aggregate performance (as shown in Fig.18) which shows
+the performance improvements come mainly from the introduction of submarkets,
+not necessarily on the overall spatial structure. This shows that β, which is based
+on the individual areas, initialising agent characteristics based on location, and the
+modiﬁcation of price setting in terms of Qh based on the area are key for resulting
+prices (more so than the spatial outreach costs).
+However, when considering the resulting agent preferences (in terms of suburbs to
+purchase in), the fully connected map had signiﬁcantly more people moving to more
+remote regions, whereas the LGA connected spatial topology prevented as drastic
+movements (with the spatial outreach term), capturing the fact people are often tied
+to speciﬁc areas (i.e. those who work in the CBD and currently reside near there, are
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 43
+(a) Spatial Structure Enforced (b) Fully Connected Structure
+Fig. 19 V ariations in agent preferences with the proposed spatial structure (left) and without a spatial struc-
+ture enforced (right) from ﬁrst-time home buyers situated in the Canterbury–Bankstown region (visualised
+in pink and labelled). The colour indicates the percentage of purchases in those areas, with dark indicating
+a high percentage of relative purchases (controlled for population sizes). Without a preserved spatial struc-
+ture we see much higher rate of purchases on the outskirts of the Greater Sydney region, such as in Upper
+Lachlan Shire and Lithgow (labelled). We verify the proposed movements are logical in Sect. 6.3 (colour
+ﬁgure online)
+unlikely to the outskirts of the Greater Sydney region). This is visualised in Fig. 19,
+where we show the proposed movements follow a diffusive-like pattern (Slavko et al.
+220b) compared to the fully connected topology which had movements to more remote
+regions of Greater Sydney. We further discuss the resulting movements Sect. 6.3,
+where we show with the agent movement patterns with the proposed spatial structure
+are logical and consistent with the actual reported movements in the Greater Sydney
+region based on the observed trends reported in the recent literature.
+In this section, we have shown the area-speciﬁc submarket extensions signiﬁcantly
+outperform an equivalent model which does not include individual areas, highlighting
+the importance of capturing submarkets. Furthermore, the incorporation of area-
+speciﬁc submarkets allows for additional insights (such as those in Sect. 6.3.1 which
+would not otherwise be possible). We then further validated the choice of the network
+topology by comparing resulting agent preferences, and showing the proposed archi-
+tecture (with spatial-based search costs) prevents drastic movements by the agent (in
+terms of relative distance from an agent’s current location), allowing the agents to act
+based on their location (preferring closer areas) in a manner consistent with the actual
+observed trends as discussed in Sect. 6.3.
+H: Experiment settings
+Due to the stochastic and non-deterministic nature of ABMs, we run 100 Monte Carlo
+simulations per run (unless otherwise stated) and report the aggregate results over all
+runs to get a robust estimate.
+123
+
+44 B. P. Evans et al.
+Fig. 20 Robustness of scale over the training phases (visualised as the mean ± standard deviation range
+for varying scales). We see with varying scales similar results are recovered (with large areas of overlap),
+indicating in-variance to the scales used (within acceptable bounds)
+H.1 Scale
+Experiments are run at a 1:100 scale of the true housing market, i.e. every one hundred
+households in the Greater Sydney region are represented by one household in the
+model. The 1:100 scale was chosen for efﬁciency, but results for 1:50, 1:100, and
+1:200 are also presented in Fig. 20 to show robustness to scale. There is an upper limit
+on the scale where the performance will begin to degrade, for example, the number
+of overseas investments is given in Table 5, and by using a scale close to 1:1000, we
+would lose the contribution of foreign investments (since the values would be < 1).
+For lower scales (i.e. 1:1), the results may be more accurate but this comes at the
+expense of increased computational power, so the 1:100 provided a good trade-off
+between accuracy and efﬁciency.
+I: Initialisation data
+I.1 Data
+All real estate listings and sales from 2006 to present (2020) were used from SIRCA–
+CoreLogic, including the sale price, LGA, and sale date. These data are used as the
+actual price, and to calibrate the ABM.
+I.2 Spatial initialisation
+I.2.1 Pricing distributions
+Between LGAs, there is a wide range of dwelling sale prices, and different distributions
+of prices amongst the LGAs as well. To sample from this effectively, we use kernel
+density estimation (KDE) to create a probability density function for each LGA for
+each time period. The previous 3 months of sales from the beginning of the time period
+are used to generate the density function. Scott’s Rule (Scott 2015) is used to assign
+the bandwidth, which sets the bandwidth to n
+−1
+d+4 , where n is the number of data points
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 45
+(a) 2006 (b) 2011 (c) 2015
+Fig. 21 KDE plots for each LGA based on SIRCA–CoreLogic data. Dark red indicates the Greater Sydney
+average, and this is assigned to LGAs without enough data to generate their own reliable KDE
+(in this case dwelling sales in the LGA at the beginning of the time period), and d is
+the number of dimensions (in this case d = 1). When new houses are created for an
+area, they are set with an initial quality based on this distribution. The resulting KDEs
+are shown in Fig. 21.
+I.2.2 Positioning
+Households are not assigned to an LGA directly, as households can freely move areas.
+Instead, the households area is based on the residential dwelling of the household (and
+thus can change over time). When we reference a households area, we are referring to
+the LGA of the dwelling where the household currently resides.
+At the beginning of the simulation, households which are homeowners are assigned
+to dwellings to match the population distribution amongst LGAs. The income and
+liquid wealth for the household are then assigned based on the brackets from the
+dwellings LGA. Renters are assigned a random LGA to begin with (again weighted
+by the population of each LGA) and income and wealth based on the distribution of
+that LGA. Households then try and ﬁnd a rental they can afford (on with a rental price
+approximately 10–30% of the household’s income) which may mean some have to
+move LGAs.
+I.3 Time periods
+In line with the previous work of Glavatskiy et al. (2020), and following the Australian
+census timelines (which are performed every 5 years), we choose the three most recent
+census periods for analysis. These are 2006–2010, 2011–2015, and 2016–2019. The
+length was chosen such that upon new census information becoming available, a new
+simulation is run. Meaning, a separate model (and optimisation process) is run for each
+of the time periods to ensure the model is calibrated to the most recent data available.
+In doing so, we ensure the agent characteristics of the model most closely match those
+in the true Greater Sydney market. As each period corresponds to the census years,
+there is a large array of available data for calibration to ensure the models begin in a
+state as close to possible as the true populations state. Alternate (non-census) dates
+123
+
+46 B. P. Evans et al.
+could be used; however, the model may not begin with as accurate of a reﬂection on the
+true underlying agent characteristics (depending on the data availability). While the
+models are calibrated for the time periods outlined here, such calibrations would also
+work well for surrounding dates (or alternate run duration’s), or the model could be
+re-calibrated for alternative dates to provide additional forecasting—for example, after
+the 2021 census, the agent characteristics could be reassigned and a new optimisation
+process run to reﬂect updated agent behaviours, likewise for past market behaviour
+such as with the 2001 census.
+I.4 Household characteristics
+I.4.1 Area
+Agents are initialised into an area based on the Australian census data, meaning the
+population of each area at the beginning of the simulations corresponds to the propor-
+tions from the census data for that time period. For example, if there are three areas “A ”,
+“B”, “C”, and the true proportions in each are 60:25:15, the model will also populate
+agents into the three areas according to this proportion. Throughout the simulation,
+agents may move areas. They may be forced to move to a cheaper area if they cannot
+afford their current area, or they may move to a more afﬂuent area if they can afford a
+dwelling there. So once the simulation begins, the movement dynamics are controlled
+by the agents’ cash ﬂow position (again from census data, outlined below). Initialising
+agents into areas based on census data allows for correct agent characteristics (such as
+income and net worth) that directly line up with those observed throughout the Greater
+Sydney region.
+I.4.2 Income
+Income is assigned from the distribution based on the households area. This distribution
+comes from the census data. Income grows throughout the simulation. The income
+brackets follow those speciﬁed in the census data.
+I.4.3 Liquid wealth
+Again, the liquid wealth (liquidity) of a household is based on the true distributions
+from census data. However, in this case, liquidity is not available per LGA, only for
+Greater Sydney as a whole. So to map a household to an appropriate liquidity bracket,
+the households liquid is based on the income of the household. That is, if a household
+is in the top X% of earners in an LGA, the liquidity will be in the top X% as well
+(approximately, since liquidity is from brackets).
+I.5 Population distribution
+In this case, there are three measures of interest. The total number of dwellings, the
+total number of households, and the distribution of these households amongst LGAs.
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 47
+The dwellings and households estimates from the census data are used for each year,
+and simple linear projections used for forecasting the growth of these. The distribution
+amongst LGAs is that recorded at the start of the simulation and is assumed to grow
+linearly with the overall population size. Individual LGA future population projections
+are available from 2016 onward, but as no projections existed before this date, we used
+this simpliﬁed measure instead of all LGAs growing by a ﬁxed percentage within a
+given simulation period. As such, higher movements towards one particular LGA
+throughout simulation could indicate the requirement of additional dwellings being
+built here to cater for the growth, which is another contribution we consider in later
+sections of this work.
+J: Movement pattern visualisations
+Over 10 million total movements were tracked across the simulations (approximately
+3.3 million per time period). All plots in this section represent the normalised heatmaps
+of these movements. The total number of movements to a particular LGA is scaled by
+the population size of this LGA, meaning the results can be interpreted as a preference
+for certain areas rather than visualising the population size of the LGAs. Therefore,
+movements are not just reﬂecting larger populations, instead, reﬂecting a larger portion
+of people moving there relative to the size. All movements are then normalised such
+that the summation of all cells in the plot is 1, meaning if a particular cell has a value
+of 0.05, this means 5% of all matched movements moved to this LGA.
+The rows and columns of the plots are always sorted in ascending order based on
+median price, i.e. the most affordable LGAs ﬁrst, and the most expensive LGA as the
+ﬁnal row or column.
+K: Exogenous variables
+There are two main external inﬂuences on the model, which are governed by govern-
+ment approvals (in the case of overseas investments) and the central bank (in the case
+of mortgage rates).
+K.1 Overseas investors
+Overseas investments are often cited as a key driver of price growth in the Australian
+market (Rogers et al. 2017), and ﬁgures show the foreign investment has more than
+tripled since the mid-1990s (Haylen 2014). However, actual data on foreign invest-
+ments are difﬁcult to ﬁnd. ABS has described their own data on overseas investments
+to parliament as “hit or miss” Iggulden ( 2014).
+The purpose of this work is not a full investigation into overseas investments
+[overviews are given in Gauder et al. ( 2014), House of Representatives Standing
+Committee on Economics ( 2014)], but rather the contribution overseas might have in
+relation to many other factors with the readily available data (be this complete or not).
+123
+
+48 B. P. Evans et al.
+Fig. 22 Migrations. These plots
+capture new households in
+Greater Sydney throughout the
+simulation period, due to either
+migration or splitting of existing
+households. The ﬁrst row is the
+2006–2010 period, the middle
+row the 2011–2015 period, and
+the ﬁnal row the 2016–2019
+period
+(a) New Renters (b) New Owners
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 49
+Fig. 23 Investors. These plots
+show the simulation difference
+between local and overseas
+investment patterns. The ﬁrst
+row is the 2006–2010 period, the
+middle row the 2011–2015
+period, and the ﬁnal row the
+2016–2019 period
+(a) Local (b)Overseas
+123
+
+50 B. P. Evans et al.
+(a) Renting LGA (rows), to Purchase LGA (columns) (b) Purchase LGAs
+Fig. 24 First-time home buyers. The ﬁrst row is the 2006–2010 period, the middle row the 2011–2015
+period, and the ﬁnal row the 2016–2019 period
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 51
+Fig. 25 Average overseas approval amount
+Table 5 Overseas investment approval
+Period Number approved V alue approved Average per approval
+2018–2019 1337 $3,100,000,000 $2,318,624
+2017–2019 2340 $4,400,000,000 $1,880,342
+2016–2017 4224 $6,580,000,000 $1,557,765
+2014–2015 12349 $20,230,000,000 $1,638,189
+2013–2014 7814 $13,220,000,000 $1,691,835
+2012–2013 3580 $5,580,000,000 $1,558,659
+2011–2012 3048 $6,920,000,000 $2,270,341
+2010–2011 2598 $5,070,000,000 $1,951,501
+2009–2010 910 $1,950,000,000 $2,142,857
+2008–2009 956 $2,210,000,000 $2,311,715
+2007–2008 1223 $4,230,000,000 $3,458,708
+2006–2007 908 $2,890,000,000 $3,182,819
+For this, we use the annual reports from the Foreign Investment Review Board
+(FIRB) from June 2006 to June 2019. The June 2019–June 2020 report was not avail-
+able at the time of this writing (in 2020), as reports are not made available until the
+following year. Data are provided yearly at a NSW level, which is converted to monthly
+(simply dividing by 12). Again, data in this area are sparse, so this is the closest esti-
+mate we could derive. These data are provided in Table 5, and the average approval
+per year given in Fig. 25.
+While the data are provided for the entirety of NSW, it has been shown that foreign
+investors prefer the inner city over rural areas, and thus, the NSW levels have been
+used for Greater Sydney. This is a fair assumption since the numbers are relatively
+123
+
+52 B. P. Evans et al.
+Fig. 26 α’s effect on utility
+maximising behaviour
+conservative anyway. For the testing period, the most recent overseas approval value
+from the training period is used.
+K.2 Mortgage rates
+Mortgage rates are those set by the RBA. The ﬁnal training months mortgage rate is
+used throughout the testing period since no real value can be read.
+L: Utility function
+Following Axtell et al. (2014), agents are assumed to choose the most expensive house
+they can afford, that is, the house price directly corresponds to the utility for the agent.
+However, the introduction of α alters this, such that there is some uncertainty or
+error in the agents choice. When α = 1, the perfect utility maximisation behaviour
+is recovered where the agent attempts to purchase the most expensive dwelling they
+can afford. For α< 1, the agent buys the most expensive dwelling they can afford
+with probability α, which then decreases for each subsequent listing in turn. This
+is visualised in Fig. 26. For high α, we can see the probability mass is contained
+only in the highest priced dwellings. For lower α, this probability mass becomes
+more distributed, meaning less focus on utility, and potential for cheaper houses to be
+purchased. For α = 0, the utility is not considered at all and a random house within
+the agents budget is chosen (i.e. the probability mass is uniform across options). α,
+therefore, corresponds to the boundedness of the agent.
+The above description considers the case of uniform knowledge, i.e. for investors
+where they are assumed to be invariant to the areas available. However, for ﬁrst-time
+home buyers, we propose a space-based knowledge where buyers are more likely to
+consider listings close to where they are renting. The probability associated with the
+distance to the agents’ location is visualised in Fig. 27. The uniform knowledge of
+investors is given in green, and the spatial knowledge of ﬁrst-time home buyers is
+given as the dotted black line.
+For ﬁrst-time home buyers, the probability of viewing a listing is therefore con-
+trolled by both the proximity of the listing to the agents current (rental) location, and
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 53
+Fig. 27 Probability of viewing
+based on distance to agents
+location
+Fig. 28 First-time home buyers probability of viewing a listing for various α’s. Showing the relationship
+between dwelling price (x-axis) and distance to dwelling ( y-axis), and how α adjusts this distribution. Low
+α’s correspond to higher dispersion, and less focus on utility maximising behaviour. High α’s focus the
+agent on dwellings which maximise utility
+the price of the listing. This is visualised in Fig. 28.F o rα = 0, the agent preference
+is uniform across all choices, placing no emphasis on utility (from either price or dif-
+ference). As α increases, the focus shifts to the more expensive dwellings, and does
+so based on the distance to the listing. This is shown in Fig. 28, where with increasing
+α the emphasis focuses on the top right corner, which is the optimal value for both
+distance (closest) and price (most expensive in the agents budget). We can see that
+price remains the most important term in the agents’ utility though, with close listings
+with low prices having a low resulting probability, indicating the agent likely wants
+to move to a more afﬂuent area if they can afford to do so. However, given an equal
+price, agents will prefer the closer listing.
+References
+Alhashimi H, Dwyer W (2004) Is there such an entity as a housing market. In: 10th annual paciﬁc rim real
+estate conference (press), Bangkok
+Arcaute E, Molinero C, Hatna E, Murcio R, V argas-Ruiz C, Masucci AP , Batty M (2016) Cities and regions
+in Britain through hierarchical percolation. R Soc Open Sci 3(4):150691
+Axtell R, Farmer D, Geanakoplos J, Howitt P , Carrella E, Conlee B, Goldstein J, Hendrey M, Kalikman P ,
+Masad D, et al. (2014) An agent-based model of the housing market bubble in metropolitan Washington,
+DC. In: Whitepaper for Deutsche Bundesbank’s Spring conference on “Housing markets and the
+macroeconomy: challenges for monetary policy and ﬁnancial stability”
+123
+
+54 B. P. Evans et al.
+Bahadir B, Mykhaylova O (2014) Housing market dynamics with delays in the construction sector. J Hous
+Econ 26:94–108
+Bangura M, Lee CL (2019) The differential geography of housing affordability in Sydney: a disaggregated
+approach. Aust Geogr 50(3):295–313
+Bangura M, Lee CL (2020) Housing price bubbles in Greater Sydney: evidence from a submarket analysis.
+Hous Stud 1–36. https://doi.org/10.1080/02673037.2020.1803802
+Baptista R, Farmer JD, Hinterschweiger M, Low K, Tang D, Uluc A (2016) Macroprudential policy in an
+agent-based model of the UK housing market. Bank of England working papers 619, Bank of England.
+https://doi.org/10.2139/ssrn.2850414
+Barbosa H, Barthelemy M, Ghoshal G, James CR, Lenormand M, Louail T, Menezes R, Ramasco JJ, Simini
+F, Tomasini M (2018) Human mobility: models and applications. Phys Rep 734:1–74
+Barthelemy M (2016) The structure and dynamics of cities. Cambridge University Press, Cambridge
+Barthelemy M (2019) The statistical physics of cities. Nat Rev Phys 1(6)
+Barthelemy M, Bordin P , Berestycki H, Gribaudi M (2013) Self-organization versus top-down planning in
+the evolution of a city. Sci Rep 3:2153
+Bergstra J, Y amins D, Cox D (2013) Making a science of model search: hyperparameter optimization in
+hundreds of dimensions for vision architectures. In: International conference on machine learning, pp
+115–123
+Berndt DJ, Clifford J (1994) Using dynamic time warping to ﬁnd patterns in time series. In: Proceedings of
+the 3rd international conference on knowledge discovery and data mining. AAAI Press, AAAIWS’94,
+pp 359–370
+Bessant JC, Johnson G (2013) Dream on declining homeownership among young people in Australia? Hous
+Theory Soc 30(2):177–192
+Burnside C, Eichenbaum M, Rebelo S (2016) Understanding booms and busts in housing markets. J Polit
+Econ 124(4):1088–1147
+Campolongo F, Cariboni J, Saltelli A (2007) An effective screening design for sensitivity analysis of large
+models. Environ Model Softw 22(10):1509–1518
+Carstensen CL (2015) An agent-based model of the housing market: steps toward a computational tool for
+policy analysis. University of Copenhagen, MSc-szakdolgozat
+Chang SL, Harding N, Zachreson C, Cliff OM, Prokopenko M (2020) Modelling transmission and control
+of the COVID-19 pandemic in Australia. arXiv preprint arXiv:2003.10218
+Cheng IH, Raina S, Xiong W (2014) Wall street and the housing bubble. Am Econ Rev 104(9):2797–2829
+Cliff OM, Harding N, Piraveenan M, Erten EY , Gambhir M, Prokopenko M (2018) Investigating spa-
+tiotemporal dynamics and synchrony of inﬂuenza epidemics in Australia: an agent-based modelling
+approach. Simul Model Pract Theory 87:412–431
+Conlisk J (1996) Why bounded rationality? J Econ Lit 34(2):669–700
+Crosato E, Nigmatullin R, Prokopenko M (2018) On critical dynamics and thermodynamic efﬁciency of
+urban transformations. R Soc Open Sci 5(10):180863
+Crosato E, Prokopenko M, Harré MS (2021) The polycentric dynamics of Melbourne and Sydney: suburb
+attractiveness divides a city at the home ownership level. Proc R Soc A 477(2245):20200514
+Edmonds B, ní Aodha L (2018) Using agent-based modelling to inform policy—what could possibly go
+wrong? In: International workshop on multi-agent systems and agent-based simulation. Springer, pp
+1–16
+Fernald M (2020) Americas rental housing 2020. Joint Center for Housing Studies of Harvard University,
+Cambridge
+Frías-Paredes L, Mallor F, León T, Gastón-Romeo M (2016) Introducing the temporal distortion index to
+perform a bidimensional analysis of renewable energy forecast. Energy 94:180–194
+Frías-Paredes L, Mallor F, Gastón-Romeo M, León T (2017) Assessing energy forecasting inaccuracy by
+simultaneously considering temporal and absolute errors. Energy Convers Manag 142:533–546
+Gallegati M, Kirman A (1999) Beyond the representative agent. Edward Elgar Publishing, Cheltenham
+Gauder M, Houssard C, Orsmond D, et al. (2014) Foreign investment in residential real estate. RBA Bulletin,
+June pp 11–18
+Ge J (2013) Who creates housing bubbles? An agent-based study. In: International workshop on multi-agent
+systems and agent-based simulation. Springer, pp 143–150
+Ge J (2017) Endogenous rise and collapse of housing price: an agent-based model of the housing market.
+Comput Environ Urban Syst 62:182–198
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 55
+Geanakoplos J, Axtell R, Farmer JD, Howitt P , Conlee B, Goldstein J, Hendrey M, Palmer NM, Y ang
+CY (2012) Getting at systemic risk via an agent-based model of the housing market. Am Econ Rev
+102(3):53–58
+Gilbert N, Hawksworth JC, Swinney PA (2009) An agent-based model of the English housing market. In:
+AAAI spring symposium: technosocial predictive analytics, pp 30–35
+Glavatskiy KS, Prokopenko M, Carro A, Ormerod P , Harre M (2020) Explaining herding and volatility in
+the cyclical price dynamics of urban housing markets using a large scale agent-based model. arXiv
+preprint arXiv:2004.07571
+Goldstein J (2017) Rethinking housing with agent-based models: Models of the housing bubble and crash
+in the Washington DC area 1997–2009. PhD thesis, George Mason University
+Greater Sydney Commission (2018) Greater Sydney region plan: a metropolis of three cities. NSW Depart-
+ment of Planning and Environment. https://www.greater.sydney/metropolis-of-three-cities . Accessed
+22 Aug 2020
+Guest R, Rohde N (2017) The contribution of foreign real estate investment to housing price growth in
+Australian capital cities. Abacus 53(3):304–318
+Haylen A (2014) House prices, ownership and affordability: trends in New South Wales. NSW Parliamentary
+Library
+Herman J, Usher W (2017) SALib: an open-source Python library for sensitivity analysis. J Open Source
+Softw. https://doi.org/10.21105/joss.00097
+House of Representatives Standing Committee on Economics (2014) Report on Foreign Investment in
+Residential Real Estate. The Parliament of the Commonwealth of Australia
+Huang Y , Ge J (2009) House prices and the collapse of stock market in mainland China?-an empirical study
+on house price index. In: Paciﬁc Rim real estate conference
+Iggulden T (2014) ABS admits data on foreign real estate buyers is ‘hit and miss’. https://www.abc.net.au/
+news/2014-06-25/abs-admits-foreign-real-estate-purchase-data-unreliable/5549926 Accessed 10
+May 2020
+Kim JH, Pagliara F, Preston J (2005) The intention to move and residential location choice behaviour. Urban
+Stud 42(9):1621–1636
+Kouwenberg R, Zwinkels R (2014) Forecasting the US housing market. Int J Forecast 30(3):415–425
+Kouwenberg R, Zwinkels RC (2015) Endogenous price bubbles in a multi-agent system of the housing
+market. PLoS ONE 10(6):e0129070
+Kupke V , Rossini P (2011) Housing affordability in Australia for ﬁrst home buyers on moderate incomes.
+Property Management
+La Cava G, Leal H, Zurawski A et al (2017) Housing accessibility for ﬁrst home buyers. Reserve Bank of
+Australia Bulletin, pp 19–28
+LeBaron B, Tesfatsion L (2008) Modeling macroeconomies as open-ended dynamic systems of interacting
+agents. Am Econ Rev 98(2):246–50
+Louf R, Barthelemy M (2013) Modeling the polycentric transition of cities. Phys Rev Lett 111(19):198702
+Mc Breen J, Goffette-Nagot F, Jensen P (2010) Information and search on the housing market: an agent-
+based model. In: Li Calzi M, Milone L, Pellizzari P (eds) Progress in artiﬁcial economics. Springer,
+Berlin, pp 153–164
+McMaster R, Watkins C (1999) The economics of housing: the need for a new approach. In:
+PRRES/AsRES/IRES conference. Kuala Lumpur
+Miles W (2008) Boom-bust cycles and the forecasting performance of linear and non-linear models of house
+prices. J Real Estate Finance Econ 36(3):249–264
+Morris MD (1991) Factorial sampling plans for preliminary computational experiments. Technometrics
+33(2):161–174
+Myers C, Rabiner L, Rosenberg A (1980) Performance tradeoffs in dynamic time warping algorithms for
+isolated word recognition. IEEE Trans Acoust Speech Signal Process 28(6):623–635
+Pangallo M, Nadal JP , Vignes A (2019) Residential income segregation: a behavioral model of the housing
+market. J Econ Behav Organ 159:15–35
+Pawson H, Martin C (2020) Rental property investment in disadvantaged areas: the means and motivations
+of Western Sydney’s new landlords. Hous Stud 1–23https://doi.org/10.1080/02673037.2019.1709806
+Piazzesi M, Schneider M, Tuzel S (2007) Housing, consumption and asset pricing. J Financ Econ 83(3):531–
+569
+Piovani D, Arcaute E, Uchoa G, Wilson A, Batty M (2018) Measuring accessibility using gravity and
+radiation models. R Soc Open Sci 5(9):171668
+123
+
+56 B. P. Evans et al.
+Poledna S, Miess MG, Hommes CH (2019) Economic forecasting with an agent-based model. Available at
+SSRN 3484768
+Polhill G (2018) Why the social simulation community should tackle prediction. Rev Artif Soc Soc Simul.
+https://rofasss.org/2018/08/06/gp/ . Accessed 1 May 2020
+Power C (2009) A spatial agent-based model of n-person prisoner’s dilemma cooperation in a socio-
+geographic community. J Artif Soc Soc Simul 12(1):8
+Raimbault J, Broere J, Somveille M, Serna JM, Strombom E, Moore C, Zhu B, Sugar L (2020) A spatial
+agent based model for simulating and optimizing networked eco-industrial systems. Resour Conserv
+Recycl 155:104538
+Randolph B, Pinnegar S, Tice A (2013) The ﬁrst home owner boost in Australia: a case study of outcomes
+in the Sydney housing market. Urban Policy Res 31(1):55–73
+Rogers D, Lee CL, Y an D (2015) The politics of foreign investment in Australian housing: Chinese investors,
+translocal sales agents and local resistance. Hous Stud 30(5):730–748
+Rogers D, Wong A, Nelson J (2017) Public perceptions of foreign and Chinese real estate investment:
+intercultural relations in Global Sydney. Aust Geogr 48(4):437–455
+Sakoe H, Chiba S (1978) Dynamic programming algorithm optimization for spoken word recognition. IEEE
+Trans Acoust Speech Signal Process 26(1):43–49
+Saltelli A, Tarantola S, Campolongo F, Ratto M (2004) Sensitivity analysis in practice: a guide to assessing
+scientiﬁc models, vol 1. Wiley Online Library, New Y ork
+Saltelli A, Aleksankina K, Becker W, Fennell P , Ferretti F, Holst N, Li S, Wu Q (2019) Why so many
+published sensitivity analyses are false: a systematic review of sensitivity analysis practices. Environ
+Model Softw 114:29–39
+Sanchez DG, Lacarrière B, Musy M, Bourges B (2014) Application of sensitivity analysis in building energy
+simulations: combining ﬁrst-and second-order elementary effects methods. Energy Build 68:741–750
+Scott DW (2015) Multivariate density estimation: theory, practice, and visualization. Wiley, New Y ork
+Shahriari B, Swersky K, Wang Z, Adams RP , De Freitas N (2015) Taking the human out of the loop: a
+review of Bayesian optimization. Proc IEEE 104(1):148–175
+Shimizu C, Nishimura KG, Watanabe T (2010) Housing prices in Tokyo: a comparison of hedonic and
+repeat sales measures. Jahrbücher für Nationalökonomie und Statistik 230(6):792–813
+Simini F, González MC, Maritan A, Barabási AL (2012) A universal model for mobility and migration
+patterns. Nature 484(7392):96
+Simon HA (1955) A behavioral model of rational choice. Q J Econ 69(1):99–118
+Simon HA (1957) Models of man; social and rational. Wiley, New Y ork
+Sinai TM (2012) House price moments in boom-bust cycles. Technical report, National Bureau of Economic
+Research
+Slavko B, Glavatskiy K, Prokopenko M (2019) Dynamic resettlement as a mechanism of phase transitions
+in urban conﬁgurations. Phys Rev E 99(4):042143
+Slavko B, Glavatskiy K, Prokopenko M (2020a) City structure shapes directional resettlement ﬂows in
+Australia. Sci Rep 10(1):1–11
+Slavko B, Prokopenko M, Glavatskiy KS (2020b) Diffusive resettlement: irreversible urban transitions in
+closed systems. arXiv preprint arXiv:2009.04094
+Snoek J, Larochelle H, Adams RP (2012) Practical Bayesian optimization of machine learning algorithms.
+In: Advances in neural information processing systems, pp 2951–2959
+Tesfatsion L (2002) Agent-based computational economics: growing economies from the bottom up. Artif
+Life 8(1):55–82
+Thomas M, Hall A (2016) Housing affordability in Australia. Brieﬁng Book: Key Issues for the 45th
+Parliament pp 86–90
+Ustvedt S (2016) An agent-based model of a metropolitan housing market-linking micro-level behavior to
+macro-level analysis. Master’s thesis, NTNU
+V allance L, Charbonnier B, Paul N, Dubost S, Blanc P (2017) Towards a standardized procedure to assess
+solar forecast accuracy: a new ramp and time alignment metric. Sol Energy 150:408–422
+Vincent L, Thome N (2019) Shape and time distortion loss for training deep time series forecasting models.
+In: Advances in neural information processing systems, pp 4189–4201
+Wang W, Y ang S, Hu F, Han Z, Jaeger C (2018) An agent-based modeling for housing prices with bounded
+rationality. In: Journal of physics: conference series, vol 1113. IOP Publishing, p 012014
+Watkins CA (2001) The deﬁnition and identiﬁcation of housing submarkets. Environ Plan A 33(12):2235–
+2253
+123
+
+The impact of social inﬂuence in Australian real estate: a spatial ABM 57
+Wei SJ, Zhang X, Liu Y (2012) Status competition and housing prices. Technical report, National Bureau
+of Economic Research
+Wilkins R, Lass I (2015) The household, income and labour dynamics in Australia survey: Selected ﬁndings
+from waves 1 to 12. Melbourne Institute of Applied Economic and Social Research, University of
+Wong PY (2017) Foreign real estate investment and the Australian residential property market: a study on
+Chinese investors. Int J Soc Behav Educ Econ Bus Ind Eng 11:1529–1538
+Y etsenga R, Emmett F (2020) The ANZ CoreLogic housing affordability report 2020. ANZ Media Centre
+Publisher’s Note Springer Nature remains neutral with regard to jurisdictional claims in published maps
+and institutional afﬁliations.
+123

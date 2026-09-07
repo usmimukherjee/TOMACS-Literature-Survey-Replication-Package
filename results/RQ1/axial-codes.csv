@@ -1,0 +1,38 @@
+axial_id,axial_code,selective_id,selective_code,open_code_count,open_codes,studies_exhibiting_count,studies_exhibiting
+A1.1,Value-based reinforcement learning,M1,Value & Policy Optimization Methods,3,DQN/DDQN; Q-learning; Reinforcement Learning (unspecified),8,2; 4; 11; 12; 25; 44; 57; 63
+A1.2,Direct policy optimization,M1,Value & Policy Optimization Methods,9,Continuous Action Space; Deep RL; Intervention Selection; Optimal Execution; Order Splitting; Policy Gradient; Policy Iteration; Policy Network; Stabilization,7,3; 4; 12; 40; 44; 66; 67
+A1.3,Multi-agent and distributed RL architectures,M1,Value & Policy Optimization Methods,2,Distributed Optimization; Multi-agent RL (MARL),3,2; 11; 67
+A1.4,Metaheuristic and numerical optimization,M1,Value & Policy Optimization Methods,15,Genetic Algorithm (GA); Hill Climbing; Investment Optimization; Latency Optimization; Micro-level Optimization; Monte Carlo; Multi-objective Decision; Multi-scale Optimization; OCBA; Portfolio Optimization; Price Stabilization; Price-Density Optimization; Profit Maximization; Simulated Annealing; Spatial Optimization,14,7; 8; 15; 23; 36; 39; 42; 43; 48; 56; 58; 59; 62; 63
+A2.1,Canonical actor-critic,M2,Hybrid Actor-Critic Methods,1,Actor-Critic,2,1; 4
+A2.2,Asynchronous and parallel actor-critic,M2,Hybrid Actor-Critic Methods,1,A3C/A2C/IAsync,2,2; 44
+A2.3,Deterministic continuous-control actor-critic,M2,Hybrid Actor-Critic Methods,2,Continuous Concession; DDPG,2,1; 40
+A2.4,Constrained-update policy-gradient hybrids,M2,Hybrid Actor-Critic Methods,1,PPO,2,12; 66
+A2.5,Pre-trained and bootstrapped hybrids,M2,Hybrid Actor-Critic Methods,1,Supervised Learning (pre-training),1,1
+A3.1,Fixed heuristic trading and pricing rules,M3,Fixed & Adaptive Rule Systems,17,Bid-Ask Formation; Business Rules; Empirical Decision; FCN (fundamental-chartist-noise); Fundamental Analysis; Fundamentalist/Chartist; Heuristic Pricing; Heuristic Trading; Indicator-based; Market Making; Microeconomic Rules; Rule-based Trading; Spatial Decision Rules; Technical Trading; Trade Acceptance; Trend-following; Volatility-adjusted Quoting,15,3; 6; 7; 9; 11; 13; 16; 26; 32; 34; 48; 49; 55; 56; 59
+A3.2,Threshold- and constraint-triggered rules,M3,Fixed & Adaptive Rule Systems,11,Collateral Valuation; Credit Condition; Credit Constraints; Credit-responsive; Cycle-phase; LTV/LTI Compliance; Leverage-based Rules; Policy-responsive; Risk Propagation; Satisfaction Threshold; Threshold Adoption,7,18; 21; 26; 46; 47; 50; 51
+A3.3,"Adaptive, performance-contingent rule revision",M3,Fixed & Adaptive Rule Systems,8,Adaptive Decision; Adaptive Expectations / Adaptive Behavior; Bubble-responsive; Expectation Formation; Feedback Mechanisms; Future-adaptive; Scenario-responsive; Speculative Forecasting,20,2; 14; 16; 20; 22; 23; 28; 29; 35; 38; 40; 41; 43; 45; 46; 51; 53; 65; 66; 67
+A3.4,Strategy switching between rule sets,M3,Fixed & Adaptive Rule Systems,1,Strategy Switching,10,6; 14; 35; 45; 48; 49; 51; 54; 57; 67
+A3.5,Bounded-rational and behavioural heuristics,M3,Fixed & Adaptive Rule Systems,5,Behavioral Heuristics; Bounded Rationality; Experience-based Learning; FOMO; Loss Memory,6,38; 45; 49; 50; 51; 64
+A4.1,BDI and explicit mental-state architectures,M4,Cognitive Models,1,Cognitive / BDI,1,15
+A5.1,Direct imitation and herding,M5,Imitative & Social Learning Models,2,Imitation; Peer Influence,2,37; 49
+A5.2,Word-of-mouth and network diffusion,M5,Imitative & Social Learning Models,2,Social Network; WOM / Social Influence,4,18; 22; 37; 49
+A5.3,Contagion and epidemic-style state diffusion,M5,Imitative & Social Learning Models,3,Attitude Infection; Contagion Dynamics; Local Neighborhood,1,30
+A5.4,Similarity-based algorithmic social learning,M5,Imitative & Social Learning Models,2,Collaborative Filtering; Cosine Similarity,1,10
+A6.1,Random utility and discrete choice,M6,Utility & Probabilistic Choice Models,4,Choice Model; Discrete Choice / Utility Maximization; Probabilistic Choice; Utility-based,8,5; 17; 19; 22; 31; 39; 61; 64
+A6.2,Multi-attribute and multi-criteria evaluation,M6,Utility & Probabilistic Choice Models,4,Conjoint / Part-worth Utility; Factor Scoring; Multi-criteria Decision; TCO (total cost of ownership),5,10; 17; 31; 39; 58
+A6.3,Probabilistic belief updating,M6,Utility & Probabilistic Choice Models,1,Bayesian Updating,1,5
+A6.4,Risk and expected-value valuation criteria,M6,Utility & Probabilistic Choice Models,3,NPV/IRR; Probabilistic Cost; Risk-based Decision,2,23; 58
+A7.1,Equilibrium concepts as solution criteria,M7,Non-Cooperative Game Models,3,Equilibrium-seeking; Game-theoretic; Nash Equilibrium,2,60; 66
+A7.2,Best-response and equilibrium learning,M7,Non-Cooperative Game Models,2,Best Response; Nash Q-learning,1,52
+A7.3,Competitive bidding as a strategic game,M7,Non-Cooperative Game Models,2,Competitive bidding game; Strategic/economic withholding,4,2; 43; 53; 67
+A7.4,Bargaining and alternating-offer games,M7,Non-Cooperative Game Models,3,Alternating Offers; Bargaining Protocols; Concession Strategies,2,5; 61
+A8.1,Replicator and population dynamics,M8,Evolutionary Game Models,2,Evolutionary Game Theory; Replicator Dynamics,1,45
+A9.1,Supervised function approximation,M9,Supervised & Predictive Learning Models,1,Machine Learning (unspecified),1,55
+A9.2,Bayesian and probabilistic prediction,M9,Supervised & Predictive Learning Models,3,Bayesian / DBN; Probabilistic Inference; Sparse Bayesian,1,33
+A9.3,Regression and econometric estimation,M9,Supervised & Predictive Learning Models,4,Hedonic Pricing; Hedonic Regression; Price Projection; Spatial Regression,3,19; 20; 23
+A9.4,Calibration and parameter estimation from data,M9,Supervised & Predictive Learning Models,3,Calibration-based; Data-driven; Parameter Learning,3,8; 41; 48
+A10.1,Generative-adversarial imitation of market data,M10,Representation Learning & Deep Imitation Learning,3,Conditional GAN; GAN / Generative Models; Synthetic Order Flow,1,24
+E1,Auction and clearing mechanism,E,Market Mechanism & Environment Codes (outside M1-M10),3,Continuous Double Auction (CDA); Market Clearing; Protocol-based,30,2; 4; 9; 11; 13; 15; 23; 24; 25; 28; 29; 33; 36; 37; 38; 40; 42; 43; 44; 45; 51; 52; 53; 54; 56; 57; 59; 60; 66; 67
+E2,Order book and order-type microstructure,E,Market Mechanism & Environment Codes (outside M1-M10),2,Limit/Market Order; Order Book / Exchange / LOB,14,3; 6; 11; 15; 16; 20; 28; 29; 34; 37; 38; 53; 55; 56
+E3,Hybrid simulation architecture,E,Market Mechanism & Environment Codes (outside M1-M10),1,Hybrid ABM + SD/SDM/SDS,2,25; 32
+E4,Domain-specific trading institution,E,Market Mechanism & Environment Codes (outside M1-M10),1,Emission Trading,1,54

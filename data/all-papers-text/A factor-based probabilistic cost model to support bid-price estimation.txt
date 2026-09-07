@@ -1,0 +1,892 @@
+A factor-based probabilistic cost model to support bid-price estimation
+Wei-Chih Wang a,⇑, Shih-Hsu Wang b, Yu-Kun Tsui c, Ching-Hsiang Hsu c
+a Department of Civil Engineering, National Chiao Tung University, No. 1001, University Road, Hsinchu, Taiwan
+b Department of Civil Engineering, R.O.C Military Academy, No. 1, Wei-Wu Road, Fengshan District, Kaohsiung, Taiwan
+c Department of Civil Engineering, National Chiao Tung University, Taiwan
+article info
+Keywords:
+Factors
+Probabilistic cost
+Cost division
+Bidding
+Simulation
+Residential housing project
+abstract
+An appropriate bid price is essential for winning a construction project contract. However, making an
+accurate cost estimate is both time-consuming and expensive. Thus, a method that does not take much
+time and can approximate a proper bid price can help a contractor in making bid-price decisions when
+the available bid-estimation time is insufﬁcient. Such a method can also generate a target cost and pro-
+vide a cross-check for their bid prices that were estimated using a detailed process. This study proposes a
+novel model for quickly making a bid-price estimation that integrates a probabilistic cost sub-model and
+a multi-factor evaluation sub-model. The cost sub-model, which is simulation-based, focuses on the cost
+divisions to save estimation time. At the same time, the multi-factor evaluation sub-model captures the
+speciﬁc factors affecting the cost of each cost division. The advantages of the proposed model are dem-
+onstrated by its application to three residential housing projects located in northern Taiwan. The steps for
+applying this model to other contractors are also provided.
+/C2112011 Elsevier Ltd. All rights reserved.
+1. Introduction
+An accurate estimation of the bid price for a construction project
+is essential to securing the project contract and achieving a reason-
+able proﬁt. A detailed cost estimation process is both costly and
+time consuming ( PEH, 2008 ). However, in practice, the available
+bid-estimation time is often insufﬁcient ( Akintoye & Fitzgerald,
+2000). Thus, conducting comprehensive and detailed cost estima-
+tions are not always possible. Thus, a method that does not take
+much time and can approximate a proper bid price can help a
+contractor in making bid-price decisions when the available bid-
+estimation time is insufﬁcient. Such a method can also generate
+a target cost and provide a cross-check for their bid prices that
+were estimated using a detailed process.
+Although many cost estimating methods (such as the average-
+unit-cost method, the cost-capacity factor estimation, and compo-
+nent ratios) can quickly compute a total project cost ( Barrie &
+Paulson, 1992; Hendrickson & Au, 2003; Hong, Hyun, & Moon,
+2011), they generally have two signiﬁcant drawbacks in determin-
+ing a reliable bid price. First, these methods focus on the level of
+total project cost ( i.e., they usually do not examine any details of
+cost divisions or cost items) and generate estimates that can vary
+widely in terms of accuracy. These methods are suitable for use
+during the early phase of a construction project, such as in the con-
+ceptual or schematic design phases, rather than during the bidding
+phase. Second, these methods do not explicitly capture the factors
+and characteristics of a construction project, such as the type of
+retaining walls, building complexity, number of ﬂoors, and mate-
+rial types, all of which inﬂuence project costs. When these project
+factors are not systematically evaluated in the decision-making
+process, bids are generally unreliable. Thus, a bid-price method
+that estimates costs in detail per cost division and which considers
+the factors that can inﬂuence project cost is preferred.
+Therefore, this study developed an innovative model to
+compute a project bid price by integrating a probabilistic cost
+sub-model with a multi-factor evaluation sub-model. The simula-
+tion-based cost sub-model focuses on the cost divisions ( i.e., the
+project cost is broken down into several cost divisions) to save esti-
+mation time and reduce labor costs. In addition, the multi-factor
+evaluation sub-model reﬂects the speciﬁc factors affecting the cost
+of each cost division.
+The remainder of this paper is organized as follows. Section 2
+reviews previous research on bidding methods and parametric
+estimating methods. The cost divisions for residential building
+projects and the factors affecting these division costs are identiﬁed
+in Sections 3 and 4 . The proposed model is described in Section 5.
+The experimental results from applying the model to three case
+projects are presented in Section 6, and the steps for applying
+the model to other construction companies are discussed in
+Section 7. Finally, we discuss the results and indicate directions
+for future research in Section 8.
+0957-4174/$ - see front matter /C2112011 Elsevier Ltd. All rights reserved.
+doi:10.1016/j.eswa.2011.11.049
+⇑ Corresponding author. Tel.: +886 3 5712121x54952; fax: +886 3 5716257.
+E-mail addresses: weichih@mail.nctu.edu.tw (W.-C. Wang), wss.cv91g@nctu.
+edu.tw (S.-H. Wang), k335789@ms24.hinet.net (Y.-K. Tsui), adios0705@ctci.com.tw
+(C.-H. Hsu).
+Expert Systems with Applications 39 (2012) 5358–5366
+Contents lists available at SciVerse ScienceDirect
+Expert Systems with Applications
+journal homepage: www.else vier.com/locate/eswa
+
+2. Previous research
+2.1. Bidding methods
+Most bidding research addresses the question of whether to bid
+(Bageis & Fortune, 2009; Han & Diekmann, 2001; Kwaku &
+Carleton, 1999; Lin & Chen, 2004; Oo, Drew, & Lo, 2007; Wanous,
+Boussabaine, & Lewis, 2000 ) and what bid price (or bid markup)
+is appropriate. This study is more focused on the second decision.
+Current models for determining bid markups can be classiﬁed into
+three types ( Marzouk & Moselhi, 2003 ): statistical models; artiﬁ-
+cial intelligence-based models; and multi-criteria utility models.
+In statistical models, for instance, Carr (1983) developed a general
+bidding model that considers the inﬂuence of the number of bid-
+ders on markup. Additionally, Carr (1987) demonstrated how com-
+petitive bid analysis can include resource constraints and
+opportunity costs. Dulaima and Shan (2002) investigated the fac-
+tors inﬂuencing bid markup decisions of large- and medium-size
+contractors in Singapore. Lowe and Parvar (2004) used a logistic
+regression approach to modelling contractors’ decisions to bid.
+Several bidding models that use techniques related to artiﬁcial
+neural networks have been designed to support markup decisions
+via a sequence of deep-reasoning steps ( Li & Love, 1999; Moselhi,
+Hegazy, & Fazio, 1993 ). Furthermore, as bid-related decisions are
+highly unstructured and no clear rules exist for bidding decisions,
+Chua, Li, and Chan (2001) devised a case-based-reasoning bidding
+model. Liu and Ling (2003) described a fuzzy neural network based
+approach to estimate the markup percentage. Additionally, Liu and
+Ling (2005) investigated the factors considered by more successful
+contractors in mark-up decisions. Christodoulou (2004) presented
+a methodology for arriving at optimum bid markups in static com-
+petitive bidding environments using neurofuzzy systems and mul-
+tidimensional risk analysis algorithms.
+Several criteria or factors guide bidders in determining how to
+price their work in relation to estimated construction costs ( Chao,
+2007; Chua & Li, 2000 ; Dozzi, AbouRizk, & Schroeder, 1996 ; Dula-
+ima & Shan, 2002; Seydel & Olson, 2001 ). For example, Dozzi et al.
+(1996) applied a multi-criteria utility theory for bid-markup deci-
+sions for construction projects. Seydel and Olson (2001) designed
+an approach for incorporating multiple criteria into the bidding
+decision. Moreover, Marzouk and Moselhi (2003) proposed a mod-
+el that estimates the markup and evaluates the bid proposal using
+multi-attribute utility theory and the Analytical Hierarchy Process.
+Furthermore, Wang, Dzeng, and Lu (2007) used fuzzy integrals to
+develop a multi-criteria evaluation model that reﬂects bidder pref-
+erences regarding decision criteria. Chao (2007) adopted risk atti-
+tude of the contractor and proposed a fuzzy logic model based
+on determining the minimum bid markup with assessments of
+chance of winning and loss risk.
+In summary, these statistical models have difﬁculty of capturing
+speciﬁc project characteristics (e.g., project complexity and market
+conditions), whereas artiﬁcial intelligence-based models require
+numerous training cases or rules that represent the bidding strat-
+egies of individual bidders. Notably, multi-criteria evaluations are
+more applicable to real-life situations than other models ( Lai, Liu,
+& Wang, 2002; Marzouk & Moselhi, 2003 ). Finally, existing models
+typically evaluate bid markups or bid prices by focusing on the le-
+vel of total bid price.
+2.2. Parametric estimating methods
+A parametric cost estimating method includes one or several
+cost estimating relationships, between the cost (the dependent
+variables) and the cost-governing parameters (the independent
+variables) (Hegazy & Ayed, 1998; PEH, 2008 ). Parametric cost esti-
+mating methods are often used by both contractors and govern-
+ment bodies in the planning and budget stages of a project
+(Hegazy & Ayed, 1998 ). This method is sometimes also used by
+contractors to expedite cost estimates when detailed estimating
+methods require inordinate amounts of time and resources and
+are likely to produce similar results ( PEH, 2008 ).
+Several parametric estimation methods based on regression
+analysis and neural networks have been suggested to improve
+the accuracy of conceptual cost estimates ( Gunduz, Ugur, & Ozturk,
+2011; Sonmez, 2008 ). The regression technique allows a relatively
+simple analysis to sort out the impact of the parameters on the cost
+of the project ( Karshenas, 1984; Lowe, Emsley, & Harding, 2006 ).
+Neural networks based on artiﬁcial intelligence offer an alternative
+approach to estimate costs of building projects ( Kim, Seo, & Kang,
+2005) and highway projects ( Hegazy & Ayed, 1998 ). In addition,
+some parametric estimating models also consider the level of
+uncertainty associated with project costs ( PEH, 2008; Sonmez,
+2008). For instance, Sonmez (2008) integrated the regression anal-
+ysis and the bootstrap resampling technique to develop a probabi-
+listic and conceptual construction cost estimate. Although most
+parametric estimating methods assess costs by focusing on the to-
+tal project cost, Sonmez’s model can be used to produce the prob-
+abilistic costs of the cost divisions. The produced cost distributions
+were used to indicate the range of cost expectations, but they were
+not used to directly support the bid-price decision, which was pref-
+erably made based on a single point estimate. Thus, for the model
+proposed in this study we developed a multi-factor evaluation sub-
+model to assess the effects of various factors on the costs of the
+cost divisions. Afterwards we generate a single point of bid price.
+3. Cost divisions
+3.1. Levels of project costs
+The costs of a building construction project are generally orga-
+nized according to four estimates which are based on different lev-
+els of detail. Each estimate level is described as follows. The highest
+level is the total bid price. The second level is the bid summary le-
+vel or cost division level, which summarizes the various cost divi-
+sions. Typical cost divisions include direct costs, such as site work,
+concrete, construction equipment, and mechanical costs, and indi-
+rect costs such as taxes, insurance, and overhead. Usually, the total
+cost of a second-level cost division is the sum of the costs of several
+third-level cost items. In this study, the total cost of a cost division
+is deﬁned as the product of a unit cost (dollar/square meter) and
+the total ﬂoor area. (See Section 5.1.1 for further details.)
+The third level is the cost item level. Each second-level cost divi-
+sion is subdivided into smaller third-level cost items. For instance,
+the cost items for the second-level site-excavation cost division are
+the construction of slurry walls, pilings, and ﬁnished grading. The
+cost of a cost item is equal to its unit cost multiplied by the quan-
+tity of that item. The fourth level is the unit cost level. A unit cost in
+this level is expressed as the cost required to complete a unit of
+work associated with a cost item, such as the cost of constructing
+a square meter of slurry wall. ‘‘Cost division’’ in this study means a
+second-level cost division.
+3.2. Cost divisions of residential housing projects
+This study focuses on residential housing projects made of rein-
+forced concrete (RC). According to the 36 projects completed by a
+single contractor, ten cost divisions of construction costs for a res-
+idential housing project are as follows: (1) foundation (represented
+by C1); (2) structure ( C2); (3) external ﬁnishes ( C3); (4) internal ﬁn-
+ishes ( C4); (5) doors and windows ( C5); (6) elevator ( C6); (7)
+W.-C. Wang et al. / Expert Systems with Applications 39 (2012) 5358–5366 5359
+
+mechanical/electrical/plumbing (MEP) ( C7); (8) temporary facili-
+ties ( C8); (9) landscaping ( C9); and, (10) markup ( C10). Notably, in
+this study, the cost division of temporary facilities ( C8) includes
+several indirect costs such as installing a temporary water supply
+and electricity, ﬁeld and home ofﬁce overhead, insurance, inspec-
+tion fees, and air-pollution control fees.
+4. Factors
+Many factors affect the unit cost (or cost) of a cost division. The
+major factors affecting unit costs or total costs of the nine cost divi-
+sions (C1–C9) are identiﬁed by analyzing the 36 completed projects
+and interviewing two managers familiar with construction costs of
+these residential housing projects ( Table 1 ).
+Take the foundation cost division as an example. The unit cost
+of this division is dominated by four factors — ground improve-
+ment (F1.1), retaining wall (F1.2), excavation method (F1.3), and
+soil type (F1.4). Each factor is classiﬁed into different kinds of fac-
+tor conditions. These factor conditions in the foundation cost divi-
+sion are as follows.
+/C15 The ground improvement factor (F1.1) indicates whether a pro-
+ject site requires ground improvement. Five factor conditions
+are identiﬁed: no ground improvement (no cost effect);
+improved via compaction; improved by well-point dewatering;
+improved by consolidation; and, improved by soil replacement
+(high cost effect).
+/C15 Retaining wall factor (F1.2) has three factor conditions: no
+retaining wall (no cost effect); sheet-pile wall; and, slurry wall
+(high cost effect).
+/C15 Excavation method factor (F1.3) has three factor conditions:
+open-cut method (low cost effect); bottom-up method; and,
+top-down method (high cost effect).
+/C15 Soil type factor (F1.4) has three factor conditions: gravel (low
+cost effect), sand, and silt (high cost effect). Excavated gravels
+and sand can be recycled, whereas silt must be dumped, which
+is costly.
+Table 2 shows the three factors inﬂuencing the markup percent-
+age in the markup cost division ( C10). These factors are market
+environment (F10.1), company conditions (F10.2), and project con-
+ditions (F10.3). The right side of Table 3 lists the sub-factors for
+each factor. For example, the market environment factor consists
+of four sub-factors: availability of future projects (F10.1.1); eco-
+nomic conditions (F10.1.2); market competition (F10.1.3); and, la-
+bor supply (F10.1.4). In F10.1.1, the markup will typically be low
+such that a company remains competitive when very few projects
+will be tendered in the near future. Conversely, markup may be
+high when many projects will be available in the future; that is,
+many opportunities exist. Further details regarding factors and fac-
+tor conditions ( Tables 1 and 2 ) can be found in Hsu (2004) .
+5. Proposed model
+Similar to many other methods ( Dozzi et al., 1996; Li & Love,
+1999; Marzouk & Moselhi, 2003; Wang et al., 2007 ), the proposed
+model is designed to improve the bid-price decision-making pro-
+cess. The total cost of a construction project is the sum of the total
+costs of all its cost divisions. The proposed method ( Fig. 1 ) evalu-
+ates the unit cost (or cost or percentage) of each cost division by
+integrating a division-level probabilistic cost sub-model (see the
+right-hand side of Fig. 1) and the multi-factor evaluation sub-mod-
+Table 1
+Factors affecting unit costs or costs in the nine cost divisions.
+Cost divisions Factors
+1. Foundation F1.1 ground improvement; F1.2 retaining wall; F1.3 excavation method; F1.4 soil types
+2. Structure F2.1 concrete strength; F2.2 form types; F2.3 building complexity; F2.4 number of ﬂoors; F2.5 ﬂoor height; F2.6 earthquake location
+3. External ﬁnishes F3.1 number of ﬂoors; F3.2 form types; F3.3 material types of external walls, F3.4 ﬂoor height; F3.5 building complexity
+4. Internal ﬁnishes F4.1 form types; F4.2 material types of ﬂoors; F4.3 material types of internal walls; F4.4 ﬂoor height; F4.5 room area; F4.6 number of rooms in an
+unit
+5. Windows / doors F5.1 building complexity; F5.2 window glass; F5.3 thickness of window glass; F5.4 room area; F5.5 number of rooms in an unit; F5.6 mat erial
+types of doors
+6. MEP F6.1 functions of equipment; F6.2 quality class of MEP; F6.3 room area; F6.4 number of rooms in an unit
+7. Elevator F7.1 loading capacity; F7.2 quality class of elevator; F7.3 elevator speed
+8. Temporary
+facilities
+F8.1 duration; F8.2 total ﬂoor area; F8.3 protection of nearby buildings
+9. Landscaping F9.1 sporting facilities; F9.2 entertainment facilities; F9.3 planting; F9.4 other landscaping
+Table 2
+Factors affecting the markup percentage in the markup cost division.
+Factors Sub-factors
+F10.1 Market environment F10.1.1 availability of future projects; F10.1.2 economic conditions; F10.1.3 market competition; F10.1.4 labor supply
+F10.2 Company conditions F10.2.1 capital availability; F10.2.2 current workload; F10.2.3 technology capability
+F10.3 Project conditions F10.3.1 relationship with project client; F10.3.2 project risk; F10.3.3 project complexity; F10.3.4 completeness of ten dering information
+Table 3
+Mean and standard deviation of unit costs (or costs or percentages) for each cost
+division in historical cost data.
+Cost division Mean of unit cost
+(NTD/m2)
+Standard deviation of unit cost
+(NTD/m2)
+1. Foundation 2235.5 1290.5
+2. Structure 5312.4 1052.8
+3. External
+ﬁnishes
+1578.2 633.0
+4. Internal
+ﬁnishes
+3469.8 947.5
+5. Windows 1211.9 621.6
+6. MEP 3294.1 1619.0
+7. Elevator 581.3 462.2
+Mean cost (NTD) Standard deviation of cost (NTD)
+8. Temporary
+facilities
+17,614,204.6 18,129,566.3
+9. Landscaping 7,626,645.1 8,006,389.0
+Mean% Standard deviation%
+10. Markup 6.51% 2.86%
+5360 W.-C. Wang et al. / Expert Systems with Applications 39 (2012) 5358–5366
+
+el (left-hand side of Fig. 1 ). The division-level probabilistic cost
+sub-model uses a cumulative distribution to represent the possible
+range of unit cost (or cost or percentage) for a particular cost divi-
+sion. This type of distribution is used in order to take into consid-
+eration the level of uncertainties when it comes to cost estimates,
+and it is derived based on historical data from similar residential
+housing construction projects. In addition, the minimum distribu-
+tion value indicates the minimum unit cost (or cost or percentage)
+of a particular cost division under best case scenario condition, and
+vice versa for the maximum distribution value.
+The multi-factor evaluation sub-model is then applied to reﬂect
+the speciﬁc factor conditions. The factor conditions guide bidders
+in determining how to price their work above the minimum unit
+cost (or cost or percentage) for a cost division. After the unit cost
+(or cost or percentage) of each cost division is assessed, total con-
+struction costs can be calculated.
+5.1. Division-level probabilistic cost sub-model
+5.1.1. Total construction cost
+In this investigation, total cost, CTot of a project is derived by
+CTot ¼½ construction cost /C2ð 1 þ markupÞ/C138 /C2 ð 1 þ taxÞ
+¼½ ðC1 þ/C1/C1/C1þ Ci þ C8 þ C9Þ/C2ð 1 þ C10Þ/C138 /C2 ð 1 þ tÞð 1Þ
+where C1–C, are the costs of cost divisions (1)–(9), respectively.
+Notably, C10 is the markup and is expressed as a percentage of total
+construction cost. The value t is tax, which is a percentage (constant
+value, usually 5% in Taiwan) of the sum of total construction cost
+plus markup.
+In assessing the costs of cost divisions (1)–(7) ( i.e., C1–C7), the
+cost of a cost division equals its unit cost ( i.e., the cost required
+to complete a unit of work associated with a cost division) multi-
+plied by total ﬂoor area. That is,
+Ci ¼ Ui /C2 Q for i ¼ 1 /C24 7 ð2Þ
+where Ui is unit cost of cost division i, and Q is total ﬂoor area. Thus,
+for instance, the cost of division (1) ( i.e., C1) equals U1 /C2 Q.
+By integrating Eq. (2) into Eq. (1), Eq. (1) can be rewritten as
+CTot ¼ f½ðU1Q þ/C1/C1/C1þ U7QÞþ C8 þ C9/C138/C2ð 1 þ C10Þg /C2 ð 1 þ tÞð 3Þ
+Notably, the costs of temporary facilities ( C8) and landscaping
+(C9) are usually uncorrelated with total ﬂoor area and are highly
+dependent on owner needs in individual projects. Thus, C8 and C9
+in Eq. (3) are analyzed directly in terms of cost rather than unit
+cost.
+Finally, Eq. (3) is rewritten as follows to reﬂect the effect of
+inﬂation on total construction costs:
+CTot ¼½ ð U1Q þ/C1/C1/C1þ U7Q Þþ C8 þ C9/C138 CCIyear
+CCIave
+/C18/C19
+/C2ð 1 þ C10Þ
+/C26/C27
+/C2ð 1 þ tÞð 4Þ
+where CCIyear is the construction cost index of the analysis year for a
+new project, and CCI ave is the average construction cost index of the
+years when historical projects were completed. In this study, CCI ave
+is 76.4 for 1994–2003 — the historical projects were ﬁnished in that
+period. Notably, we assume the markup percentage ( C10) is not af-
+fected by inﬂation.
+5.1.2. Historical cost data
+The 36 residential housing projects located in northern Taiwan
+are used as a historical database. All projects were completed by
+one general contractor. As mentioned, all projects were all com-
+pleted during 1994–2003. Some major characteristics of these pro-
+jects are summarized as follows: (1) all were reinforced concrete
+(RC) structures; (2) average total actual cost (including markup)
+was about NT $ 295,464,995 (roughly US $8.9 million; US
+$1 ﬃ NT $33); (3) average number of ﬂoors, 12; (4) average number
+of underground ﬂoors, 2; and (5) average total ﬂoor area, 16,093
+m2. Table 3 lists the means and standard deviations of unit cost
+(or cost or percentage) for the ten cost divisions of these projects.
+5.1.3. Probabilistic cost distribution
+Uis( i =1 /C24 7), C8 and C9 are variables in unit costs or costs. Addi-
+tionally, C10 is a variable in percentage. In the proposed division-le-
+vel cost model, each variable follows a Normal distribution
+according to the calculated mean and standard deviation of unit
+cost (or cost percentage). A simulation is conducted to generate a
+0
+0.5
+1.0
+Si(1)
+Si(1)+Si(2)
+Si(1)+Si(2)+Si(3)
+Si=Si(1)+…+S i(j)
+Effect
+0
+Cumulative probability
+1.0
+Minimum
+unit cost
+Suggested 
+unit cost
+Unit cost
+...
+Maximum 
+unit cost
+.
+Multi-factor evaluation sub -model Division-level probabilistic cost sub -model
+Fig. 1. Proposed model of each cost division.
+Table 4
+Simulated minimum and maximum unit costs (or costs or percentages) for each cost
+division.
+Cost division Minimum unit
+cost (NTD/m 2)
+Maximum unit
+cost (NTD/m 2)
+1. Foundation 179.7 7165.2
+2. Structure 2369.3 9291.0
+3. External ﬁnishes 567.9 3846.7
+4. Internal ﬁnishes 2160.7 6931.2
+5. Windows 715.8 3492.5
+6. MEP 993.7 9376.1
+7. Elevator 0.0 2368.5
+Minimum cost (NTD) Maximum cost(NTD)
+8. Temporary facilities 7,398,300 91,964,500
+9. Landscaping 0.0000 37,155,300
+Minimum% Maximum%
+10. Markup 0% 17.26%
+W.-C. Wang et al. / Expert Systems with Applications 39 (2012) 5358–5366 5361
+
+cumulative distribution of unit cost (or cost or percentage) of each
+cost division. A common simulation program, @Risk4.5, is used to
+execute the simulation algorithm. This algorithm was imple-
+mented on a Pentium 3 personal computer running Windows XP.
+Generating each distribution 5000 times took approximately 3
+minutes. Table 4 shows the simulated minimum and maximum
+unit costs (or costs or percentages) of each cost division. Notably,
+other methods can be used to produce such a cumulative distribu-
+tion. For example, in simulating each cost division, a Beta statistical
+distribution may be assumed based on the optimistic, most likely,
+and pessimistic unit costs (or costs or percentages) generated from
+historical cost data. Additionally, when simulation is unavailable, a
+cumulative distribution can be generated using readily available
+statistical tables with an assumed normal distribution ( Moder,
+Phillips, & Davis, 1983 ).
+5.2. Multi-factor evaluation sub- model
+The multi-factor evaluation model must identify all factors in
+each cost division. Notably, the proposed method does not limit
+the number of factors involved. As we assume the factors in a cost
+division i are independent, the importance of each factor j is pair-
+wisely compared with other factors to obtain the weight ( Wi(j))o f
+each factor j. The evaluation result of a factor j for a given cost divi-
+sion i is a qualitative or quantitative value (e.g., factor condition)
+that is mapped to a corresponding effect value ( Ei(j)) to represent
+the effect of a factor on unit cost (or cost or percentage) of a cost
+division i. Multiplying the effect value ( Ei(j)) by its weight ( Wi(j)) ob-
+tains a weighted effect value ( Si(j) = Wi(j) /C2 Ei(j)) of a cost division i.
+The sum of all weighted effect values of factors is the expected ef-
+fect value (Si = RSi(j)) of a cost division i. This process is repeated for
+each cost division. The following subsections describe Wi(j), Ei(j) and
+Si in detail.
+5.2.1. Factor weights
+The factors in each cost division are pair-wisely compared to
+determine their importance or preferences. The scale of 1–9 is used
+to rate the relative importance of pair-wise comparisons ( Saaty,
+1978). Scale values are as follows: 1, equally important; 3, slightly
+more important; 5, strongly more important; 7, demonstratedly
+more important; and, 9, absolutely more important. Scale values
+2, 4, 6, and 8 denote the degree of importance between values 1
+and 3, 3 and 5, 5 and 7, and 7 and 9, respectively. The matrix of
+preferences is processed to determine the eigenvector correspond-
+ing to the maximum eigenvalue of a matrix ( Saaty, 1978). The sum
+of weights in each cost division must equal 1.
+Take the foundation cost division as an example. The prefer-
+ences of the four factors ( i.e., F1.1, F1.2, F1.3, and F1.4) are pair-wi-
+sely compared ( Fig. 2 ). The eigenvector of the matrix ( Fig. 2 )i s
+(0.0632, 0.6005, 0.2731, 0.0632) using the maximum eigenvalue
+of 4.0498. That is, the weights of factors F1.1, F1.2, F1.3, and F1.4
+are 0.0632, 0.6005, 0.2731, and 0.0632, respectively.
+5.2.2. Effect values of factors
+Again, the foundation cost division is used as an example. Table
+5 summarizes the effect values ( Ei(j)) corresponding to the factor
+conditions of factors F1.1, F1.2, F1.3 and F1.4. For instance, the fac-
+tor conditions in the ground improvement factor (F1.1) are no
+ground improvement, improved via compaction, improved by
+well-point dewatering, improved by consolidation, and improved
+by soil replacement. The corresponding effect values of these factor
+conditions are 0, 0.2, 0.5, 0.8, and 1, respectively. For example,
+when no ground improvement is needed, no cost is added; re-
+stated, the effect value is zero. Similarly, the cost is highest when
+good soil (improved weight-bearing strength) is purchased to re-
+place the poor foundation soil. Thus, the effect value will be highest
+(i.e., 1).
+5.2.3. Weighted effect values of factors
+Take the same foundation cost division as an example. In a given
+project, suppose the factor conditions of ‘‘no ground improvement,’’
+‘‘slurry wall,’’ ‘‘bottom-up method,’’ and ‘‘silt’’ are selected in factors
+F1.1, F1.2, F1.3, and F1.4, respectively. The effect values (Ei(j)) of F1.1,
+F1.2, F1.3, and F1.4 will be 0, 1, 0.5, and 1, respectively. The weighted
+effect values ( Si(j) = Wi(j) /C2 Ei(j)) corresponding to factors F1.1, F1.2,
+F1.3, and F1.4 will be 0 (=0 /C2 6.32%), 0.6005 (=1 /C2 60.05%), 0.1365
+(=0.5 /C2 27.31%), and 0.0632 (=1 /C2 6.32%), respectively. Thus, the
+expected effect value (Si = RSi(j)) for the foundation cost division will
+be 0.8002 (=0 + 0.6005 + 0.1365 + 0.0632).
+5.3. Integration of two sub-models
+After evaluating the expected effect values ( Si) of multiple fac-
+tors for each cost division i, the method yields a suggested unit cost
+(or cost or percentage) from the cumulative distribution for a cost
+division i (right side of Fig. 1). After repeating the same process to
+ F1.1 F1.2 F1.3 F1.4 
+F1.1 1 1/8 1/5 1 
+F1.2 8 1 3 8 
+F1.3 5 1/3 1 5 
+F1.4 1 1/8 1/5 1 
+Fig. 2. Pairwise weighting matrix of factors in the foundation cost division.
+Table 5
+Effect values corresponding to various factor conditions in the foundation cost
+division.
+Factors Factor conditions Effect value
+(Ei(j))
+Ground improvement
+(F1.1)
+No ground improvement 0
+Improved via compaction 0.2
+Improved by well-point
+dewatering
+0.5
+Improved by consolidation 0.8
+Improved by soil replacement 1
+Retaining wall (F1.2) No retaining wall 0
+Sheet-pile wall 0.5
+Slurry wall 1
+Excavation method
+(F1.3)
+Open-cut method 0
+Bottom-up method 0.5
+Top-down method 1
+Soil type (F1.4) Gravel 0
+Sand 0.5
+Silt 1
+Table 6
+General descriptions of three case projects.
+Major characteristics Case project
+I
+Case project
+II
+Case project
+III
+Completion time Aug. 1999 Nov. 2000 Dec. 2004
+Construction cost index 77.06 76.69 92.60
+Construction duration
+(months)
+20 20 23
+Total ﬂoor area (m 2) 7363 4490 14,518
+Number of ﬂoors 14 13 14
+Floor height (m) 3.6 3.2 3.6
+Room area (m 2) 163.6 171.0 272.7
+Number of rooms in an unit 4 4 4
+Concrete strength 4000 psi 4000 psi 5000 psi
+Retaining wall Slurry wall Slurry wall Slurry wall
+Excavation method Bottom up Bottom up Bottom up
+Soil type Silt Silt Silt
+5362 W.-C. Wang et al. / Expert Systems with Applications 39 (2012) 5358–5366
+
+obtain the unit cost (or cost or percentage) of each cost division, Eq.
+(4) is then applied to compute project total bid price.
+6. Case studies
+6.1. Description of case projects
+The proposed method is applied to three residential housing
+projects — projects I, II, and III) — all of which were located in
+northern Taiwan. These case projects and the aforementioned 36
+projects were all completed by the same contractor. Table 6 lists
+the major characteristics of the three case projects. For example,
+project I is made of RC, has 14 ﬂoors and 3 underground ﬂoors,
+and a total ﬂoor area of roughly 7363 m 2. Project I, which was com-
+pleted in mid-1999; took about 20 months to complete. A cost
+manager who was fully involved in the bidding process for these
+three projects provided input for application of the proposed meth-
+od. The following subsections examine evaluation results.
+Table 7
+Wi(j),E i(j),S i(j) and S i for the nine cost divisions in case project I.
+Cost division Factor Weight ( Wi(j)) Effect value ( Ei(j)) Weighted effect value ( Si(j) = Ei(j) /C3 Wi(j)) Expected effect value( Si = RSi(j))
+1. Foundation F1.1 6.32% 0.0 0.0000 0.8002
+F1.2 60.05% 1.0 0.6005
+F1.3 27.31% 0.5 0.1365
+F1.4 6.32% 1.0 0.0632
+2. Structure F2.1 6.91% 0.5 0.0346 0.6618
+F2.2 6.91% 1.0 0.0691
+F2.3 3.08% 0.5 0.0154
+F2.4 15.84% 0.6 0.0885
+F2.5 23.59% 1.0 0.2359
+F2.6 43.67% 0.5 0.2183
+3. External ﬁnishes F3.1 3.46% 0.6 0.0194 0.6290
+F3.2 6.66% 0.0 0
+F3.3 54.87% 0.6 0.3292
+F3.4 21.08% 1.0 0.2108
+F3.5 13.93% 0.5 0.0696
+4. Internal ﬁnishes F4.1 9.60% 0.0 0 0.5956
+F4.2 44.89% 0.6 0.2693
+F4.3 24.99% 0.6 0.1499
+F4.4 14.06% 1.0 0.1406
+F4.5 2.85% 0.3 0.0087
+F4.6 3.62% 0.8 0.0271
+5. Windows F5.1 7.77% 0.5 0.0138 0.4454
+F5.2 17.36% 0.9 0.0593
+F5.3 14.18% 0.5 0.0214
+F5.4 4.76% 0.3 0.0331
+F5.5 4.89% 0.8 0.1437
+F5.6 51.05% 0.3 0.1741
+6. MEP F6.1 59.78% 0.5 0.2989 0.5142
+F6.2 26.04% 0.5 0.1302
+F6.3 4.79% 0.3 0.0146
+F6.4 9.40% 0.8 0.0705
+7. Elevator F7.1 10.47% 0.5 0.0524 0.5001
+F7.2 63.70% 0.5 0.3185
+F7.3 25.83% 0.5 0.1292
+8. Temporary facilities F8.1 46.29% 0.6 0.2671 0.5122
+F8.2 48.15% 0.5 0.2173
+F8.3 5.56% 0.5 0.0278
+9. Landscaping F9.1 5.14% 0.5 0.0257 0.4465
+F9.2 7.93% 0.5 0.0396
+F9.3 69.11% 0.5 0.3456
+F9.4 17.82% 0.2 0.0356
+Table 8
+Wi(j), Ei(j), Si(j) and Si for the markup division in case project I.
+Factor Weight ( Wi(j)) (%) Effect value ( Ei(j)) Weighted effect value ( Si(j)) Expected effect value ( Si)
+F10.1 Market environment 63.70 0.6 0.3900 0.6300
+F10.1.1 26.22 1.0 0.2622
+F10.1.2 56.50 0.3 0.1695
+F10.1.3 11.75 1.0 0.1175
+F10.1.4 5.53 1.0 0.0553
+F10.2 Company conditions 10.47 0.9 0.1000
+F10.2.1 19.98 1.0 0.1998
+F10.2.2 68.33 1.0 0.6833
+F10.2.3 11.69 0.5 0.0584
+F10.3 Project conditions 25.83 0.5 0.1400
+F10.3.1 8.86 1.0 0.0886
+F10.3.2 23.89 0.5 0.1194
+F10.3.3 23.89 0.5 0.1194
+F10.3.4 43.37 0.5 0.2168
+W.-C. Wang et al. / Expert Systems with Applications 39 (2012) 5358–5366 5363
+
+6.2. Evaluation results for project I
+Tables 7 and 8 present the calculated weights, effect values,
+weighted effect values and expected effect values for each cost
+division by applying the proposed multi-factor evaluation model.
+For instance, the expected effect value ( Si) for the foundation cost
+division is 0.8002 ( Table 7 ), and the expected effect value for the
+markup division is 0.63 ( Table 8 ).
+The expected effect value ( Si) of each cost division i is then uti-
+lized to determine a suggested unit cost (or cost or percentage)
+from the cumulative distribution i. For instance, the suggested unit
+cost of the foundation cost division is NT $3322.30/m 2 based on the
+expected effect value of 0.8002 ( Si)( Fig. 3). Similarly, the unit costs
+(or costs or percentages) for the other cost divisions can be deter-
+mined (left side of Table 9). The details of the evaluation results can
+be found in Hsu (2004) .
+The suggested cost of each division can be computed by multiply-
+ing unit cost by total ﬂoor area (7362.8 m2). The right side of Table 9
+summarizes the suggested cost considering the construction cost
+index for each cost division. Finally, based on the suggested costs
+of divisions (1)–(9) and the suggested percentage for the markup
+division, the suggested total cost using Eq. (4) is NT $192,481,864.
+Actual bid price (including costs and markup) for project I was NT
+$186,492,943. Thus, total bid price approximated by the proposed
+model is roughly 3.21% (=192,481,864 /C0 186,492,943/186,492,943)
+higher than actual project bid price.
+6.3. Evaluations of case projects II and III
+The proposed method was also applied to projects II and III. The
+right side of Table 10 shows the computational results for the two
+projects. The suggested total bid prices are around 1.00% and 1.08%
+higher than the actual bid prices of projects II and III, respectively.
+7. Steps in applying the model to other companies
+Fig. 4 presents the steps in applying the proposed model to
+other construction companies for estimating a bid price for a par-
+ticular project type. These steps are as follows. First, a company
+must prepare a cost sub-model; that is, a cost database of a partic-
+ular project type (e.g., warehouse projects) must be established
+(Step 1.1). In Step 1.2, the mean and standard deviation of the unit
+cost (or cost or percentage) of each cost division must be identiﬁed.
+In Step 1.3, the cumulative distribution of unit cost (or cost or per-
+centage) of each cost division must be determined using @Risk
+simulation or a statistical table of Normal distribution.
+Second, a company must generate a multi-factor evaluation
+sub-model of that particular project type. In Step 2.1, the factors
+and factor conditions affecting the unit cost (or cost or percentage)
+of each cost division must be identiﬁed. In Step 2.2, the effect val-
+ues of factor conditions must be speciﬁed. In Step 2.3, the factor
+weights of each cost division should be given based on pairwise
+comparisons between factors.
+Finally, with the cost sub-model and multi-factor evaluation
+sub-model established, a company can estimate the bid price of a
+new project via Steps 3.1–3.5 ( Fig. 4 ). This model can be imple-
+0 .
+1.0
+Si( 1)=0
+Si( 1)+Si(2)=0.60
+Si( 1)+Si(2)+Si(3)=0.74
+Si=Si(1)+…+S i(4)=0.80
+Effect
+0
+Cumulative probability
+1.0
+Suggested unit 
+cost =3,322
+Unit cost
+Fig. 3. Unit cost suggested for the foundation cost division in case project I.
+Table 9
+Suggested unit cost (or cost or percentage) of each cost division in case project I.
+Cost division Expected effect value (S i) Suggested unit cost (NTD/m 2) Suggested cost (NTD) Suggested cost considering CCI (NTD)
+1. Foundation 0.8002 3322.3 24,461,430 24,674,361
+2. Structure 0.6618 5751.3 42,345,672 42,714,280
+3. External ﬁnishes 0.6290 1786.3 13,152,170 13,266,656
+4. Internal ﬁnishes 0.5956 3698.9 27,234,261 27,471,329
+5. Windows 0.4454 1126.8 8,296,403 8,368,621
+6. MEP 0.5142 3351.5 24,676,424 24,891,227
+7. Elevator 0.5001 581.3 4,279,996 4,317,252
+8. Temporary facilities 0.5122 18,166,354 18,324,488
+9. Landscaping 0.4465 6,552,430 6,609,467
+Suggested% Suggested%
+10. Markup 0.6300 7.43% 7.43%
+Note: CCI is construction cost index; Average CCI is 76.4 for 1994–2003; CCI is 77.06 in 1999.
+Table 10
+Evaluation results of three case studies.
+Case project I Case project
+II
+Case project
+III
+Actual bid price (a) $186,493,993 112,570,700 455,501,682
+Suggested bid price (b) $192,481,864 113,701,379 460,398,206
+Difference ((b) /C0 (a)) $5,987,871 1,130,679 4,896,525
+Difference in% ((b) /C0 (a)/
+(a))
+3.21% 1.00% 1.08%
+5364 W.-C. Wang et al. / Expert Systems with Applications 39 (2012) 5358–5366
+
+mented easily in a computerized environment using such tools as
+spreadsheets. In such a computerized environment, obtaining the
+bid price of a new project requires only a few hours. However, a
+company must establish several models (with a different cost data-
+base, factors, and factor conditions) to deal with different project
+types.
+8. Conclusions
+The proposed model generates reliable results that are 3.21%,
+1%, and 1.08% different from the actual bid prices of projects I, II
+and II, respectively. This model is innovative in two signiﬁcant
+ways. First, the cost sub-model is focused on the level of the cost
+divisions rather than on the level of the total bid price. In addition,
+since the project costs are usually uncertain ( i.e., represented by a
+cumulative distribution of project costs), the proposed cost sub-
+model ﬁts real-world practices more closely than the existing mod-
+els (Wang et al., 2007 ). Second, incorporating the effects of various
+factors on the cost of the cost divisions can systematically capture
+the bid-price decision-making process. In general, the model can
+suggest an approximate bid price in a rather short period of time,
+allowing contractors to quickly make a bid-price decision, espe-
+cially when sufﬁcient estimation time is not available, or to
+cross-check their bid price based on a detailed estimation process.
+This model can also be easily applied to other types of projects and
+be implemented by most construction companies.
+The evaluation results of the three case studies were presented
+to two cost-estimating managers of the contractor who provided
+the historical cost data for this study. Overall, they appreciated
+the evaluation results and the strengths of our proposed model.
+They believe that the model will assist contractors with verifying
+the accuracy of their bid price calculated according to the conven-
+tional detailed estimating process. They also agreed that the model
+was helpful for approximating the project value and to decide
+whether or not to bid for a given project. However, they also indi-
+cated that they would be reluctant to use the bid price obtained by
+our proposed model directly for submission because they were not
+familiar with probabilistic estimating techniques. The contractor’s
+comment regarding their unfamiliarity with probabilistic estimat-
+ing techniques is consistent with the study conducted by Akintoye
+and Fitzgerald (2000) . Their comment suggests that academic
+researchers need to promote the advantage of probabilistic esti-
+mating by reporting much more real-world case studies and gain
+the conﬁdence of the contractors.
+Subsequent research projects are as follows. First, like several
+other bidding models ( Carr, 1987; Chua et al., 2001 ), the proposed
+model should be extended to derive a bid price that maximizes the
+probability of being awarded the contract. Second, computeriza-
+tion will markedly reduce the time needed to execute the model.
+Third, the model can be applied to other projects for further reﬁne-
+ment (e.g., reﬁning the effect values shown in Table 5). Fourth, the
+parametric range estimating of cost distribution suggested by Son-
+mez (2008) may be applied and substitute the probabilistic cost
+sub-model used in this study.
+Acknowledgements
+The authors would like to thank the National Science Council of
+Taiwan (under Contract No. NSC96-2211-E-009-151) and the Min-
+istry of Education of Taiwan (via the Aim for the Top University
+program) for ﬁnancially supporting this research. Mr. Y. H. Lu is
+also appreciated for providing valuable data and sharing his
+experience.
+References
+Akintoye, A., & Fitzgerald, E. (2000). A survey of current cost estimating practices in
+the UK. Construction Management and Economics, 18 , 161–172.
+Bageis, A. S. F., & Fortune, C. (2009). Factors affecting the bid/no bid decision in the
+Saudi Arabian construction contractors. Construction Management and
+Economics, 27 (1), 53–71.
+Barrie, D. S., & Paulson, B. C. (1992). Professional construction management (Third
+ed.). New York: McGraw-Hill.
+Carr, R. I. (1983). Impact of number of bidding on competition. Journal of
+Construction Engineering and Management, 109 (1), 61–73.
+Carr, R. I. (1987). Competitive bidding and opportunity costs. Journal of Construction
+Engineering and Management, 113 (1), 151–165.
+Chao, L. C. (2007). Fuzzy logic model for determining minimum bid markup.
+Computer-Aided Civil and Infrastructure Engineering, 22 , 449–460.
+Christodoulou, S. (2004). Optimum bid markup calculation using neurofuzzy
+systems and multidimensional risk analysis algorithm. Journal of Computing in
+Civil Engineering, 18 (4), 322–330.
+Chua, D. K. H., & Li, D. (2000). Key factors in bid reasoning models. Journal of
+Construction Engineering and Management, 126 (5), 349–357.
+Fig. 4. Steps in applying the proposed model to other construction companies.
+W.-C. Wang et al. / Expert Systems with Applications 39 (2012) 5358–5366 5365
+
+Chua, D. K. H., Li, D. Z., & Chan, W. T. (2001). Case-based reasoning approach in bid
+decision making. Journal of Construction Engineering and Management, 27 (1),
+35–45.
+Dozzi, S. P., AbouRizk, A. M., & Schroeder, S. L. (1996). Utility-theory model for bid
+markup decisions. Journal of Construction Engineering and Management, 122 (2),
+119–124.
+Dulaima, M. F., & Shan, H. G. (2002). The factors inﬂuencing bid markup decisions of
+large- and medium-size contractors in Singapore. Construction Management and
+Economics, 20 , 601–610.
+Gunduz, M., Ugur, L. O., & Ozturk, E. (2011). Parametric cost estimation system for
+light rail transit and metro trackworks. Expert Systems with Applications, 38 (3),
+2873–2877.
+Han, S. H., & Diekmann, J. E. (2001). Making a risk-based bid decision for oversees
+construction projects. Construction Management and Economics, 19 , 765–776.
+Hegazy, T., & Ayed, A. (1998). Neural network model for parametric cost estimation
+of highway projects. Journal of Construction Engineering and Management, 124 (3),
+210–218.
+Hendrickson, C., & Au, T. (2003). Project Management for Construction –
+Fundamental Concepts for Owners, Engineers, Architects and Builders, 1, (pp.
+1–2).
+Hong, T., Hyun, C. T., & Moon, H. S. (2011). CBR-based cost prediction model-II of the
+design phase for multi-family housing projects. Expert Systems with Applications,
+38(3), 2797–2808.
+Hsu, C. H. (2004). A Bid-Price Decision Model. MS thesis, Department of Civil
+Engineering, National Chiao Tung University, Taiwan, 2004.
+Karshenas, S. (1984). Predesign cost estimating method for multistory buildings.
+Journal of Construction Engineering and Management ASCE, 110 (1), 79–86.
+Kim, G. H., Seo, D. S., & Kang, K. I. (2005). Hybrid models of neural networks and
+genetic algorithms for predicting preliminary cost estimates. Journal of
+Computing in Civil Engineering, 19 (2), 208–211.
+Kwaku, A. T., & Carleton, C. (1999). Bid markup methodologies. Cost Engineering,
+41(11), 39–43.
+Lai, K. K., Liu, S. L., & Wang, S. (2002). Bid markup selection models by use of
+multiple criteria. IEEE Transactions on Engineering Management, 49 (2), 155–160.
+Li, H., & Love, P. E. D. (1999). Combining rule-based expert systems and artiﬁcial
+neural networks for mark-up estimation. Construction Management and
+Economics, 17 , 169–176.
+Lin, C. T., & Chen, Y. T. (2004). Bid/no-bid decision-making - a fuzzy linguistic
+approach. International Journal of Project Management, 22 , 585–593.
+Liu, M., & Ling, Y. Y. (2003). Using fuzzy neural network approach to estimate
+contractors’ markup. Building and Environment, 38 (11), 1303–1308.
+Liu, M., & Ling, Y. Y. (2005). Modeling a contractor’s markup estimation. Journal of
+Construction Engineering and Management, 131 (4), 391–399.
+Lowe, D. J., Emsley, M. W., & Harding, A. (2006). Predicting construction cost using
+multiple regression techniques. Journal of Construction Engineering and
+Management, 132 (7), 750–758.
+Lowe, D. J., & Parvar, J. (2004). Logistic regression approach to modelling the
+contractor’s decision to bid. Construction Management and Economics, 22 (6),
+643–653.
+Marzouk, M., & Moselhi, O. (2003). A decision support tool for construction bidding.
+Construction Innovation, 3 , 111–124.
+Moder, J. J., Phillips, C. R., & Davis, E. W. (1983). Project management with CPM, PERT
+and precedence diagram . New York: Van Nostrand Reinhold.
+Moselhi, O., Hegazy, T., & Fazio, P. (1993). DBID: analogy-based DSS for bidding in
+construction. Journal of Construction Engineering and Management, 119 (3),
+466–470.
+Oo, B. L., Drew, D. S., & Lo, H. P. (2007). Applying a random coefﬁcients logistic
+model to contractors’ decision to bid. Construction Management and Economics,
+25(4), 387–398.
+PEH, (2008). Parametric Estimating Handbook, Fourth Edition, International Society
+of Parametric Analysts, http://www.galorath.com/images/uploads/
+ISPA_PEH_4th_ed_Final. pdf.
+Saaty, T. L. (1978). Exploring the interface between the hierarchies, multiple
+objectives and fuzzy sets. Fuzzy Sets and Systems, 1 , 57–68.
+Seydel, J., & Olson, D. L. (2001). Multicriteria support for construction bidding.
+Mathematical and Computer Modelling, 34 (6), 677–701.
+Sonmez, R. (2008). Parametric range estimating of building costs using regression
+models and bootstrap. Journal of Construction Engineering and Management,
+134(12), 1011–1016.
+Wang, W. C., Dzeng, R. J., & Lu, Y. H. (2007). Integration of simulation-based cost
+model and multi-criteria evaluation model for bid price decisions. Computer-
+Aided Civil and Infrastructure Engineering, 22 , 223–235.
+Wanous, M., Boussabaine, A. H., & Lewis, I. (2000). To bid or not to bid: a parametric
+solution. Construction Management and Economics, 18 , 457–466.
+5366 W.-C. Wang et al. / Expert Systems with Applications 39 (2012) 5358–5366

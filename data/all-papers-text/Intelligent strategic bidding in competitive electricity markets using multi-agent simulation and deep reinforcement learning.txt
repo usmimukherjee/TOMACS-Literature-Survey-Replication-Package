@@ -1,0 +1,1145 @@
+Applied Soft Computing Journal 152 (2024) 111235
+Available online 4 January 2024
+1568-4946/© 2024 Elsevier B.V. All rights reserved.
+Intelligent strategic bidding in competitive electricity markets using 
+multi-agent simulation and deep reinforcement learning 
+Jiahui Wu , Jidong Wang , Xiangyu Kong * 
+Key Laboratory of the Ministry of Education on Smart Power Grids, Tianjin University, Tianjin 300072, China   
+HIGHLIGHTS 
+• A theoretical framework of intelligent electricity market bidding using MAS and DRL. 
+• Three MAS models of intelligent bidding are established based on three DRL Algorithms. 
+• Convergence speed and response sensitivity using three DRL algorithms are compared. 
+• An improved DRL algorithm is proposed and a MAS model is established based on it.  
+ARTICLE INFO  
+key words: 
+Intelligent bidding strategy 
+Competitive electricity markets 
+Multi-agent simulation(MAS) 
+Deep reinforcement learning(DRL) 
+Async n-step QL 
+Improved Async n-step QL 
+ABSTRACT  
+Aiming at the lack of comprehension of agents in Multi-Agent Simulation (MAS) based on classic Reinforcement 
+Learning algorithms of competitive electricity markets, an intelligent strategic bidding method using Deep 
+Reinforcement Learning (DRL) and MAS is proposed in this paper, which not only can provide more intelligent 
+strategies for market participants to maximize their profits, but can enhance the performance of simulation 
+models dealing with high-dimensional continuous data in electricity markets. Firstly, a theoretical framework of 
+intelligent strategic bidding in competitive electricity markets based on MAS and DRL is proposed, and the 
+process of intelligent bidding in electricity markets based on MAS and DRL is described. Then, three MAS models 
+of intelligent strategic bidding are built based on three classic DRL algorithms, including Deep Q-Network (DQN), 
+Double Deep Q-Network (DDQN), and Asynchronous n-step Q-learning (Async n-step QL), and three algorithms’ 
+convergence speed, computational efficiency, and response sensitivity are compared and analyzed. Finally, a 
+novel Improved Async n-step QL (IAsync n-step QL) algorithm is proposed, the MAS model based on the IAsync 
+n-step QL algorithm for intelligent strategic bidding is established. Simulation results show that the model using 
+the novel DRL algorithm is more profitable and responsive than the classic DRL algorithms.   
+1. Introduction 
+With the entry of electricity sales companies established by social 
+capital into the electricity market [1], the electricity spot market places 
+higher and more specialized requirements on the access rules of elec-
+tricity sales companies in terms of bidding decisions and deviation 
+control [2]. As an increasingly complex and dynamic environment, in-
+dividuals in the electricity market take actions to maximize their in-
+terests, reflecting their adaptability and learning ability. Agents in 
+Multi-agent Simulations (MAS) can make autonomous decisions and 
+interact with other agents, which resemble various social behaviors such 
+as collaboration, competition, etc., rather than just the data exchange 
+between them. Therefore, MAS methods are often used to study the 
+bidding behavior in electricity markets [3]. Also, with artificial intelli-
+gence techniques, market participants can be empowered to learn 
+adaptively to achieve optimal profitability [4]. Therefore, using MAS 
+combined with machine learning algorithms can develop optimal stra-
+tegies for market participants, thus simulating the bidding behavior of 
+the electricity selling side in real electricity markets. 
+Many scholars around the world have studied bidding strategies on 
+the electricity selling side in the electricity market [5,6]. Among them, 
+the Reinforcement Learning (RL) algorithm [7,8], as a popular method 
+to help power plant agents optimize their own bidding behavior and 
+make decisions, can be combined with Multi-agent Simulation methods 
+to maximize profits, has been widely used in different aspects of the 
+electricity market [9,10], and has become a new solution for the 
+* Correspondence to: Key Laboratory of Smart Grid of Ministry of Education, Tianjin University, Tianjin, 300072, China. 
+Contents lists available at ScienceDirect 
+Applied Soft Computing 
+journal homepage: www.elsevier.com/locate/asoc 
+https://doi.org/10.1016/j.asoc.2024.111235 
+Received 1 March 2023; Received in revised form 8 September 2023; Accepted 31 December 2023
+
+Applied Soft Computing 152 (2024) 111235
+2
+management and supervision of the electricity market.However, RL al-
+gorithms suffer from dimensional catastrophes [11–13] in practical 
+applications and have many limitations. Using deep neural networks 
+instead of discrete tables to approximate the value functions and 
+training can solve the dimensionality catastrophe in the state space and 
+action space, which usually lead to better results [14]. Therefore, 
+combined with the advantages of RL in training samples, interaction 
+methods and decision-making, based on Deep Learning (DL) algorithms, 
+Deep Reinforcement Learning (DRL) is proposed as a new machine 
+learning algorithm. It combines the perception ability of DL and the 
+decision-making ability of RL, which is an artificial intelligence method 
+closer to the way of human thinking. 
+Since Mnih et al. proposed Deep Q-Network (DQN) [15], research in 
+the field of Deep Reinforcement Learning (DRL) has developed rapidly. 
+Based on the classic DQN method, researchers proposed the Double DQN 
+(DDQN) algorithm, which eliminated the problem of overestimation and 
+validated the better performance of the DDQN method in some Atari 
+games [16]. Then referring to the human learning process that priori-
+tizes past successful experiences. Ref. [17] applied the Power-weighted 
+Experience Replay (PER) to DQN and DDQN using time-difference error 
+to improve the model’s performance. In addition, Wang et al. proposed a 
+Dueling DQN structure, which splits the last fully-connected layer in the 
+classic DQN network into two independent fully-connected layers for 
+estimating the state value function and the dominance function, 
+respectively, to speed up the convergence of training [18]. In addition to 
+value-based methods, researchers have made some progress in intro-
+ducing deep learning to policy gradient methods in reinforcement 
+learning. Actor-critic methods [19] are one of the common frameworks, 
+but often suffer from the difficulty of simultaneous converging of Actor 
+and Critic networks. Casas has made some progress using an actor-critic 
+method based on the Deep Deterministic Policy Gradient (DDPG) 
+method [20] to solve this problem. In addition, the asynchronous 
+learning method exploits the natural irrelevance between different 
+processes to sample multiple learning processes. Therefore, the corre-
+lation problem of the observed sequences in a single training process can 
+be solved without using experience replay. Ref. [21] proposed a general 
+asynchronous reinforcement learning framework while replacing 
+single-step rewards with multistep rewards and proposed an Asyn-
+chronous n-step Q-Learning method (Async n-step QL). 
+In recent years, more and more scholars try to use DRL algorithms to 
+study electricity markets, focusing on improving the accuracy of elec-
+tricity load forecasting [22] and electricity price forecasting [23], as 
+well as studying the bidding strategies of market participants [24,25]. In 
+the study of the bidding strategies on electricity selling side, in [26], 
+power companies use Deep Q-Networks (DQN) to learn the optimal 
+bidding strategy from the raw data of complex games to reduce the 
+market-clearing price. In view of the large-scale participation of 
+renewable energy in electricity market bidding, Ref. [27] uses the deep 
+deterministic policy gradient (DDPG) algorithm to describe the game 
+behavior between renewable energy generators and traditional gener-
+ators. Ref. [28] uses the maximum entropy based Soft Actor-Critic (SAC) 
+algorithm to improve the efficiency of wind power plants in the 
+real-time market while maintaining its robustness. Ref. [29] uses the 
+SAC algorithm to simulate the behavior of the Virtual Power Plant 
+(VPP), and uses the DDPG algorithm to simulate the behavior of the 
+electric vehicle charging station to achieve the game balance between 
+the power generation side and the power consumption side. By 
+improving the DDPG algorithm, the Markov decision process describing 
+the pricing can be solved to obtain the optimal bidding and pricing 
+strategy [30], thereby enhancing the bidding ability of Gas-Fired Units 
+(GFU) in integrated electricity and natural gas markets [31], and in-
+crease the market-clearing price in the bidding process of the electricity 
+market [32]. 
+Recently, some scholars have gradually tried to apply the Deep 
+Reinforcement Learning (DRL) algorithm and the Multi-Agent Simula-
+tion (MAS) to the research on the electricity market, among which the 
+Multi-agent Deep Reinforcement Learning (MADRL) algorithm is the 
+most commonly used. Ref. [33] studied electricity market bidding with 
+multiple strategic generation company bidders using the MADRL in 
+order to obtain an optimal strategy. Ref. [34] used MADRL to bid for 
+power plants in the day-ahead market and the real-time market. 
+Ref. [35] first applied the MADRL in the design of a Local Electricity 
+Market (LEM) to optimize its market function. In the related research of 
+Virtual Power Plants (VPPs), [36] used MADRL to regulate VPPs in 
+distribution network to realize real-time energy sharing and manage-
+ment in community power market. Ref. [37] used MADRL to regulate 
+VPPs in the microgrid, so that the VPP with market power can become 
+the price maker. The MADRL algorithm was also applied to study load 
+frequency control of the multi-area power system [38]. Ref. [12] used 
+MADRL to simulate the price game among charging stations and to 
+obtain the optimal charging price for a single electric vehicle. 
+In the above existing research based on MADRL, however, for a 
+single agent in its multi-agent simulation system, the behavior of other 
+agents is predetermined or considered as part of the environment which 
+is fixed for a certain period of time, which leads to the fact that the 
+dynamic interactive bidding behaviors between the agents on the elec-
+tricity selling side in the electricity market cannot be fully simulated. 
+Therefore, there still needs to be a research gap in combining MAS and 
+DRL to study intelligent strategic bidding in competitive electricity 
+markets. Therefore, this paper combines MAS and DRL algorithms to 
+study the dynamic bidding strategic behaviors of competitive electricity 
+markets. The main contributions of this paper are as follows: 
+1) The bidding process of each participant in competitive electricity 
+markets under the Energy Internet is essentially an intelligent decision- 
+making process, which requires the support of Artificial Intelligence 
+technology; and the bidding process is a complex dynamic process that is 
+difficult to establish an accurate mathematical model, which require the 
+support of computer simulation technology. Therefore, in order to solve 
+the problem of insufficient intelligent decision-making ability and 
+simulation computing ability in competitive electricity market bidding, 
+a simulation method of intelligent strategic bidding in competitive 
+electricity markets based on Multi-agent Simulation (MAS) and Deep 
+Reinforcement Learning (DRL) is proposed. MAS method solves the 
+problem that single agent can only be confined to a simple market 
+environment with complete information and cannot intuitively reflect 
+the dynamic interactive bidding behaviors among multiple participants; 
+And the employment of DRL algorithms avoids the unstable conver-
+gence caused by the traditional RL algorithm limited to low-dimensional 
+discrete state and action space, and enhances the performance of the 
+model on processing high-dimensional continuous data. 
+2) A theoretical framework of intelligent strategic bidding using 
+Multi-agent Simulation (MAS) and Deep Reinforcement Learning (DRL) 
+in competitive electricity markets is proposed. The framework consists 
+of two parts: one part is MAS that simulates the data exchange behaviors 
+and relations between entities during the bidding process based on 
+bidding strategies in electricity markets; the other part is bidding stra-
+tegies learning which provides more intelligent strategies for market 
+participants to maximize their profits. Then, the modeling process and 
+simulation process based on Deep Reinforcement Learning (DRL) and 
+Multi-Agent Simulation (MAS) are designed. Three MAS models of 
+intelligent strategic bidding based on three classic DRL algorithms are 
+established in the electricity market, including Deep Q-Network (DQN), 
+Double Deep Q-Network (DDQN), and Asynchronous n-step Q-Learning 
+(Async n-step QL). 
+3) An improved Async n-step QL (IAsync n-step QL) algorithm is 
+proposed to establish a MAS model of intelligent strategic bidding in 
+competitive electricity markets based on it. And by running the model, 
+the effectiveness of the IAsync n-step QL algorithm is verified. The 
+simulation results show that the application of the novel Async n-step QL 
+algorithm improves the profitability of power plant agents when the 
+market demand is low, and promotes market competition by encour-
+aging active bidding behavior, which is superior to the simulation 
+J. Wu et al.
+
+Applied Soft Computing 152 (2024) 111235
+3
+models based on the other three classic DRL algorithms. 
+The rest of the paper is structured as follows. Section 2 presents a 
+theoretical framework for intelligent strategic bidding based on MAS 
+and DRL algorithms in competitive electricity markets. Section 3 applies 
+three DRL algorithms to the Multi-agent simulation model of strategic 
+bidding in the competitive electricity markets. Section 4 analyzes each 
+algorithm in terms of computational efficiency, convergence speed, and 
+responsiveness to supply and demand changes under different demand- 
+to-supply ratios. Section 5 proposes a novel Improved Async n-step QL 
+(IAsync n-step QL) algorithm, establishes a MAS model based on IAsync 
+n-step QL and proves the advantages of the improved Async n-step QL 
+algorithm. The conclusions are presented in Section 6. 
+2. Theoretical framework of intelligent strategic bidding in 
+competitive electricity markets 
+This paper proposes a novel theoretical framework for intelligent 
+strategic bidding in diverse competitive electricity markets based on 
+MAS and DRL algorithms, as Fig. 1. Fig. 1 contains two parts, one is 
+multi-agent simulation including entities in competitive electricity 
+markets, which is used to describe the relationships and data exchange 
+behaviors between entities in real competitive electricity markets. The 
+other part is the bidding strategic learning using a specific DRL algo-
+rithm to provide more intelligent learning strategies for electricity 
+buyers and sellers to maximize the profits of each entity. The partici-
+pants in the electricity market trading process can be classified into 
+three types: Generator agents (Gn), the Independent System Operator 
+(ISO) agent, and buyer agents (Bm). Seller agents are different types of 
+power plants, whereas buyer agents include various small and medium- 
+sized factories, commercial companies, and community residents. The 
+decision-making behavior of individual agent and the interaction be-
+tween agents maintain the proper functioning of the competitive elec-
+tricity market. 
+The bidding strategic learning in Fig. 1 is contained within the seller 
+and the buyer agents, and DRL algorithms can be used to generate 
+strategy networks for market analysis and decision making. First, the 
+power plants need to obtain key information about the electricity mar-
+kets, such as market clearing price, bidding information of other agents 
+and calculate their profit. The above observations and environment 
+analysis can be used as state inputs to the DRL algorithm. After inputting 
+observations of the electricity market environment, corresponding 
+quotation actions can be generated to maximize profits in the next 
+bidding round. Therefore, the bidding strategic learning is a decision- 
+making unit for power plants and reflects the agent’s ability to adapt 
+and learn. Similarly, bidding strategic learning also applies to the 
+decision-making unit of buyer agents in the electricity market. 
+We adopt the current mainstream centralized trading model: elec-
+tricity sellers and buyers trade through an Independent System Operator 
+(ISO). ISO calculates the final uniform clearing price from the bidding 
+prices submitted by the electricity sellers and buyers according to 
+market clearing rules, and completes the transaction at the clearing 
+price. To simplify the model, the centralized trading mode is generally 
+reduced to a unilateral form, i.e., the electricity demand remains un-
+changed. In the market, only the electricity selling entities sell electricity 
+for profits using intelligent strategic bidding. 
+There are two main settlement methods in the centralized trading 
+electricity market currently: MCP (Market Clearing Price) and PAB (Pay 
+as Bid) [39]. In each round of bidding, ISO ranks the bidding prices from 
+lowest to highest and accumulates the corresponding volumes until the 
+accumulated volumes are no less than the total market demand. Under 
+PAB rules, all winning power plants trade at their respective bid prices. 
+And the market settlement price under the MCP is the bid price of the 
+last power plant to be accumulated. In this paper, we adopt MCP as the 
+bidding rules when the market is cleared. 
+3. Intelligent strategic simulation model in competitive 
+electricity markets using DRL and MAS 
+In this section, based on the theoretical framework of intelligent 
+strategic bidding in electricity markets, the simulation method of 
+intelligent strategic bidding in electricity markets based on DRL algo-
+rithms is studied and the MAS models of intelligent strategic bidding 
+based on DRL algorithms are established. The modeling process is 
+divided into the generation of intelligent strategic bidding based on DRL 
+algorithms and the MAS modeling of the behavior between entities 
+during the bidding process. 
+Three classic value-based DRL algorithms, including Deep Q 
+Network (DQN) algorithm, Double Deep Q Network (DDQN) algorithm, 
+and Asynchronous n-step Q-learning (Async n-step QL) algorithm, are 
+applied to the multi-agent simulation model of electricity market bid-
+ding, and the changes of variables are analyzed qualitatively and 
+quantitatively. It is worth noting that we select the Async n-step QL 
+algorithm, which is more advantageous in the context of the applica-
+tions in the model of this paper, as an example to introduce the DRL- 
+based electricity market multi-agent simulation model for intelligent 
+bidding. 
+Fig. 1. The theoretical framework of intelligent strategic bidding in competitive electricity markets using multi-agent simulation and deep reinforcement learning.  
+J. Wu et al.
+
+Applied Soft Computing 152 (2024) 111235
+4
+3.1. Intelligent strategic bidding using DRL algorithms 
+In traditional deep reinforcement learning methods that utilize the 
+experience replay mechanisms, it is necessary to sample from a large 
+historical dataset to destroy correlations in the time series. Furthermore, 
+data generated by previous strategies may prevent the optimization of 
+new strategies, which leads to a slower convergence of the learning 
+process. An asynchronous concurrent architecture can solve these 
+problems by exploiting the natural irrelevance between learning 
+threads. 
+In an asynchronous learning algorithm, an agent can parallelize 
+several learning threads, starting from different states and exploring 
+different actions to obtain different observation sequences. Moreover, 
+the shared network parameters can be updated alternately between 
+different threads, making the parameters becomes higher more 
+frequently updated and the prediction of the output results more accu-
+rate. In addition, the n-step asynchronous framework differs from the 
+single-step framework in that each thread computes the parameter up-
+dates by performing multiple actions at a time instead of one action, and 
+accumulates the updates of each action and updates them to the original 
+network parameters together after reaching a certain number of steps. 
+Algorithms of Async n-step QL is shown in Fig. 2. [21]. 
+3.1.1. Training steps of DRL algorithms in multi-agent simulation 
+Step 1: Determine the neural network structure corresponding to 
+each agent, such as the network depth, the number of hidden layer 
+nodes, whether to use convolutional layers, etc., and initialize the 
+network parameters randomly. 
+Step 2: Determine the hyperparameters in the training process, such 
+as learning rate, discount factor, ϵ annealing rate, number of training 
+steps, optimizer, etc. 
+Step 3: In each training segment, the agent and the state of the 
+environment are initialized, and then several training steps are 
+performed. 
+Step 4: In each training step, each agent i observes the environment 
+and selects actions to execute according to the ϵ  greedy strategy, and 
+records the next state and their respective single-step rewards, and up-
+dates the optimization network by optimizing the error between the 
+current value and the target value Parameter θi. 
+Step 5: When the number of training rounds reaches the set upper 
+limit or a certain training index reaches the expected value, the training 
+is stopped, and each agent obtains a parameterized neural network from 
+state mapping to action—the well trained strategy, which can be called 
+by multi-agent simulation. 
+3.1.2. Settings of training parameters 
+A fully connected structure is used to set up the network structure. 
+The number of nodes in the input and output layers of the network is 20, 
+which is equal to the dimensions of the state space and action space 
+above. And three hidden layers are set, with 100 hidden nodes in each 
+layer. 
+In training hyperparameter settings, the maximum iterations per 
+training round are set to 50 steps, and the cumulative maximum number 
+of steps is 4800. The size of the mini-batch for each sampling is32, and 
+the reinforcement learning discount factor γ= 0.98. The number of 
+actor learner threads is 4, so the expected number of training steps per 
+Fig. 2. Asynchronous n-step Q-Learning algorithm per actor-learner thread.  
+J. Wu et al.
+
+Applied Soft Computing 152 (2024) 111235
+5
+thread is 1200. The key parameter n-step is 10, that is, each thread ac-
+cumulates the updated amount of each action, and updates it to the 
+original network parameters. 
+after reaching 10 steps. During the training process, ϵ adopts an 
+exponential decay method, which decays to a minimum value of 0.05 
+after 3200 steps. The optimizer uses RmsProp with a learning rate of 
+0.001. 
+3.1.3. Changes in training metrics 
+The training process will be analyzed below. The parameters of the 
+target network are updated asynchronously by different actor-learner 
+threads, and because the Async n-step QL algorithm uses a multi- 
+thread implementation method, it may lead to large differences in the 
+training progress between threads. The learning process is also asyn-
+chronous among different agents, so the maximum number of training 
+rounds for each agent may vary. Fig. 3. (a) shows the variation of the 
+network score of an agent in the Async n-step QL algorithm with the 
+training time. It can be seen that a local optimum appears around the 5th 
+round and reaches convergence after about 20 training rounds. Fig. 3. 
+(b) shows the change in reward value during the learning process. The 
+change of the reward of the agent using the Async n-step QL during the 
+training process does not have an obvious upward or downward trend, 
+which indicates that the competition between different power plants is 
+more intense. 
+3.2. Intelligent strategic bidding using multi-agent simulation 
+3.2.1. The simulation steps of multi-agent simulation (MAS) process 
+Step 1: Determine the initial state of the simulation and when to 
+terminate it. 
+Step 2: Identify key metrics during the simulation. 
+Step 3: In each period of simulation, each agent obtains the envi-
+ronmental state s obtained by observation, and then takes the next ac-
+tion ai= пi(s|θi) according to the strategy generated by the neural 
+network obtained by the respective training, obtains the actual single- 
+step return ri of environmental feedback, and advances the environ-
+ment move to the next state s′. 
+Step 4: Step 3 loops continuously until the simulation terminates. 
+3.2.2. Implementation tools for multi-agent simulation 
+In this paper, AnyLogic software is used to implement multiagent- 
+based simulation modeling tasks. AnyLogic can support three main-
+stream modeling and simulation methods simultaneously: Discrete- 
+Event Modeling (DEM), Agent-Based Modeling (ABM), and System Dy-
+namics Modeling(SDM). In addition, AnyLogic contains various 
+industry-specific class libraries and is currently the only simulation 
+software that can support industrial-strength multi-agent modeling 
+[30]. Based on Eclipse, AnyLogic can be customized with various classes 
+and functions using the Java language to implement user-specific fea-
+tures. At the same time, the changes in different variables are dynami-
+cally monitored and displayed during the simulation process. 
+3.2.3. The MAS model of intelligent strategic bidding 
+Based on the theoretical framework of intelligent strategic bidding in 
+electricity markets, the simulation methods of intelligent strategic bid-
+ding based on DRL are studied. and three DRL algorithms are applied to 
+the MAS model. In the MAS model established in this paper, we set up 
+eight power plant agents and one ISO agent. Each power plant agent 
+submits a bid price to ISO in each bidding round, and ISO releases the 
+market clearing price and winning information to each power plant 
+agent after clearing. The market maximum bidding price is set to 20 
+USD/MWh, and the settings of power plants are set as Table 1 [8]: 
+We set the average winning prices of each bidding round as the state 
+space, the bidding behavior of each power plant agent as its respective 
+action space, and the profit each power plant makes in each bidding 
+round as its reward from the environment. Next, the value interval [Pmin, 
+Pmax] of the average winning price is discretized into 20 equal parts, 
+each length d= (Pmax-Pmin)/20. The average winning price p∈(Pmin+id, 
+Pmin+(i+ 1)d] corresponds to state i, i= 0, 1,⋯, 19. The state is then 
+transformed into a 20-dimensional one-hot vector as the input to the 
+deep neural network. 
+The bidding action of one power plant consists of the electricity 
+bidding price and the electricity bidding volumes. The bidding price of a 
+power plant is taken as [mc, P], where mc is the marginal cost of the 
+power plant, and P is the maximum bidding price specified by the 
+market. Similarly, the bid price range is divided into 20 equal parts, each 
+with length d= (P-mc)/20. Therefore, taking action j represents a 
+random bid price in the interval (mc+ jd, mc+(j+ 1)d], where j= 0, 1, 
+⋯, 19. And the output of the deep neural network is a 20-dimensional 
+Fig. 3. a) Average network score change b) Average return value change.  
+Table 1 
+Intrinsic parameter setting of each power plant agent.  
+Power plant i Maximum electricity generation (MWh) Cost (USD/MWh) 
+Gen1  30  8 
+Gen2  40  9 
+Gen3  50  8 
+Gen4  30  10 
+Gen5  40  8 
+Gen6  50  11 
+Gen7  60  8 
+Gen8  40  9  
+J. Wu et al.
+
+Applied Soft Computing 152 (2024) 111235
+6
+vector representing the probability distribution of taking each action. 
+The following mathematical model is established for the market 
+clearing process based on the MCP bidding mechanism. Assume that the 
+bidding price and bidding volumes of power plant i are pi and qi, and the 
+actual electricity clearing price and electricity volumes are pi′ and qi′, the 
+total market demand is Q, and pc is the market clearing price. We can 
+assume that the result of ranking from minimum to maximum according 
+to the bidding price is p1 < p2 < ⋯ < pn. Since randomness is introduced 
+in the definition of actions, and the probability value and measurement 
+value of a single point are both 0, so the quotations proposed by different 
+power plant agents are not equal, so there will exist a continuous in-
+cremental. Then there are Eq.(1)-eq.(3): 
+pc = pi (1)  
+s.t.
+∑i  1
+j=1
+qj < Q (2)  
+∑i
+j=1
+qj ≥ Q (3)  
+n is the number of power plants satisfied 1⩽i⩽n. And winning prices and 
+volumes of each power plant are as Eq. (4) and eq. (5): 
+q′
+i =
+⎧
+⎪⎪⎪⎪⎪⎨
+⎪⎪⎪⎪⎪⎩
+qi, pi < pc
+Q 
+∑i  1
+j=1qj, pi = pc
+0, pi > pc
+(4)  
+p′
+i = pc, pi ≤ pc (5) 
+The profit of power plant i can be expressed as Eq. (6)： 
+ri =
+ 
+p′
+i  mci
+)
+q′
+i (6) 
+The deep neural network-based strategy training task in intelligent 
+strategic bidding simulation models for competitive electricity markets 
+can be implemented using the DRL. In DRL, a parameterized deep neural 
+network Q(s, a; θ) is used to approximate the value function. Taking the 
+DQN as an example, the observation of states is preprocessed as Eq. (7). 
+ϕt = ϕ(st) (7) 
+Then in each time step, the action at is selected according to the 
+ϵ-greedy strategy and executed in the Markov decision process to obtain 
+the single-step payoff and the next state. Subsequently, the quaternion 
+(фt, at, at, фt+1) is stored in D as an experience in the learning process and 
+the experience is sampled randomly. The target value of the value 
+estimation is Eq. (8). 
+y= r+ γmax
+a′
+Q
+(
+s′, a′|θ) (8) 
+After that, we can use the Mean-Square Error(MSE) between the 
+target value and the current value to represent the loss function, and 
+then update the network parameters θ by optimizing the loss function by 
+gradient descent, as in Eq. (9). 
+L(θ)= 1
+N
+∑N
+j=1
+ 
+yj  Q
+ 
+ϕj, aj; θ
+))2
+(9)  
+where N is the number of samples in the experience reply. The hyper-
+parameter ϵ is set using the annealing algorithm during the training 
+process. This indicates that a larger ϵ in the early stage of training can 
+ensure the full exploration of the whole action space. As the training 
+process advances, the value of ϵ is gradually reduced to make full use of 
+experience rather than random actions to achieve a balance between 
+exploring possibilities and using knowledge. 
+3.3. Intelligent strategic simulation model using DRL algorithms and MAS 
+In the MAS experiment, 1000 bidding cycles are set, so that all agents 
+bid randomly throughout the action space with probability ϵ= 0.05 in 
+each bidding cycle, and the remaining time is based on the strategy 
+network obtained by training. 
+To compare the responsiveness of intelligent bidding strategies to the 
+market demand, the market demand to total supply is set to 50%, 60%, 
+70%, 80%, 90% when t∈(0200], t∈(200,400], t∈(400,600], t∈
+(600,800], t∈(800,1000], respectively. Since the buyers’ demand is 
+rigid, the supply-demand ratio has a more obvious impact on the elec-
+tricity market. The above-mentioned simulation scenario setting is to 
+make the market have different supply-demand levels in different time 
+periods. 
+Next, we will analyze the bidding strategies and bidding results of 
+power plants under different supply and demand levels from qualitative 
+and quantitative perspectives, and analyze and evaluate the market 
+revenue at the same time. 
+3.3.1. Qualitative analysis of intelligent strategic bidding based on Async n- 
+step QL and MAS 
+The variation of the variables in the simulation of applying the Async 
+n-step QL to strategic bidding in competitive electricity markets is 
+shown in Fig. 4–7, in which the horizontal axis represents the number of 
+market clearings and the vertical axis represents the different prices 
+(USD/MWh). 
+It can be seen that as the market demand increases, market clearing 
+prices and the total revenue on the electricity selling side increase 
+significantly, average winning prices of power plants increase slightly, 
+while the change in average bidding prices is not significant. 
+In addition, due to the ϵ-greedy principle for power plants quotation, 
+the existence of the random exploration factor makes the algorithm 
+fluctuate even when it is stable, and the simulation becomes unstable as 
+the total market demand converges to the total power plant supply 
+volumes and the fluctuation range of each index is greater. 
+3.3.2. Quantitative analysis of intelligent strategic bidding based on Async 
+n-step QL and MAS 
+The quantitative changes of each variable in the electricity market 
+based on Async n-step QL algorithm in the simulation experiment are 
+shown in Table 2. 
+When t= 200, 600, the growth rates of total revenue on the elec-
+tricity selling side are 96.2% and 74.5%, respectively, and the growth 
+rates of market clearing prices are 22.1% and 23.0%, respectively, 
+showing a relatively large growth rate. This indicates that some of the 
+higher quotations plants start to take the bidding initiative at this time. 
+The growth in both trading volumes and clearing prices result in a sig-
+nificant increase in total revenue on the electricity selling side. When 
+t= 400, 800, the growth rates of the total revenue on the electricity 
+selling side are 13.7% and 15.3%, respectively, and the growth rates of 
+the market clearing prices are 0.9% and 1.0%, respectively, which is 
+smaller. This indicates that the main influencing factor leading to the 
+Fig. 4. Average winning price.  
+J. Wu et al.
+
+Applied Soft Computing 152 (2024) 111235
+7
+change of the revenue on the electricity selling side is the increase of 
+trading volume. Among them, the agent at t= 400 prefer conservative 
+bidding, while the insignificant change at t= 800 mainly stems from the 
+decrease in the reliability of simulation experiments due to the tension 
+between supply and demand. 
+4. Comparative analysis of the MAS Model based on three classic 
+DRL algorithms 
+The comparative analysis of the performance of the MAS model 
+based on three classic DRL algorithms are carried out in this section. 
+three MAS models based on DQN algorithm, DDQN algorithm and Async 
+n-step QL algorithm are compared and analyzed in terms of computa-
+tional efficiency, convergence speed, and responsiveness to demand 
+changes. 
+4.1. Computational efficiency and convergence speed 
+The number of training rounds of DQN algorithm and DDQN algo-
+rithm is set to 50, with 100 iterations per round, i.e., each agent per-
+forms 5000 iterations of training simultaneously. Since there are 
+multiple asynchronous learning threads inside the agent in the Async n- 
+step QL algorithm, all learning threads of each agent are set to iterate 
+5000 steps in total, and each round of training iterates 100 times. We 
+recorded the running time and convergence time of the three training 
+algorithms and calculated the average computational speed of each al-
+gorithm. The results are shown in Table 3: 
+From Table 3, we observed that the MAS model based on DQN has 
+the fastest convergence and computational speed. The MAS model based 
+on DDQN has a slower convergence speed and computational speed due 
+to the difference between the current and target networks. The 
+convergence speed and computational speed of the MAS model based on 
+the Async n-step QL algorithm are moderate. 
+4.2. Responsiveness to changes in supply and demand 
+To study the responsiveness of the three DRL algorithms to the 
+supply and demand changes of the multi-agent simulation in the elec-
+tricity market, we conducted three training simulation experiments to 
+analyze each of the three algorithms. The ratio of total market electricity 
+demand to power plant supply volumes was set to 50%, 70%, and 90% in 
+the three-disk of experiments, and remained unchanged during the 
+training and simulation process. 
+Fig. 5. Total power plants revenue.  
+Fig. 6. Average bidding price.  
+Fig. 7. Market clearing price.  
+Table 2 
+The main variables of the electricity market under different demand-to-supply ratios using the Async n-step QL algorithm.  
+Time  0-200 200-400 400-600 600-800 800-1000 
+Supply Value(MWh)  340  340  340  340  340 
+Demand-to-supply ratio  50%  60%  70%  80%  90% 
+Load Value(MWh)  170  204  238  272  306 
+Growth rate  0%  20%  16.7%  14.3%  12.5% 
+Total revenue Value(USD)  696.5  1366.4  1554.2  2711.8  3127.1 
+Growth rate  0%  96.2%  13.7%  74.5%  15.3% 
+AWP Value(USD/MWh)  10.72  11.03  11.61  12.49  13.36 
+Growth rate  0%  2.89%  5.26%  7.58%  6.97% 
+ABP Value(USD/MWh)  13.77  13.73  13.68  13.82  13.95 
+Growth rate  0%  -0.29%  -0.36%  1.02%  0.94% 
+MCP Value(USD/MWh)  12.44  15.19  15.32  18.85  19.04 
+Growth rate  0%  22.1%  0.9%  23.0%  1.0%  
+Table 3 
+Comparison of computational efficiency and convergence speed of MAS model 
+based on the deep reinforcement learning algorithm.  
+Algorithms Training 
+rounds 
+Iteration 
+steps 
+Running 
+time (s) 
+Convergence 
+rounds 
+Speed 
+(s/ 
+round) 
+DQN  50  5000  225  32  4.5 
+DDQN  50  5000  262  40  5.2 
+Async n-step 
+QL  
+50  5000  250  38  5.0  
+J. Wu et al.
+
+Applied Soft Computing 152 (2024) 111235
+8
+4.2.1. Qualitative analysis 
+For the bidding simulation methods based on the DQN, DDQN, and 
+Async n-step QL, Average Winning Prices (AWPs), Average Bidding 
+Prices (ABPs), and Market Clearing Prices (MCPs) in three-disk experi-
+ments can be obtained, as shown in Fig. 8.~Fig. 10. 
+We observed that applying all three training algorithms led the 
+market to an equilibrium steady state. As the ratio of electricity demand 
+to total supply volumes increases, average winning prices and market 
+clearing prices in the market both increase accordingly. In turn, an in-
+crease in the demand-to-supply ratios leads to higher electricity trading 
+volumes and market clearing prices, both of which, in turn, lead to a rise 
+in the total revenue on the electricity selling side of the market. It is 
+worth mentioning that the random fluctuations of the variables in  
+Figs. 8–10 come from the setting of the random exploration probability ϵ 
+= 0.05. 
+4.2.2. Quantitative analysis 
+Table 4 shows the quantitative variation of market parameters with 
+the demand-to-supply ratio in the multi-agent simulation model based 
+on three classic deep reinforcement learning algorithms. 
+For the DQN algorithm, at the lower level of 50% demand-to-supply 
+ratio, its average winning price, average bidding price, and market 
+clearing price are $11.9, $14.1, and $13.2, respectively, which are the 
+highest among the three algorithms. As the demand-to-supply ratio in-
+creases, average winning. 
+prices and market clearing prices increase significantly with growth 
+rates of 5.9% and 7.1%, 19.7% and. 
+23.4% when the demand-to-supply ratio increases to 70% and 90%, 
+respectively, whereas the average. 
+bidding prices remain unchanged. When the demand-to-supply ratio 
+reaches 90%, market clearing prices reach $19.5, which is very close to 
+the market limit of $20 maximum bid price, and the operational status of 
+the market becomes unstable due to the tense supply demand. We can 
+conclude that the bidding strategies of the DQN are more aggressive. 
+In contrast, when the electricity demand reaches 50% of the supply 
+with the DDQN, its average winning price, average bidding price, and 
+market clearing price are $10.4, $12.8, and $12.6, which are the lowest 
+among the three algorithms. As the demand increases, the average 
+winning price and clearing price also increase with growth rates of 6.7% 
+and 10.8%, 11.9%, and 26.2% when the demand-supply ratio increases 
+to 70% and 90%, respectively, and the average bidding price remains 
+unchanged. At the demand-to-supply ratio of 90%, the market clearing 
+price is $17.8, which is lower than the others and leads to the lowest 
+total revenue of the three algorithms in electricity sellers. Therefore, we 
+observed that the bidding strategies of the DDQN are more conservative 
+and can provide a more reliable solution with tight supply-demand 
+while losing some revenue. 
+At a demand-to-supply ratio of 50%, the average winning price and 
+the market clearing price using the Async n-step QL are $10.7 and $12.3, 
+respectively, at a lower initial level, which is similar to DDQN, whereas 
+the average bidding price is $13.8, which is similar to the values of the 
+DQN. When the ratio increases to 70% and 90%, its average winning 
+prices increase to $11.6 and $13.4, and the market clearing prices in-
+crease to $15.4 and $18.9, with the highest growth rates of 8.4% and 
+15.5%, 25.2% and 22.7% in the three methods. In the case of supply- 
+demand tension, the market clearing price is $18.9, which is between 
+the DQN and the DDQN. So we can conclude that the Async n-step QL 
+can provide conservative bidding strategies when demand-to-supply 
+ratios are relatively low. And as the demand rises, market indicators 
+grow with it and become more responsive to changes in demand-to- 
+supply ratios, which can lead to more considerable revenue on the 
+electricity selling side. At the same time, the highest bidding price close 
+to the market regulation does not occur when the supply-demand rela-
+tionship is tight, thus ensuring the stability of the market operation and 
+the reliability of the simulation results. 
+Compared with the other two algorithms, the convergence speed and 
+computational speed of Async n-step QL are moderate, but they show 
+higher sensitivity to market demand changes. And on the premise of 
+ensuring the stability of market bidding, using the Async n-step QL can 
+also obtain a higher total revenue on the selling side when supply and 
+demand are tight. Therefore, the Async n-step QL learning algorithm has 
+more advantages in the multi-agent simulation model of electricity 
+market bidding established in this paper. 
+5. Improved Async n-step QL algorithm and performance 
+analysis of the MAS model based on it 
+The Async n-step QL algorithm with the best performance is 
+improved in this section, and its performance in the intelligent strategic 
+simulation model is compared with the benchmark Async n-step QL 
+algorithm. 
+5.1. Improvement of Async n-step QL algorithm 
+In the study applying the classic Async n-step QL algorithm, the key 
+factor of supply-demand ratio was not added into the training process as 
+part of the environment observation. Therefore, in the study of this 
+section, the state space is modified as a vector of four continuous vari-
+ables, i.e., S= {x1, x2, x3, x4}, where x1, x2, and x3 are the average 
+winning price, average bidding price, and market clearing price, 
+respectively, and x4 is the ratio of the market electricity demand to the 
+total supply volumes of all power plants. Such a setting can avoid too 
+sparse observations of the environment while enabling the influence of 
+the demand-supply ratio on bidding behaviors to be considered by the 
+trained bidding strategies. Referring to the latest method proposed in 
+[13], the goal of reinforcement learning: the signal that needs to maxi-
+mize the reward is defined, as shown in Eq. (10). 
+Fig. 8. a) DQN AWPs b) DQN ABPs c) DQN MCPs.  
+J. Wu et al.
+
+Applied Soft Computing 152 (2024) 111235
+9
+ri =
+{
+lp
+ 
+proi  proc
+i
+)
+proi > proc
+i
+ln
+ 
+proi  proc
+i
+)
+proi ≤ proc
+i
+(10)  
+where proi is the actual profit obtained by agent i, and proi
+c is the 
+benchmark profit obtained by the strategies without learning algo-
+rithms. lp and ln are proportional coefficients used to control the balance 
+between positive rewards and negative penalties, respectively. This 
+paper assumes that the bidding and clearing rules of the electricity 
+market, as well as the historical quotation and clearing information of 
+other power plants, are completely visible to any power plant in the 
+market. In a round of bidding, the agent observes the state st and takes 
+the quotation action at according to the policy network, and the actual 
+revenue obtained is proi. After taking the quotation action at, use the 
+historical quotation information and clearing rules of other power plants 
+to carry out a simulated market clearing, and the calculated benchmark 
+profit is proi
+c. 
+Network structure and hyperparameters are set as in 3.1.2. During 
+the training of the Improved Async n-step QL (IAsync n-step QL) algo-
+rithm, the adjustment of the demand amount is set every 50 rounds. The 
+demand-to-supply ratio is then varied periodically from 50% to 90% 
+with a 10% change gradient to ensure that the algorithm has approxi-
+mately the same probability of exploration at different demand levels. 
+The parameters lp, ln for profit and return value calculation are 1.45 and 
+1.05, respectively. 
+5.2. Multi-agent simulation of intelligent strategic bidding based on 
+IAsync n-step QL 
+By observing the changes in key indicators of the electricity market 
+in 1000 bidding rounds, Figs. 11–14 can be obtained. And the horizontal 
+axis in Figs. 11–14 represents the number of market clearings and the 
+vertical axis represents the different prices (USD/MWh), respectively. 
+It can be seen that after several times of clearing, the market has 
+generally reached a stable state, and the tendency of bidding strategies 
+Fig. 9. a) DDQN AWPs b) DDQN ABPs c) DDQN MCPs.  
+Fig. 10. a) Async n-step QL AWPs b) Async n-step QL ABPs c) Async n-step QL MCPs.  
+Table 4 
+Comparison of key indicators in multi-agent simulation models based on three classic deep reinforcement learning algorithms.  
+Algorithm DQN DDQN Async n-step QL 
+Number   01  02  03  01  02  03  01  02  03 
+Load Value(MWh)  170  238  306  170  238  306  170  238  306 
+Growth rate    50%  28.6%    50%  28.6%    50%  28.6% 
+AWP Value (USD/MWh)  11.9  12.6  13.5  10.4  11.1  12.3  10.7  11.6  13.4 
+Growth rate    5.9%  7.1%    6.7%  10.8%    8.4%  15.5% 
+ABP Value (USD/MWh)  14.1  14.1  14.1  12.8  12.7  12.9  13.8  13.7  13.9 
+Growth rate    0.5%  -0.4%    -0.8%  1.5%    -0.7%  1.5% 
+MCP Value (USD/MWh)  13.2  15.8  19.5  12.6  14.1  17.8  12.3  15.4  18.9 
+Growth rate    19.7%  23.4%    11.9%  26.2%    25.2%  22.7% 
+Total Revenue Value (USD)  787.4  1694.9  3239.1  637.8  1271.7  2695.5  696.5  1554.2  3127.1 
+Growth rate    115.3%  91.1%    99.4%  120%    123.1%  101%  
+J. Wu et al.
+
+Applied Soft Computing 152 (2024) 111235
+10
+has also stabilized, but there is still some randomness. All indicators in 
+the market show a state of shock, but compared with the other three 
+classic DRL algorithms, the amplitude is smaller. 
+Both the average winning price and the market clearing price have 
+risen steadily, with larger increases when electricity demand improves. 
+The market-clearing price increases with the increase of the demand- 
+supply ratio, and there is a more obvious rise at t= 600, and it is 
+generally stable at t∈[600,1000], and at this time, there is still some 
+distance between the highest bidding price defined by the market. 
+And the change trend of the total revenue of power plants is the same 
+as the change trend of the market clearing price. 
+The quantitative changes of each metric are shown in Table 5. We 
+observed that in the multi-agent simulation experiment with the IAsync 
+n-step QL algorithm, average winning prices and market clearing prices 
+increase steadily with market demand changes. In contrast, average 
+bidding prices fluctuate in a small range of around $14.3. The increase in 
+the demand-to-supply ratio leads to a simultaneous increase in the 
+trading price and volumes, which contribute to the growth of the total 
+revenue on the electricity selling side. Second, when market demand is 
+low, agents tend to make higher aggressive quotations in multi-agent 
+simulation; conversely, the market clearing price is $18.1, which is 
+still some distance from the maximum bidding price stipulated by the 
+market, ensuring the stability of the bidding market and the reliability of 
+the simulation. 
+5.3. Performance analysis of MAS model based on IAsync n-step QL 
+algorithm 
+The proposed IAsync n-step QL algorithm is validated by three-disk 
+multi-agent simulations with 50%, 70%, and 90% demand-to-supply 
+ratios in the electricity market in each simulation round, and  
+Fig. 15–17. can be obtained. 
+Table 6 shows the quantitative variation of electricity market key 
+indicators with different demand-to-supply ratios in the multi-agent 
+simulation experiment based on three classic deep reinforcement 
+learning algorithms. 
+We can conclude that at low levels of market demand, the average 
+winning price, average bidding price, and market clearing price using 
+the IAsync n-step QL are $11.9, $14.4, and $15.2, respectively, all 
+higher than the $10.7, $13.8, and $12.3 using the Async n-step QL al-
+gorithm. This illustrates that the improved algorithm is consistent with 
+the DQN algorithm when the demand-to-supply ratio is low and can 
+capture the highest possible profit by encouraging power plants to adopt 
+aggressive quotation strategies. At high levels of market demand, the 
+average winning price and average bidding price of the improved al-
+gorithm are $13.9 and $14.3, respectively, higher than the $13.4 and 
+$13.9 of the Async n-step QL algorithm. However, the market clearing 
+price in the improved algorithm is $18.1, which is lower than the $18.9 
+of the benchmark algorithm, which indicates that the improved algo-
+rithm tends to provide more conservative bidding strategies when the 
+market demand is high. The supply-demand relationship is tight to 
+ensure further the stability of the market as well as the reliability of the 
+multi-agent simulation results. 
+In summary, the multi-agent simulation based on the IAsync n-step 
+QL algorithm proposed in this paper can further improve the profit-
+ability of power plant agents when the market demand is low and pro-
+mote market competition by encouraging aggressive quotations. In the 
+case of supply-demand tension, the multi-agent simulation based on the 
+IAsync n-step QL algorithm can tighten quotation strategies at the right 
+time to ensure the stability and balance of the market, which is of 
+practical significance for us to carry out macro regulation on the elec-
+tricity selling side. In addition, in terms of responsiveness, compared 
+with the simulation models based on three deep reinforcement learning 
+algorithms, the multi-agent simulation based on the Iasync n-step QL 
+algorithm is more timely in responding to changes in market demand, 
+and the key indicators in the market are roughly linearly to demand-to- 
+supply ratio, and this intelligent bidding strategies with more stable 
+sensitivity is more valuable for power plants in the actual electricity 
+market. 
+6. Conclusion 
+Multi-agent Simulation (MAS), an efficient method for studying 
+complex systems, is also used to study strategic bidding in competitive 
+electricity markets. And how to make the agent intelligent, however, is 
+Fig. 11. Average winning price.  
+Fig. 12. Total power plant revenue.  
+Fig. 13. Average bidding price.  
+Fig. 14. Market clearing price.  
+J. Wu et al.
+
+Applied Soft Computing 152 (2024) 111235
+11
+the main concern and difficulty of multi-agent simulation. Existing 
+research usually combines Multi-agent Simulation (MAS) and Rein-
+forcement Learning (RL) algorithms to solve this problem, but it is often 
+limited in practical applications. Deep Learning (DL) enables rein-
+forcement learning to extend to previously difficult decision-making 
+problems, that is, environments with high-dimensional states and ac-
+tion spaces. Deep Reinforcement Learning (DRL), which combines deep 
+neural networks and reinforcement learning, has become a research 
+hotspot. Therefore, this study investigates intelligent strategic bidding 
+using MAS and DRL. 
+Aiming at the lack of comprehension of agents in Multi-Agent 
+Simulation (MAS) based on classic Reinforcement Learning algorithms 
+of competitive electricity markets. A novel theoretical framework for 
+intelligent strategic bidding in competitive electricity markets is pro-
+posed. This framework implements DRL-based intelligent strategic 
+bidding in competitive electricity markets and acts as an architecture 
+framework for research on strategic bidding in competitive electricity 
+markets. Three multi-agent simulation models of intelligent strategic 
+bidding in competitive electricity markets are established based on three 
+value-based DRL algorithms. Furthermore, comparing and analyzing 
+three MAS models’ convergence speed, computational efficiency, and 
+response sensitivity using the three DRL algorithms, including DQN, 
+Double DQN, and Async n-step QL. 
+An Improved Async n-step QL (IAsync n-step QL) algorithm is pro-
+posed, and a multi-agent simulation model based on a novel IAsync n- 
+step QL algorithm for intelligent strategic bidding in the competitive 
+electricity market is established. By running the model, the effectiveness 
+of the multi-agent simulation model based on the improved algorithm is 
+verified, and a more stable response sensitivity is obtained. The multi- 
+agent simulation model based on the novel IAsync n-step QL is supe-
+rior to the MAS model based on the other three DRL algorithms. 
+Strategic bidding behaviors of competitive electricity markets are 
+studied in this paper using MAS and DRL, particularly the strategic 
+intelligent learning behaviors of electricity sellers. This study not only 
+provides the government or companies with methods and tools to create 
+better market mechanisms but also provides support for the healthy 
+development of a competitive electricity market. 
+The IAsync n-step QL algorithm proposed in this paper can be 
+extended in these aspects: as there are many different domains[40] 
+where advanced optimization algorithms have been applied as solution 
+approaches, and in electricity market, it also has been well applied in the 
+short-term load forecasting[41] and so on. Therefore, in the future 
+Table 5 
+Comparison of key indicators in multi-agent simulation models based on the improved async n-step QL algorithm.  
+Time  0-200 200-400 400-600 600-800 800-1000 
+Load Value(MWh)  170  204  238  272  306 
+Growth rate  0%  20%  16.7%  14.3%  12.5% 
+Total revenue Value (USD)  1055.1  1396.7  1673.8  2264.4  2829.2 
+Growth rate  0%  32.4%  19.9%  35.3%  24.9% 
+AWP Value (USD/MWh)  11.79  12.43  12.91  13.48  13.96 
+Growth rate  0%  5.43%  3.86%  4.42%  3.56% 
+ABP Value (USD/MWh)  14.30  14.33  14.30  14.34  14.38 
+Growth rate  0%  0.21%  0.21%  0.28%  0.28% 
+MCP Value (USD/MWh)  15.18  16.02  16.68  17.25  18.10 
+Growth rate  0%  5.5%  4.1%  3.4%  4.9%  
+Fig. 15. AWPs of three-disk simulation.  
+Fig. 16. ABPs of three-disk simulation.  
+Fig. 17. MCPs of three-disk simulation.  
+J. Wu et al.
+
+Applied Soft Computing 152 (2024) 111235
+12
+research, the advanced optimization algorithms, such as new types of 
+hybrid heuristics and metaheuristics[42], adaptive algorithms[43], etc., 
+can be combined with the IAsync n-step QL algorithm to simulate the 
+bidding behavior of the electricity selling side in competitive electricity 
+markets. 
+CRediT authorship contribution statement 
+Conceptualization, Jiahui Wu and Jidong Wang. methodology, 
+Jiahui Wu and Jidong Wang. software, Jiahui Wu. validation, Jiahui 
+Wu and Jidong Wang. formal analysis, Jiahui Wu. investigation, 
+Jiahui Wu. resources, Jidong Wang. data curation, Jidong Wang. 
+writing—original draft preparation, Jiahui Wu. writing—review and 
+editing, Xiangyu Kong. visualization, Jiahui Wu. supervision, Jidong 
+Wang. project administration, Xiangyu Kong. funding acquisition, 
+Xiangyu Kong. All authors have read and agreed to the published 
+version of the manuscript. 
+Declaration of Competing Interest 
+We wish to draw the attention of the Editor to the following facts 
+which may be considered as potential conflicts of interest and to sig-
+nificant financial contributions to this work. 
+We confirm that the manuscript has been read and approved by all 
+named authors and that there are no other persons who satisfied the 
+criteria for authorship but are not listed. We further confirm that the 
+order of authors listed in the manuscript has been approved by all of us. 
+We confirm that we have given due consideration to the protection of 
+intellectual property associated with this work and that there are no 
+impediments to publication, including the timing of publication, with 
+respect to intellectual property. In so doing we confirm that we have 
+followed the regulations of our institutions concerning intellectual 
+property. 
+We declare that we do not have any commercial or associative in-
+terest that represents a conflict of interest in connection with the work 
+submitted. 
+We understand that the Corresponding Author is the sole contact for 
+the Editorial process (including Editorial Manager and direct commu-
+nications with the office). He is responsible for communicating with the 
+other authors about progress, submissions of revisions and final 
+approval of proofs. We confirm that we have provided a current, correct 
+email address which is accessible by the Corresponding Author and 
+which has been configured to accept email from “Applied Soft 
+Computing”. 
+Data availability 
+The authors do not have permission to share data. 
+Acknowledgments 
+This work was supported in part by the National Key Research and 
+Development Program of China (2021YFB2401200). 
+References 
+[1] Y.F. Zhang, Z.X. Ju, The development of domestic electricity sales companies, Light 
+Ind. Sci. Technol. 37 (6) (2021) 129–130. 
+[2] Z.X. Li, Analysis of the current situation and development direction of domestic 
+electricity sales companies, China Electr. Power Enterp. Manag. (2020) 52–53. 
+[3] P. Kiran, K.R.M. Vijaya Chandrakala, New interactive agent based reinforcement 
+learning approach towards smart generator bidding in electricity market with 
+micro grid integration, Appl. Soft Comput. 97 (2020) 106762. 
+[4] J. Vijaya Kumar, D.M. Vinod Kumar, Generation bidding strategy in a pool based 
+electricity market using shuffled frog leaping algorithm, Appl. Soft Comput. 21 
+(2014) 407–414. 
+[5] Forhad Zaman, Saber M. Elsayed, Tapabrata Ray, Ruhul A. Sarker, Co-evolutionary 
+approach for strategic bidding in competitive electricity markets, Appl. Soft 
+Comput. 51 (2017) 1–22. 
+[6] Akash Saxena, Bhanu Pratap Soni, Rajesh Kumar, Vikas Gupta, Intelligent grey 
+wolf optimizer – development and application for strategic bidding in uniform 
+price spot energy market, Appl. Soft Comput. 69 (2018) 1–13. 
+[7] J.D. Wang, J.H. Wu, Y.B. Che, Agent and system dynamics-based hybrid modeling 
+and simulation for multilateral bidding in electricity market, Energy 180 (2019) 
+444–456. 
+[8] J.D. Wang, J.H. Wu, X.Y. Kong, Multi-agent simulation for strategic bidding in 
+electricity markets using reinforcement learning, CSEE JPES (2021) 1–13. 
+[9] D.W. Qiu, Y. Wang, T.Q. Zhang, M.Y. Sun, G. Strbac, Hybrid multiagent 
+reinforcement learning for electric vehicle resilience control towards a low-carbon 
+transition, IEEE Trans. Ind. Informat 18 (11) (2022) 8258–8369. 
+[10] M. Ahrarinouri, M. Rastegar, P. Siano, Multiagent reinforcement learning for 
+energy management in residential buildings, IEEE Trans. Ind. Inf. 17 (1) (2021) 
+659–666. 
+[11] Y.C. Liang, C.L. Guo, Z.H. Ding, H.C. Hua, Agent-based modeling in electricity 
+market using deep deterministic policy gradient algorithm, IEEE Trans. Power Syst. 
+35 (6) (2020) 4180–4192. 
+[12] T. Qian, C.C. Shao, X.L. Li, X.L. Wang, Z.P. Chen, M. Shahidehpour, Multi-agent 
+deep reinforcement learning method for EV charging station game, IEEE Trans. 
+Power Syst. 37 (3) (2022) 1682–1694. 
+[13] Y.J. Ye, D.W. Qiu, M.Y. Sun, D. Papadaskalopoulos, G. Strbac, Deep reinforcement 
+learning for strategic bidding in electricity markets, IEEE Trans. Smart Grid 11 (2) 
+(2020) 1343–1355. 
+[14] Y.X. Li “Deep reinforcement learning: An overview,” arXiv:1810.06339 [cs.LG], 
+Oct. 2018. 
+[15] V. Mnih, K. Kavukcuoglu, D. Silver, A. Graves, I. Antonoglou, D. Wierstra, 
+M. Riedmiller, Playing atari with deep reinforcement learning, NIPS Deep Learn. 
+Workshop (2013) 1–9. 
+[16] H.V. Hasselt, A. Guez, and D. Silver, Deep reinforcement learning with double Q- 
+learning, In: Proceedings of the 16th AAAI Conference On Artificial Intelligence, 
+pp.2094–2100, Feb. 2016. 
+[17] T. Schaul, J. Quan, I. Antonoglou, D. Silver, Prioritized experience replay, ICLR 
+(2016) 1–21. 
+[18] Z.Y. Wang, T. Schaul, M. Hessel, H.V. Hasselt, M. Lanctot, N.D. Freitas, Dueling 
+network architectures for deep reinforcement learning, Proc. 33rd ICML 48 (2016) 
+1995–2003. 
+[19] V.R. Konda, J.N. Tsitsiklis, Actor-critic algorithms, Adv. NIPS (1999) 1008–1014. 
+[20] N. Casas, Deep deterministic policy gradient for urban traffic light control, Neural 
+Evolut. Comput. [cs. NE] (2017) 1–12. 
+[21] V. Mnih, A.P. Badia, M. Mirza, A. Graves, T. Harley, T.P. Lillicrap, D. Silver, 
+K. Kavukcuoglu, Asynchronous methods for deep reinforcement learning, Proc. 
+33rd ICML (2016) 1928–1937. 
+[22] S.M.J. Jalali, S. Ahmadian, A. Khosravi, M. Shafie-khah, S. Nahavandi, J.P. 
+S. Catal˜ao, A novel evolutionary-based deep convolutional neural network model 
+for intelligent load forecasting, IEEE Trans. Ind. Inf. 17 (12) (2021) 8243–8253. 
+Table 6 
+Comparison of key indicators in multi-agent simulation models based on the improved async n-step QL algorithm and classic async n-step algorithm.  
+Algorithm  IAsync n-step QL Async n-step QL 
+Number   01  02  03  01  02  03 
+Load Value(MWh)  170  238  306  170  238  306 
+Growth rate    50%  28.6%    50%  28.6% 
+AWP Value (USD/MWh)  11.9  13.0  13.9  10.7  11.6  13.4 
+Growth rate    9.2%  6.9%    8.4%  15.5% 
+ABP Value (USD/MWh)  14.4  14.3  14.3  13.8  13.7  13.9 
+Growth rate    -0.8%  0.3%    -0.7%  1.5% 
+MCP Value (USD/MWh)  15.2  16.6  18.1  12.3  15.4  18.9 
+Growth rate    9.2%  9.0%    25.2%  22.7% 
+Total revenue Value (USD)  1066.6  1692.2  2831.1  696.5  1554.2  3127.1 
+Growth rate    58.7%  67.3%    123.1%  101%  
+J. Wu et al.
+
+Applied Soft Computing 152 (2024) 111235
+13
+[23] Y.J. Xu, X. Zhang, P.Y. Meng, A novel intelligent deep learning-based uncertainty- 
+guided network training in market price, IEEE Trans. Ind. Inf. 18 (8) (2022) 
+5705–5711. 
+[24] Y.C. Tao, J. Qiu, S.Y. Lai, Deep reinforcement learning based bidding strategy for 
+EVAs in local energy market considering information asymmetry, IEEE Trans. Ind. 
+Inf. 18 (6) (2022) 3831–3842. 
+[25] Y.K. Liu, D.X. Zhang, H.B. Gooi, Data-driven decision-making strategies for 
+electricity retailers: a deep reinforcement learning approach, CSEE JPES 7 (2021) 
+358–367. 
+[26] S. Jia, Z.X. Gan, Y.G. Xi, D.W. Li, S.B. Xue, L.M. Wang, A deep reinforcement 
+learning bidding algorithm on electricity market, J. Therm. Sci. 29 (2021) 
+1125–1134. 
+[27] X. Ji, C. Li, D.X. Li, C.L. Qi, Bidding strategy of two-layer optimization model for 
+electricity market considering renewable energy based on deep reinforcement 
+learning, Electronics 11 (2022) 3107. 
+[28] X.Y. Wei, Y. Xiang, J.L. Li, J.Y. Liu, Wind power bidding coordinated with energy 
+storage system operation in real-time electricity market: a maximum entropy deep 
+reinforcement learning approach, Energy Rep. 8 (2022) 770–775. 
+[29] J.N. Wang, C.L. Guo, C.S. Yu, Y.C. Liang, Virtual power plant containing electric 
+vehicles scheduling strategies based on deep reinforcement learning, Electr. Power 
+Syst. Res. 205 (2022) 107714. 
+[30] H.C. Xu, H.B. Sun, D. Nikovski, S. Kitamura, K. Mori, H. Hashimoto, Deep 
+reinforcement learning for joint bidding and pricing of load serving entity, IEEE 
+Trans. Smart Grid vol. 10 (6) (. 2019) 6366–6375. 
+[31] K.Z. Ren, J. Liu, X.L. Liu, Y.X. Nie, Reinforcement Learning-Based Bi-Level strategic 
+bidding model of Gas-fired unit in integrated electricity and natural gas markets 
+preventing market manipulation, Appl. Energy 336 (2023) 120813. 
+[32] S. Jia, Z.X. Gan, Y.G. Xi, D.W. Li, S.B. Xue, L.M. Wang, A deep reinforcement 
+learning bidding algorithm on electricity market, J. Therm. Sci. 29 (5) (2020) 
+1125–1134. 
+[33] Y. Du, F. Li, H. Zandi, Y. Xue, Approximating nash equilibrium in day-ahead 
+electricity market bidding with multi-agent deep reinforcement learning, J. Mod. 
+Power Syst. Clean. Energy 9 (2021) 534–544. 
+[34] Tom´as Ochoa, Esteban Gil, Alejandro Angulo, Carlos Valle, Multi-agent deep 
+reinforcement learning for efficient multi-timescale bidding of a hybrid power 
+plant in day-ahead and real-time markets, Appl. Energy 317 (2022) 119067. 
+[35] Y. Ye, D. Papadaskalopoulos, Q. Yuan, Y. Tang, G. Strbac, Multi-agent deep 
+reinforcement learning for coordinated energy trading and flexibility services 
+provision in local electricity markets, IEEE Trans. Smart Grid 14 (2023) 
+1541–1554. 
+[36] L. Yan, X. Chen, Y. Chen, J. Wen, A hierarchical deep reinforcement learning-based 
+community energy trading scheme for a neighborhood of smart households, IEEE 
+Trans. Smart Grid 13 (2022) 4747–4758. 
+[37] X. Liu, S. Li, J. Zhu, Optimal coordination for multiple network-constrained VPPs 
+via multi-agent deep reinforcement learning, IEEE Trans. Smart Grid 14 (4) (2023) 
+3016–3031. 
+[38] Z.M. Yan, Y. Xu, A multi-agent deep reinforcement learning method for 
+cooperative load frequency control of a multi-area power system, IEEE Trans. 
+Power Syst. 35 (6) (2020) 4599–4608. 
+[39] Z.W. Shi, Market equilibrium analysis under PAB and MCP electricity price 
+mechanism, M.S. thesis, Dept. Elect. Eng., Zhejiang Univ., Zhejiang, China, 2006. 
+[40] P. Jiang, H.F. Yang, R. Li, C. Li, Inbound tourism demand forecasting framework 
+based on fuzzy time series and advanced optimization algorithm, Appl. Soft 
+Comput. 92 (2020) 106320. 
+[41] Y. Nie, P. Jiang, H.P. Zhang, A novel hybrid model based on combined 
+preprocessing method and advanced optimization algorithm for power load 
+forecasting, Appl. Soft Comput. 97 (2020) 106809. 
+[42] M.A. Lopes Silva, S.R. de Souza, M.J. Freitas Souza, M.F. de França Filho, Hybrid 
+metaheuristics and multi-agent systems for solving optimization problems: A 
+review of frameworks and a comparative analysis, Appl. Soft Comput. 71 (2018) 
+433–459. 
+[43] L.J. He, Y.L. Cao, W.F. Li, J.J. Cao, L.C. Zhong, Optimization of energy-efficient 
+open shop scheduling with an adaptive multi-objective differential evolution 
+algorithm, Appl. Soft Comput. 118 (2022) 108459. 
+J. Wu et al.

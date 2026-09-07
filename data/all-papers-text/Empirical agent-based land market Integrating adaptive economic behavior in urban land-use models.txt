@@ -1,0 +1,1525 @@
+Empirical agent-based land market: Integrating adaptive economic
+behavior in urban land-use models
+Tatiana Filatova ⁎
+Centre for Studies in Technology and Sustainable Development, University of Twente, P.O. Box 217, 7500 AE Enschede, The Netherlands
+Deltares, Postbus 85467, 3508 AL Utrecht, The Netherlands
+abstractarticle info
+Available online 25 July 2014 This paper introduces an economic agent-based model of an urban housing market. The RHEA (Risks and He-
+donics in Empirical Agent-based land market) model captures natural hazard risks and environmental amenities
+through hedonic analysis, facilitating empirical agent-based land market modeling. RHEA is well grounded in
+economic theory and uses rich spatial data and econometric analysis. It moves beyond the existing work by ex-
+plicitly simulating the emergence of property prices and their spatial distribution under adaptive price expecta-
+tions of heterogeneous agents, advancing toward empirical modeling of agent-based land markets. At the same
+time RHEA operates in a realistic GIS landscape where realtor and households agents form ask and bid prices
+using empirical hedonic price functions. The simulation results demonstrate that this combination of theoretical-
+ly sound micro-foundations in agents’ behavior and empirical data is feasible. This opens opportunities to explore
+various methodological and policy-relevant research questions including exploration of abrupt non-marginal
+changes in markets and regime shifts in coupled socio-environmental systems.
+© 2014 Elsevier Ltd. All rights reserved.
+Keywords:
+Housing market
+Hedonic model
+Price expectations
+Agent-based
+Flood risk
+Amenities
+1. Introduction
+Spatial patterns of land values in real estate markets emerge from
+complex interactions of market dynamics, heterogeneous trader prefer-
+ences, and heterogeneous attributes of the property stock. Various
+modeling approaches aim to represent the feedbacks between micro-
+foundations of actors’ behavior and macro dynamics of property mar-
+kets measured in land prices and their spatial patterns. There is a long
+tradition of modeling these spatial processes from the bottom up
+using statistics ( Geoghegan, Wainger, & Bockstael, 1997; Irwin &
+Bockstael, 2002; Plantinga & Lewis, 2014; Sheppard, 1999), cellular au-
+tomata (van Delden, Luja, & Engelen, 2007; Verburg, de Koning, Kok,
+Veldkamp, & Bouma, 1999 ), micro-simulation ( Ettema, Arentze, &
+Timmermans, 2011; Miller, Hunt, Abraham, & Salvini, 2004 ) or agent-
+based methods ( Brown & Robinson, 2006; Parker, Berger, & Manson,
+2002). It is essential that computational models are based on micro-
+foundations, which are not only theoretically sound but are also empir-
+ically justiﬁable, especially if effectiveness of policy interventions is to
+be assessed.
+This paper presents an innovative agent-based model (ABM) of a
+spatially explicit empirical housing market– RHEA (Risks and Hedonics
+in Empirical Agent-based land market model) – and explores its behav-
+ior under various micro-foundations. 1 Several recent papers provide
+comprehensive reviews of ABM methodology applied to socio-
+economic processes in space ( An, 2012; Filatova, Verburg, Parker, &
+Stannard, 2013; Heckbert, Baynes, & Reeson, 2010; Matthews, Gilbert,
+Roach, Polhill, & Gotts, 2007; Schreinemachers & Berger, 2011) and re-
+view the state-of-the art in agent-based land market models (LMMs)
+(Ettema, 2011; Huang, Parker, Filatova, & Sun, 2013; Magliocca,
+Saﬁrova, McConnell, & Walls, 2011; Parker & Filatova, 2008 ). Spatial
+ABMs applied on an urban scale generally either tend to use a compre-
+hensive empirical landscape setting and some data to lay foundations
+for agents’ behavior omitting theoretical assumptions about economic
+processes ( Benenson, 1998; Brown, 2006; Dawson, Peppe, & Wang,
+2011; Yin & Muller, 2007), or use a stylized landscape and little empir-
+ical micro-foundations of agents ’ behavior with theoretically-elegant
+Computers, Environment and Urban Systems 54 (2015) 397–413
+⁎ Address: Centre for Studies in Technology and Sustainable Development, University of
+Twente, P.O. Box 217, 7500 AE Enschede, The Netherlands.
+E-mail address: t.ﬁlatova@utwente.nl.
+1 By micro-foundations this paper means the basic principles that lay out the founda-
+tions of individual agents ’ behavior. These include a speci ﬁc theoretical basis as well as
+empirical information that is used to parameterize and/or validate these behaviors. The
+ability to generate market level phenomena and patterns based on detailed empirical data
+and theoretically-sound micro behavior provides a novel advancement in ABM.
+http://dx.doi.org/10.1016/j.compenvurbsys.2014.06.007
+0198-9715/© 2014 Elsevier Ltd. All rights reserved.
+Contents lists available at ScienceDirect
+Computers, Environment and Urban Systems
+journal homepage: www.elsevier.com/locate/ceus
+
+economic solutions ( Ettema, 2011; Filatova, van der Veen, & Parker,
+2009; Magliocca et al., 2011 ). There is a gap in the ﬁeld: the
+feasibility of combining empirics and theory when designing
+micro-foundations of agents ’ behavior in spatial markets is
+underexplored.
+ABMs are particularly strong in integrating socio-economic and
+environmental modeling, often within a spatial landscape, across
+scales, as well as exploring various market phenomena by going
+beyond stylized assumptions of equilibrium economic models. Yet,
+ABMs are often weak in connecting to empirical data when parame-
+terizing various attributes and validating decision-making processes
+of agents ( Boero & Squazzoni, 2005; Poggio, Lo, LeBaron, & Chan,
+1999 ). In fact validation and parameterization is one of the main
+research challenges in the ﬁeld of ABM ( Filatova et al., 2013;
+Heckbert, Baynes et al., 2010; Heckbert & Bishop, 2011; Robinson
+et al., 2007; Smajgl, Brown, Va lbuena, & Huigen, 2011; Windrum,
+Fagiolo, & Moneta, 2007 ). The bene ﬁts of connecting ABMs to
+empirical data are obvious. Firstly, while purely theoretical ABMs
+have an important added value ( Boero & Squazzoni, 2005 ), their
+application for policy analysis is contingent on the use of empirical
+data for parameterization and validation. A consistent use of
+empirical data increases trust of various stakeholders in any model,
+including ABMs ( Janssen & Ostrom, 2006 ). Secondly, ABMs are
+extremely ﬂexible on the choice of behavioral rules at individual
+agent level and on the structure and frequency of interactions. This
+forces a modeler to face a choice of numerous variability in a model
+instantiation ( Polhill et al., 2014 ). The parameterization of an ABM
+with the actual data ﬁlters the nearly-unlimited collection of options
+for micro-foundations or parameter settings to an easier-to-handle
+parameter set that produces an ABM world resembling a realistic
+case. Thirdly, data on individual choices over time and on the
+structure of human interactions permits an examination of the
+theoretical consequences of more realistic assumptions ( Janssen &
+Ostrom, 2006 ). Empirical data could be used to design and parame-
+terize realistic micro-foundat ions of an ABM or to validate macro
+outcomes of a simulation but preferably both ( Boero & Squazzoni,
+2005 ). Empirical methods for building ABMs such as surveys,
+stylized facts, archival and census data, participatory modeling,
+expert knowledge elicitation, participant observation, ﬁeld and
+laboratory experiments, and GIS data have been extensively
+reviewed ( Boero & Squazzoni, 2005; Heckbert, Baynes et al., 2010;
+Janssen & Ostrom, 2006; Robinson et al., 2007; Smajgl et al., 2011 ).
+Advantages of using empirical data for an ABM are vast. However,
+there are also challenges, which may include: (1) maintaining a link
+between empirical data and a theory, assumptions of which an ABM
+is supposed to relax, (2) scaling up observed behavioral data to
+large population of arti ﬁcial agents, (3) capturing behavioral change
+through time when empirical data often provides only a snapshot,
+(4) a necessity to collect case-speci ﬁc data to match the design of
+an ABM, (5) dif ﬁculty in replication and generalization of the results
+s i n c es o m em e t h o d so fc o l l e c t i n gd a t at h a ti ss u i t a b l ef o rA B M sa r e
+difﬁcult to reproduce, (6) translation of qualitative data into
+formal rules when coding ( Heckbert, Adamowicz, Boxall, &
+Hanneman, 2010; Janssen & Ostrom, 2006; Robinson et al., 2007;
+Smajgl et al., 2011; Valbuena, Ve rburg, & Bregt, 2008; Windrum
+et al., 2007 ).
+An empirical ABM of an urban economic system, which is well
+grounded in economic theory and could use readily available spatial
+data and economic empirical analysis, is not available yet. The RHEA
+model aims to address this gap. Speci ﬁcally, theoretical micro-
+foundations of residential household agents’ behavior are framed with-
+in urban economics theory (Alonso, 1964; Frame, 1998; Wu, 2001)a n d
+use adaptive price expectations. At the same time RHEA operates in a re-
+alistic GIS landscape where realtor and households agents form ask and
+bid prices using empirical hedonic price functions, i.e. empirically-
+estimated willingness-to-pay functions based on detailed spatial
+attributes of the property stock. Moreover, empirical micro-
+foundations include real income distributions, and behavioral rules of
+traders in a housing market validated through an interview with a US
+realtor.2 The interview shed light on the fact (i) that sellers set prices
+based on realtors predictions, (ii) that buyers anchor their bids on
+seller’s ask prices, (iii) that an outcome of price negotiations depend
+on market power of traders and their opportunity costs, and (iv) that
+prices, at which realtors anticipate to sell a house, depend not only on
+spatial and structural attributes of a house but also change dynamically
+with market conditions. In addition, some quantitative parameters of
+the models, such as percent of differences between bid and ask prices,
+and a period of recent sales realtors take into account when forming
+prices expectations, were derived from the interview. RHEA is applied
+to a coastal town in North Carolina, USA where data on both coastal
+amenities and ﬂood risks affect locations choices and price dynamics.
+The innovativeness of the current model is threefold: (i) in compar-
+ison to economic studies of land use (Irwin & Bockstael, 2002)R H E Ae x -
+plicitly simulates the emergence of property prices under adaptive price
+expectations of heterogeneous agents, including the emergence of car-
+dinally new trends in prices and their spatial distribution, (ii) in com-
+parison to other agent-based LMMs, which are stylized abstract
+models ( Ettema, 2011; Gilbert, Hawksworth, & Swinney, 2009;
+Magliocca et al., 2011; Parker & Filatova, 2008 ), the current model
+makes a step forward toward empirical modeling of ABM land markets
+by using actual hedonic studies and distribution of households incomes;
+(iii) in comparison to other empirical spatial ABMs of urban phenomena
+(Brown et al., 2008; Robinson et al., 2007 ) RHEA has a full LMM with
+adaptive price expectations, which allows for the emergence of prices
+and may lead to qualitatively different trends in spatial patterns
+(Parker et al., 2011).
+The primary goal of this paper is to provide theﬁrst detailed descrip-
+tion of the RHEA LMM with a special focus on micro-foundations and
+methodological aspects related to merging theoretical and empirical ap-
+proaches (Section2). In addition, a series of experiments is presented to
+explore how the model’s micro-foundations impact aggregated spatial
+urban system dynamics (Section 3). Conclusions and future work are
+outlined in Section 4.
+2. Model description (ODD + D)
+The RHEA LMM is described below employing the standard ODD
+protocol for ABMs ( Grimm et al., 2010 ), which was recently extended
+to account for human decision making– O D D+D( Mueller et al., 2013).
+2.1. Overview
+2.1.1. Purpose
+RHEA aims to provide a methodological platform to integrate adap-
+tive economic behavior into the spatial landscape using urban econom-
+ics theory and traditional data sources. This article presents the base
+model but speci ﬁc experiments could be designed to explore a range
+of research questions that are dif ﬁcult to tackle with other economic
+or geographic tools, which rely exclusively on static agents ’ behavior
+and past data ( Filatova & Bin, 2013 ). In particular, how do changes in
+preferences or risk perceptions capitalize in property price? How do
+structural non-marginal shifts in land markets emerge from the bottom
+and propagate up to the top? How do economic land use systems react
+to climate change? RHEA allows direct modeling of interactions of many
+heterogeneous agents in a land market over a heterogeneous spatial
+landscape simplifying further coupling of economic models with eco-
+logical ones. As in other ABMs of markets, RHEA helps to understand
+how aggregated patterns and economic indices result from many indi-
+vidual interactions of economic agents (Tesfatsion, 2006).
+2 An open question interview was conducted in 2012 with L. Vidgop-Barg a practicing
+realtor with extensive experience.
+398 T. Filatova / Computers, Environment and Urban Systems 54 (2015) 397– 413
+
+The model could be used by scientists to explore methodological
+questions (e.g. to compare the performance of various expectation for-
+mation algorithms with different information update time, and study
+the effects of agents heterogeneity ( Huang, Parker, Sun, & Filatova,
+2013) and by policy-makers to explore the extent of changes in eco-
+nomic system, e.g. in response to adverse consequences of climate
+change and impact of adaptation policies (Stern, 2008).
+2.1.2. Entities, state variables and scales
+The main agents in the model are households willing to buy and sell
+properties in a coastal city, real estate agents who observe market dy-
+namics and form expectations, and parcels that can be residential or
+non-residential where the former represent spatial goods. The three
+types of agents are connected through the market (Fig. 1).
+State variables that are used in this base model are listed in
+Tables 1–3.
+The model is spatially explicit, using empirical GIS data from Bin
+et al. (2008)uploaded at initialization. The empirical landscape includes
+cadaster data on non-residential and residential parcels, as well as
+ocean and river areas. At initialization each residential property is pop-
+ulated with an economic agent. The size of residential parcels varies be-
+tween 0.005 and 42.4 acres. The model operates on a spatial scale of one
+or few coastal towns. Technically, a larger spatial area can be represent-
+ed but this slows down the simulation. One time step in RHEA is equal to
+1m o n t h .3
+2.1.3. Process overview and scheduling
+The main process in the ABM is trading of residential properties and
+allocation of households in a town. Each time step the trade process
+consists of several phases: listing of vacant spatial goods in a market
+by sellers, search for the best location under budget constraint by
+buyers, formation and submission of bids by buyers to sellers, evalua-
+tion of received bids by sellers, price negotiation, transaction and regis-
+tration of trade, andﬁnally updating of market expectations by realtors.
+The sequence of events in one time step is presented inFig. 2. RHEA bor-
+rows some elements of the base trade ﬂow logic of the ALMA model
+(Filatova, Parker, & van der Veen, 2009; Filatova, Parker, & van der
+Veen, 2011). As in ALMA, a simulation in RHEA starts with sellers put-
+ting properties on the market, while buyers select a property to bid on
+by ﬁnding a maximum-utility parcel under budget constrains. However,
+RHEA has several fundamental differences compared to ALMA. Namely,
+it employs new procedures: (1) to initialize sellers (box I,Fig. 2), (2) to
+account for empirical landscape and hedonic price function (box II and
+III), (3) to estimate utility function assuming substitutability between
+a housing and a composite good (box V), (4) to select the cheapest
+property among those with similar levels of utility (box VI), (5) to real-
+ize price negotiation procedure (box IX), and (6) to perform adaptive
+price expectations (box XII and XIII). The primary mechanisms that
+are innovative in RHEA compared to the rest of the ﬁeld are the empir-
+ical setup of ask and bid prices, the introduction of realtor agents who
+update price expectations for heterogeneous spatial goods, and the de-
+tailed modeling of price negotiations.
+2.2. Design concepts
+2.2.1. Theoretical and empirical background
+The RHEA model combines the microeconomic demand, supply, and
+bidding foundations of spatial economics with the spatial heterogeneity
+of econometric models in a single methodological platform. It models a
+coastal city where both coastal amenities and ﬂooding disamenities
+drive land market outcomes, facilitating separate analysis of the effects
+of each driver on land rents. RHEA starts with a conventional urban eco-
+nomic model and gradually relaxes the assumptions of perfect rational-
+ity and homogeneity among households as well as the assumption of an
+instantly equilibrating land market. In particular, RHEA is grounded in a
+Fig. 1. UML class diagram of the bilateral housing market: agents, their properties and functions (Section2.1.2). Associations between agents label either the nature of a relationship or the
+roles of agents. The multiplicity notations indicate when the instances of classes are related to each other as one to one (‘1’ and ‘1’) or one to many ( ‘1’ and ‘1..*’).
+3 The decision to choose a 1 month time step is because households that decide to buy a
+house are likely to make several attempts a year. Besides realtors base their price expecta-
+tions on the recent sales, i.e. 1–3 months, or up to 6 months or more if not enough trades
+happened in an area (interview with L. Vidgop-Barg).
+399T. Filatova / Computers, Environment and Urban Systems 54 (2015) 397– 413
+
+monocentric urban model (Alonso, 1964) enriched by coastal amenities
+following (Wu, 2006; Wu & Plantinga, 2003)a n dﬂood hazard probabil-
+ities following Frame (1998) . Thus, spatial goods in this agent-based
+computational economics (ACE) market are quite heterogeneous differ-
+entiated by distance to Central Business District CBD (D), coastal ameni-
+ties (A), probability of hazard (P) and structural housing characteristics.
+In RHEA heterogeneous household agents (buyers and sellers) ex-
+change heterogeneous spatial goods (houses) via simulated bilateral
+market interactions with decentralized price determination. Empirical
+data are used to initialize spatial landscape, to parameterize agents ’
+properties ( Table 2 ) and to de ﬁne the initial hedonic function ( Bin
+et al., 2008), which real estate agents use for price predictions.
+2.2.2. Individual decision-making
+The household agents in the model are differentiated by their role
+(A-marketStatus inFig. 1): buyers, sellers and inactive property owners.
+The latter are associated with a certain property but do not perform any
+actions4 except eventually deciding to become a seller. The behavior of
+agents is explained below.
+Sellers’behavior: at model initialization each property has an owner
+and some of those may decide to put it for sale, i.e. become sellers (box I,
+Fig. 2). The choice of property owners who are to become sellers occurs
+in two stages in RHEA. First, every year the fraction of properties for sale
+(Fsale) and its standard deviation is de ﬁned exogenously (Table 3). The
+actual annual number of houses going for sale is a random number gen-
+erated from the normal distribution based on these two. In the future
+versions of the model this number could be made endogenous. Second-
+ly, a decision regarding which owners are actually going to become
+sellers has two alternative implementations. Speciﬁcally, they can either
+be selected randomly or be based on utility (Eq. (2))– i.e. only the least-
+satisﬁed households become sellers. In either case, the ﬁnal number of
+sellers is equal to the number of properties for sale. As the simulation
+goes on, settled households may decide to relocate following the select-
+ed seller choice strategy (either random or least-satisﬁed agents).
+At the beginning of a trading period active sellers announce theirask
+prices.T h e yd os ob yr e q u e s t i n gr e g r e s s i o nc o e fﬁcients from the hedon-
+ic analysis of the current period (box II, Fig. 2) and applying them to
+their property (box III). At the initialization stage this hedonic function
+and coefﬁcients come fromBin et al. (2008). As the model runs and new
+transactions occur real estate agents are rerunning the hedonic analysis.
+Regression coefﬁcients – i.e. willingness to pay for a speciﬁca t t r i b u t eo f
+a property of an average household in a current market – may change
+driven by the in ﬂow of new households with different preferences for
+locations or potentially dynamic perceptions regarding ﬂood risks.
+After buyers make their choices (boxes IV –VII, Fig. 2), all sellers check
+how many bid-offers they received. They choose the highest bid to en-
+gage in price negotiations (box VIII,Fig. 2). The transaction priceis de-
+ﬁned through a price negotiation procedure, which is based on bid and
+ask prices and relative market power of traders (see Section 2.2.6).
+Seller’s price formation (Section 2.2.3) and choices in price negotia-
+tion depend on the past events and experiences, thus they adapt to
+changing endogenous variables. Speci ﬁcally, sellers have a memory
+where they record a number of consequent unsuccessful trade attempts
+(NUSTr). Each seller has a threshold value ( Dneg), which he compares to
+the difference between his ask price and the highest submitted bid
+price for his property during price negotiation procedure (Section2.2.6).
+At the start of a seller’s trading history, hisDneg is equal to one month of
+his mortgage estimated based on the price at which he bought the
+house (Htran). As his NUSTr grows, the seller adapts his threshold value
+Dneg for one extra month of mortgage, i.e.:
+Dneg ¼ kH /C2 Htran /C4 12 /C2ð 1 þ NUSTrÞð 1Þ
+Here kH is a coefﬁcient to translate the property price (Htran) into an
+annual payment.
+Currently RHEA does not include modeling of developer’s behavior.
+Thus, the pull of residential housing is constant.
+Buyers’ behavior: at the beginning of a trading period all active
+buyers start searching for a property that maximizes their utility
+Table 1
+State variables related to the spatial landscape of RHEA.a
+Variable name Brief description Value
+I. Spatial landscape (GIS parcel data)
+ID A unique ID of a GIS parcel (spatial good) ***
+Residential? Indicates whether a parcel is under residential or non-residential use [0;1]
+Price An attribute of a parcel where ﬁrst seller’s asking price and then market transaction price are recorded. Property prices are in 2004
+dollars following the dataset of Bin et al (2008)
+Endogenously
+determined
+onSale Indicates whether this parcel is for sale during in the current time step [0;1]
+timeOnMarket Counts the months which this parcel is for sale on a market Endogenously
+determined
+P-location X and Y coordinates of a parcel ***
+bathroom Number of bathrooms Uploaded from GIS
+datasetbedrooms Number of bedrooms
+age Year house was built subtracted from 2004
+sqft Total structure square footage
+lotSize Total lot size measured in acres
+newHome Dummy variable for new home (1 if sold within a year after built, 0 otherwise)
+postFirm Dummy variable for post-FIRM properties (1 if post-FIRM, 0 otherwise)
+probabilityOfFlood Probability of ﬂooding (0, 1:100, 1:500)
+coastalFront Dummy variable for the ﬁrst row from coastal water (1 if on, 0 otherwise)
+distanceAmen Distance in feet to the sound or Intracoastal waterways
+distanceCBD Distance in feet to downtown Morehead City (town1 M)
+distHwy Distance in feet to nearest highway
+distPark Distance in feet to nearest park, forest, or game land
+town1 M Dummy variable for a township (1 if Morehead, 0 otherwise)
+town15B Dummy variable for a township (1 if Beaufort, 0 otherwise)
+kH Coefﬁcient that translates overall property price into an annual payment 1/15
+a Note: here we list only those agents and their state variables, which are used for the simulations done for this paper. Other implementations of this model published elsewhere may
+have different state variables and values.
+4 For the next version of the model we plan to include other interactions, such as opin-
+ion exchange regarding risks, in which property owners who are not active seller yet will
+also participate.
+400 T. Filatova / Computers, Environment and Urban Systems 54 (2015) 397– 413
+
+(boxes IV–VI, Fig. 2). Household’s utility depends on a combination of
+composite (z)a n dh o u s i n g(s) goods which is affordable for her budget
+(Y) net of transport costs (T(D)):
+U ¼ sα z1/C0 α Aγ
+or
+U ¼ sα ðY /C0 TðDÞ/C0 kH HaskÞ1/C0 α Aγ ð2Þ
+Preferences for housing good (α) and amenities (γ)a sw e l la se x o g -
+enous incomes (Y) are heterogeneous across household agents.
+When choosing a location in a costal town with designated ﬂood
+zones, a household operates under the conditions of uncertainty. Thus,
+she in fact maximizes her expected utility (EU):
+EU ¼ PiU F þð 1 /C0 PiÞUNF ð3Þ
+where UF is the households utility in case of a ﬂood event, UNF is utility
+in the case of noﬂood, and Pi is a subjective risk perception of a buyer. In
+economic literature individual, possibly biased, risk perception is often
+formalized by means of altering objective probability of ﬂooding (P).
+Thus, Pi = P ± Δ where Δ is an individual bias that can be changing
+over time.
+U F ¼ sα ðY /C0 TðDÞ/C0 kH Hask /C0 L /C0 IP þ ICÞ1/C0 α Aγ ð4Þ
+UNF ¼ sα ðY /C0 TðDÞ/C0 kH Hask /C0 IPÞ1/C0 α Aγ ð5Þ
+Here L is the damage in the case ofﬂood, IP is annual ﬂood insurance
+premium, IC is insurance coverage in the case of a disaster. It is assumed
+that housing search is costly, thus, households do not search for a global
+maximum but explore a subset5 of properties only, from which they se-
+lect the one that delivers the highest utility. Thus, buyers do not operate
+under perfect information.
+Buyers have subjective perceptions of ﬂooding probability, which
+may be biased compared to the objective probabilityP. Risk perceptions
+could be made dynamic over time. The simulations reported in this
+paper use objective risk perceptions.
+After a buyer has found the property that gives her the maximum
+utility, she submits her bid price to a seller (box VII, Fig. 2). Buyers bid
+differently depending on how long a property is on a market and on
+their relative market power (Eqs. (6), (7)). During the interview with
+the US realtor it became clear that a buyers’ price is anchored to a sellers’
+one: buyers bid between 3% and 5% below ask price, and up to 7 –10%
+below ask price if they want to be aggressive and if a property is on
+the market for a long time:
+∈½ðHask /C0 hÞ; Hask/C138ð 6Þ
+5 The number is user-deﬁned. In this simulation we used 10.
+Table 2
+State variables related to household agents in the RHEA model.
+II. Households (traders) – parent class
+A-marketStatus A market status of a household agent in a current time step Buyer, seller, traded
+A-alpha Household preference for a spatial good over a composite good. Source:( Heckbert and Smajgl 2005 ) 0.3
+A-gamma Household preferences for coastal amenities. Source:( Wu and Plantinga 2003 ) 0.5
+ﬁxedAlpha Boolean, determines whether agents have homogeneous or heterogeneous preferences for spatial goods or environmental
+amenities
+[0;1]
+ﬁxedGamma
+A-utility Agent ’s utility for a speci ﬁc spatial good Eq. (3)
+A-budget Household annual income (empirical distribution/average empirical). Source: USA statistics a. The statistical data on income
+distribution for the Carteret county (NC) was available for 2011; to match the price levels of hedonic analysis the incomes were
+adjusted to 2004 prices using Consumer Price Index b
+(8362–209,044)/51,939
+A-trav.costs Agent ’s travel costs per unit of distance. Source: ( Wu and Plantinga 2003 ) 0.284
+A-myprice Stores the value of a bid or ask price agent is ready to pay for a certain parcel Eqs. (6) –(8)
+A-refused Counts how many times an agent did not succeed in buying or selling a property ***
+II.1 Buyer – subclass of traders class
+A-delta (Dneg) Difference between bid and ask price, which buyer is ready to accept in price negotiations; equals to her monthly rent Endogenously
+determined
+Bid price Buyer ’s bid price for a speci ﬁc spatial good Section 2.2.2
+II.2 Seller – subclass of traders class
+A-delta (Dneg) Difference between bid and ask prices, which seller is ready to accept in price negotiations; equals to his monthly rent and grows
+with timeOnMarket
+Eq. (1)
+Ask price Asking price the seller assigns to the cell he owns Sections 2.2.2 and 2.2.3
+a United States Census Bureau, http://factﬁnder2.census.gov/faces/nav/jsf/pages/index.xhtml.
+b United States Department of Labor, http://www.bls.gov/cpi/.
+Table 3
+State variables related to real-estate agents and market in RHEA.
+III. Real-estate agent
+R-hedonic-list List of regression coef ﬁcients of a hedonic model in a certain time step, also serves as memory Section 2.2.3
+R-hedonics Adaptive or statics
+R-learning-strategy A strategy to update market expectations
+IV. Market
+fraction_on_sale (Fsale) sd_fraction_on_sale Share of owners who decide to become sellers (mean and standard deviation) 0.25
+0.02
+SellerChoice Method to de ﬁne which owners become sellers Random
+NumberOfBuyers Number of newcomers entering the market every time step Equals to new sellers
+tradeCode The code, with which a trade attempt is marked Section 2.2.6
+NOfTrades Number of trades Endogenous
+401T. Filatova / Computers, Environment and Urban Systems 54 (2015) 397– 413
+
+where hi s a random number between 0 and 10% of the ask price of a
+seller.
+If it is a sellers ’ market – that is, there is excess demand for certain
+areas – then buyers need to be more strategic and bid high enough to as-
+sure they actually get the property that maximizes their utility.
+Hbid∈½Hask; ðHask þ hÞ/C138 ð 7Þ
+In the current implementation of the model the sign of h is deter-
+mined randomly. RHEA departs from previous work ( Filatova, Parker
+et al., 2009; Magliocca et al., 2011), which introduced a variable to rep-
+resent a relative excess of supply or demand in a market, and by multi-
+plication pushed housing prices up or down. Instead of formally
+imposing an increasing or decreasing price trend in the code, RHEA
+allows natural emergence of such a phenomena entirely through agents’
+interactions. Speci ﬁcally, less attractive or overpriced properties get
+fewer bids and thus are more likely to get a decrease in price (i.e. com-
+petition between sellers). At the same time, a more desirable property
+in general attracts more buyers and is likely to have an increase in
+price since sellers would choose the highest bid (i.e. competition
+among buyers). However, in any case buyer ’s bid price should not ex-
+ceed her reservation price, which means that her annual payment
+should not exceed 30% of her annual income (Heckbert & Smajgl, 2005).
+In case buyers are not able toﬁnd a property, which they like and are
+able to afford, they leave the town. It occurs afterﬁve unsuccessful trade
+attempts. This assumption seems reasonable since the scale of the
+model is one town with only 3588 residential properties, and it is logical
+to search elsewhere in the neighboring area.
+Fig. 2. Dynamics of the trade process: a sequence of actions, which agents perform within 1 time step of the bilateral agent-based housing market with expectations formation (Sections
+2.1.3 and 2.2).
+402 T. Filatova / Computers, Environment and Urban Systems 54 (2015) 397– 413
+
+2.2.3. Learning
+One of the core decisions in decentralized ACE markets is the learn-
+ing process regarding prices (LeBaron, 2006; Tesfatsion, 2006). It is chal-
+lenging to model price expectations in urban property markets
+characterized by high heterogeneity of goods, which are infrequently
+traded. While ACE has made major progress in modeling markets of ho-
+mogeneous goods ( Arthur, Durlauf, & Lane, 1997; Kirman & Vriend,
+2001; Tesfatsion & Judd, 2006 ) land is a good with very diverse attri-
+butes. The same house in a different location may have a
+disproportionally different price as do two houses with different struc-
+tural characterizes in the same neighborhood. Modeling price expecta-
+tions in housing markets needs an introduction of a mediator who
+learns the efﬁcient price of any unique house and who often participates
+in transactions of such infrequently purchased goods as a house
+(Ettema, 2011; Gilbert et al., 2009; Magliocca et al., 2011; Parker &
+Filatova, 2008). As the mediator engages in many transactions, the soci-
+ety of agents relies on collective information about recent transaction
+prices. Thus, it is a collective learning process. The existing spatial
+ABMs that employ learning algorithms to support trading process in a
+land market (Balmann & Happe, 2000; Magliocca et al., 2011) deal still
+with relatively homogenous spatial goods, often differentiated only by
+the distance to CBD and size. The challenge here is to account for
+other attributes of housing, (up to 14 GIS attributes in our dataset in-
+cluding amenities and risks) that affect trading behavior.
+Real estate agent and formation of price expectations: RHEA builds on
+previous research on agent-based LMMs and introduces real estate
+agents who observe successful transactions and form price expecta-
+tions. Implementation of adaptive price expectations is realized in two
+stages: (1) trace housing price changes accounting for spatial goods het-
+erogeneity, and (2) capture market dynamics. The assumptions on the
+process of real estate agent price formation and negotiations between
+buyers and sellers were validated in an open-question interview with
+the US real estate agent.
+To model the ﬁrst stage of price expectation RHEA relies on basics of
+empirical research in urban and regional economics. In particular, ac-
+cording to Hedonic Price Modeling a house is a bundle of quantitative
+and qualitative characteristics (Rosen, 1974). Thus, a price of a residen-
+tial parcel can be expressed as a function of those attributes– presented
+as 14 GIS attributes ( Table 1 ). Marginal implicit prices can be
+interpreted as marginal willingness to pay of a representative house-
+hold for speci ﬁc housing attributes. This application of RHEA adopts
+the hedonic function estimated for the area based on the GIS data
+used to initialize the landscape (Bin et al., 2008):
+lnHtran ¼ β0 þ
+Xn
+i¼1
+βixi þ ε ð8Þ
+Here ln Htran is the log of transaction price, xi is a variable for the ith
+housing attribute (structural, neighborhood and environmental),β are
+regression coefﬁcients, and ε is the error term.
+At initialization realtors are endowed with coefﬁcients of the original
+hedonic analysis of Bin et al. (2008 , Model 4). At the end of each time
+step, all successful transactions get registered in a ﬁle (trade.csv) to-
+gether with all the attributes of traded agents and properties. Each
+month a real estate agent checks if there are enough transactions to
+run a comparable sales analysis. If yes, then he runs a hedonic analysis
+on the new transactions from the last 3–12 trading periods. If the num-
+ber of realized transactions is not sufﬁcient to capture the variation on
+housing prices in the regression analysis, then the horizon is extended
+for another month. Regression analysis based on these recent transac-
+tions is realized by employing the R-extension of Netlogo ( Thiele &
+Grimm, 2010), which makes it possible to have a direct coupling of R-
+scripts and the Netlogo ACE model. Eventually, the new coef ﬁcients
+got recorded into realtors memory. It is also possible to switch off this
+stage of adaptive price expectation by setting up R-hedonics on ‘Static’.
+In this case the hedonic model based on empirical 2004 analysis ( Bin
+et al., 2008) will be used throughout the whole simulation.
+During the second stage of price expectations a real estate agent may
+decide to apply one of the price learning strategies to suggest the ﬁnal
+asking price to a seller. Following Magliocca et al. (2011) RHEA uses
+four economic prediction models: mean, projection, mirror and regional
+models. Whether to activate or not the second stage of price expectation
+is determined by a user currently.
+2.2.4. Individual sensing
+Information about realtors ’ estimates of a property price is public.
+However, buyers are assumed to be boundedly-rational. Bounded ratio-
+nality captures the fact that an individual is not able to foresee all the
+consequences of his choice, take into account all the factors, and has lim-
+ited computing abilities (Simon, 1997). Searching for a house in reality
+is very costly (time-wise and money-wise). Not all properties are listed
+in online databases, choice and viewing of listed properties is time-
+consuming. Since a global optimum is not likely to be identi ﬁed in
+real-world housing markets, buyers do not search for the maximum
+throughout the whole landscape, but rather ﬁnd a local maximum
+among a set of randomly chosen cells. Yet, at this stage the costs of infor-
+mation gathering by buyers are not explicitly included in the model.
+Sellers’ ask prices are public information but a buyer is not aware of
+the bids other buyers make.
+2.2.5. Individual prediction
+Traders rely on pricing information, which realtors provide. The pre-
+diction involving learning algorithms is present only if real estate agents
+activate the second stage of expectation formation. If the latter is not ac-
+tivated, then agents make decisions based only on the current state of
+the landscape and the current market.
+2.2.6. Interaction
+Agents are involved in market interactions with each other:
+(a) buyers and sellers engage in direct interactions during negotiations,
+(b) residential property prices are emergent outcomes of direct buyers
+and sellers interactions; (c) buyers compete with each other submitting
+bids to the same seller; (d) sellers update their threshold for accepting
+the difference between bid and ask prices ( Dneg) if they were not suc-
+cessful during a trade period (for details on b, c and d see Section 2.2.2
+and Fig. 2). The outcomes of these interactions also indirectly affect fu-
+ture trades through real estate agents updating their price expectations
+(Section 2.2.3). Let us elaborate on the ﬁrst type of interactions, as it
+constitutes one of the innovative aspects of the RHEA model. This type
+of interactions gets activated during the trade process (box IX Fig. 2).
+Price negotiations in land market ABMs are often presented in a sim-
+pliﬁed way – as an arithmetic or geometric average between bid and ask
+prices. The RHEA model aims to bring in more realistic price negotia-
+tions procedure. Speciﬁcally, buyers and sellers do not simply settle on
+a price, which is an average of bid and ask, but rather play with their
+market power when negotiating. Moreover, during the interview with
+the US realtor it became clear that a buyers ’ price is always anchored
+to that of a sellers. Both prices are linked to the market average sug-
+gested by realtors. Yet, bids can vary because of the buyers or seller mar-
+ket or depending on how much a buyer wants the property. These
+processes are captured through competition on sellers ’ as well as on
+buyers’ sides in the new price negotiation procedure (Fig. 3). Speciﬁcal-
+ly, if a seller has at least one bid submitted he engages in price negotia-
+tions with the buyer who offered the highest bid price. Naturally, if her
+bid price is higher than seller’s ask price, then the trade is successful and
+ﬁnal transaction price is equal to this bid (box (1), Fig. 3). If the highest
+bid is below the original ask price, then the market power of agents
+plays a role (box (2) Fig. 3). Speciﬁcally, if the seller has more than 1
+bid offered, then the highest-bid buyer is the ﬁrst one to reconsider
+his bid price. The highest-bid buyer checks if the opportunity costs of
+waiting another month for another trade attempt (her Dneg)a r e
+403T. Filatova / Computers, Environment and Urban Systems 54 (2015) 397– 413
+
+comparable to the difference between the bid and ask prices (box
+(3) Fig. 3 ). Here Dneg of a buyer is operationalized as one month of
+renting an average house in the city,6 which is updated with time as res-
+idential housing prices change. If it is beneﬁcial for the buyer to accept
+the ask price instead of waiting another month for a trade attempt,
+then she accepts the ask price and trade is successfully registered. How-
+ever, if the seller receives only one offer-bid, then he is the one to recon-
+sider his ask price (box (4) Fig. 3 ). In particular, he compares the
+difference between bid and ask prices to the opportunity costs of
+waiting another month (his Dneg) and accepts the bid price, if compari-
+son is in its favor. The Dneg of a seller is operationalized as one month of
+mortgage for his property at the start of sellers trading history and gets
+updated with every unsuccessful trade attempt (Section 2.2.2). If the
+seller and the buyer do not agree on a price the negotiation fails. Poten-
+tially one may consider advancing the negotiation procedure at the
+stage of box (4), Fig. 3, by making sellers estimate their probability of
+selling in a given time at a given price and have this probability updated
+as in Ettema (2011).
+Considering the processes in Figs. 2 and 3 the overall trade process
+may result in the following outcomes, coded with ‘trade codes ’
+(Table 4).
+2.2.7. Collectives
+Agents do not form any networks or other collectives.
+2.2.8. Heterogeneity
+Traders can be heterogeneous in their preferences for spatial goods
+over composite and for coastal amenities, in their risk perceptions and
+in their budgets. To explore research questions at hand RHEA allows
+setting up combinations of sources of heterogeneity as well as initiating
+homogenous agents by varying parameters such as A-budget,ﬁxedAlfa/
+Gamma and their average values (Table 2).
+Buyer, seller and real estate agents have different decision-making
+rules, as elucidated in 2.2.2 and 2.2.3 above.
+2.2.9. Stochasticity
+When the population of agents is created as heterogeneous in their
+attributes (preferences, risk perceptions, incomes) during initialization
+and consequent steps (for incoming buyers), speciﬁc values of those at-
+tributes are assigned randomly to agents. Moreover, during the model
+run, irrespectively of whether traders activated during the simulation
+are heterogeneous or homogenous, the randomness comes in when
+property owners decide to become sellers (if random strategy is cho-
+sen), when buyers set up their bid prices, and when the number of in-
+coming households is determined every step.
+2.2.10. Observation
+Urban property prices emerge as a result of bilateral trades between
+buyers and sellers with diverse incomes and speci ﬁc preferences in a
+heterogeneous landscape. This can be re ﬂected on a map as a color-
+gradient of property prices changing over time. Furthermore, RHEA
+monitors a set of macro-scale measures such as total property value in
+the area, average rent in a city, average price in a non- ﬂooded vs.
+hazard-prone areas, and aggregate utility of settled households. These
+aggregated outcomes are important for the understanding of price dy-
+namics as people with different incomes and preferences arrive to the
+studied areas, and for tracing agents’ welfare over time.
+Moreover, at the end of each time step there are a number of tables
+(csv ﬁles), which get updated. Speciﬁcally, each trade attempt (success-
+ful and unsuccessful) gets recorded in the trade.csv table together with
+all attributes of the buyer and the seller and the property in question,
+what allows running new hedonic analysis when needed. In addition,
+realtors record their current regression coef ﬁcients of hedonic model
+6 RHEA does not model a residential renting market explicitly. Thus, the average rent in
+the city is equal to average mortgage payment in this city and is the same for all buyers. In
+case a rental market is modeled explicitly in parallel to the ownership market, the monthly
+rent would be heterogeneous across households.
+Fig. 3.The simulationﬂow of the price negotiation process (Section2.2.6). Here: buyers’ opportunity costs of waiting another month for another trade attempt (Dneg of a buyer) are equal to
+1 month of rent, seller’s opportunity costs of waiting another month (Dneg of a seller) are equal to 1 month of mortgage. Both of them are updated following unsuccessful trades.
+404 T. Filatova / Computers, Environment and Urban Systems 54 (2015) 397– 413
+
+in the realtors.csv ﬁle, so that the dynamics of price expectation forma-
+tion can be traced over time.
+2.3. Details
+2.3.1. Implementation details
+The model is implemented in Netlogo v5.0.4 (Wilensky, 1999)u s i n g
+GIS7 and R (Thiele & Grimm, 2010) extensions. R-scripts are called from
+within Netlogo during each time step. The model will be accessible via
+OpenABM.org at the end of the project (2015–2016).
+2.3.2. Initialization
+The model is initialized with either two coastal cities in North Caro-
+lina, USA, or only one of them (Beaufort or Morehead) with 34,923,
+7106 or 24,980 GIS parcels, respectively. About half of those parcels
+are residential, other represent water or undeveloped areas. The num-
+ber of residential owner-agents at initialization for e.g. Beaufort city is
+3588, the number of sellers and buyers is user-de ﬁned. The properties
+going for sale at initialization vary across model runs. The incomes, pref-
+erences and risk perceptions of household agents are set at initialization
+according to the user settings (see Sections 2.2.8 and 2.2.9).
+2.3.3. Input data
+In this paper RHEA is applied to the coastal town of Beaufort. The
+area is in general low lying and is prone to ﬂooding with probability of
+1:100 and 1:500 in certain zones. At initialization RHEA uploads vector
+data from multiple GIS data-sets on the locations of residential housing,
+coastal amenities (measured in terms of distance from coastal water
+and sound, and a Boolean measure of waterfront), ﬂood probabilities,
+distances to the CBD and national parks, and data on structural charac-
+teristics of properties ( Table 1). Distance to CBD in the GIS dataset is
+measured as the distance to the nearest main employment center in
+the area – a neighboring town Morehead (Bin et al., 2008). In addition
+at initialization realtor-agents get the empirical hedonic function ( Bin
+et al., 2008 ) based on the real estate transactions from 2000 to 2004
+after a period of active hurricane seasons from middle of 1990s to
+2003. Data on households’ incomes and preferences is taken from vari-
+ous sources (Table 2).
+2.3.4. Submodels
+The submodels described in Fig. 2 are explained in detail in
+Section 2.2.
+3. Results
+3.1. Experiment settings
+The experiments presented here are for the city of Beaufort, USA
+(Fig. 4 ). The area in our GIS dataset contains 7106 parcels, 3588 of
+which are residential. Among residential parcels 50% are located in the
+zone with zero ﬂood occurrence, 27% and 23% of residential properties
+are in 1:100 and 1:500 zones respectively. The characteristics of resi-
+dential parcels vary as described in Table 5.
+To test the effect of various micro-foundations ﬁve experiments
+were run ( Table 6 ). The ﬁrst experiment serves as a benchmark, i.e.
+the most simpliﬁed micro-foundations of agents’ behavior are used. It
+demonstrates the behavior of a representative agent without any adap-
+tation. Further experiments introduce the heterogeneity of agents in
+disposable incomes, which comes from statistical data. Then heteroge-
+neity in preferences and adaptive price expectations are gradually
+added.
+3.2. Observation on micro-foundations #1: introducing empirical data into
+the landscape and agents’behavior
+RHEA attempts to bring together theoretical micro-foundations of
+urban economics and traditionally available empirical data. A major
+challenge on this path toward empirics is that one needs to use various
+sources of data: aggregated (e.g. incomes here) and micro-level data
+(individual property prices), data for a speci ﬁc geographical location
+(parcel-level data) and average country level data (preferences for spa-
+tial goods over composite goods or for amenities). When various data
+sources are merged in an agent-based market it is quite likely that
+trader-agents endowed with certain preferences and incomes may not
+necessary represent the population that was active on the actual coastal
+property market during the period, for which hedonic analyses and con-
+sequently housing prices are estimated. Thus, an ACE market would
+need to adjust the empirically-de ﬁned demand function, i.e. hedonic
+function, with the simulated demand that emerged from individual de-
+mands of agents endowed with empirical data from other sources. As
+Fig. 5 demonstrates in RHEA it happens primarily during the ﬁrst time
+step when all prices jump signiﬁcantly, even in the base case of fully ho-
+mogeneous traders and static realtors in Exp1, to catch up with the cur-
+rent simulated demand. Modiﬁcations in traders and realtors behavior
+as well as spatial heterogeneity (average prices in safe, ﬂood-prone
+and waterfront zones) may affect the extent of this sharp change in
+price but not the fact of its occurrence (Exp2 –5, Fig. 5). The prices for
+the most demanded properties – coastal front properties – adjust
+quicker than for less attractive zones as a result of endogenous housing
+market.
+Let us consider price dynamics variation for four general types of
+properties: average price of properties located in the safe zone
+(Fig. 5a), in the zone with 1:100 chance of ﬂood occurrence ( Fig. 5b),
+in the areas where probability of ﬂooding is 1:500 years ( Fig. 5c), and
+for waterfront properties ( Fig. 5 d). It should be noted that there are
+overlaps between some categories as waterfront properties may be ei-
+ther in a safe or 1:100 ﬂood zone. On average the level of amenities
+(measured as proximity to the coast and availability of the coastal
+front) in the areas with 1:100 ﬂood occurrence are 45% higher than in
+the safe one while in 1:500 ﬂood zone amenity levels constitute only
+48% of amenity levels in the safe zone. A market with homogeneous
+traders and static realtors (Exp1) produces quite stable price trends
+over the ﬁrst three categories of properties except for the coastal front
+properties. As preferences for coastal amenities are quite strong, the de-
+mand for these areas is the highest and the market constantly adjusts by7 GIS extension of Netlogo: http://ccl.northwestern.edu/netlogo/docs/gis.html.
+Table 4
+A list of possible outcomes of the trade process.
+Trade
+code
+Meaning
+TC1 Trade attempt is successful when Bid > Ask
+TC2 Trade attempt is successful when Bid b Ask, seller has more than 1 offer-bid, and buyer raises her bid
+TC3 Trade attempt is successful when Bid b Ask, seller has more than 1 offer-bid, and seller lowers his ask to match the highest bid
+TC4 Trade does not occur because Bid b Ask and traders did not agree
+TC5 Trade attempt is successful when Bid b Ask, seller has only 1 offer-bid, and he lowers his ask
+TC6 Traders did not agree since for both it is cheaper to wait another month
+TC7 Trade does not occur because there were no bids offered to a seller
+405T. Filatova / Computers, Environment and Urban Systems 54 (2015) 397– 413
+
+pushing prices up. Prices for properties in areas with 1:100 years ﬂood
+occurrence are higher than in safe areas: between 4% (in Exp2 and
+4) and 12–16% (in Exp5 and 3) price increase in 1:100 zone compared
+to 2% (in Exp2 and 4) and 7 –11% (in Exp5 and 3) price increase in the
+safe zone (Fig. 5bv s .5a). Properties in 1:100 zone have higher level of
+coastal amenities compared to safe and more landward properties:
+207 out of 975 parcels in 1:100 ﬂood zone are waterfront compared to
+only 199 waterfront properties among 1777 ones in the safe zone. As
+Bin et al. (2008) demonstrated in their hedonic analyses marginal will-
+ingness to pay for amenities is higher than marginal price discount for
+risk. One may also notice that price trends in the ﬂood zone of
+1:500 years is controversial in markets with adaptive price expectations
+(Exp3 and 5 in Fig. 5c) but has a clear downward trend in markets with
+heterogeneous agents and static expectations (Exp2 and 4, Fig. 5 c).
+Properties with a ﬂood occurrence 1:500 years have lower expected
+utility than comparable properties in safe zone and at the same time
+the level of environmental amenity is low (only 2 out of 408 properties
+are waterfront) what makes them less attractive than 1:100 zone prop-
+erties. The relatively low demand for those areas leads to a decrease in
+the price trend.
+Fig. 4. A map of property price gradient at initialization (Beaufort coastal town, North Caroline, USA). The darker the red color the higher a property price is. Green color symbolizes non-
+residential properties; blue color stands for ocean.
+406 T. Filatova / Computers, Environment and Urban Systems 54 (2015) 397– 413
+
+3.3. Observation on micro-foundations #2: heterogeneity vs. homogeneity
+Introduction of heterogeneity among traders leads to more success-
+ful trade pairs. In particular, there is a better match between heteroge-
+neous preferences for amenities as well as heterogeneous incomes
+and available spatial goods compared to the choice a representative
+agent faces (compare Exp2 to Exp1 in Fig. 6). Introduction of an empir-
+ical distribution of budgets rather than an average budget for whole
+population of traders adds more ﬂexibility to satisfy agents ’ needs
+(compare Exp4 to Exp1 in Fig. 6), especially when preferences are also
+heterogeneous (Exp4 and Exp2, Fig. 6).
+Systematic test for the impacts of heterogeneity in budgets and pref-
+erences in ABM LMMs have been performed and proven important for
+Table 5
+Heterogeneous attributes of housing goods in the GIS data set.
+GIS parcel attribute Min Average Max
+Number of bathrooms 0.5 1.7 6
+House age 1 38.45 103
+Sq. footage of a house 160 1581.2 4382
+Lot size 0.005 0.92 42.39
+Whether a house is in 1:100 ﬂood zone 0 0.27 1
+Whether a house is in 1:500 ﬂood zone 0 0.23 1
+Whether a property is at coastal front 0 0.11 1
+Distance to amenity 1.8 1589.04 8445.6
+Distance to CBD 7552.7 22781.9 69386.6
+Distance to highway 50.7 2685 31313.3
+Distance to parks 4331.9 14,412 36527.6
+Table 6
+Variation in the model settings among experiments.
+Experiment
+#
+Preferences for
+amenity, A-gamma
+Household annual
+income, A-budget
+Realtor price
+update, R-hedonics
+Exp1 Homogeneous Homogeneous Static
+Exp2 Homogeneous Empirical distribution Static
+Exp3 Homogeneous Empirical distribution Adaptive
+Exp4 Heterogeneous Empirical distribution Static
+Exp5 Heterogeneous Empirical distribution Adaptive
+Fig. 5. Average price of a residential property over time under various settings. Speciﬁcally: Exp1 assumes buyer and seller agents having homogeneous incomes and homogenous pref-
+erences for amenities, realtors do not update price expectations based on the recent sales; Exp2 assumes buyer and seller agents having empirically-parameterized incomes and homog-
+enous preferences for amenities, realtors do not update price expectations based on the recent sales; Exp3 assumes buyer and seller agents having empirically-parameterized incomes and
+homogenous preferences for amenities, realtors update price expectations based on the recent sales; Exp4 assumes buyer and seller agents having empirically-parameterized incomes and
+heterogeneous preferences for amenities, realtors do not update price expectations based on the recent sales; andﬁnally Exp5 assumes buyer and seller agents having empirically-param-
+eterized incomes and heterogeneous preferences for amenities, realtors update price expectations based on the recent sales.
+407T. Filatova / Computers, Environment and Urban Systems 54 (2015) 397– 413
+
+the resulting spatial patterns and economic metrics (Huang, Parker, Sun
+et al., 2013; Sun et al., 2014)a sw e l la sf o rt h eo v e r a l le fﬁciency of a mar-
+ket (Heckbert, 2011). In RHEA heterogeneity in both budgets and pref-
+erences for amenity signiﬁcantly affects utility of an average household
+who settled in the city. Speciﬁcally, in Exp1– homogeneous preferences
+and budgets – average utility remains almost stable throughout a simu-
+lation (Fig. 7). As soon as empirical distribution of incomes in Exp2 and
+Exp3 is introduced the average utility starts growing over time. This
+happens because heterogeneity in budgets allows the market to sort
+agents across parcels with a distribution of prices in a way that maxi-
+mizes their utility. Thus, budget heterogeneity is essential when model-
+ing markets of heterogeneous goods with high price variability. Exp4
+and Exp5 add preference heterogeneity on top of budget heterogeneity.
+As a result average utility in the city grows for another 15% due to the
+fact that traders with heterogeneous preferences are able to ﬁnd a bet-
+ter match for their needs on a market. Activation of adaptive vs. static
+price expectations does not have a signiﬁcant impact on average utility
+of settled households agents (compare Exp2 to Exp3 or Exp4 to Exp5 in
+Fig. 7).
+3.4. Observation on micro-foundations #3: static vs. adaptive price
+expectations
+RHEA implements a process of price expectations formation either
+as an adaptive (Exp3 and 5) or as a static one (Exp1, 2 and 4). When
+adaptive price expectation is activated a real estate agent monthly up-
+dates his hedonic function using R-extension based on the recent trans-
+actions. Table 7 presents the coefﬁcients of a hedonic function changing
+over time for selected time steps.
+The effect of these changes may be best seen visually inFig. 8, which
+applies the static and adaptive hedonic model to an average house in the
+city. It is quite obvious that under adaptive expectations with an inten-
+sive trading the price of an average house is quite volatile.
+Price dynamics for the four groups of properties inFig. 5 also demon-
+s t r a t e st h a tah o u s i n gm a r k e tw i t hn op r i c eu p d a t e ,i . e .‘static’,h a sav e r y
+smooth price trend. At the same time a market with adaptive price ex-
+pectations, which updates over time based on the recent transaction
+and preferences and incomes of newcomers, is quite corrugated. The
+level of ‘bumpiness’ depends on the interactions between landscape
+heterogeneity and micro-foundation of agent behavior. Speciﬁcally, in
+Fig. 5a and b the growth of the price trend under the adaptive realtor
+strategy (Exp3 and 5) is larger in the extent and is quite jagged com-
+pared to the small gradual increase in prices in markets with static real-
+t o rb e h a v i o r( E x p 1 ,2a n d4 ) .Fig. 5d shows that it is the extent and the
+speed of price increase that is higher in the adaptive price expectations
+markets (Exp3 and 5) in comparison with static ones (Exp1, 2 and 4).
+Thus, prices in highly demanded areas, e.g. waterfront here, experience
+an ampliﬁcation effect if adaptive price expectation is activated. It im-
+plies that an assumption that base prices remain the same over time,
+i.e. realtors do not update their price information, is sufﬁcient for model-
+ing gradual change processes in housing markets. Impacts of abrupt
+Table 7
+Dynamics in the coefﬁcients of the hedonic price function (Eq. (8)).
+Exp1, 2 and 4 throughout the simulation; Exp3 and 5 in time = 0 Exp3 Exp5
+Time = 12 Time = 24 Time = 12 Time = 24
+time 0 12 24 12 24
+intercept 11.337 11.304 11.659 11.403 11.748
+bathrooms 0.108 0.140 0.135 0.106 0.161
+bathrooms2 −0.011 −0.015 −0.003 −0.002 −0.002
+age −0.01 −0.008 −0.007 −0.011 −0.008
+age2 0.000094 −4.54E−06 −1.30E−06 1.22E −05 1.11E −06
+SQFT 0.001 9.60E −04 9.64E −04 9.55E −04 8.56E −04
+SQFT2 −0.00011 −1.30E−08 −4.00E−09 −2.50E−08 −1.10E−08
+lotsize 0.03 0.037 0.064 0.037 0.091
+lotsize2 0.00019 −4.23E−05 −4.43E−04 0.000058266 −8.18E−04
+newhome −0.059 −0.056 −0.054 −0.045 −0.041
+postFirm −0.022 −0.001 −0.006 −0.082 −0.058
+FP100 −0.078 −0.058 −0.051 −0.062 −0.065
+FP500 −0.062 −0.049 −0.044 −0.056 −0.059
+coastalFront 0.314 0.372 0.378 0.354 0.377
+log(distAmen) −0.106 −0.101 −0.116 −0.115 −0.125
+log(distCBD) −0.00038 −0.015 −0.090 −0.022 −0.090
+log(distHwy) 0.005 −0.002 0.007 0.001 0.004
+log(distPark) −0.001 0.001 0.035 0.021 0.044
+Fig. 7. Dynamics of the average utility of settled household agents in the city over time.
+Fig. 6. The percent of successful trades (trade codes TC1, TC2, TC3 and TC5, seeTable 4)i n
+the total number of trade attempts over time.
+408 T. Filatova / Computers, Environment and Urban Systems 54 (2015) 397– 413
+
+changes in markets and effects of social ampli ﬁcation, e.g. realized
+through market competition for highly demanded areas and re ﬂected
+in prices trends, are evident when adaptive price expectations are
+present.
+The aggregated effect of this dynamics is also well re ﬂected in the
+trend of the total property value in the city ( Fig. 9 ). The trend of the
+total property value in the city is bumpy in adaptive price markets
+(Exp3 and 5) and is smooth in static price markets (Exp1, 2 and 4). Ac-
+cumulative effect of the adaptive vs. static price expectations is a distinct
+increase in property values over time, and thus an increase in a tax base
+for local governments as well as increase in direct expected damage if a
+ﬂood disaster hits.
+4. Conclusions
+This paper provides a detailed ODD + D description of a spatially-
+explicit empirical housing market ABM – RHEA and demonstrates its
+performance under various micro-foundations. RHEA is well grounded
+in economic theory and uses readily-available spatial data and econom-
+ic empirical analysis. It moves beyond existing work by making a step
+forward toward empirical modeling of ACE land markets by using actual
+hedonic studies and real distribution of households incomes, while
+explicitly simulating the emergence of urban property prices and their
+spatial distribution under adaptive price expectations of heterogeneous
+agents. The use of empirical data to parameterize micro behavior and
+validate macro patterns in ABMs is widely discussed ( Heckbert,
+Baynes et al., 2010; Heckbert & Bishop, 2011; Robinson et al., 2007;
+Smajgl et al., 2011; Windrum et al., 2007 ). It is a challenge to employ
+empirical data while still grounding an ABM in a particular theory.
+Usually a modeler faces a trade-off between designing a theoretically-
+grounded model with no empirical data employed and a comprehen-
+sive empirical model but with ad hoc assumptions ( Boero &
+Squazzoni, 2005). It is particularly difﬁcult to keep empirical ABMs con-
+nected to a certain disciplinary theory, as one of the main reasons for
+using an ABM is to depart from certain stylized assumptions in a ﬁeld.
+RHEA makes a step forward by marrying theoretically-grounded
+micro-foundations with standard empirical data.
+The RHEA results demonstrate that this combination of theoretically
+sound micro-foundations in agents’ behavior and empirical data is fea-
+sible and opens opportunities to explore various methodological and
+policy-relevant research questions. In particular, RHEA allows explora-
+tion of gradual as well as abrupt changes in spatial economic systems
+enabling possibilities to trace non-marginal abrupt shifts in housing
+market dynamics in hazard-prone areas when either changes in the en-
+vironment or in agents’ behavior occur. This is especially relevant for de-
+signing policies in the world with climate change where sudden non-
+marginal changes in economic system are expected. Existing decision-
+support tools are designed to tackle marginal changes only and may
+be misleading if economic systems undergo structural changes. The
+methodological setup of RHEA is not limited only to urban models. It
+can be extended to other challenges faced by decision-makers designing
+policies to manage coupled socio-environmental systems and by re-
+searchers modeling those.
+Another advantage of RHEA is that while using empirical data, it
+maintains the ﬂexibility of replacing it with stylized data if the former
+is missing. Moreover, RHEA does not rely entirely on historic data,
+which in fact represent only a snapshot of past choices in a land market,
+but is able to adjust with time. This functionality is enabled through in-
+corporating adaptive expectations about land market dynamics into the
+spatial landscape. At the same time RHEA is programmed in open-
+access Netlogo software, a user-friendly and easy-to-learn ABM envi-
+ronment, which opens RHEA to a broad user community. The Netlogo
+code of RHEA empowered by the use of GIS and R-extensions facilitates
+real policy decision support. In summary, while many ABMs remain
+stylized and focus on exploration of methodological questions, RHEA
+deeply integrates micro-economic foundations with real data and stan-
+dard empirical economic analysis. Thus, it represents an important
+modern trend in the ABM ﬁeld: moving from stylized modeling experi-
+ments to simulating real life situations using data to their full extent.
+Yet, the downside of this process is that by trying to match reality
+one makes a model increasingly more complex. This is known as
+Bonini’s Paradox (Voinov, 2008): as a simulation model moves toward
+representing the complexity of a real system, it forgoes its comprehen-
+sibility and transparency. Thus, while the realism of a spatial ABM in-
+creases the complexity of micro-foundations in agents ’ behavior may
+need to be reduced. Robinson et al. (2007) also highlight that the
+ABMs using GIS data should be simple. This may perhaps imply that
+the use of state-of-the-art methodological advances in ABM and ACE,
+e.g. advanced artiﬁcial learning techniques, is challenging outside of a
+simpliﬁed context. In any case, RHEA is still data-intensive compared
+to stylized ABMs of spatial economic systems and may take time to cal-
+ibrate to a new case study. Another limitation of thisﬁrst presentation of
+the RHEA model is that a thorough validation and a comprehensive sen-
+sitivity analysis is still a subject of future work. A basic sensitivity anal-
+ysis and comparative statics analysis is presented in Appendix A .
+Systematic sensitivity analysis of certain micro-foundations of agents
+and markets behavior is a vital aspect, which requires intensive simula-
+tion runs and development of techniques to manage big simulation-
+output data varying in time and space.8
+The development of the RHEA model is theﬁrst stage of a multi-year
+project. While some limitations exist, often relevant for any type of
+Fig. 9. Dynamics of total property value (in % from the value at initialization) in the coastal
+city under various micro-foundations of agent behavior (Exp1–5i n Table 6).
+8 The processing of big data from social science ABMs is a vital research frontier and is a
+subject of future work, for example within the MIRACLE project funded by the‘Digging In-
+to Data’ program http://wici.ca/new/research/digging-into-data-did-research/.
+Fig. 8. Price of an average house in the town over time under static (Exp1, 2 and 4) and
+adaptive (Exp3 and Exp5) price expectations (in 2004 $). The regression function
+(Eq. (8)) with the current regression coefﬁcients (Table 7) was applied to a house with av-
+erage characteristics (Table 5).
+409T. Filatova / Computers, Environment and Urban Systems 54 (2015) 397– 413
+
+modeling, RHEA offers much potential. Future work can develop in sev-
+eral directions. Firstly, a detailed sensitivity analysis is to be performed,
+and in particular mutual effects of combining two parts of price expec-
+tation formation (Section2.3.3) are to be studied systematically. More-
+over, one needs to asses the realism of produced price patterns: while
+almost stable price trends in Exp1, 2 and 4 are hardly realistic, the
+abruptness of the corrugated dynamics of prices in Exp3 and 5 may
+also be exaggerated. Whether these market ﬂuctuations are temporary
+or persistent can be important for interpretations and further applica-
+tions of the model. The oscillations in price dynamics largely depend
+on the speed of information update, i.e. the intensity of monthly trades.
+Thus, sensitivity to the rates of buyers and sellers inﬂow, their trade in-
+tensity and the time-horizon of realtors should be studied. Secondly,
+agents, which are designed to make decisions under uncertainty follow-
+ing expected utility approach, can be compared with agents operating
+according to the prospect theory paradigm ( Kahneman & Tversky,
+1979). Thirdly, an introduction of individual risk perception evolution
+based on the theories of opinion dynamics ( Acemoglu & Ozdaglar,
+2011) in addition to adaptive price learning dynamics is of great inter-
+est. While majority of economic models assume static preferences and
+risk perceptions, agents do in fact learn to adjust their perceptions and
+preferences individually and through peer-to-peer networks ( Janssen
+&J a g e r ,2 0 0 1), and potentially make different choices. It has been dem-
+onstrated that alteration in agents’ preferences may signiﬁcantly change
+emergent outcomes of an ABM ( Heckbert, Adamowicz et al., 2010 ).
+Lastly, a design and conduct of parallel experiments with human sub-
+jects in the lab and RHEA is planned. Lab experiments could be used
+to acquire behavioral foundations about risk perception dynamics in a
+group (Contini, Leombruni, & Richiardi, 2007), also when hazard prob-
+abilities change. ABM will help to extend these behavioral patterns to
+larger (than in the lab) temporal and spatial scales ( Duffy, 2006;
+Heckbert, Baynes et al., 2010; Janssen, Holahan, Lee, & Ostrom, 2010;
+Poggio et al., 1999) and to validate agents’ decision-making in a spatial
+landscape (Evans, Sun, & Kelley, 2006; Heckbert & Bishop, 2011 ). The
+work in these directions will increase the reliability of the RHEA
+model and improve its utility in supporting policy-making.
+Acknowledgements
+This research is supported by the Netherlands Organisation for Sci-
+entiﬁc Research (NWO) VENI Grant 451-11-033, the U.S. National Sci-
+ence Foundation ’s Coupled Natural and Human Systems program
+‘‘SLUCE II project (Spatial Land Use Change and Ecological Effects) NSF
+CNH-0813799, and the EU-FP7-308601 COMPLEX project. The author
+is grateful to Prof. O. Bin, Prof. A. Voinov, Dr. B. Naimi, L. Vidgop-Barg,
+Prof. S. Hulscher and to the discussions within the Laboratory for Social
+Interactions and Economic Behavior at the University of Twente. Lastly,
+the author also thanks the editor and the three anonymous reviewers
+for the valuable comments and suggestions.
+Appendix A. Basic sensitivity analysis
+Experiments 1–5( Table 6) in fact present a sensitivity analysis of the
+model’s emergent outcomes in terms of utilities, prices and their spatial
+distributions, on micro-foundations. This series of ﬁve experiments
+starts with a stylized case and moves toward more empirical represen-
+tation of agents’ behavior. Experiment 1 is a stylized base case scenario
+when neither budgets nor preferences of households’ agents vary, and
+when expectations of future housing prices are not updated. Experi-
+ment 5 employs empirical distribution of households’ budgets, assumes
+that preferences for amenities are normally distributed, and allows real-
+tors to update price expectations based on recent sales. Yet, there are
+still several parameters, which have an impact on the emergent macro
+outcomes.
+In what follows, we perform an additional sensitivity analysis of the
+model’s macro-outcomes to several main micro-foundations. A
+comprehensive sensitivity analysis of the model performance, analysis
+and visualization of the ‘big data ’ that it generates is currently under
+way.9 Here we employ the comparative static analysis of agents’ utility,
+link these trends to the impact on prices, and complement it with the
+examples of the model performance. We would like to highlight once
+again that households in RHEA make their purchasing decisions in a
+housing market in two stages: (1) they ﬁrst select which house they
+like based on highest utility among considered houses, (2) then they de-
+cide what bid price to offer using seller’s ask price as an anchor. Such a
+market design allows combining theoretically-grounded behavioral
+rules (i.e. resuming the standard setup of urban economics models in
+our case) with conventional empirical data (e.g. econometric hedonic
+model) to parameterize micro-foundations of agents ’ behavior while
+preserving agents and landscape heterogeneity. Yet, it also implies,
+that there is no formal link in equations between agents preferences,
+budgets and eventual transaction prices as it is replaced by logical ex-
+pressions (i.e. if-else conditions) and ﬁlters (e.g. choosing minimum
+and maximum) in the program code. Given the architecture of this mar-
+ket, there is a direct link between agents’ preferences and budgets and
+their utilities. The impact on prices is consistently related to changes
+in utility: the houses that are most desirable receive more bids (both
+below and above ask price), and have a higher probability to be sold
+above initial ask prices as sellers have an opportunity to choose the
+highest bid.
+To derive qualitative predictions of how macro indicators of interest
+change with some exogenous parameters change, we performed“com-
+parative statics” analysis by estimatingﬁrst-order derivatives10 of corre-
+sponding equations with respect to a certain parameter, while holding
+others constant.
+A.1. Sensitivity to the years of mortgage
+Coefﬁcient kH translates the property price ( Htran) into an annual
+payment in Eqs. (1) and (2). Experiments in this paper make a simplify-
+ing assumption that mortgage is paid out in m = 15 years (i.e. kH =1 /
+15). If mortgage can be arranged for a longer/shorter period then it
+changes Dneg of traders and their utility:
+∂Dneg
+∂m ¼/C0 Htranð1 þ NUSTrÞ
+12m2 b0 ðA:1Þ
+If years of mortgage grow, i.e. kH decreases, then Dneg of sellers de-
+creases. This implies that opportunity costs of waiting another month
+are smaller and sellers can afford to wait longer for a better deal on a
+market. In other words they are more likely to reject option 4 in price
+negotiations ( Fig. 3 ). Overall it means less successful trades in one
+time step or slower dynamics of a market, which in turn affects price ex-
+pectations update. The direction, in which the latter changes, depends
+on several other factors: preferences of the incoming new buyers on a
+market, whether realtors extend the period of transaction analysis for
+more months, the types of properties that were sold recently and etc.
+Dneg of buyers is a monthly update of an average mortgage. Thus, if
+years of mortgage increase, i.e. kH decreases, then Dneg of buyers also
+decreases. It implies that it costs less for buyers to wait resulting in
+less successful trades per trade period.
+∂U
+∂m ¼ sα /C1 Aγ /C1 Hask /C1ð Y /C0 TðDÞ/C0 Hask
+m Þ
+/C0 α
+m2 > 0 ðA:2Þ
+9 Please see details on the transnational Digging into Data MIRACLE projecthttp://wici.
+ca/new/research/digging-into-data-did-research/.
+10 All derivatives were estimated using https://www.wolframalpha.com. The negative
+sign of a derivative implies that a macro variable declines with an increase in one unit of
+a parameter; the positive sign implies that a macro variable increases as a parameter
+grows.
+410 T. Filatova / Computers, Environment and Urban Systems 54 (2015) 397– 413
+
+If mortgage is given for longer period, i.e. years of mortgagem grows,
+then utility U grows because households either spend less on the same
+housing annually and have more disposable budget for a composite
+good, or can afford buying a more expensive house with bigger sq. foot-
+age or land lot or richer environmental amenities.
+We run RHEA with kH = 1/7 and kH = 30 in addition to the base
+case of kH = 1/15 reported in the paper. We report the sensitivity of
+Dneg and U for experiments 1 and 5 as they present two extreme
+cases in terms of other settings ( Table A.1). Changes are indeed in the
+direction predicted by Eqs. (A.1) and (A.2).
+A.2. Sensitivity to travel costs
+Currently travel costs per unit of distance are taken from another
+study ( Wu and Plantinga, 2003 ), which provides an estimate of the
+real travel costs an average US household spends per year ($1500 per
+mile per year or $0.284 per foot per year). As travel costs per unit of dis-
+tance may change, we ﬁnd the ﬁrst derivate of utility:
+∂U
+∂T ¼/C0 sα /C1 Aγ /C1ð 1 /C0 αÞ/C1 D /C1ð Y /C0 TðDÞ/C0 kH HaskÞ/C0 α b0 ðA:3Þ
+Eq. (A.3) implies that utility increases with the decrease of travel
+costs and falls if they grow. It is logical since there is less money avail-
+able for either a composite good consumption or an improvement in liv-
+ing conditions (i.e. richer amenities or bigger sq. footage of a house and
+land lot). The impact on housing prices is expected to be mixed: the
+more distant parcels become less affordable, while price for housing
+closer to CBD increases since demand for these properties grows.
+RHEA was run for two additional scenarios: with travel costs twice
+lower and twice higher. As expected, utility becomes lower in the case
+of increased travel costs, and higher in the case of lower travel costs
+both in Exp1 and Exp5 ( Table A.2 ). The overall effect on prices is
+mixed in Exp1. In Exp5 total property value in the town grows most
+likely because higher-income households outbid others for the most
+central locations driving prices up. The effect is ampli ﬁed by adaptive
+price expectations, which include this trend in further setting of ask
+prices.
+A.3. Sensitivity to the deviation of bid prices from ask prices (h)
+Variable h in Eqs. (6) and (7) determines the upper boundary of the
+deviation of a submitted bid price from a stated ask price, i.e. how dis-
+persed will bid prices be. The sign of the derivative is straightforward:
+∂Hbid
+∂h ¼ 1; if h > 0
+/C0 1 if h b0
+/C26
+ðA:4Þ
+Since h is a random number between 0% and 10% of the ask price of a
+seller, the fact whether resulting bid price increases or decreases with a
+change of h on one unit actually depends on a random seed. The ques-
+tion is whether other market mechanisms, such as competition and
+price update eventually drive price down or up. The simulation results
+Table A.2
+Percentage difference in total property value in the modeled town and in the average utility of settle households (U) in case travel costs change from $0.142 to $0.284 to $0.568 per foot per
+year. Coefﬁcient T = 0.284 is taken as the base case.
+Exp1 Exp5
+T = 0.284/2 T = 0.284 T = 0.284 * 2 T = 0.284/2 T = 0.284 T = 0.284 * 2
+Total property value in town 99.6 100.0 99.4 98.9 100.0 106.1
+Average utility of settled households 107.2 100.0 84.7 107.6 100.0 92.6
+Table A.3
+Percentage difference in total property value in the modeled town and in average rent buyers pay (buyers’ Dneg) in case deviation of bid price from ask price changes from 3% to 5% to 10%.
+Coefﬁcient h = 5% is taken as the base case.
+Exp1 Exp5
+h = 0.03 h = 0.05 h = 0.1 h = 0.03 h = 0.05 h = 0.1
+Total property value in town 99.6 100.0 99.9 99.8 100.0 165.7
+Average rent ( Dneg of buyers) 99.6 100.0 99.9 99.8 100.0 165.7
+Table A.1
+Percentage difference in buyers’ opportunity costs of waiting for another trade attempt in the next time step ( Dneg) and in the average utility of settle households ( U)i nc a s ey e a r so f
+mortgage change from 7 to 15 to 30 years. Coefﬁcient kH = 1/15 (i.e. years of mortgage m = 15) is taken as the base case.
+Exp1 Exp5
+kH =
+1/7
+kH =
+1/15
+kH =
+1/30
+kH =
+1/7
+kH =
+1/15
+kH =
+1/30
+Dneg of buyers 148.9 100.0 74.9 140.2 100.0 76.4
+Average utility of settled households 86.6 100.0 107.2 94.2 100.0 106.0
+Table A.4
+Percentage difference in the average utility of the settled households (U) in case standard deviation from the average preference for environmental amenities changes from 0.01 to 0.05 to
+0.1. Coefﬁcient g = 0.05 is taken as the base case.
+Exp4 Exp5
+g =
+0.01
+g =
+0.05
+g =
+0.1
+g =
+0.01
+g =
+0.05
+g =
+0.1
+Average utility of settled households 87.7 100.0 161.6 87.8 100.0 159.6
+411T. Filatova / Computers, Environment and Urban Systems 54 (2015) 397– 413
+
+presented in this paper useh = 0.05. We run additional scenarios withh
+= 0.03 and h =0 . 1(Table A.3).
+In case of Exp1 where agents are homogeneous and there are no
+adaptive price expectations occurring, there is hardly a difference in
+the resulting transaction prices and total value of all residential proper-
+ties in the town, conﬁrming the mixed effects anticipated from Eq. (A.4).
+However, as soon as there are agents with higher budgets and realtors
+adapt price expectations based on the recent demand and supply,
+there is a signiﬁcant growth in prices as bid prices start to be more dis-
+persed (Table A.3). There are two processes contributing to this growth.
+Firstly, as incomes are heterogeneous there exist high-income buyers
+who are able to afford a bid price up to 10% higher than an ask price
+of a seller, which may simply not be affordable in case of homogenous
+incomes. It results in more successful transaction with bid prices up to
+10% higher that ask prices. Secondly, as realtors update their price ex-
+pectations, they do account for these growing prices. Thus, overall mar-
+ket dynamics responds to the growing demand, which sellers now also
+take into account when setting their ask prices. This leads to the ampli-
+ﬁcation of price increase leading up to 66% increase in cases when bid
+price may deviate up to 10% from the anchor ask price.
+A.4. Sensitivity to the distribution of preferences for amenities (γ)
+The value of average preferences for environmental amenities γ =
+0.5 is based on another study ( Wu and Plantinga, 2003 ) and assumed
+to be normally distributed. Yet, the standard deviation of this distribu-
+tion is not known but is likely to affect macro outcomes, such as utility.
+Assuming thata is the average of households’ preferencesγ and g is the
+standard deviation, we estimate the ﬁrst derivative of utility on g:
+∂U
+∂g ¼ sα /C1ð Y /C0 TðDÞ/C0 kH HaskÞ1/C0 α /C1 logðAÞ/C1 Aavþg > 0
+/C0 sα /C1ð Y /C0 TðDÞ/C0 kH HaskÞ1/C0 α /C1 logðAÞ/C1 Aav/C0 g b0
+(
+ðA:5Þ
+With a more dispersed distribution of gamma, there will be more
+polarized society in terms of preferences for amenity. Generally speak-
+ing, the impact of distribution of preferences for amenity on utility of
+searching households is likely to be mutually cancelled (A.5). However,
+the distribution may have an impact on the utility of eventually settled
+households in the city. Speci ﬁcally, households with higher + g (and
+lower −g), i.e. higher preferences for amenity γ, would always prefer
+properties with higher amenity levels. The effect is opposite for house-
+holds with lower +g or higher −g. Thus, amenity-lovers would always
+bid for high-amenity properties. However, whether they are able to
+compete for and get them or not depends on their budgets. In case of
+heterogeneous budgets RHEA assigns distributions of budgets and pref-
+erences independently, assuming that high-income and low-income
+people are in general may like or be indifferent to environmental ame-
+nities with an equal probability. Thus, whether prices go up or down de-
+pend also on the incomes of households bidding for properties with
+heterogeneous levels of coastal amenities.
+The simulation results on the differences in the levels of utility under
+various scenarios of γ distribution for Exp4 and Exp5 are presented in
+Table A.4 . The more dispersed the distribution of preferences among
+households who eventually settled in the town, the higher the utility.
+It occurs because differences in the levels of amenities start to matter
+more: the same attribute ( A, coastal amenity) contributes more to a
+household’s utility and households with more polarized preferences
+can ﬁnd a better match among heterogeneous properties on a market.
+Moreover, there is market sorting happening. Speci ﬁcally, households
+that like amenities and can afford them, buy coastal properties. House-
+holds who value them less, prefer properties with fewer amenities and
+either settle with cheaper houses gaining more utility from a composite
+good or go for larger housing without amenities.
+References
+Acemoglu, D., & Ozdaglar, A. (2011). Opinion dynamics and learning in social networks.
+Dynamic Games and Applications, 1(1), 3–49.
+Alonso, W. (1964). Location and land use. Cambridge, MA: Harvard University Press.
+An, L. (2012). Modeling human decisions in coupled human and natural systems: Review
+of agent-based models. Ecological Modelling, 229,2 5–36.
+Arthur, W. B., Durlauf, S. N., & Lane, D. (1997). The economy as an evolving complex system
+II. Santa Fe institute studies in the science of complexity , Vol. XXVII, Addison-Wesley.
+Balmann, A., & Happe, K. (2000). Applying parallel genetic algorithms to economic prob-
+lems: The case of agricultural land markets. In“Microbehavior and Macroresults”,I I F E T
+2000 Proceedings. Corvallis, Oregon USA.
+B e n e n s o n ,I .( 1 9 9 8 ) .Multi-agent simulations of residential dynamics in the city.
+Computers, Environment and Urban Systems, 22(1), 25–42.
+Bin, O., Kruse, J. B., & Landry, C. E. (2008). Flood hazards, insurance rates, and amenities:
+Evidence from the coastal housing market. The Journal of Risk and Insurance , 75(1),
+63–82.
+Boero, R., & Squazzoni, F. (2005). Does empirical embeddedness matter? Methodological
+issues on agent-based models for analytical social science.Jasss-the Journal of Artiﬁcial
+Societies and Social Simulation, 8(4).
+Brown, D. G., & Robinson, D. T. (2006). Effects of heterogeneity in residential preferences
+on an agent-based model of urban sprawl. Ecology and Society, 11(1) art.46.
+Brown, D. G., Robinson, D. T., An, L., Nassauer, J. I., Zellner, M., Rand, W., et al. (2008). Ex-
+urbia from the bottom-up: Modeling multiple actors and their landscape interactions.
+Geoforum, 39(2), 805–818.
+Contini, B., Leombruni, R., & Richiardi, M. (2007). Exploring a new ExpAce: The comple-
+mentarities between experimental economics and agent-based computational eco-
+nomics. Journal of Social Complexity, 3(1), 13–22.
+Dawson, R. J., Peppe, R., & Wang, M. (2011). An agent-based model for risk-based ﬂood
+incident management. Natural Hazards, 59,1 6 7–189.
+Duffy, J. (2006). Agent-based models and human subject experiments. In L. Tesfatsion, &
+K. L. Judd (Eds.), Handbook of computational economics volume 2: Agent-based compu-
+tational economics (pp. 949–1011). Amsterdam: Elsevier B.V.
+Ettema, D. (2011).A multi-agent model of urban processes: Modelling relocation process-
+es and price setting in housing markets. Computers, Environment and Urban Systems,
+35,1 –11.
+Ettema, D. F., Arentze, T. A., & Timmermans, H. J. P. (2011).Social inﬂuences on household
+location, mobility and activity choice in integrated micro-simulation models.
+Transportation Research. Part A: Policy and Practice, 45(4), 283–295.
+Evans, T. P., Sun, W. J., & Kelley, H. (2006). Spatially explicit experiments for the explora-
+tion of land-use decision-making dynamics. International Journal of Geographical
+Information Science, 20(9), 1013–1037.
+Filatova, T., & Bin, O. (2013). Changing climate, changing behavior: Adaptive economic
+behavior and housing markets responses to ﬂood risks. In B. Kaminski, & G. Koloch
+(Eds.), Advances in social simulation, Vol. 229.( p p .2 4 9–259). Berlin: Springer.
+Filatova, T., Parker, D., & van der Veen, A. (2009). Agent-based urban land markets:
+Agent’s pricing behavior, land prices and urban land use change. Journal of Artiﬁcial
+Societies and Social Simulation, 12(1), 3.
+F i l a t o v a ,T . ,P a r k e r ,D .C . ,&v a nd e rV e e n ,A .( 2 0 1 1 ) .The implications of skewed risk
+perception for a dutch coastal land marke t: Insights from an agent-based com-
+putational economics model. Agricultural and Resource Economics Review ,
+40(3), 405 –423.
+Filatova, T., van der Veen, A., & Parker, D. (2009). Land market interactions between het-
+erogeneous agents in a heterogeneous landscape—tracing the macro-scale effects of
+individual trade-offs between environmental amenities and disamenities. Canadian
+Journal of Agricultural Economics, 57(4), 431–459.
+Filatova, T., Verburg, P. H., Parker, D. C., & Stannard, C. A. (2013). Spatial agent-based
+models for socio-ecological systems: Challenges and prospects. Environmental
+Modelling & Software, 45,1 –7.
+Frame, D. E. (1998). Housing, natural hazards, and insurance.Journal of Urban Economics,
+44(1), 93–109.
+Geoghegan, J., Wainger, L. A., & Bockstael, N. E. (1997). Spatial landscape indices in a he-
+donic framework: An ecological economics analysis using GIS. Ecological economics,
+23,2 5 1–264.
+Gilbert, N., Hawksworth, J. C., & Swinney, P. A. (2009). An agent-based model of the En-
+glish housing market. In Association for the advancement of artiﬁcial intelligence spring
+symposium series. Stanford, California: The AAAI Press, Menlo Park, California, March
+23–25, 2009.
+Grimm, V., Berger, U., DeAngelis, D. L., Polhill, J. G., Giske, J., & Railsback, S. F. (2010). The
+ODD protocol a review and ﬁrst update. Ecological Modelling, 221(23), 2760–2768.
+Heckbert, S., & Smajgl, A. (2005). Analysing urban systems using agent-based modelling.
+In MODSIM 2005 international congress on modelling and simulation“advances and ap-
+plications for management and decision making”. Modelling and Simulation Society of
+Australia and New Zealand.
+Heckbert, S. (2011).Agent-based modelling of emissions trading for coastal landscapes in
+transition. Journal of Land Use Science, 6(2–3), 137–150.
+Heckbert, S., Adamowicz, W., Boxall, P., & Hanneman, D. (2010). Cumulative effects and
+emergent properties of multiple-use natural resources. Multi-Agent-Based
+Simulation X, 5683,1 –13.
+Heckbert, S., & Bishop, I. (2011). Empirical calibration of spatially explicit agent-based
+models. In D. Marceau, & I. Benenson (Eds.), Advanced Geosimulation (pp. 92–110).
+Bentham.
+Heckbert, S., Baynes, T., & Reeson, A. (2010).Agent-based modeling in ecological econom-
+ics. Ecological Economics Reviews, 1185,3 9–53.
+Huang, Q., Parker, D. C., Filatova, T., & Sun, S. (2013). A review of urban residential choice
+models using agent-based modeling. Environment and Planning: B, 40.
+412 T. Filatova / Computers, Environment and Urban Systems 54 (2015) 397– 413
+
+Huang, Q., Parker, D. C., Sun, S., & Filatova, T. (2013). Effects of agent heterogeneity in the
+presence of a land-market: A systematic test in an agent-based laboratory.Computers
+Environment and Urban Systems, 41,1 8 8–203.
+Irwin, E. G., & Bockstael, N. E. (2002). Interacting agents, spatial externalities and the evo-
+lution of residential land use patterns. Journal of Economic Geography, 2,3 1–54.
+Janssen, M. A., Holahan, R., Lee, A., & Ostrom, E. (2010). Lab experiments for the study of
+social-ecological systems.Science, 328(5978), 613–617.
+Janssen, M. A., & Jager, W. (2001). Fashions, habits and changing preferences: Simulation
+of psychological factors affecting market dynamics. Journal of Economic Psychology ,
+22(6), 745–772.
+Janssen, M. A., & Ostrom, E. (2006). Empirically based, agent-based models. Ecology and
+Society, 11(2).
+Kahneman, D., & Tversky, A. (1979). Prospect theory: An analysis of decisions under risk.
+Econometrica, 47(2), 263–292.
+Kirman, A. P., & Vriend, N. J. (2001).Evolving market structure: An ACE model of price dis-
+persion and loyalty. Journal of Economic Dynamics and Control, 25,4 5 9–502.
+LeBaron, B. (2006). Agent-based computational ﬁnance. In L. Tesfatsion, & K. L. Judd
+(Eds.), Handbook of computational economics volume 2: Agent-based computational
+economics (pp. 1187–1233). Elsevier B.V.
+Magliocca, N., Saﬁrova, E., McConnell, V., & Walls, M. (2011). An economic agent-based
+model of coupled housing and land markets (CHALMS). Computers Environment and
+Urban Systems, 35(3), 183–191.
+Matthews, R. B., Gilbert, N. G., Roach, A., Polhill, J. G., & Gotts, N. M. (2007). Agent-based
+land-use models: A review of applications. Landscape Ecology, 22,1 4 4 7–1459.
+Miller, E., Hunt, J. D., Abraham, J. E., & Salvini, P. A. (2004).Microsimulating urban systems.
+Computers, Environment, and Urban Systems, 28,9 –44.
+Mueller, B., Bohn, F., Dreßler, G., Groeneveld, J. r., Klassert, C., Martin, R., et al. (2013).De-
+scribing human decisions in agent-based models − ODD + D an extension of the
+ODD protocol. Environmental Modelling & Software, 48(37–48).
+Parker, D. C., Berger, T., & Manson, S. M. (Eds.). (2002).Agent-based models of land-use and
+land-cover change: Report and review of an international workshop.LUCC Report Series
+Bloomington, LUCC, October 4–7, 2001.
+Parker, D. C., Brown, D. G. Filatova, T., Riolo, R., Robinson, D. T., Sun, S. (2011). Do land
+markets matter? A modeling ontology and experimental design to test the effects
+of land markets for an agent-based model of ex-urban residential land-use change.
+In A. J. Heppenstall, A. T. Crooks, L. M. See, & M. Batty (Eds.), Agent-based models of
+geographical systems (pp. 525–542). Dordrecht: Springer. bhttp://www.casa.ucl.ac.
+uk/ABM.pdf> (accessed 06.01.14).
+Parker, D. C., & Filatova, T. (2008). A conceptual design for a bilateral agent-based land
+market with heterogeneous economic agents. Computers, Environment and Urban
+Systems, 32(6), 454–463.
+Plantinga, A. J., & Lewis, D. J. (2014).Landscape simulations with econometric-based land-
+use models. In J. Wu, & J. M. Duke (Eds.), Oxford handbook of land economics.O x f o r d
+University Press.
+Poggio, T., Lo, A. W., LeBaron, B., & Chan, N. T. (1999).Agent-based models ofﬁnancial mar-
+kets: A comparison with experimental markets. MIT Working Paper.
+Polhill, G., Dawson, T., Parker, D. C., Jin, X., Robinson, K., Filatova, T., et al. (2014). Towards
+metadata standards for sharing simulation outputs. In Social simulation conference
+(ESSA 2014).B a r c e l o n a ,S p a i n( 4 p ) .
+Robinson, D. T., Brown, D., Parker, D. C., Schreinemachers, P., Janssen, M. A., Huigen, M.,
+et al. (2007). Comparison of empirical methods for building agent-based models in
+land use science. Journal of Land Use Science, 2(1), 31–55.
+Rosen, S. (1974). Hedonic prices and implicit markets: Product differentiation in pure
+competition. Journal of Political Economy, 82(1), 34–55.
+Schreinemachers, P., & Berger, T. (2011).An agent-based simulation model of human en-
+vironment interactions in agricultural systems. Environmental Modelling & Software,
+26,8 4 5–859.
+Sheppard, S. (1999). Hedonic analysis of housing markets. In E. S. Mills, & P. Cheshire
+(Eds.), Handbook of regional and urban economics (pp. 1596–1635). Elsevier Science
+B.V.
+Simon, H. (1997). Models of bounded rationality. Emperically grounded economic reason,
+Vol. 3, MIT Press.
+Smajgl, A., Brown, D. G., Valbuena, D., & Huigen, M. G. A. (2011). Empirical characterisa-
+tion of agent behaviours in socio-ecological systems. Environmental Modelling &
+Software, 26(7), 837–844.
+Stern, N. (2008).The economics of climate change: The stern review.Cambridge: Cambridge
+University Press.
+Sun, S., Parker, D. C., Huang, Q., Filatova, T., Robinson, D. T., Riolo, R. L., et al. (2014).Market
+impacts on land-use change: An agent-based experiment.Annals of the Association of
+American Geographers, 104(3), 460–484.
+Tesfatsion, L., & Judd, K. L. (2006). Handbook of computational economics volume II: agent-
+based computational economics.Elsevier B.V.
+Tesfatsion, L. (2006). Agent-based computational economics: A constructive approach to
+economic theory. In L. Tesfatsion, & K. L. Judd (Eds.), Handbook of computational eco-
+nomics volume 2: Agent-based computational economics (pp. 831–880). Amsterdam:
+Elsevier B.V.
+Thiele, J. C., & Grimm, V. (2010). NetLogo meets R: Linking agent-based models with a
+toolbox for their analysis. Environmental Modelling & Software, 25(8), 972–974.
+Valbuena, D., Verburg, P. H., & Bregt, A. K. (2008). Am e t h o dt od eﬁne a typology for
+agent-based analysis in regional land-use research. Agriculture Ecosystems &
+Environment, 128(1–2), 27–36.
+van Delden, H., Luja, P., & Engelen, G. (2007). Integration of multi-scale dynamic spatial
+models of socio-economic and physical processes for river basin management.
+Environmental Modelling & Software, 22,2 2 3–238.
+Verburg, P. H., de Koning, G. H. J., Kok, K., Veldkamp, A., & Bouma, J. (1999). A spatial ex-
+plicit allocation procedure for modelling the pattern of land use change based upon
+actual land use. Ecological Modelling, 116,4 5–61.
+Voinov, A. (2008). Systems science and modeling for ecological economics. London – Bur-
+lington – San Diego: Elsevier, Academic Print.
+Wilensky, U. (1999). NetLogo.Center for connected learning and computer-based modeling.
+Evanston, IL: Northwestern University.bhttp://ccl.northwestern.edu/netlogo/>.
+Windrum, P., Fagiolo, G., & Moneta, A. (2007). Empirical validation of agent-based
+models: alternatives and prospects. Jasss-the Journal of Arti ﬁcial Societies and Social
+Simulation, 10(2).
+Wu, J. (2001). Environmental amenities and the spatial pattern of urban sprawl.American
+Journal of Agricultural Economics, 83(3), 691–697.
+Wu, J. J. (2006). Environmental amenities, urban sprawl, and community characteristics.
+Journal of Environmental Economics and Management, 52(2), 527–547.
+Wu, J., & Plantinga, A. J. (2003). The inﬂuence of public open space on urban spatial struc-
+ture. Journal of Environmental Economics and Management, 46(2), 288–309.
+Yin, L., & Muller, B. (2007). Residential location and the biophysical environment:
+Excurban development agents in a heterogeneous landscape. Environment and
+Planning B-Planning & Design, 34(2), 279–295.
+413T. Filatova / Computers, Environment and Urban Systems 54 (2015) 397– 413

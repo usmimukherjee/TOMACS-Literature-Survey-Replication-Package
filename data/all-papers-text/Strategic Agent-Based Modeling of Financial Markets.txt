@@ -1,0 +1,1583 @@
+Michael P . Wellman is Lynn A. Conway Collegiate Professor of Computer Science and Engineering at the Uni-
+versity of Michigan. Elaine Wah works at IEX Group Inc. This work was completed while she was a research 
+assistant at the University of Michigan.
+Direct correspondence to: Michael P. Wellman at wellman@umich.edu, 2260 Hayward St., Ann Arbor, MI 48109; 
+and Elaine Wah at elaine.wah@iextrading.com.
+Strategic Agent- Based 
+Mo
+deling of Financial Markets
+Michael p. w e ll M a n and el aine wa h
+Understanding the implications of algorithmic trading calls for modeling financial markets at a level of fidel-
+ity that often precludes analytic solution. We describe how agent-  b ased simulation modeling can be com-
+bined with game- the oretic reasoning to examine the effects of market variables on outcomes of interest. The 
+approach is illustrated in a basic model where investors trade a single security through a continuous double 
+auction mechanism. Our results demonstrate the feasibility of the approach, and raise questions about the 
+use of spreads as a proxy for trading cost and welfare.
+Keywords: algorithmic trading, agent-  b ased modeling
+Program trading has been a reality for many 
+years now, and the pervasiveness, speed, and 
+autonomy of trading algorithms continue to 
+reach new heights. Algorithmic strategies de-
+signed to respond to information within a few 
+milliseconds 
+or less are now widely deployed. 
+The blink of a human eye, normally lasting 
+over 0.3 seconds, may span hundreds of rounds 
+of high- freq uency trading (HFT). Although pre-
+cise definitions or prevalence measurements 
+of HFT are hard to come by, typical estimates 
+agree that HFT accounts for over half of trad -
+ing volume on U.S. equities and futures mar -
+kets, and is increasingly common on currency 
+exchange and fixed-
+ i
+ncome markets (Cardella 
+et al. 2014).
+With the ascent of algorithmic trading and 
+HFT has come no small amount of public con-
+troversy, for example, about whether this prac-
+tice contributed to the “flash crash” of May 6, 
+2010. Despite an abundance of available mar -
+ket data, understanding this episode is chal -
+lenging because of the multiplicity of actors 
+and complexity of interactions. This is re -
+flected in necessarily complicated and nu -
+anced characterizations of the role of HFT , as 
+in the conclusion by Andrei A. Kirilenko et al. 
+(2014) that HFT was not the proximate cause, 
+yet HFT presence shaped the environmental 
+conditions for the crash and accelerated price 
+movements in response to the triggering 
+event.
+One way that prevalent algorithmic trading 
+can shape the trading environment is through 
+strategies that quickly withdraw liquidity when 
+observations indicate a situation outside the 
+normal operating conditions. This response is 
+quite rational, given that underlying algo -
+rithms were derived and vetted on the basis of 
+data from historical experience. When evi -
+dence presents that the current situation devi-
+ates qualitatively from historical conditions, 
+the safe move is to turn off the algorithm. Of 
+course, this is precisely the situation when the
+
+S tr ategic agent-  B a S e d M o deling  105
+rsf: the russell sage foundation journal of the social sciences
+market is most in need of liquidity, so if such 
+algorithms control the main liquidity sources 
+this poses a clear stability risk.
+Because the markets recovered minutes af -
+ter they plunged, the May 2010 flash crash 
+caused no general economic damage beyond 
+harm to specific investors and traders caught 
+in the wave—save perhaps the intangible ero -
+sion of confidence in the markets. The quick 
+recovery is as mysterious as the precipitous 
+drop, and there is no assurance that we will 
+fare as well in the next flash-  crash event. This 
+next event is seemingly inevitable, as mecha -
+nisms in place to act as circuit breakers have 
+limited ability to prevent or ameliorate them 
+(Subrahmanyam 2013), and no other measures 
+have qualitatively changed the general condi-
+tions of our financial markets. Subsequent 
+smaller flash crashes in other financial assets 
+(U.S. Treasury bonds in October 2014, U.S. dol-
+lars in March 2015) remind us that the prospect 
+looms, and with it potential contagion across 
+exchanges and asset classes, possibly trigger -
+ing generalized panic impinging on the real 
+economy.
+The spotlight on HFT grew particularly in -
+tense in 2014 with the publication of Flash 
+Boys, an engaging account by Michael Lewis 
+(2014) of strategies employed by HFT firms to 
+obtain and exploit speed advantages. Billions 
+of dollars have been invested in new fiber-  
+optic, microwave, and even laser-  based com-
+munication networks, in the effort to shave 
+milliseconds or microseconds off the informa-
+tion latency: the time it takes to transmit in -
+formation across exchanges. To compete in 
+this latency arms race firms spend additional 
+billions on specialized hardware, co-  location  
+with exchanges, and development of stream -
+lined software—possibly omitting error checks 
+and other safety-  e nhancing features in the 
+quest for ultimate speed.
+Much of the debate about HFT revolves 
+around the ramifications for real and perceived 
+transparency and fairness of market opera -
+tions; see, for example, criticisms by Haim 
+Bodek (2013) about the proliferation of special 
+order types catering to HFT strategies. This 
+specific issue drew the attention of regulators 
+at the U.S. Securities and Exchange Commis -
+sion, who in January 2015 fined the exchange 
+operator Direct Edge $14M for insufficient 
+transparency about the availability and opera-
+tion of special order types (Beeson 2015).
+Some observers conclude that the state of 
+U.S. equity trading markets is fundamentally 
+broken (Arnuk and Saluzzi 2012) and call for 
+sweeping reform. Others suggest that the ap-
+parent downsides of HFT are tolerable relative 
+to the claimed beneficial effects of modern 
+electronic trading. Some of the disconnects in 
+this debate can be attributed to confounding 
+qualitatively distinct forms of HFT , conflicting 
+assumptions about market organization, or in-
+formation hiding and obfuscation to protect 
+proprietary interests.
+Such issues can be addressed by careful re -
+search conducted in the public domain. Much 
+of the finance literature on high-  freq uency 
+trading (HFT) takes an empirical approach, 
+and has come to mixed conclusions on the ef-
+fects of HFT on overall market quality. For ex-
+ample, in a survey discussing the strategies, 
+benefits, and costs of HFT , Charles M. Jones 
+(2013) points to the positive role of HFT firms 
+in market making and providing liquidity 
+(Hendershott, Jones, and Menkveld 2011). The 
+liquidity provided by algorithmic market mak-
+ers, however, may be more erratic at high fre-
+quencies, and may be accompanied by in -
+creased adverse selection (Menkveld 2014). The 
+effects of algorithmic trading operate along 
+multiple pathways, with conflicting implica -
+tions for market performance. As a result, 
+most detached and deliberate commentators 
+agree that uncertainty and concern about the 
+ramifications of HFT , both potential and real-
+ized, are justified.
+These 
+uncertainties are difficult to resolve, 
+in part because the factors at play in modern 
+high- freq uency trading are unprecedented. 
+The most important new features in our view 
+are the two following factors:
+1.
+ The 
+very speed of operation renders details 
+of internal market operations—especially 
+the structure of communication channels 
+and information—systematically relevant 
+to market performance. In particular, the 
+latencies (time lags) between market events 
+(transactions, price updates, order submis-
+sions) and the point in time when various
+
+106  f inancial refor M
+rsf: the russell sage foundation journal of the social sciences
+actors find out about these events become 
+pivotal, and even the smallest differen -
+tial latency can significantly affect trading 
+outcomes.
+2. The autonomy and adaptivity of algorithmic 
+trading strategies takes them out of the 
+scope of direct human control, and makes 
+it challenging to understand how they will 
+perform in unanticipated circumstances. 
+The challenges are exacerbated by the in -
+creasing use of sophisticated machine 
+learning techniques to derive trading strat-
+egies, and the fundamental multi- agent na-
+ture of the execution environment.
+These two factors are closely interrelated, as 
+autonomy is necessary for operation at super-
+human speed. Some issues, such as interac -
+tions among adaptive and data-  d riven strate-
+gies, apply to algorithmic trading even when it 
+is not conducted at high frequency (Easley, 
+López de Prado, and O’Hara 2012).
+In this article we outline a computational 
+approach to analysis of financial markets that 
+offers the fidelity needed to capture complex 
+algorithmic trading environments yet is ame-
+nable to strategic reasoning based on game-  
+theoretic principles. Following background on 
+simulation modeling of financial markets, we 
+present a simple yet realistic model environ -
+ment and illustrate the approach for game-  
+theoretic 
+selection of trading strategies and 
+reasoning about the effects of market condi -
+tions through equilibrium comparisons. Our 
+results provide evidence for several proposi -
+tions relevant to market performance and how 
+it is assessed. Key findings include:
+•
+ Modeling trader patience in terms of the 
+time horizon they are willing to monitor 
+and reenter markets, we find robustly that 
+patient traders are able to achieve greater 
+gains from trade, up to essentially full effi-
+ciency with sufficient horizon.
+•
+ A
+ll else equal, more frequent market reen -
+try and reduced fundamental volatility in -
+crease welfare.
+•
+ The common use of quoted or effective 
+spreads as a proxy for welfare is not a reli-
+able guide for comparing market perfor -
+mance.
+si m Ul a Tion  mo deling of  
+fi
+nancial 
+m
+a
+Rk
+eTs
+Most of the finance community’s prior re -
+search on HFT takes an empirical approach, 
+employing available order, quote, and transac-
+tion data streams to measure market activity 
+and relate relevant variables. This has often 
+yielded great insight and represents an essen-
+tial form of inquiry. Analysis of available data 
+is 
+ultimately limited, however, with respect to 
+counterfactual questions, such as the response 
+of financial markets to rarely occurring shocks 
+or the effects of alternative market rules and 
+regulations. Answering such questions inher-
+ently requires models that incorporate causal 
+premises, specifically, assumptions as to how 
+trading behavior is shaped by environmental 
+conditions.
+Theoretical models can support such infer-
+ence, and these also represent an important 
+resource from the finance research literature. 
+Trading in markets can be formulated as a 
+game, and game-
+ theoretic 
+equilibrium con -
+cepts can be employed to characterize behavior 
+in markets by rational agents. However, model-
+ing algorithmic trading entails accommodat -
+ing complex information and fine-  grai ned dy-
+namics, which often renders game-  theoretic  
+reasoning analytically intractable.
+An alternative, computational, approach is 
+to model financial markets in simulation. Sim-
+ulation can faithfully capture complex market 
+microstructure and trading interactions at ar -
+bitrarily fine degrees of temporal granularity. 
+Algorithmic and other traders are cast as 
+agents, with various objectives and informa -
+tion sources, and available actions as dictated 
+by market rules. This approach, generally 
+known as agent-  based modeling (ABM), ana-
+lyzes a complex social system through simula-
+tion of fine-  grai ned interactions among the 
+constituent decisionmakers (the agents), de -
+scribed and implemented as (usually simple) 
+computer programs. ABM researchers in the 
+social sciences typically justify adopting the 
+agent- based approach on the basis of tractabil-
+ity, or avoiding restrictive assumptions about 
+rationality or other characteristics (Tesfatsion
+
+S tr ategic agent-  B a S e d M o deling  107
+rsf: the russell sage foundation journal of the social sciences
+2006). Richard Bookstaber (2012) invokes these 
+arguments and others in expressly advocating 
+the development of agent- based models for in-
+vestigating threats to financial stability.
+ABM applications to financial trading date 
+back to the 1990s, notable early models includ-
+ing those by Moshe Levy, Haim Levy, and Sorin 
+Solomon (1994) and the Santa Fe Artificial 
+Stock Market (Arthur et al. 1997). Agent-  based 
+financial models facilitate consideration of 
+heterogeneous agent types (Boswijk et al. 
+2007), and multiple forms of learning (LeBaron 
+2011). Researchers have employed ABMs to 
+shed light on central issues in today’s financial 
+markets, such as the impact of a transaction 
+tax (Fricke and Lux 2015), and conditions that 
+can produce instabilities reminiscent of the 
+2010 flash crash (Lee, Cheng, and Koh 2011; 
+Paddrik et al. 2012).
+In our own previous work we have used 
+agent- based simulation of financial markets to 
+model a variety of trading scenarios. We focus 
+on the impact of algorithmic trading on alloc-
+ative efficiency (social welfare), which is a mea-
+sure of how well markets distribute resources 
+(in this context, financial securities) to market 
+participants. Greater efficiency means im -
+provements (in aggregate) in investors’ gains 
+from trading.
+In one study, we investigated the effect of 
+latency arbitrage, an HFT strategy that exploits 
+speed advantages in identifying price dispari-
+ties across fragmented markets (Wah and Well-
+man 2013). We found that latency arbitrage 
+harms market efficiency, not even counting the 
+costs of the latency arms race. We proposed 
+that this arms race can be eliminated by replac-
+ing continuous- ti me trading with frequent- call  
+markets, a mechanism whereby orders accu -
+mulate and are matched periodically, for ex -
+ample, once per second. Frequent- call markets 
+neutralize tiny speed advantages (Budish, 
+Cramton, and Shim 2015) and can improve 
+market efficiency in many circumstances.
+One of our recent studies examines the wel-
+fare effects of market making, finding that 
+market makers generally improve efficiency, 
+but provide benefits to investors only when the 
+investors are sufficiently impatient (Wah and 
+Wellman 2015). The model we present here fol-
+lows the configuration of this study and re -
+ports an extended analysis of trading strategies 
+(without the market makers) explored there.
+se c U R iT y  T R a ding m odel
+Our analysis focuses on a single security traded 
+in a two-  sided market. Though the model is 
+simple, it captures key characteristics of real-  
+w
+orld market mechanisms and trading behav-
+ior. Here we present a basic description of mar-
+ket operation, and the objectives and strategies 
+of traders. The appendix provides a more de-
+tailed mathematical description.
+The market operates over a finite time ho -
+rizon, which we call T. Agents enter and reenter 
+the market at random intervals to trade. On 
+each arrival these traders submit a limit order 
+to the market (replacing their previous order, 
+if any), indicating the price at which they are 
+willing to buy or sell a single unit of the secu-
+rity.
+The market mechanism is a continuous 
+double auction (CDA) (Friedman 1993), which 
+means that a new buy or sell order transacts 
+immediately whenever it matches an existing 
+order in the market. The trade executes at the 
+price of the incumbent order. If an order does 
+not match, it is added to the CDA’s order book. 
+The CDA maintains price quotes reflecting the 
+best outstanding orders. These quotes com -
+prise two parts: a bid quote BID  reflects the 
+highest current buy offer, and ask quote ASK 
+the lowest current offer to sell.
+The market environment is populated by a 
+set of traders, representing investors. Each in-
+vestor has an individual valuation for the secu-
+rity made up of private and common compo-
+nents. The common component is represented 
+by a fundamental value, which can be viewed 
+as the intrinsic value of the security. This fun -
+damental value varies over time according to a 
+stoc
+hastic process.
+The private component of value is a specific 
+agent’s reason for trading. For example, an 
+agent may have positive value for a security 
+that complements its portfolio (for example, it 
+hedges other risk), and negative value for un -
+diversified risk. Similarly, the need for savings 
+or 
+liquidity is reflected in the private value.
+The common and private components are 
+effectively added together to determine the 
+agent’s valuation of the security. Agents accrue
+
+108  f inancial refor M
+rsf: the russell sage foundation journal of the social sciences
+private value on each transaction, and at the 
+end of the trading horizon evaluate their ac -
+cumulated inventory on the basis of the end-  
+ti
+me fundamental.
+Given a market mechanism and valuation 
+model, investors pursue their trading objec -
+tives by executing a trading strategy in that en-
+vironment. As noted, we assume that traders 
+arrive stochastically at the market over a time 
+horizon, and at each arrival have the opportu -
+nity to submit a limit order to buy or sell a 
+single unit of the security. The strategy defines 
+how this order is generated, on the basis of 
+price quotes and current holdings.
+Though the CDA market mechanism and 
+environment as described here are relatively 
+simple, the associated bidding game is quite 
+complex, owing to the incompleteness of in -
+formation (private valuations) and the dynam-
+ics of arrivals and repeated trading. No analytic 
+solution—nor any constructive theoretical 
+characterization—is known for this or similar 
+CDA games, and so the literature has generally 
+relied on simulation studies. Many previous 
+works have explored CDA bidding strategies 
+(Das et al. 2001; Friedman 1993; Wellman 2011), 
+so there is a body of ideas to work with. Many 
+of the proposed solutions are variations of the 
+so- called zero intelligence (ZI) family of bid -
+ding strategies (Gode and Sunder 1993), and 
+that 
+is the class of approaches we consider 
+here.
+In the ZI bidding strategy, agents determine 
+an amount of surplus to ask for, and submit a 
+corresponding limit order. The strategy param-
+eters Rmin and Rmax (0 ≤ Rmin ≤ Rmax) govern the 
+range of surplus requests. Our extended ver -
+sion of ZI employs a third parameter, η ∊ [0,1], 
+which is a threshold determining whether to 
+just take the currently available surplus based 
+on the price quotes. The details of our strategy 
+implementation are provided in the appendix.
+Although ZI is quite simplistic as a trading 
+strategy, it does reflect cognizance of com-
+mon and private value components, and 
+t
+hrough setting of the strategic parameters 
+(Rmin, Rmax, η) it accommodates a spectrum of 
+surplus- demandi ng behavior. The most effec-
+tive settings of these parameters vary depend-
+ing on the environment (such as number of 
+other traders, valuation distributions, time ho-
+rizon, arrival rate) and the strategies employed 
+by other traders. Any conclusions for market 
+performance, therefore, are sensitive to choice 
+of these ZI parameters. We have developed a 
+game- theoretic process for choosing strategic 
+parameters in simulation models, described in 
+detail in the next section.
+em pi R ical ga me-  Theo R eTic  
+a
+nalysis
+A financial market simulation model provides 
+a way for an experimenter to directly answer 
+questions of the form “What happens when 
+the trading strategies <fill in strategy set> inter-
+act in environment <fill in environment specifi-
+cation>?” Choice of environment specification 
+is driven by the target subject of study, and may 
+be informed by existing models and data. The 
+choice of strategies, however, is up to the mar-
+ket participants, and since strategies are not 
+generally observable in market data, the exper-
+imenter must consider how traders would be 
+likely to act in a given market situation. The 
+conventional economic assumption is that 
+traders rationally pursue their objectives, and 
+the standard economic approach to strategy 
+choice relies on reasoning based on rationality 
+criteria.
+The empirical game-  theoretic analysis 
+(EGTA) approach incorporates such reasoning 
+in a simulation-  ba sed framework. Figure 1 il -
+lustrates how EGTA generates a game model 
+from financial-
+ mark
+et simulations. First, we 
+configure the financial-
+ mark
+et simulator on 
+the basis of the market mechanisms (number 
+of markets, continuous versus periodic clear -
+ing, quoting policies), environmental condi -
+tions (numbers and types of traders, commu-
+nication latencies), and agent valuations 
+(fundamental process and private component 
+distributions) we wish to study. These configu-
+rations may have both structural and paramet-
+ric elements. For example, we used this simu-
+lator to investigate latency arbitrage, an HFT 
+tactic that exploits speed advantage to profit 
+in fragmented markets. Our study of latency 
+arbitrage (Wah and Wellman, 2013) was based 
+on a two- mark et model, with individual-  mark et 
+and global public price quotes (the national 
+best bid and offer, or NBBO) available to regu-
+lar and high-  freq uency traders at differential
+
+S tr ategic agent-  B a S e d M o deling  109
+rsf: the russell sage foundation journal of the social sciences
+latency. Given this structure, we then varied 
+the latency parameter to evaluate its effect on 
+market outcomes. That study also compared 
+to single-  m arket models, employing CDA or 
+call- mark et clearing mechanisms.
+The simulator configuration includes a 
+specification of the numbers of players in var-
+ious roles. Each role is associated with a set of 
+available strategies. Within each role, players 
+are treated as ex ante symmetric. (This is with-
+out loss of generality, as we can always associ-
+ate a unique role with each player.) In our study 
+of market making, for example, there were two 
+roles: background investor and market maker. 
+In the current study, we consider only the in -
+vestor role. The strategy set is the family of ZI 
+bidders 
+defined earlier.
+Once configured, we can feed into the mar-
+ket simulator a strategy profile, defined as an 
+assignment 
+of strategies to each player. In our 
+case, assigning a strategy means assigning the 
+ZI parameters (R min, Rmax, η) for each trader. 
+Each simulation run produces an outcome (set 
+of trades), which in turn defines a net surplus 
+for each trader (value of final holdings minus 
+cash flow). This can be interpreted as the 
+agent’s payoff for that run of the market game. 
+In general, given the stochastic nature of the 
+market simulation (random draws of valua -
+tions, fundamental time series, agent arrival 
+patterns), we require many runs to yield accu-
+rate estimates of payoffs for any given strategy 
+profile.
+To perform EGTA of a particular scenario, 
+we evaluate a large number of strategy profiles 
+in this manner, collecting the estimated pay -
+offs in an outcome database. From this data 
+we then induce a game model. This game 
+model may generalize to nonsimulated profiles 
+through regression (Vorobeychik, Wellman, 
+and Singh 2007); however, in many cases (such 
+as this study) we generate an incomplete game 
+model that includes payoff estimates only for 
+simulated profiles.
+Given a game model, we can perform any of 
+the usual game-
+ theoretic 
+analysis operations, 
+for example, computing Nash equilibrium 
+(NE). In our study, we focus on identifying sym-
+metric mixed- strateg y NE. Given a set of evalu-
+ated profiles, our algorithm starts by finding 
+the maximal complete subgames (henceforth 
+referred to as subgames): sets of strategies 
+such that all profiles are evaluated. For each 
+subgame, we compute subgame equilibria by 
+the replicator dynamics algorithm (Gintis 
+2000), which starts from a particular probabil-
+ity distribution over strategies, then increases 
+the probability of those strategies that perform 
+better than average. We run this replicator dy-
+namics method initialized at a diverse set of 
+points in the simplex, then test whether these 
+subgame equilibria are equilibria in the full 
+game by evaluating all deviations outside the 
+subgame.
+In principle, the EGTA approach could ap -
+ply to a game of any size. In practice, we are 
+limited by the computation available for simu-
+lation, which is proportional to the number of 
+profiles 
+evaluated. Financial markets often in-
+volve a large number of traders, and there is a 
+Figure 1. Empirical Game-Theoretic Analysis
+Source: Authors’ compilation.
+Note: Simulating a large number of strategy profiles produces data used to induce a game-theoretic 
+model.
+Financial 
+market 
+simulator
+Outcome 
+DB
+(proﬁts, 
+surplus)
+Game 
+model
+strat1
+strat2
+stratN
+…
+Strategy Proﬁle
+E nvironment conditions
+A gent valuations
+
+110  f inancial refor M
+rsf: the russell sage foundation journal of the social sciences
+large space of possible strategies. Even if we 
+restrict attention to ZI strategies, there is a 
+three- di
+mensional parametric space of strat -
+egy settings. Let N denote the number of trad-
+ers, and S the number of strategies. In this 
+study, we investigate markets with N  = 25 and 
+N
+ 
+=
+ 
+66, and consider S
+ 
+=
+ 
+9 distinct settings for 
+the ZI strategy. A symmetric game has
+()N – S + 1
+N
+distinct strategy profiles (that is, the number 
+of different ways of drawing N items from  
+N – S + 1 candidates), and so even games of this 
+modest size cannot be explored exhaustively. 
+For example, with N = 25 and S =  9, the number 
+of profiles is 13.9 million.
+To enable analysis of games at this scale, we 
+employ an approximation technique called 
+deviation- preser ving reduction (DPR) (Wieden-
+beck and Wellman 2012). DPR approximates an 
+N- pl ayer game by a smaller k-  pl ayer game with 
+the same strategy set. The method estimates 
+payoffs in the reduced game based on a map-
+ping from select profiles in the full game. For 
+example, with N  = 25 and k =  5, the payoff to 
+the player playing strategy a in the reduced-  
+game profile (a , b, c, d, d) would be obtained 
+by simulating a 25-  pl ayer profile where one 
+agent plays a and the other 24 are divided 
+across the remaining strategies as follows: 6 
+each play b and c, and 12 play d. This reduction 
+is termed “deviation- preser ving” because it ac-
+curately reflects the first player’s relative pay-
+offs for playing alternative strategies in this 
+context. It is still an approximation, however, 
+because the other players are treated as aggre-
+gates. This technique has been shown to pro-
+duce good approximations for purposes of 
+equilibrium identification in a variety of large 
+games. In this study, we employ 5- pl ayer reduc-
+tions for the N  = 25 cases, and 6-  pl ayer reduc-
+tions for N = 66.
+e x pe Rim en Ta l seT Up
+The experiments reported here elaborate the 
+analysis of trading environments investigated 
+in our prior work (Wah and Wellman 2015), fo-
+cusing on the games with no market maker 
+present. Traders follow the ZI strategy de -
+scribed, with settings (R min, Rmax, η) selected 
+from the following set of thirteen triples:
+{ (0,65,0.8), (0,125,0.8), (0,125,1), (0,250,0.8), 
+(0,250,1), (0,500,1), (250,500,1), (0,1000,0.8), 
+(0,1000,1), (500,1000,0.4), (0,1500,0.6), 
+(1000,2000,0.4), (0,2500,1) }
+This set was determined in a fairly ad hoc 
+manner. We seeded it with all of the η =  1 strat-
+egies above, then extended it to include some 
+η = 1 cases based on finding improvements 
+from 
+initial equilibrium candidates. We also 
+tried some strategies with Rmin ∊ {2500,5000} and 
+Rmax ∊ {10000,15000}, but these never appeared in 
+equilibrium so were discarded.
+We consider three instances of the market 
+environment, labeled A, B, and C. All three as-
+sign traders a private valuation generated with 
+variance parameter σ2
+PV = 5 × 106 and qmax = 10. 
+(See the appendix for definitions of these and 
+other parameters.) The global fundamental 
+has a mean value r  =  100000 and evolves with 
+mean reversion κ
+ 
+=
+ 
+0.05. The environment dif-
+ferences are focused on two parameters:
+•
+ Agent 
+reentry rate: λ
+ 
+=
+ 
+0.0005 (environment 
+A) or λ
+ 
+=
+ 
+0.005 (environments B and C)
+•
+ Fund
+amental shock variance: σ2
+s = 106 (envi-
+ronments A and B) or σ2
+s = 5 × 105  (environ-
+ment C)
+For each environment, we consider three dif-
+ferent time horizons T (in 1,000s) and two set-
+tings for number of traders N. For N  = 25 we 
+considered an additional horizon T  =  24. Thus 
+we explored a total of 21 games using the EGTA 
+approach. We label each game according to the 
+environment (A, B, C) and time horizon T, 
+where T ∊ {1, 4, 12, 24}; for example, B12 is envi-
+ronment B with time horizon 12.
+Res Ul Ts
+To analyze a particular game configuration we 
+perform a systematic search, evaluating strat -
+egy profiles through simulation with the goal 
+of identifying equilibria. Our search process 
+starts by considering each ZI strategy in self-  
+play—the nine pure symmetric profiles where 
+every agent plays the given strategy. We then
+
+S tr ategic agent-  B a S e d M o deling  111
+rsf: the russell sage foundation journal of the social sciences
+iteratively generate additional profiles to simu-
+late according to the following criteria:
+•
+ F
+or any subgame equilibrium that is not re-
+futed in the full game, evaluate all devia -
+tions outside the subgame.
+•
+ Extend a refuted subgame equilibrium by 
+adding the best response strategy to the set 
+of strategies in that equilibrium profile’s 
+support.
+Note that deviations and subgame profiles are 
+selected on the basis of the reduced 5-   or 
+6- pl ayer games defined by our DPR approxima -
+tion. The payoffs for these reduced games are 
+estimated based on simulation results from 
+corresponding full- g ame profiles.
+For each of the 21 games analyzed, this 
+ process succeeded in identifying at least one 
+and up to three distinct symmetric equilibria. 
+This typically required evaluating 1,000 or 
+2,000 full- g ame profiles, with an actual range 
+of 553 to 4,167. Each profile evaluated was sim-
+ulated at least 20,000 times. Overall, the com-
+putation deployed for this study occupied doz-
+ens of cores on a large- scale computing cluster 
+for much of the time over a period of several 
+months.
+A summary of the equilibria across environ-
+ments is presented in figure 2. For each market 
+size (25, 66) and each environment (A, B, C) we 
+plot a series of points corresponding to the five 
+time horizons T considered. Each point sum-
+marizes the equilibrium ZI parameters using 
+the average of surplus-  r equest midpoints,  
+Rmid = (Rmin + Rmax)/2, with the average weighted 
+by probability in the equilibrium profile. For 
+games with multiple equilibria, we display the 
+range of Rmid values using error bars.
+The Rmid statistic for a profile represents the 
+average surplus requested in a trader limit or-
+der, but only approximately, as it ignores the 
+effect of the quote threshold parameter η. Fig-
+ure 2 suggests some general trends in this sta-
+tistic, but we are reluctant to draw strong con-
+clusions, given the roughness of this measure 
+and 
+the inconsistency in the observed trends. 
+Nevertheless, we do generally see that the thin-
+ner markets (N  = 25) have higher surplus re -
+quests, and that there is some tendency for 
+these requests to decrease with time horizon, 
+particularly for environment A.
+Perhaps the most salient outcome variable 
+is market efficiency, which we measure by to -
+tal surplus. For each equilibrium we evaluated 
+total surplus from 10,000 sample runs over 
+the full- g ame mixed profile. Figure 3 displays 
+the market efficiency exhibited in equilibrium 
+across our 21 games. For this variable, the re-
+Figure 2. Median Rmid (the Midpoint of the ZI Range [Rmin, Rmax]) Value for Equilibria in the Three 
+Environments A, B, and C, for N = 66 and N = 25 
+Source: Authors’ simulation results.
+Note: The X-axis is the simulation length T (in 1000s). The error bars for each point indicate the mini-
+mum and maximum Rmid values for equilibria in a market configuration.
+Rmid, N = 25
+Midpoint of ZI Range
+Simulation Length (Thousands)
+Simulation Length (Thousands)
+Midpoint of ZI Range
+0
+100
+200
+300
+400
+500
+600
+700
+800
+14 12 24
+Rmid, N = 66
+0
+100
+200
+300
+400
+500
+600
+700
+800
+14 12
+A B C A B C
+
+112  f inancial refor M
+rsf: the russell sage foundation journal of the social sciences
+lationships are quite apparent. Welfare gener -
+ally increases with time horizon. The reason 
+is that with longer horizons, traders have 
+more reentries and thus greater opportunity 
+to find mutually beneficial trades. With 
+enough time, the ZI traders are able to achieve 
+a high fraction of full efficiency in equilib -
+rium.
+It is also apparent from figure 3 that envi -
+ronments with more frequent trader entries (B 
+and C compared to A) have higher surplus, for 
+any given horizon. This holds for the same rea-
+son that extending horizon improves effi -
+ciency. Closer inspection of the figure reveals 
+that when holding arrival rate and horizon 
+fixed, for N = 66, reducing fundamental volatil-
+ity (moving from environment B to C) increases 
+efficiency to a small but consistent degree. It 
+seems that with thick markets, high variance 
+on the fundamental often leads to extramar -
+ginal trades, which then require additional en-
+tries to correct.
+Inspection of the number of trades pro -
+duced in equilibrium (figure 4) is also illumi-
+nating. A few equilibrium instances generate 
+high efficiency but produce more trades than 
+optimal, indicating that these runs involve 
+agents who make trades and reverse them on 
+subsequent entries.
+spR eads and maR ke T ef ficiency
+The final question we examine with data from 
+our EGTA study concerns the reliability of 
+spreads as a proxy for market efficiency or 
+welfare. True transaction cost, or the differ -
+ence between the price of execution and the 
+true value of the security, is a measure of the 
+net change in welfare of market participants. 
+When welfare is not directly observable, as is 
+generally the case for real-  w orld data, proxy 
+measures for transaction costs can be em -
+ployed to estimate changes in welfare (Goet-
+tler et al. 2005). Estimation of the cost of trad-
+ing relies on the intuition that in the absence 
+of 
+execution costs, transactions would occur 
+at the underlying value of the security. As 
+such, the difference between trade price and 
+any proxy for the value of the security gives an 
+estimate of the cost of execution (Bessem -
+binder and Venkataraman 2010). There are 
+mu
+ltiple ways to estimate these execution 
+costs. The simplest of these is the quoted 
+Figure 3. Comparison of Welfare (Total Surplus) Across Thirty Game Environments 
+Source: Authors’ simulation results.
+Note: The top dotted line is the optimal social welfare available with sixty-six traders (44,155); the bot-
+tom dotted line is the optimal welfare available with twenty-five traders (16,306). Error bars indicate 
+the minimum and maximum values for equilibria in a game.
+0
+5
+10
+15
+20
+25
+30
+35
+40
+45
+50
+A1 A4 A12 A24 B1 B4 B1 2B 24 C1 C4 C1 2C 24
+Surplus (Thousands)
+Game Environment
+N = 66 N = 25
+
+S tr ategic agent-  B a S e d M o deling  113
+rsf: the russell sage foundation journal of the social sciences
+spread, which is defined at a particular time 
+point as the difference between the BID and 
+ASK quotes. We summarize quoted spread for 
+a scenario run as the median spread over all 
+time points. Figure 5 presents statistics on 
+quoted spreads for equilibrium trading in our 
+21 game configurations. As one would expect, 
+spreads are always greater in thinner markets, 
+all else equal. We also tend to find smaller 
+spreads in the scenarios exhibiting greatest 
+surplus (compare figure 3), although this cor-
+respondence is rough and inconsistent at 
+best.
+If quotes vary significantly over time, aggre-
+gating quoted spreads over all time points may 
+not accurately reflect trading costs. An alterna-
+tive is the effective spread, which focuses on 
+spreads in effect at the time of actual trades 
+(Bessembinder 2003; Madhavan et al. 2002). 1 
+Specifically, our aggregate measure of effective 
+spread takes the mean BID-  ASK  difference over 
+all times when a trade occurs. These effective 
+spread values for the equilibria found in each 
+environment are shown in figure 6.
+We see that effective spreads are sometimes 
+substantially lower than the quoted spreads 
+and never vice versa (figure 5), reflecting the 
+fact that a new limit order is more likely to 
+match at times when the spread is tight. Nev-
+ertheless, quoted and effective spreads are 
+highly correlated, suggesting that quoted 
+spreads can serve as a predictor for effective 
+spreads. As for quoted spreads, tighter effec -
+tive spreads often correspond to increased wel-
+fare in the corresponding environment, but 
+this is not consistently the case.
+Such inconsistency may not be surprising, 
+given that other factors also vary systematically 
+Source: Authors’ simulation results.
+Note: The dotted lines represent the average number of trades required for socially optimal allocations, 
+with N = 66 (115 trades, top dotted line) and N = 25 (43, bottom dotted line). Error bars indicate the 
+minimum and maximum values for equilibria in a game.
+Figure 4. Average Number of Trades Generated in Equilibrium, Across Twenty-One Game 
+Environments 
+Number of Transactions
+0
+20
+40
+60
+80
+100
+120
+140
+A1 A4 A12 A24 B1 B4 B1 2B 24 C1 C4 C1 2C 24
+N = 66 N = 25
+Game Environment
+1. Another spread metric is the realized spread, which samples the spread n periods after a trade, as a proxy for 
+the post- t
+rade value of the security, to capture the price impact of the trade or to capture how the market has 
+incorporated the private information conveyed by the trade (Bessembinder and Venkataraman 2010). It is unclear, 
+however, what time period n is appropriate in our market model. Exploratory measurements revealed that in our 
+environments, realized spreads differ widely depending on the value of n selected; hence, we omit realized 
+spreads from further discussion.
+
+114  f inancial refor M
+rsf: the russell sage foundation journal of the social sciences
+Source: Authors’ simulation results.
+Note: Error bars indicate the minimum and maximum values for equilibria in a game. 
+Figure 5. Quoted Spread (Measured as the Median BID-ASK Difference over the Duration of the 
+Simulation) for Twenty-One Game Environments
+0
+200
+400
+600
+800
+1,000
+1,200
+1,400
+A1 A4 A12A 24 B1 B4 B1 2B 24 C1 C4 C1 2C 24
+Median Spread
+N = 66 N = 25
+Game Environment
+Figure 6. Effective Spread (Measured as the Mean BID-ASK Difference over the Transaction Time 
+Points) for Twenty-One Game Environments 
+Source: Authors’ simulation results.
+Note: Error bars indicate the minimum and maximum values for equilibria in a game.
+0
+200
+400
+600
+800
+1,000
+1,200
+1,400
+A1 A4 A12 A24 B1 B4 B1 2B 24 C1 C4 C1 2C 24
+Eﬀective Spread
+N = 66 N = 25
+Game Environment
+across game instances. We tested the corre -
+spondence of spreads and welfare within 
+games by examining cases of multiple equilib-
+ria. Six of our games have multiple equilibria, 
+and in only two (that is, one-  th ird) does the 
+ordering of quoted spread accord with the or-
+dering of welfare. For effective spread, the cor-
+respondence also holds in only two of six 
+cases.
+To further examine the efficacy of spread 
+measures as a proxy for welfare, we simulate 
+10,000 samples of five pure- strateg y profiles for
+
+S tr ategic agent-  B a S e d M o deling  115
+rsf: the russell sage foundation journal of the social sciences
+N = 66 and N = 25 under fixed market configu-
+ration (game B12). The strategies of these pro-
+files all belong to the ZI family, with the follow-
+ing ranges (η = 1 unless otherwise stated):
+•
+ B12a: 
+ZI[0, 125] with η
+ 
+=
+ 
+0.8
+•
+ B12b: 
+ZI[0, 250]
+•
+ B12c: 
+ZI[0, 1000]
+•
+ B12d
+: ZI[0, 2500].
+•
+ B12e: 
+ZI[500, 1000] with η
+ 
+=
+ 
+0.4
+In each of these profiles, all N traders play the 
+specified strategy. The surplus of each profile 
+is shown in figure 7, and the corresponding 
+spread measures are in figure 8. We measure 
+quoted spread as a time series across the dura-
+tion of the simulation and report the median 
+spread, and we report effective spread as the 
+mean over all transactions.
+We find that for both populations, the sur -
+plus is the lowest for profile B12e and is rela-
+tively constant for profiles B12a to B12c. Both 
+spread measures, in contrast, widen over the 
+a- to -  e range, which properly reflect the in -
+crease in welfare from c to e, but fail to accu-
+rately mirror the flat welfare rankings in pro-
+files B12a to B12c. This is particularly true for 
+quoted spread. Effective spread comes closer 
+to matching the flat area overall surplus for 
+N = 66, but its correspondence breaks down in 
+the thinner market with 25 traders, for example 
+in the increased spread from B12b to B12c.
+As true value of the security is unobservable 
+in real data, proxies such as quoted and effec-
+tive spread may often be the best available pre-
+dictors of transaction costs. However, accu -
+rately computing effective spreads from real 
+data is often difficult, as it is not always readily 
+apparent from historical trade prices and 
+quotes which price quote corresponds to a 
+given transaction, especially when order-  le vel 
+data are not available. In addition, effective 
+spread measures can be particularly sensitive 
+Figure 7. Overall Surplus in Five Pure-Strategy 
+Profiles for N = 66 and N = 25 in Game B12 
+Source: Authors’ simulation results.
+Note: The ZI strategies are written in the form 
+[Rmin, Rmax; η]. 
+0
+10
+20
+30
+40
+50
+[0,125;0.8] [0,250] [0,1000] [0,2500]
+[500,1000;0.4]
+Surplus (Thousands)
+N = 66 N = 25
+ZI Strategy
+Source: Authors’ simulation results.
+Note: The ZI strategies are written in the form [Rmin, Rmax; η]. 
+Figure 8. Quoted Spread and Effective Spread in Five Pure-Strategy Profiles for N = 66 and N = 25 in 
+Game B12
+0
+100
+200
+300
+400
+500
+600
+700
+800
+[0,125;0.8]
+[0,250] [0,1000] [0,2500]
+[500,1000;0.4]
+ Eﬀective Spread
+0
+100
+200
+300
+400
+500
+600
+700
+800
+[0,125;0.8]
+[0,250] [0,1000] [0,2500]
+[500,1000;0.4]
+ Median Spread
+N = 66 N = 25 N = 66 N = 25
+ZI Strategy ZI Strategy
+
+116  f inancial refor M
+rsf: the russell sage foundation journal of the social sciences
+in electronic markets, with frequent quote up-
+dates and more active trading (Piwowar and 
+Wei 2006).
+A more fundamental problem with effective 
+spread, however, is that it was developed for 
+intermediated markets, where prices are set by 
+a middleman, such as a dealer. In a pure limit- 
+order market, prices are determined by arriv-
+ing traders and thus are not necessarily equal 
+to the expected value of the security. Ronald L. 
+Goettler, Christine A. Parlour, and Uday Rajan 
+(2005) demonstrate that the midpoint of the 
+BID- ASK  spread is not a good proxy for a secu-
+rity’s true underlying value. Given that it em-
+phasizes the surplus of the trade- i nitiating or-
+der submitter and omits the surplus of the 
+incumbent order submitter, effective spread is 
+not a generally representative estimate of wel -
+fare.
+concl Us ions
+We have presented an approach to strategic 
+reasoning, using agent- based simulation mod-
+els, for application to understanding trading 
+behavior in financial markets. Contrary to 
+views often expressed by advocates (and re -
+spectively, critics) of agent- b ased modeling and 
+game- theoretic analysis, the two methods are 
+actually quite complementary, together sup -
+porting principled strategic analysis of com -
+plex dynamic scenarios. We illustrated the ap-
+proach by deriving and analyzing equilibrium 
+trading strategies for a variety of continuous 
+double auction scenarios, differing in number 
+of traders, trading horizon, arrival rate, and 
+fundamental volatility.
+Our study confirms several expected rela -
+tionships among market outcomes, and par -
+ticularly underscores the importance of trader 
+reentry in achieving efficient outcomes in con-
+tinuous double auctions. Data from simula -
+tions were also instrumental in demonstrating 
+the limitations of relying on proxies such as 
+price quotes for statistics of central interest, 
+such as welfare.
+The unobservability of key elements (strate-
+gies, welfare) in empirical data provides a 
+strong impetus behind the simulation ap -
+proach to modeling financial markets. Our 
+si
+mulation studies of latency arbitrage and 
+market making have shed light on the costs 
+and benefits of such strategies, in terms of 
+their effects on the welfare of investors. These 
+works highlight the importance of distinguish-
+ing among different roles of algorithmic trad-
+ing, separating the deleterious practices (la -
+tency arbitrage) from those that improve 
+market performance (liquidity provision to im-
+patient investors). This argues against broad-  
+brush regulatory policies that raise the costs 
+of algorithmic trading across the board, in fa-
+vor of more targeted interventions that deter 
+the harmful forms of algorithmic trading with-
+out unduly burdening beneficial practices.
+Our ongoing research is applying the ap -
+proach illustrated here to further key questions 
+in the behavior of financial markets, for exam-
+ple: comparing continuous and periodic trad-
+ing rules, effects of competition among market 
+makers, and adoption of alternative market 
+mechanisms (Wah, Hurd, and Wellman 2015). 
+Models combining rich simulation with game-
+ 
+theoretic reasoning can play a constructive role 
+in evaluating alternative market mechanisms 
+and enhancing our understanding of the ef -
+fects of algorithmic trading in a wide range of 
+scenarios.
+ap pendix
+Mathematical Model Formulation
+In the Appendix we provide further technical 
+details of our models of the market environ -
+ment and agent trading strategies.
+Market Operation and Agent Valuations
+We model a single security traded in a two-  
+sided market. Prices are integers, which means 
+they are discretized at a tick size of any desired 
+granularity. Time is also defined on a discrete 
+domain, with finite horizon T. Agents arrive to 
+submit their limit orders according to a Pois -
+son distribution, with a rate parameter λ defin-
+ing the probability of arriving in each unit 
+time. The market mechanism is a standard 
+limit- order market, or continuous double auc-
+tion (CDA).
+T
+raders value the security on the basis of a 
+common fundamental value, in combination 
+with an individual-  specific private value. We 
+denote by rt the fundamental value for the se-
+curity at time t. The fundamental time series
+
+S tr ategic agent-  B a S e d M o deling  117
+rsf: the russell sage foundation journal of the social sciences
+is generated by a mean-  re verting stochastic 
+process:
+rt = max[0, κ r  +  (1  –  κ)rt–1  + ut].
+Parameter κ ∊[1,0] specifies the degree to which 
+the fundamental reverts back to the mean r, 
+and parameter ut ~ N(0, σ2
+s) is a random shock 
+at time t.
+The private valuation component for agent 
+i is a vector
+Θt = (θi
+–qmax+1, . .  .  , θi
++1, . .  .  , θi
+qmax),
+where qmax > 0 is the maximum number of 
+units an agent can hold (either long or short). 
+Θt specifies the marginal private benefits to 
+agent i of trading single units, according to i’s 
+current net position. Element θi
+q is the incre-
+mental private benefit obtained from selling 
+one unit of the security, given current position 
+q, where positive (negative) q indicates a long 
+(short) position. Similarly, θi
+q+1 is the marginal 
+private gain from buying an additional unit 
+given current net position q. This representa-
+tion is similar to the model of Goettler, Chris-
+tine A. Parlour, and Uday Rajan (2009).
+Agent i’s private valuation vector is gener -
+ated by drawing 2 q max values independently 
+from a Gaussian distribution, N(0,σ2
+PV). To en-
+sure that the valuation reflects diminishing 
+marginal utility, that is, θqʹ ≥ θq for all qʹ  ≤  q, we 
+sort the drawn values before assigning the vec-
+tor Θi.
+At the end of the trading horizon, an 
+agent’s total value is the sum of private val -
+ues accrued on each transaction, plus the 
+worth of its final holdings evaluated at rT , the 
+end- ti me fundamental value. Agent i’s valua-
+tion vi(t) for the security at time t therefore 
+depends on its current position qt and the 
+value of the common fundamental at the end 
+of the trading horizon:
+ 
+vi (t) = rT + { 
+θi
+qt+1 if buying one unit
+ θi
+qt if selling one unit
+The surplus of a trade is the difference be -
+tween valuation (including both common and 
+private components) and transaction price. For 
+a single-  q uantity limit order transacting at 
+time t and price p, a buyer B obtains surplus 
+vB(t)  –  p, whereas seller S obtains surplus 
+p 
+–
+ 
+vS(t). Since the price and fundamental 
+terms cancel out in exchange, the total surplus 
+achieved when B buys from S is θB
+q(B)+1 – θS
+q(S)+1, 
+where q(i) denotes the pre-  trade position of 
+agent i.
+Trading Strategies
+An agent’s trading strategy governs how it gen-
+erates a limit order each time it arrives to the 
+market, as a function of its state and informa -
+tion. To simplify the strategy structure, we as-
+sume that the trader flips a coin on each arrival 
+to decide whether its order on that round will 
+be to buy or to sell. As a result, agent i’s deci-
+sion boils down a price for its new limit order, 
+as 
+a function of its valuation vector Θi, current 
+holdings q(i), and its history of market obser -
+vations (transactions and price quotes).
+In the zero intelligence bidding strategy, 
+agents bid for a randomly determined amount 
+of surplus. Our extended version of ZI employs 
+three parameters: Rmin and Rmax (0 ≤ Rmin ≤ Rmax) 
+define the range of surplus requests, and  
+η ∊[1,0] is a threshold for taking the currently 
+available surplus. Specifically, a ZI trader i con-
+structs its bid as follows:
+1.
+ A
+ssess its valuation vi(t) at the time of mar-
+ket entry t , using an estimate r̂t  of the end- 
+time fundamental rT. The estimate is simply 
+an adjustment of the current fundamental 
+rt, accounting for mean reversion:
+r̂t = (1 – (1 – κ)T–t)r + (1 – κ)T–trt
+2. Determi ne its requested surplus s, by draw-
+ing uniformly from the interval [R min, Rmax].
+3.
+ If 
+the surplus available at the current price 
+quote is at least ηs, then submit an offer at 
+the quoted price. Otherwise submit a limit 
+order requesting surplus s. For instance, if 
+the agent is buying, its bid price is given by:
+  A
+SKt
+  if ASKt ≤ vi(t) – ηs
+ { vi(t) – s  other wise
+Note that a trader with η
+ 
+=
+ 
+0 accepts any profit-
+able quote, and one with η  =  1 bids the same, 
+regardless of the current quote.
+
+118  f inancial refor M
+rsf: the russell sage foundation journal of the social sciences
+For example, consider a trader with valua -
+tion v applying a ZI strategy with parameters 
+Rmin = 0, Rmax = 1000, and η =  0.6. On entering 
+the market, it first flips a coin to decide whether 
+to buy or sell. Supposing the coin flip dictates 
+BUY , it then draws a random surplus request 
+s ~ U[0,1000], which for example yields s  =  700. 
+It therefore aims to buy at a price 700 below its 
+valuation. If it can buy right now at a price of 
+700η
+ 
+=
+ 
+420 less than v (that is, if ASK 
+≤
+ 
+v
+ 
+–
+ 
+420), 
+however, it submits a price at the current mar-
+ket value. Otherwise, it submits a buy order 
+with price v  –  700.
+Refe Ren ces
+Arnuk, Sal, and Joseph Saluzzi. 2012. Broken Mar -
+kets: How High Frequency Trading and Predatory 
+Practices on Wall Street Are Destroying Investor 
+Confidence and Your Portfolio. Upper Saddle 
+River, N.J.: FT Press.
+Arthur, Brian, John H. Holland, Blake LeBaron, Rich-
+ard Palmer, and Paul Tayler. 1997. “Asset Pricing 
+Under Endogenous Expectations in an Artificial 
+Stock Market.” In The Economy as an Evolving 
+Complex System II, edited by Brian W. Arthur, 
+Steven N. Durlauf, and David A. Lane. Boulder: 
+Westview Press.
+Beeson, Ed. 2015. “SEC Fines Direct Edge $14M 
+over Misleading Order Types.” Law360 (online 
+journal), January 12, 2015. Available at: http:/ /
+www.law360.com/articles/610484/sec-fines-di-
+rect-edge-14m-over-misleading-order-types; ac-
+cessed June 12, 2016.
+Bessembinder, Hendrik. 2003. “Issues in Assessing 
+Trade Execution Costs.” Journal of Financial Mar -
+kets 6(1): 233–57.
+Bessembinder, Hendrik, and Kumar Venkataraman. 
+2010. “Bid- As
+k Spreads: Measuring Trade Execu-
+tion Costs in Financial Markets.” In Encyclopedia 
+of Quantitative Finance, edited by Rama Cont. 
+New York: John Wiley.
+Bodek, Haim. 2013. The Problem of HFT: Collected 
+Writings on High Frequency Trading and Stock 
+Market Structure Reform. Electronic edition. Cre -
+ateSpace Independent Publishing Platform.
+Bookstaber, Richard. 2012. “Using Agent-
+ B
+ased 
+Models for Analyzing Threats to Financial Stabil-
+ity.” Office of Financial Research Working Paper 
+3. Washington: U.S. Department of the Treasury.
+Boswijk, H. Peter, Cars H. Hommes, and Sebastiano 
+Manzan. 2007. “Behavioral Heterogeneity in 
+Stock Prices.” Journal of Economic Dynamics and 
+Control 31(6): 1938–70.
+Budish, Eric B., Peter Cramton, and John J. Shim. 
+2015. “The High-
+ F
+requency Trading Arms Race: 
+Frequent Batch Auctions as a Market Design Re -
+sponse.” Quarterly Journal of Economics 130(4): 
+1547–621.
+Cardella, Laura, Jia Hao, Ivalina Kalcheva, and Yung-
+ Y
+u Ma. 2014. “Computerization of the Equity, 
+Foreign Exchange, Derivatives and Fixed-
+ Inc
+ome 
+Markets.” Financial Review 49(2): 231–43.
+Das, Rajarshi, James E. Hanson, Jeffrey O. Kephart, 
+and Gerald Tesauro. 2001. “Agent-
+ Human Int
+er-
+actions in the Continuous Double Auction.” Pro -
+ceedings of the Seventeenth International Joint 
+Conference on Artificial Intelligence. San Fran-
+cisco: Morgan Kaufmann and American Associa-
+tion for Artificial Intelligence.
+Easley, David, Marcos M. López de Prado, and Mau-
+reen O’Hara. 2012. “The Volume Clock: Insights 
+into the High Frequency Paradigm.” Journal of 
+Portfolio Management 39(1): 19–29.
+Fricke, Daniel, and Thomas Lux. 2015. “The Effects 
+of a Financial Transaction Tax in an Artificial Fi-
+nancial Market.” Journal of Economic Interaction 
+and Coordination 10(1): 119–50.
+Friedman, Daniel. 1993. “The Double Auction Market 
+Institution: A Survey.” In The Double Auction 
+Market: Institutions, Theories, and Evidence, ed-
+ited by Daniel Friedman and John Rust. Reading, 
+Mass.: Addison- 
+Wesley.
+Gintis, Herbert. 2000. Game Theory Evolving. 
+Princeton, N.J.: Princeton University Press.
+Gode, Dhananjay K., and Shyam Sunder. 1993. “Al-
+locative Efficiency of Markets with Zero-
+ 
+Int
+elligence Traders: Market as a Partial Substi-
+tute for Individual Rationality.” Journal of Political 
+Economy 101(1): 119–37.
+Goettler, Ronald L., Christine A. Parlour, and Uday 
+Rajan. 2005. “Equilibrium in a Dynamic Limit Or -
+der Market.” Journal of Finance 60(5): 2149–92.
+———. 2009. “Informed Traders and Limit Order 
+Markets.” Journal of Financial Economics 93(1): 
+67–87.
+Hendershott, Terrence, Charles M. Jones, and Albert 
+J. Menkveld. 2011. “Does Algorithmic Trading Im-
+prove Liquidity?” Journal of Finance 66(1): 1–33.
+Jones, Charles M. 2013. “What Do We Know About 
+High Frequency Trading?” Available at SSRN 
+(link for download): http:/ /ssrn.com/abstract 
+=2236201; accessed June 12, 2016.
+
+S tr ategic agent-  B a S e d M o deling  119
+rsf: the russell sage foundation journal of the social sciences
+Kirilenko, Andrei A., Albert S. Kyle, Mehrdad Sa-
+madi, and Tugkan Tuzun. 2014. “The Flash 
+Crash: The Impact of High Frequency Trading on 
+an Electronic Market.” Available at SSRN (link 
+for download): http:/ /ssrn.com/ab-
+stract=1686004; accessed June 12, 2016.
+LeBaron, Blake. 2011. “Active and Passive Learning 
+in Agent-
+ B
+ased Financial Markets.” Eastern Eco -
+nomic Journal 37(1): 35–43.
+Lee, Bernard, Shih- f
+en Cheng, and Annie Koh. 2011. 
+“Would Price Limits Have Made Any Difference 
+to the ‘Flash Crash’ on May 6, 2010?” Review of 
+Futures Markets 19 (Special IFM Issue): 55–93.
+Levy, Moshe, Haim Levy, and Sorin Solomon. 1994. 
+“A Microscopic Model of the Stock Market: Cy -
+cles, Booms, and Crashes.” Economics Letters 
+45(1): 103–11.
+Lewis, Michael. 2014. Flash Boys: A Wall Street Re -
+volt. New York: W. W. Norton.
+Madhavan, Ananth, Kewei Ming, Vesna Straser, and 
+Yingchuan Wang. 2002. “How Effective Are Ef-
+fective Spreads? An Evaluation of Trade Side 
+Classification Algorithms.” Working paper. ITG 
+Analytic Incubator, November 20. Available at: 
+http:/ /analyticsincubator.itginc.com/library 
+/
+papers/how-effective-are-effective-spreads 
+-an-evaluation-of-trade-side-classification 
+-
+algorithms/; accessed June 12, 2016.
+Menkveld, Albert J. 2014. “High-
+ F
+requency Traders 
+and Market Structure.” Financial Review 49(2): 
+333–44.
+Paddrik, Mark, Roy Hayes, Jr., Andrew Todd, Steve 
+Yang, Peter Beling, and William Scherer. 2012. 
+“An Agent-
+ B
+ased Model of the E-
+ Mini S
+&P 500 
+Applied to Flash Crash Analysis.” Conference on 
+Computational Intelligence for Financial Engi-
+neering and Economics, New York (March 29).
+Piwowar, Michael S., and Li Wei. 2006. “The Sensi-
+tivity of Effective Spread Estimates to Trade-
+ 
+Quot
+e Matching Algorithms.” Electronic Markets 
+16(2): 112–29.
+Subrahmanyam, Avanidhar. 2013. “Algorithmic Trad-
+ing, the Flash Crash, and Coordinated Circuit 
+Breakers.” Borsa Istanbul Review 13(3): 4–9.
+Tesfatsion, Leigh. 2006. “Agent-
+ B
+ased Computa-
+tional Economics: A Constructive Approach to 
+Economic Theory.” In Handbook of Agent-
+ B
+ased 
+Computational Economics, edited by Leigh Tes-
+fatsion and Kenneth L. Judd. Amsterdam: Else -
+vier.
+Vorobeychik, Yevgeniy, Michael P. Wellman, and Sat-
+inder Singh. 2007. “Learning Payoff Functions in 
+Infinite Games.” Machine Learning 67(1): 145–68.
+Wah, Elaine, Dylan R. Hurd, and Michael P. Wellman. 
+2015. “Strategic Market Choice: Frequent Call 
+Markets vs. Continuous Double Auctions for Fast 
+and Slow Traders.” Paper presented at Third EAI 
+Conference on Auctions, Market Mechanisms, 
+and Their Applications, Chicago (August 8 to 9). 
+Available at: http:/ /web.eecs.umich.edu/srg 
+/?page_id=1666; accessed July 11, 2016.
+Wah, Elaine, and Michael P. Wellman. 2013. “La-
+tency Arbitrage, Market Fragmentation, and Effi-
+ciency: A Two-
+ Mark
+et Model.” Proceedings of the 
+Fourteenth ACM Conference on Electronic Com-
+merce. Available at: http:/ /dl.acm.org/citation.
+cfm?id 
+=2482577, pp. 855–72; accessed July 11, 2016.
+———. 2015. “Welfare Effects of Market Making in 
+Continuous Double Auctions.” Proceedings of the 
+Fourteenth International Conference on Autono -
+mous Agents and Multiagent Systems. Available 
+at: http:/ /aamas2015.com/en/AAMAS_2015_USB 
+/aamas/p57.pdf, pp. 57–66; accessed July 11, 
+2016
+Wellman, Michael P. 2011. Trading Agents. Electronic 
+edition. San Rafael, Calif.: Morgan & Claypool.
+Wiedenbeck, Bryce, and Michael P. Wellman. 2012. 
+“Scaling Simulation-
+ B
+ased Game Analysis 
+Through Deviation-
+ P
+reserving Reduction.” Pro-
+ceedings of the Eleventh International Conference 
+on Autonomous Agents and Multiagent Systems. 
+Available at http:/ /www.aamas-conference.org 
+/Proceedings/aamas2012/papers/5E_1.pdf, pp. 
+931–38; accessed July 11, 2016.

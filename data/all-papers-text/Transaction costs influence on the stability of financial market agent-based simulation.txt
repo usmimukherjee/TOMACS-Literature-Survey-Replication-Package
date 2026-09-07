@@ -1,0 +1,658 @@
+Journal of Business Economics and Management
+ISSN: 1611-1699 (Print) 2029-4433 (Online) Journal homepage: www.tandfonline.com/journals/tbem20
+Transaction costs inﬂuence on the stability of
+ﬁnancial market: agent-based simulation
+Roman Šperka & Marek Spišák
+To cite this article: Roman Šperka & Marek Spišák (2013) Transaction costs inﬂuence on the
+stability of ﬁnancial market: agent-based simulation, Journal of Business Economics and
+Management, 14:sup1, S1-S12, DOI: 10.3846/16111699.2012.701227
+To link to this article:  https://doi.org/10.3846/16111699.2012.701227
+Published online: 24 Dec 2013.
+Submit your article to this journal 
+Article views: 102
+View related articles 
+Citing articles: 1 View citing articles 
+Full Terms & Conditions of access and use can be found at
+https://www.tandfonline.com/action/journalInformation?journalCode=tbem20
+
+Journal of Business Economics and Management
+ISSN 1611-1699 print / ISSN 2029-4433 online
+2013 Volume 14(S upplement 1): S1–S12
+doi:10.3846/16111699.2012.701227
+Copyright © 2013 Vilnius Gediminas Technical University (VGTU) Press Technika
+http://www.tandfonline.com/TBEM
+TRANSACTION COSTS INFLUENCE ON THE STABILITY  
+OF FINANCIAL MARKET: AGENT-BASED SIMULATION
+Roman Šperka1, Marek Spišák2
+Department of Informatics, School of Business Administration in Karviná,  
+Silesian University in Opava, 
+Univerzitní náměstí 1934/3, 733 40 Karviná, Czech Republic
+E-mails: 1sperka@opf.slu.cz (corresponding author); 2spisak@opf.slu.cz
+Received 09 November 2011; accepted 06 June 2012
+Abstract. We implement an agent-based simulation of financial market model. Agent-
+based simulations are used nowadays as an alternative to the traditional models, based 
+on predetermined equilibrium state theory. Agent technology brings some kind of local 
+intelligence and rational expectations to the decision support system of financial market 
+participants. Agents follow technical and fundamental trading rules to determine their 
+speculative investment positions. We consider direct interactions between speculators and 
+they may decide to change their trading behaviour. If a technical trader meets a fundamen-
+tal trader and they realize that fundamental trading has been more profitable than technical 
+trading in recent past, the probability that the technical trader switches to the fundamental 
+trading rules is relatively high. In particular the influence of transaction costs is studied in 
+this paper. Transaction costs can be increased by the off-market regulation (for example 
+in the form of taxes) on financial market stability, by overall volume of trade and other 
+market characteristics. The paper shows a positive impact of suitable transaction costs on 
+the financial market stability in the long run.
+Keywords: agent-based, financial market, NetLogo, direct interactions, technical and fun-
+damental analysis, simulation, Tobin tax.
+Reference to this paper should be made as follows: Šperka, R.; Spišák, M. 2013. Transac-
+tion costs influence on the stability of financial market: agent-based simulation, Journal 
+of Business Economics and Management 14(Supplement 1): S1–S12.
+JEL Classification: E37, E44, C53, C63, C90.
+Introduction
+Simulation of financial market (Macal, North 2006) is a new fast growing research area 
+with two primary motivations. The first is the need to provide a development platform 
+for the ever increasing automation of financial markets. The second is the inability of 
+traditional computational mathematics to predict the financial market patterns that result 
+from the choices made by investors interacting in a financial market.
+The financial market participants in our multi-agent model use technical and funda-
+mental analysis to assess financial markets. Multi-agent financial market models have a 
+strong empirical foundation (Spišák, Šperka 2011; Vymetal, Sperka 2011; Wooldridge
+
+S2
+2009). This paper firstly defines how financial market participants may select their trad-
+ing rules, secondly describes a multi-agent model of the transaction costs influence on 
+the stability of financial market. We used and extended the original model developed by 
+Frank Westerhoff (Westerhoff 2009) in our research. This model recombines a number 
+of building blocks from three known multi-agent models of financial market.
+In the first model (Brock, Hommes 1997, 1998) a continuum of financial market partici-
+pants endogenously chooses between different trading rules. The agents are rational in 
+the sense that they tend to pick trading rules which have performed well in the recent 
+past. This displays some kind of learning behaviour. The performance of the trading 
+rules may be measured as a weighted average of past realized profits. The relative 
+importance of the trading rules is derived via a discrete choice model. Contributions 
+developed in this manner are often analytically tractable. Agents interact only indirectly 
+with each other: their orders have an impact on the price formation. An agent is not 
+directly affected by the actions of others.
+In (Kirman 1991, 1993) an influential opinion formation model with interactions be-
+tween a fixed number of agents was introduced. Agents may hold one of two views. In 
+each time step, two agents may meet at random. There is a fixed probability that one 
+agent may convince the other one to follow his opinion. In addition, there is also a 
+small probability that an agent changes his opinion independently. A key finding of this 
+model is that direct interactions between heterogeneous agents may lead to substantial 
+opinion swings.
+The models of (Lux 1998) and (Lux, Marchesi 1999) also focus on the case of a lim -
+ited number of agents. Within this approach, an agent may either be an optimistic or a 
+pessimistic technical trader, or a fundamental trader. The probability that agents switch 
+from having an optimistic technical attitude to a pessimistic one (and vice versa) de -
+pends on the majority opinion among the technical traders and the current price trend. 
+For instance, if the majority of technical traders are optimistic and if prices are going 
+up, the probability that pessimistic technical traders turn into optimistic technical trad-
+ers is relatively high. The probability that technical traders (either being optimistic or 
+pessimistic) switch to fundamental trading (and vice versa) depends on the relative 
+profitability of the rules.
+The (Westerhoff 2009) model recombines key ingredients of the three aforementioned 
+approaches to come with a simple model that is able to match the facts of financial 
+markets. Direct interactions between numbers of agents are considered. To avoid asym-
+metric profit measures a fitness function is defined. The attractiveness of a rule is ap-
+proximated by a weighted average of current and past profits. We extended this model 
+with transaction costs influence.
+The transaction costs on the financial market are mainly the costs of the obtaining 
+and the interpreting of the information, the time required for decision making, various 
+types of fees, etc. Transaction costs according to (Burian 2011; Ho 1998; Habermeier, 
+Kirilenko 2003) are often viewed as negative phenomena, but there are cases where 
+the increase in the transaction costs can be viewed positively and can contribute to the 
+R. Šperka, M. Spišák. Transaction costs influence on the stability of financial market: agent-based simulation
+
+S3
+stability of the market. The increase in the transaction costs may also occur in the form 
+of non-market regulation such as the taxes. In the early seventies the Nobel laureate in 
+the economics James Tobin drafted the regulation of currency markets (Seely 2012). 
+Tobin suggested that all short-term transactions should be taxed at a low fixed rate (the 
+proposal was later identified as the so-called Tobin tax). The results according to Tobin 
+would avoid short-term currency speculation and stabilize the market.
+The model described here, however, needs not be interpreted as a model for the intro-
+duction of taxes, but in general, as a model of the transaction costs influence on the 
+market stability. The aim of the model described in this paper is to explore the depend-
+ence of the market stability to the extent of transaction costs. 
+This paper is structured as follows. Section 1 briefly informs about the behaviour on real 
+financial markets and introduces the agent-based methods for modelling and simulation. 
+In section 2 the original multi-agent model of financial market is presented. In section 
+3 we enhance the original model with transaction costs. Section 4 presents the original 
+simulation results of the implemented agent-based simulation. 
+1. Agent-based methods for modelling and simulation  
+of real financial markets
+The behaviour of real financial markets shows some significant deviations from the 
+efficient-market hypothesis (Siegel 2003; Allen, Gale 2002), which argues that the mar-
+ket price reflects all information on the fair value of traded assets and should not devi-
+ate from it. In fact, the market price often differs from the fair value of assets, which 
+is reflected especially in the so-called market bubbles. Market bubble is an artificial 
+overvaluation of assets due to excessive demand, or on the other hand it is the market 
+collapse due to the oversupply of the assets. (Burian 2011; Stein 1998; James, Smith 
+2000) Efficient-market hypothesis is according to (Shleifer 2000) based on three basic 
+assumptions. Firstly the investors are able to rate the assets with unlimited rationality. 
+Secondly if some investors are not rational, their purchases are random and therefore 
+they cancel each other out, and finally the influence of irrational investors on the price 
+of the assets is eliminated by rational agents.
+The agent technology is widely used nowadays and not only in the finance and invest-
+ment fields, but for instance in the management theory. The agent-based simulation of 
+the company model is introduced in (Vymetal, Sperka 2011). The model presented in 
+this paper describes some typical characteristics of the real market. A multi-agent model 
+is a computerized simulation of a number of decision-makers (agents) and institutions, 
+which interact through prescribed rules (Rutkauskas, Ramanauskas 2009; Shleifer 2000; 
+Goncalves 2011). The agents can represent different financial market participants – from 
+direct investors to the financial market supervisors and brokers – with institutions like 
+banks and government. Multi-agent models in opposite to other models are not based on 
+the presumption that the economy moves to the destined equilibrium state. Each agent 
+acts at any time according to its current state, the situation of the environment around 
+it and the conditions directing its plans. An individual investor decides whether to save 
+Journal of Business Economics and Management, 2013, 14(Supplement 1): S1–S12
+
+S4
+or to invest the money according to the developme nt of the inflation rate, his or her ex-
+pectations about the future, and experiences obtained in the past. The software applica -
+tion stores behaviour of many agent interactions in order to analyse what happens over 
+time. Multi-agent models and simulations can use many types of non-linear behaviour 
+comparing with equilibrium models. Financial market supervisors can thus model and 
+simulate an artificial economy with more policy scenarios and quantitatively measure 
+their impacts. During the last years of the twentieth century, behavioural economics 
+gained in importance. The theory of ‘rational expectations’ emerged as the dominant 
+approach in economics. This theory implies that people have perfect access to infor -
+mation and adapt rationally and instantly to new situations maximizing their long-run 
+advantage. Behavioural economics are now using topics based on the conviction that 
+real people often act under influence of overconfidence, fear and peer pressure.
+Farmer and Foley (2009) characterized the weaknesses and problems of equilibrium 
+methods declaring that “Even if rational expectations are a reasonable model of human 
+behaviour, the mathematical machinery is cumbersome and requires drastic simplifica -
+tions to get tractable results. The equilibrium models that were developed, such as those 
+used by the US Federal Reserve, by necessity stripped away most of the structure of 
+a real economy. There are no banks or derivatives, much less sub-prime mortgages or 
+credit default swaps – these introduce too much nonlinearity and complexity for equi-
+librium methods to handle.” We agree and claim that multi-agent models could help to 
+evaluate policies contributing to foster economic recovery.
+We use agent-based methods of simulation (Situngkir, Surya 2011), (Vymetal et al. 
+2012), (Spisak, Sperka 2012) in the case of financial market in this paper. Financial 
+market is a relatively balanced market (supply roughly coincides with the demand) with 
+bubbles and busts. Furthermore, in contrast to efficient-market hypothesis assumptions 
+is more realistic to assume that (Burian 2011; Yang 1999; Lettau 1997):
+– Agents are limited only rational. They do not have all information or they are not 
+able to interpret it correctly.
+– Agents are heterogeneous. They react with varying sensitivity to the reports of 
+the market developments. Differently strong random factors affect their decisions.
+– Agents make decisions influenced by the opinions of their close colleagues.
+The model described in this paper is based on these assumptions. The features of the 
+original model used in this paper are explained in detail in the next section.
+2. Original model
+The mathematical model developed by Frank Westerhoff (Westerhoff 2009) was chosen 
+for the implementation in this paper. It is an agent-based model simulating the financial 
+market. Two base types of traders are represented by software agents:
+– Fundamental traders – their reactions are based on the fundamental analysis. 
+They believe that asset prices approximate their fundamental price in long term. 
+They buy assets when the price is under the fundamental value.
+– Technical traders – they decide using technical analysis. The prices tend to move 
+in trends in their opinion. 
+R. Šperka, M. Spišák. Transaction costs influence on the stability of financial market: agent-based simulation
+
+S5
+Price changes reflect current demand excess. This excess expresses the orders amount 
+submitted by technical and fundamental traders each turn. The rate between their orders 
+evolves in a time. Agents regularly meet and discuss their trading performance. One 
+agent can be persuaded by the others to change the trading method, if his rules relative 
+success is less than the others one. Communication is direct talk between agents. Com-
+municating agents meet randomly – there is no special relationship between them. The 
+success of rules is represented by current and passed profitability. The model assumes 
+traders ability to define the fundamental value of assets. The agents’ behaviour is rational.
+The price reflects the relation between assets that have been bought and sold in a turn 
+and the price change caused by these orders. This can be formalized as a simple log-
+linear price impact function:
+ ( )1+ = + ++ CC FFt t tt tt tP P aW D W D a , (1)
+where a is a positive price adjustment coefficient, DC are orders generated by techni -
+cal agents while DF are the orders of fundamental ones. WC and WF are the weights of 
+agents using technical respective fundamental rules. They reflect current ratio between 
+the technical and fundamental agents. α brings the random term to the Eq. (1). It is an 
+IID1 normal random variable with mean zero and constant standard deviation σα.
+As was already said, technical analysis extrapolates the price trends – when they go up 
+(the price grows) agents buy the assets. So the formalization for technical order rules 
+can be like this:
+ ( )1−= − +βCt tt tD bP P . (2)
+The parameter b is positive and presents agent sensitivity to the price changes. The 
+difference in brackets reflects the trend and β is the random term – IID normal random 
+variable with mean zero and the constant standard deviation σ β. 
+Fundamental analysis permits the difference between price and fundamental value for 
+short time only. In long run there is an approximation of them. So if the price is below 
+the fundamental value  – the assets are bought and vice versa  – the orders according 
+fundamentalists are formalized:
+ ( )= − +γFt tt tD cF P . (3)
+The parameter c is positive parameter and presents agent sensitivity to reaction. F rep-
+resents fundamental value – we keep as constant value to keep the implementation as 
+simple as possible2. γ is the random term – IID normal random variable with mean zero 
+and constant standard deviation σγ. 
+If we say that N is the total number of agents and K is the number of technical traders, 
+then we define the weight of technical traders: 
+ /CttW KN=  (4)
+1 independent and identically distributed.
+2 in our implementation F = 0.
+Journal of Business Economics and Management, 2013, 14(Supplement 1): S1–S12
+
+S6
+and the weight of fundamental traders:
+ ( ) /= −FttW NK N . (5)
+Two traders meet at each step and they discuss about the success of their rules. If the 
+second agent rules are more successful, the first one changes its behaviour with prob-
+ability K. Probability of transition is defined as (1 – δ). Also there is a small probability 
+ε that agent changes his mind independently. Transition probability is formalized as:
+  K t = (Kt–1 + 1) with probability 11
+11 (1 ) 1
+tt FC
+tt
+NK Kp NN
+−−+→
+−−
+− = ε+ −σ  −
+,
+          K t = (Kt–1 – 1) with probability 11
+1 1(1 ) 1
+tt CFt t
+K NKp NN
+−−−→− −
+−= ε+ −σ −
+,
+          K t = Kt–1 with probability 111 ttpp+− −−−− , (6)
+where the probability that fundamental agent becomes technical one is:
+    ( )11 0,5CF
+t
+→
+−−δ = +λ  for CFttAA〉 ,
+ ( )11 0,5FC
+t
+→
+−−δ = −λ otherwise. (7)
+The probability that technical agent becomes fundamental one is:
+                                     ( )11 0,5CF
+t
+→
+−−δ = −λ  for CFttAA〉 ,
+ ( )11 0,5CF
+t
+→
+−−δ = +λ  otherwise.  (8)
+Success (fitness of the rule) is represented by past profitability of the rules that are 
+formalized as:
+ [ ] [ ]( )1 21exp exp − −−= −+C CCt tt ttA P P D dA  (9)
+for technical rules, and:
+ [ ] [ ]( )1 21exp exp − −−= −+F FFt tt ttA P P D dA  (10)
+for the fundamental rules. 
+Agents use most recent performance (at the end of AC formula resp. AF ) and also the 
+orders submitted in period t  – 2 are executed at prices started in period t  – 1. In this 
+way the myoptic profits are calculated. Agents have memory – which is represented by 
+the parameter d. Values are 0 ≤ d ≤ 1. If d = 0 then agent has no memory, much higher 
+value is. Much higher influence has the profits on the rule fitness.
+The implementation of this model was done in NetLogo development platform. The 
+author of NetLogo is Uri Wilensky (Wilensky 1999). NetLogo is software platform for 
+modelling problems or systems with natural or social character. Its deploying has started 
+in 1999 and is still in progress in Centre for Connected Learning and Computer-Based 
+Modelling in North-western University in Chicago (USA).
+The tool is fully programmable. It is a variant of Logo language. The agent support can 
+be added into the environment. The work with it is intuitive and easy. The language is 
+R. Šperka, M. Spišák. Transaction costs influence on the stability of financial market: agent-based simulation
+
+S7
+clear and simple. It provides the interface to develop various simulations and to visual-
+ize them. In Figure 1 it is possible to see the results of the simulation process. In the 
+left part there are parameters (for values see the section 4). In the middle part of Figure 
+1 the evolution of key values (log price, returns as their changes, weights of technical 
+traders) can be seen, and in the right part there is the rate between fundamental (black) 
+and technical traders (yellow) shown in graphics. In the next section we explain the 
+consequences of adding the transaction costs to the model.
+3. Transaction costs involvement into the model
+The aim of this paper is to investigate the influence of the transaction costs on the mar -
+ket stability (which is measured by the price volatility). Much more stable the market 
+is, much less occur the price differences in a time. The entrance of transaction costs 
+(TC) – e.g. a tax will have direct impact on the asset price. The model was changed to 
+adopt this aspect into price formula. So the price is composed in this way:
+ ( )1+ = +α + + +αCC FFt t tt tt tP P W D W D TC . (11)
+TC is a value of the transaction costs. The value of TC is constant during the simulation.
+While the tax is out-of trade factor, all the agents will be affected in the same way. Gen-
+erally there can be also different kind of transaction costs than taxes – e.g. information 
+obtaining costs. The TC increase has following results.
+– The price increase will stimulate technical rules usage. The influence of the price 
+increase on the expected future profit opportunities (as the fundamental value of 
+the asset) is irrelevant, because they depend on the company state, rather than on 
+the transaction costs.
+Fig. 1. Results of the simulation process (source: authors)
+Journal of Business Economics and Management, 2013, 14(Supplement 1): S1–S12
+
+S8
+– In a short time, the price growth will attract technical traders. But after they real -
+ize profits their interests will fall down and the fundamental traders will start to 
+dominate. That will lead to the financial market stabilization (price changes are 
+falling – volatility of price is lower).
+4. Simulation results
+In this section we present practical results of the agent-based simulation implementa -
+tion. Twenty simulations were processed. Averaged values are being plotted in the result 
+graphs.
+4.1. Simulation in original model
+The parameterization of the model was kept from the original parameterization made 
+by Westerhoff (Westerhoff 2009). The number of agents (N) was set to 10,000 to obtain 
+more relevant results. The parameters are:
+ a = 1, b = 0.05, c = 0.02, d = 0.95, λ = 0.45, ε = 0.1, 
+                      σα  = 0.0025, σβ = 0.025, and σγ = 0.0025. (12)
+With these parameters the model is calibrated to the daily data. Number of turns, resp. 
+time steps is 5000 days, which presents more than 13 and half of year. Westerhoff 
+(Westerhoff 2009) found that growing number of agents reduces the model dynamicity 
+and the volatility of price, while agents behaviour tends to be fundamental. This can be 
+reduced by adding more communication turns. We have decided to give opportunity to 
+talk to 1%. This ensures positive influence on the model dynamicity.
+In Figure 2 on the top left position the price values can be seen. Top right graph repre-
+sents changes of the price in a time. The bottom left graph shows the weights of techni -
+cal trading rules (in a long time there is a tendency to prefer fundamental than technical 
+trading rules). Bottom right graph includes the distribution of returns (log price changes) 
+compared with the normal distribution. 
+4.2. Simulation with transaction costs
+In the next step we added TC to the model formalization. All the parameters are the 
+same. Newly added TC is the constant value equal to 0.015. From the following graphs 
+in Figure 3 we can declare that transaction costs have the influence on the model. The 
+price is growing in a short time, but in longer scope it is falling. The technical weights 
+evolution is similar. In a short time it grows, but after it starts to fall – as the agents 
+prefer the fundamental strategy. With higher number of fundamental traders the market 
+stabilizes. This conclusion is readable from the returns (volatility of price changes is 
+falling) in Figure 3.
+4.3. Simulation with higher transaction costs
+We achieved different results with the last set of simulations. All the parameters re-
+mained the same. Only the TC was doubled and became the constant value equal to 
+0.03. Higher value of TC made the model destabilization, technical traders rules won 
+R. Šperka, M. Spišák. Transaction costs influence on the stability of financial market: agent-based simulation
+
+S9
+(weight = 1) and the price was growing without limit. Figure 4 demonstrates the con-
+tradictory effect on the market. Instead of the stabilization, the market started to be 
+unstable.
+Fig. 2. Simulation results in original model (source: authors)
+Fig. 3. Simulation results with transaction costs (source: authors)
+Log Price
+Time (days)
+Log Pric
+e
+–0.08
+–0.06
+–0.04
+–0.02
+0
+0.02
+0.04
+0.06
+Returns (log price changes)
+Rerturns
+–0.015
+–0.01
+–0.005
+0.015
+0.01
+0.005
+0
+0
+0.1
+02.
+03.
+04.
+05.
+06.
+Weights of Technical Trading Rules
+Weights (tec
+hnical trading rules)
+Distribution of Returns (log price changes)
+–0.01– 0.005 00 .005 0.01
+Frequen
+cy
+160
+140
+120
+100
+80
+60
+40
+20
+0
+180
+Cumulative probability, %
+0
+20
+40
+60
+80
+100
+Normal distribution Returns distribution Cumulative probability
+1 1501 3001 4501 Time (days)
+1 1501 3001 4501
+Time (days)
+1 1501 3001 4501
+Returns
+250
+200
+150
+100
+50
+0
+Frequenc
+y
+Distribution of Returns (log price changes)
+Cumulative probability, %20
+40
+60
+80
+100
+Normal distribution Returns distribution Cumulative probability
+0
+–0.01– 0.005 00 .0050 .01
+Log Price
+Time (days)
+Log Pric
+e
+0
+0.5
+1
+15.
+2
+25.
+Rerturns
+–0.015
+–0.01
+–0.005
+0.015
+0.01
+0.005
+0
+0.02
+0.025
+Time (days)
+1 1501 3001 4501
+Returns (log price changes)
+Weights of Technical Trading Rules
+0
+0.1
+02.
+03.
+04.
+05.
+06.
+07.
+Weights (te
+chnical tr
+ading rules)
+Time (days)
+1 1501 3001 4501
+1 1501 3001 4501501 1001 2001 2501 3501 4001
+Returns
+Journal of Business Economics and Management, 2013, 14(Supplement 1): S1–S12
+
+S10
+Conclusions
+The agent-based simulation of the financial model implemented in this paper has the 
+tendency to stabilize itself in a long term, if the fundamental trading rules are overbear -
+ing the technical trading method. Although the bubbles and the crashes occur in our 
+model, their tendencies are going to be less dangerous, because the price is targeting 
+near the fundamental value and the volatility is going to be less. This description is 
+similar to current situation on financial markets.
+By adding transaction costs (Tobin tax) to the model we can observe price changes. In 
+the first situation Tobin tax was defined to be equal to 1,5%. The price grows up with 
+the transaction costs to the bubble, while technical traders overtake the market. But the 
+price starts to fall down according to the technical analysis growth. In this moment the 
+volatility falls down and the market stabilizes. This is the main positive contribution of 
+Tobin tax introduction into financial market in our agent-based simulation. On the other 
+hand when the value of the transaction costs is disproportionately high (3% and higher), 
+the system destabilizes and the price grows without limit.
+This paper demonstrates positive impact of suitable transaction costs (Tobin tax) on the 
+financial market stability in log run. The implementation of other agent-based simula -
+tions of financial market models could be the task for the future research.
+140
+120
+100
+80
+60
+40
+20
+0
+Log Price
+Time (days)
+1 1501 3001 4501501 1001 2001 2501 3501 4001
+Rerturn
+s
+Time (days)
+1 1501 3001 4501
+Returns (log price changes)
+Weights of Technical Trading Rules
+Weights (te
+chnical trading rules)
+Time (days)
+1 1501 3001 4501
+0
+0.2
+0.4
+0.6
+0.8
+1.0
+1.2
+Distribution of Returns (log price changes)
+–0.020 0.04 0.06
+Frequenc
+y
+140
+120
+100
+80
+60
+40
+20
+0
+Cumulative probability, %
+0
+20
+40
+60
+80
+100
+Normal distribution Returns distributionC umulative probability
+Returns
+0.02
+Log Price
+Fig. 4. Simulation results with higher transaction costs (source: authors)
+R. Šperka, M. Spišák. Transaction costs influence on the stability of financial market: agent-based simulation
+
+S11
+References
+Allen, F.; Gale, D. 2002. Asset price bubbles and stock market interlinkages, in Federal Reserve 
+Bank of Chicago and World Bank Groups Conference on “Asset Price Bubbles: Implications for 
+Monetary, Regulatory, and International Policies”, April 24–25, 2002, Chicago.
+Brock, W.; Hommes, C. 1997. A rational route to randomness, Econometrica 65: 1059–1095. 
+http://dx.doi.org/10.2307/2171879
+Brock, W.; Hommes, C. 1998. Heterogeneous beliefs and routes to chaos in a simple asset pricing 
+model, Journal of Economic Dynamics Control 22: 1235–1274. 
+http://dx.doi.org/10.1016/S0165-1889(98)00011-6
+Burian, J. 2011. Multiagentní model transakčních nákladů na finančních trzích. VŠE Prague. 
+[online], [cited 9 September 2011]. Available from Internet: http://www.eldar.cz/honza/articles/
+burian_ace_fin_market_tc.doc
+Farmer, J. D.; Foley, D. 2009. The economy needs agent-based modelling, Nature Opinion 460: 
+685–686 [online], [cited 9 September 2011]. Macmillan Publishers Limited. Available from Inter-
+net: http://www2.econ.iastate.edu/tesfatsi/EconomyNeedsABM.NatureAug2009.FarmerFoley.pdf. 
+Goncalves, C. P. 2011. Artificial financial market model, Netlogo Forum [online], [cited 9 Sep-
+tember 2011]. Available from Internet: http://ccl.northwestern.edu/netlogo/models/community/
+Artificial Financial Market Model 
+Habermeier, K.; Kirilenko, A. 2003. Securities transaction taxes and financial markets, IMF Staff 
+Papers 50(Special Issue): 165−180.
+Ho, L. I. 1998. Market crashes and informational avalanches, Review of Economic Studies 65(4): 
+741–760. http://dx.doi.org/10.1111/1467-937X.00066
+James, Ch.; Smith, D. 2000. Are banks still special? New evidence on their role in the capital-
+raising process, Journal of Applied Corporate Finance 13: 52–63. 
+http://dx.doi.org/10.1111/j.1745-6622.2000.tb00041.x
+Kirman, A. 1991. Epidemics of opinion and speculative bubbles in financial markets, in M.Taylor 
+(Ed.). Money and financial markets. Oxford: Blackwell, 354–368. 
+Kirman, A. 1993. Ants, rationality, and recruitment, Quarterly Journal of Economics  108: 137–
+156. http://dx.doi.org/10.2307/2118498
+Lettau, M. 1997. Explaining the facts with adaptive agents: the case of mutual fund flows, Jour-
+nal of Economic Dynamics and Control 21: 1117–1147. 
+http://dx.doi.org/10.1016/S0165-1889(97)00046-8
+Lux, T. 1998. The socio-economic dynamics of speculative markets: interacting agents, chaos, 
+and the fat tails of return distributions, Journal of Economic Behavior and Organization 33: 
+143–165. http://dx.doi.org/10.1016/S0167-2681(97)00088-7
+Lux, T.; Marchesi, M. 1999. Scaling and criticality in a stochastich multi-agent model of a finan-
+cial market, Nature 397: 498–500.
+Macal, C. M.; North, M. J. 2006. Tutorial on agent-based modeling and simulation. Part 2. 
+How to model with agents, in Proc. of the Winter Simulation Conference, 29 November, 2006, 
+79–83 [online], [cited 9 September 2011]. Available from Internet: http://www.informs-sim.org/
+wsc06papers/008.pdf 
+Rutkauskas, A. V .; Ramanauskas, T. 2009. Building an artificial stock market populated by re-
+inforcement learning agents, Journal of Business Economics and Management 10(4): 329–341. 
+ISSN 1611-1699 (print), 2029-4433 (online).
+Seely, A. 2012. The Tobin Tax: earlier debates. Standard Note SN/BT/1346, Business and Trans-
+port section. House of Commons Library.
+Shleifer, A. 2000. Inneficient markets, an introduction to behavioral finance. Oxford: Oxford 
+University Press.
+Journal of Business Economics and Management, 2013, 14(Supplement 1): S1–S12
+
+S12
+Siegel, J. J. 2003. What is asset price bubble? An operational definition, European Financial 
+Management 9(1): 11–24. http://dx.doi.org/10.1111/1468-036X.00206
+Situngkir, H.; Surya, Y . 2011. Agent-based model construction, Financial Economic System, 
+vol. 1. [online], [cited 9 September 2011]. Bandung Fe Institute. Available from Internet: http://
+cogprints.org/3767/1/hokky_new2004.pdf 
+Spišák, M.; Šperka, R. 2011. Financial market simulation based on intelligent agents – case study, 
+Journal of Applied Economic Sciences 63(17): 249–256. ISSN 1843-6110 (print). 
+Spisak, M.; Sperka, R. 2012. Multi-agent simulation of financial market with transaction costs 
+influence, Journal Scientific Papers of the University of Pardubice Series D. Czech Republic.
+Stein, J. C. 1998. An adverse-selection model of bank asset and liability management with im -
+plications for the transmission of monetary policy, RAND Journal of Economics 29: 466–486. 
+http://dx.doi.org/10.2307/2556100
+Vymetal, D.; Sperka, R. 2011. Agent-based simulation in decision support systems, in Distance 
+Learning, Simulation and Communication 2011, 10–11 May, 2011, Brno. ISBN 978-80-7231-
+695-3.
+Vymetal, D.; Slaninova, K.; Sperka, R.; Spisak, M. 2012. Output analysis in business process 
+simulation, in Proc. of 7th International Symposium on business Administration: Creating a Car-
+ing Economics after the Global Economic and Financial Crisis: Theory, Research, and Practice, 
+11–12 May, 2012, Cannakale Onsekiz Mart University, Cannakale, Turkey. 10 p.
+Westerhoff, F. 2009. A simple agent-based financial market model: direct interactions and com-
+parisons of trading profits, BERG Working Paper Series on Government and Growth No. 61. 
+Bamberg University.
+Wilensky, U. 1999. NetLogo [online], [cited 9 September 2011]. Center for Connected Learning 
+and Computer-Based Modeling, Northwestern University, Evanston, IL. Available from internet: 
+http://ccl.northwestern.edu/netlogo
+Wooldridge, M. 2009. An introduction to multiagent systems. 2nd ed. Chichester: John Wiley & 
+Sons Ltd. 461 p. ISBN 978-0-470-51946-2.
+Yang, J. 1999. The efficiency of an artificial stock market. Economic Department, Concordia 
+University. 44. p.
+Roman ŠPERKA, Mgr. Ing. He is an assistent at the Silesian University in Opava, School of Busi-
+ness Administration in Karvina, Department of Informatics, Czech Republic, European Union. He 
+completed his master degree (System Eingeneering and Informatics) in 2010 at the Silesian University, 
+School of Business Administration in Karvina, Czech Republic. He completed his second master de -
+gree (Information systems) in 2011 at the University of Ostrava, Faculty of Sciences, Czech Republic. 
+His research interests include multi-agent systems and their application in the field of economics, 
+business and management. He is also interested in BPM, ABMS, business process modeling and 
+simulation, and REA.
+Marek SPIŠÁK, Ing. He is an assistent at the Silesian University in Opava, School of Business Ad-
+ministration in Karvina, Department of Informatics, Czech Republic, European Union. He completed 
+his master degree (System Engineering and Informatics) in 2001 at the Silesian University, School of 
+Business Administration in Karvina, Czech Republic. He is interested in multi-agent systems in the 
+field of economics, business and management (especially in finance sector). Another field of interest 
+are business processes – during the last 15 years he was participating on many Czech and international 
+information systems projects (automotive, pharmacy, delicatessen, waste treatment) as programmer, 
+system analyst and database designer. 
+R. Šperka, M. Spišák. Transaction costs influence on the stability of financial market: agent-based simulation

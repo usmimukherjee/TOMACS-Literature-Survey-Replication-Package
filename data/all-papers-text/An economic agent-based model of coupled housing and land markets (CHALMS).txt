@@ -1,0 +1,950 @@
+An economic agent-based model of coupled housing and land markets (CHALMS)
+Nicholas Magliocca a,⇑, Elena Saﬁrova b, Virginia McConnell a,b, Margaret Walls b
+a University of Maryland, Baltimore County, IGERT, 211 Sondhiem Hall, 1000 Hilltop Circle, Baltimore, MD 21250, USA
+b Resources for the Future, 1616 P St. NW, Washington, DC 20036, USA
+article info
+Article history:
+Received 2 June 2010
+Received in revised form 24 September
+2010
+Accepted 15 January 2011
+Available online 18 February 2011
+Keywords:
+Agent-based modeling
+Land markets
+Housing markets
+Price expectations
+Coupled markets
+Housing density
+abstract
+This paper describes a spatially disaggregated, economic agent-based model of urban land use, which is
+named for its innovative feature of coupled housing and land markets (CHALMS). The three types of
+agents—consumer, farmer and developer—all make decisions based on underlying economic principles,
+and heterogeneity of both individuals and the landscape is represented. CHALMS simulates the conver-
+sion of farmland to housing development over time, through the actions of the agents in the land and
+housing markets. Land and building structures in the housing bundle are treated explicitly, so the model
+can represent the effects of land and housing prices on housing density over time. We use CHALMS to
+simulate the dynamics of land-use changes as a representative suburban area grows. The presence of
+agent and landscape heterogeneity, stochastic processes, and path dependence require multiple model
+runs, and the expression of spatial dispersion of housing types, overall housing density, and land prices
+over time in terms of the most likely, or ‘average’, patterns. We ﬁnd that CHALMS captures both the gen-
+eral tendency for diminishing population density at greater distances from the center city, and dispersed
+leapfrog patterns of development evident in most suburban areas of the US.
+/C2112011 Elsevier Ltd. All rights reserved.
+1. Introduction
+Land-use patterns on the urban fringe emerge from many indi-
+vidual landowners’ conversion decisions in response to changing
+economic opportunities and landscape features. Given this com-
+plexity, land-use change simulation models have become valuable
+tools to understand processes of land conversion and development,
+and for analyzing the effects of land-use policies. Various modeling
+methodologies have been applied by a wide range of disciplines,
+such as urban planning, landscape ecology, geography, and eco-
+nomics, to build the current understanding of land-use change ( Ir-
+win, 2010; Parker, Manson, Janssen, Hoffmann, & Deadman, 2003;
+Veldkamp & Verburg, 2004 ).
+However, most models represent either spatially detailed devel-
+opment patterns or individual-level decision-making—rarely inte-
+grating both elements explicitly. For example, models that
+provide spatially explicit representations of land-use patterns
+may lack an equally rigorous representation of agent decision-
+making processes ( Fernandez, Brown, Marans, & Nassauer, 2005;
+Parker & Filatova, 2008 ). Models that take into account microeco-
+nomic agent decision-making, on the other hand, may fail to cap-
+ture the full heterogeneity of those agents and inadequately
+describe spatial characteristics of model outcomes ( Irwin, 2010 ).
+This paper describes the coupled housing and land markets
+model—CHALMS. It is an economic agent-based model (ABM) of
+housing and land markets that captures the conversion of farmland
+to residential housing of varying densities over time in a hypothet-
+ical, growing ex-urban area. The primary goal of this study is to de-
+velop some general theoretical insights into the individual-level
+processes that drive regional development patterns. CHALMS is un-
+ique among ABMs of land-use for its integration of: (1) microeco-
+nomic decision-making rules for consumer, farmer, and
+developer agents in a spatially explicit framework; (2) representa-
+tion of heterogeneous agent characteristics and spatial goods (e.g.
+land productivity and housing sizes and densities); and (3) direct
+linkages between adaptive price expectations and demand and
+supply decisions of developer and farmer agents through housing
+and land markets. We demonstrate how patterns in development
+density and land prices that are predicted by traditional urban eco-
+nomic theory can be reproduced in an ABM framework. In addition,
+we show how disconnected, leapfrog development patterns
+emerge from the simulation of individual price expectations and
+market transactions.
+Section 2 reviews the capabilities and limitations of current
+land-use modeling approaches, and describes how integrating
+the insights from recent economic and non-economic ABMs can
+provide a more complete representation of the processes driving
+urban growth. Section 3 details the structure of CHALMS, agent
+representations, and market interactions. Section 4 presents
+baseline results and outcomes of preliminary sensitivity analysis.
+0198-9715/$ - see front matter /C2112011 Elsevier Ltd. All rights reserved.
+doi:10.1016/j.compenvurbsys.2011.01.002
+⇑ Corresponding author.
+E-mail address: nmag1@umbc.edu (N. Magliocca).
+Computers, Environment and Urban Systems 35 (2011) 183–191
+Contents lists available at ScienceDirect
+Computers, Environment and Urban Systems
+journal homepage: www. elsevier.com/locat e/compenvurbsys
+
+Finally, Section 5 concludes with a discussion of model capabilities
+and limitations and directions for future research.
+2. Some previous land-use modeling approaches
+2.1. Spatial equilibrium economic models
+Economic models of urban land use are typically built on the
+assumption of spatial equilibrium. These models assume that over
+the long run housing rents will reach equilibrium and offset differ-
+ences in spatially heterogeneous attributes such as transportation
+costs to the central business district (CBD), neighborhood ameni-
+ties, and access to employment. Early models in the urban econom-
+ics literature used a monocentric city framework in which location
+is deﬁned purely by distance to a CBD where all jobs are located
+(Alonso, 1964; Mills, 1972; Muth, 1969 ). Decreasing housing rent
+and density gradients are a feature of these monocentric models
+– i.e., rents and housing density fall as distance to the CBD in-
+creases. The basic monocentric framework has been expanded to
+incorporate growth and uncertainty, include environmental and
+open space amenities, evaluate zoning and other regulations, and
+study a variety of other issues ( Capozza & Helsley, 1990; Mills,
+1972; Wheaton, 1974 ; Wu & Plantinga, 2003 ). In recent years,
+economists have relaxed the monocentricity assumption (e.g.
+Epple & Sieg, 1999; Walsh, 2007 ).
+Although spatial equilibrium models have many desirable fea-
+tures – a rigorous representation of agent behavior and capitaliza-
+tion of spatial differences in amenities and other factors into land
+values (Irwin, 2010) – several strong assumptions are made to en-
+sure analytical tractability. First, spatial equilibrium is a particu-
+larly restrictive assumption, because out-of-equilibrium
+dynamics, such as path dependence of development location, are
+important drivers of urban systems ( Arthur, 2006, Chapter 2;
+Brown, Page, Riolo, Zellner, & Rand, 2005; Irwin, 2010; Tesfatsion,
+2006, Chapter 16). Second, in order to ensure analytical tractability,
+agent heterogeneity is typically quite limited. 1 More detailed dis-
+cussions of the limitations of these assumptions are available else-
+where for a wide range of applications ( Arthur, 2006, Chapter 2;
+Arthur, Durlauf, & Lane, 1997; Axtell, 2005; Kirman, 1992 ; Filatova
+et al., 2009 ; Irwin, 2010; Parker & Filatova, 2008; Tesfatsion & Judd,
+2006). Since we want to investigate the spatial and temporal dynam-
+ics of housing density patterns, a framework that can account for
+both agent preferences for spatially heterogeneous goods and idio-
+syncratic differences in decision-making processes is necessary. Path
+dependence of land-use patterns can then be explicitly linked to
+individual-level motivations of land conversion decisions.
+2.2. Agent-based models
+Agent-based modeling (ABM) has emerged as an alternative
+method for modeling urban growth and land-use change. Parker
+et al. (2003) provide a detailed review of the different types and
+applications of ABMs for modeling land-use change. Although
+ABMs differ widely in their focus, assumptions, and formalizations
+of agent interactions (e.g. Benenson & Torrens, 2004; Ettema, 2010;
+Filatova, Parker, & van der Veen, 2007; Filatova, Parker, & van der
+Veen, 2009; Ligtenberg, Wachowicz, Bregt, Beulens, & Kettenis,
+2004; McNamara & Werner, 2008; Otter, van der Veen, & de
+Vriend, 2001; Parker & Filatova, 2008; Robinson & Brown, 2009 )
+they all rely on interactions between many distributed agents to
+form emergent larger-scale patterns ( Manson, 2001). Thus, micro-
+economic fundamentals can be incorporated into individual
+agents’ decision-making rules to simulate emergent trends in a
+spatially explicit framework.
+However, examples of incorporating microeconomic decision-
+making rules into ABMs are few. Filatova et al. (2009) and earlier
+papers ( Filatova et al., 2007; Parker & Filatova, 2008 ) present the
+fullest, economically-based implementation of an agent-based
+land market to date. The authors relax the conventional spatial
+equilibrium assumption by explicitly modeling decentralized,
+bilateral transactions between land buyers and sellers. Transaction
+prices for land are determined by specifying a buyer’s and seller’s
+willingness to pay and willingness to accept, respectively, which
+are then adjusted to form bid and asking prices accounting for dif-
+ferent market power scenarios ( Filatova et al., 2009 ; Parker &
+Filatova, 2008 ). The authors have provided valuable insights into
+methods for relaxing spatial equilibrium assumptions and incorpo-
+rating microeconomic decision-making into the ABM framework.
+However, their model lacks a housing market and cannot capture
+the feedbacks between land and housing markets that inﬂuence
+spatial rent structures.
+Ettema (2010) presents an economic ABM of a housing market,
+which explicitly simulates relocation and price setting processes.
+Housing prices are produced through bilateral transactions be-
+tween a buyer and seller, and are constrained by the agents’ per-
+ceptions of market conditions and by the buyer’s budget
+constraint and housing preferences. The buyer’s opportunity costs
+are explicitly considered by comparing utility derived from hous-
+ing dwellings available in the current period to the maximum ex-
+pected utility of potential housing in the future. Expectation
+formation, executed using Bayesian updating, is a key advance
+from this model design. However, the expectation formation pro-
+cess only accounts for price changes driven by changing consumer
+preferences attributed to life cycle effects. For the purposes of sim-
+ulating spatially explicit development patterns—which the author
+acknowledges is beyond the scope of his current model—the mod-
+el’s design cannot accommodate spatial characteristics of housing
+goods or the formation of spatially heterogeneous price
+expectations.
+Robinson and Brown (2009) present a detailed spatial represen-
+tation of regional development patterns in a GIS-based ABM
+named dynamic ecological exurban development (DEED). Land
+and housing markets are integrated by the conversion of farm par-
+cels to residential subdivisions of different densities by developers,
+and the acquisition of deeds to subdivision lots by residential
+household agents. In addition, township agents are able to specify
+zoning and land acquisition polices to alter development patterns.
+However, land conversion events are not based on microeconomic
+decision-making. Farm and residential parcel sales probabilisti-
+cally occur on the basis of land or lot characteristics. No markets
+are represented in which competing land uses can be valued, and
+the economic constraints or opportunity costs of the acting agents
+are not considered. Although the authors make a valuable contri-
+bution towards empirically grounding ABMs, this approach makes
+it difﬁcult to gain general insights into the underlying economic
+forces that drive land conversion decisions.
+CHALMS builds upon the above ABMs by integrating many of
+their innovations into one framework capable of simulating devel-
+opment density patterns through coupled housing and land mar-
+kets. Similar to Robinson and Brown (2009) , housing and land
+markets are linked through the supply and demand functions of
+the developer and consumer households, respectively; however,
+our agents respond directly to and create market prices subject
+to economic constraints. Mechanisms of land and housing transac-
+tions in CHALMS are built upon the bilateral transaction frame-
+work developed by Parker and Filatova (2008) , but are expanded
+to link the developer’s rent expectations in the housing market
+to his bid prices in the land market. Price expectations play a
+1 Some models include more heterogeneity than others. See, for example, Anas and
+Arnott (1991) and Epple and Sieg (1999) for models with heterogeneous consumers.
+184 N. Magliocca et al. / Computers, Environment and Urban Systems 35 (2011) 183–191
+
+similar role in CHALMS as they do in Ettema’s model (2010) . Adap-
+tive expectations of future prices and market conditions are used
+to compare the utility of present and potential future transac-
+tions—directly inﬂuencing the timing of transactions. In addition,
+our agents’ price expectation models are designed to capture spa-
+tially dependent price trends that directly affect the location of
+housing and land sales. These advances allow us to investigate
+both the supply- and demand-side forces driving spatial patterns
+of land conversion and development density over time.
+3. Model description
+3.1. Model structure
+A growing ex-urban area is represented in which land is con-
+verted from farming to residential housing of varying densities
+over time. Farmland differs randomly in its productive capacity
+across farms, and farmers differ in how they form expectations
+about future prices of their land. Farmers compare the returns from
+farming to expected proﬁt from selling their land to a single repre-
+sentative developer and make the decision each period whether to
+continue farming or enter the land market. Inequality between
+farmers’ total supply and the developer’s demand for land estab-
+lishes the bargaining power of farmers, which inﬂuences land
+transaction prices.
+The developer determines the proﬁtability of different types of
+housing that vary by both structure and lot size. He sells a housing
+good (i.e. a combination of a given house and lot size) to consumers
+who prefer to be close to the urban area to minimize transport
+costs, and are differentiated by both income and preferences over
+different housing types. CHALMS tracks development over time
+incorporating elements of path dependence and stochastic uncer-
+tainty that determine spatial development. A schematic of agent
+decision-making and market interactions, along with the sequence
+of events, is shown in Fig. 1 . Price prediction models for farmers
+and the developer are used to form expectations of future land
+and housing prices, respectively, and are described in detail in
+the Appendix.
+3.2. Formation of agent price expectations
+3.2.1. 1 Consumer utility, willingness to pay (WTP), and willingness to
+bid (WTB)
+A consumer c calculates standard Cobb–Douglas utility derived
+from the consumption of a general consumption good and a hous-
+ing good. Each housing good can be considered a ‘bundle’ of one of
+eighteen different housing types, which are distinguished by dif-
+ferent combinations of three different house sizes ( h) – 1500,
+2000, and 2500 square feet – and six different lot sizes ( l)– 1=4 acre,
+½ acre, 1 acre, 2 acre, 5 acre, and 10 acre; these lot and house sizes
+are meant to represent a typical ex-urban area. We assume that
+consumer c’s utility function has a Cobb–Douglas form:
+Uðc; nÞ¼ð Ic /C0 Paskjn /C0 wnÞac h
+bc
+n lcc
+n ; ð1Þ
+where Ic is income, Wn is the travel cost from the location of house n
+to the CBD, and bc and cc are the consumer’s idiosyncratic prefer-
+ences for house and lot sizes, respectively. Pask|n is the developer’s
+asking price for house n, which is determined by Eqs. (15) or (16)
+below, depending on whether the house is being re-sold or is newly
+constructed, respectively (Section 3.4.1).
+The WTP of consumer c for any given house n is then equal to
+the portion of the consumer’s income he is willing to pay for hous-
+ing as given by the Cobb–Douglas structure.
+WTPðc; nÞ¼ð Ic /C0 wnÞðbc þ cc Þ; ð2Þ
+Although this functional form for the utility function implies
+that consumers would pay the same amount for all housing net
+of transportation costs, consumers identify the housing option
+with the greatest utility and adjust their bids on other houses rel-
+ative to this most preferred option. First, the maximum utility pos-
+sible across all houses, U/C3 , is found. Holding U/C3 constant for all
+housing options, the rent, R/C3 , that would produce the same utility
+to the consumer as the most preferred choice (i.e. an optimal rent
+such that the consumer would be indifferent among housing op-
+tions) is calculated for each housing option.
+R/C3 ðc; nÞ¼ Ic /C0 wn /C0 U/C3
+h
+bc
+n lcc
+n
+ ! 1
+ac
+; ð3Þ
+Second, the difference between the rent being asked by the
+developer, Pask|n, and the optimal rent, R/C3 , is used to form a willing-
+ness to bid (WTB) from WTP for each house.
+WTBðc; nÞ¼ WTPðc; nÞ/C0ð Paskjn /C0 R/C3 ðc; nÞÞ; ð4Þ
+Consumers therefore bid more or less than the constant share of
+income for housing depending on their income and idiosyncratic
+preferences for house and lot size, and on the seller’s asking prices
+for the houses actually available at a point in time. It is important
+to note that the full heterogeneity of consumer preferences is cap-
+tured, and bids reﬂect the relative utility of each housing option
+offered.
+3.2.2. Developer’s rent and return projections and willingness to pay
+(WTP) for land
+We assume that the developer uses housing information, such
+as incomes and utilities of residents and records of past housing
+prices, to form rent expectations, which in reality would be
+available from a ‘real estate agent’ or similar source. Housing
+Fig. 1. Conceptual map of agent and market interactions in CHALMS. The red numbers indicate the (counter-clockwise) sequence of events within one simulated time period
+(t). Agents ( italics) are labeled with the underlying conceptual model that governs their behavior. Inter-temporal processes ( t + 1) shown include updating developer’s rent
+prediction models, updating the farmers’ land price prediction models, and exogenous growth of the consumer population. (For interpretation of the references to colour in
+this ﬁgure legend, the reader is referred to the web version of this article.)
+N. Magliocca et al. / Computers, Environment and Urban Systems 35 (2011) 183–191 185
+
+information is recorded in discrete ‘zones’ of ﬁve by ﬁve blocks of
+cells, which segment the entire simulated landscape. This informa-
+tion includes the average expected rent, lot size, house size, number
+of bidders before sale, percent that sale price was above/below the
+original asking price, the number of houses of each type in the zone,
+and residents’ income and utility levels for all houses in each zone.
+For any given house, the developer uses ﬁnancial prediction models
+(based on Arthur, 1994 , see Appendix, Eqs. (A.1)–(A.6)) to form a
+rent expectation (Rexpt) for that house in t + 1 given past price infor-
+mation from the neighboring zones. Based on rent expectations for
+existing housing, the developer makes spatially explicit rent projec-
+tions for all housing types for all undeveloped cells.
+Rent projections are made by one of the three different methods
+described below. Projected rents are a combination of weighted lo-
+cal and regional (city-wide) rent information. For a given housing
+type to be built in a given location, a similar housing type within
+a local geographic area provides rent information from which a di-
+rect extrapolation can be made based on distance and local price
+trends. However when a similar housing type does not occur lo-
+cally, the developer must rely on rent prediction methods that
+draw from similar housing types in a larger geographic region. In
+this ‘regional case’, rent predictions are less direct than in the ‘local
+case’. Thus, the appropriate rent projection method is adopted
+based on the amount of rent information available in a given area.
+For each undeveloped cell, a rent for each housing type is projected
+taking into account the distance of the given cell from the CBD and
+associated travel costs.
+For a given undeveloped cell, the distance to every other grid
+cell is calculated and mapped. The speciﬁed parameter, nclose, sets
+the number of closest cells to be considered as a local search area
+for rent information. Using nclose developed cells, a distance-from-
+the-CBD-weighted average rent is calculated for each housing type
+present. This subset of local houses, nclose, is the basis of rent pro-
+jections so that high demand in particular areas (e.g. due to desir-
+able housing types and/or a relative shortage of housing in close
+proximity to the CBD) can be capitalized into rents that may ex-
+ceed what is predicted based on only the travel cost gradient.
+Depending on whether the housing type for which a rent projec-
+tion is being made is present in nclose search cells, one of the follow-
+ing methods for projecting rent is used:
+1. If the housing type for which a projection is made is present in
+the n closest cell:
+Rlog
+projði; ltÞ¼ Rlog
+lt /C0 mcðDi /C0 Dlog
+lt Þ; ð5Þ
+where Rloc
+lt is the local distance-weighted average rent for hous-
+ing of type lt within the closest developed cells, mc is the travel
+cost per cell (converted from $/mile), and Dloc ði; ltÞ is the distance
+from the cell i to the closest developed cell of the same housing
+type lt.
+Rreg
+projði; ltÞ¼ Rreg
+lt /C0 mcðDi /C0 Dreg
+lt Þ; ð6Þ
+where Rreg
+lt is the regional average rent for housing type lt, Di is
+the distance from the CBD of cell i, and Dreg
+lt is the average dis-
+tance from the CBD of all housing of type lt in the region. The
+resulting rent projection is given by:
+Rprojði; ltÞ¼ wloc Rloc
+projði; ltÞþ wreg Rreg
+projði; ltÞ; ð7Þ
+where wloc and wreg are local and regional weights of 0.3 and 0.7,
+respectively.
+2. If the lot type for which a projection is being made is not present
+in the n closest cells, but exists somewhere in the city, the rent
+projection is solely based on regional rental information and is
+given by Eq. (6) for Rreg
+projði; ltÞ.
+3. If the lot type for which a projection is being made is not present
+in the n closest cells, and it does not exist anywhere else in the
+city, then rent projections are made based on average utilities:
+Rloc
+projði; ltÞ¼ Iloc
+n /C0 wi /C0 Uloc
+n
+h
+bn lcn
+ ! 1
+an
+; ð8Þ
+where Iloc
+n is the average income (available from zonal housing infor-
+mation, see above in Section 3.2.2) households located in the n clos-
+est cells, and Uloc
+n is the average utility of households located in the n
+closest cells.
+Rreg
+projði; ltÞ¼ Ireg /C0 wi /C0 Ureg
+h
+b
+lc
+/C18/C19 1
+a
+; ð9Þ
+where Ireg and Ureg are the average household income and utility,
+respectively, over the entire region. The rent projection for housing
+type lt in cell i is then given by Eq. (7).
+Based on projected rents, potential returns are calculated for
+every housing type in every undeveloped cell by subtracting the
+costs of construction and infrastructure ( Table 1 ), which vary by
+housing type, and the price of land for the given cell. The maximum
+return for each cell is calculated as the housing type with the max-
+imum return over all possible housing types (subject to zoning
+constraints) for the given cell. Maximum returns are then projected
+onto the gridded landscape to be used by the developer to deter-
+mine the type and location of housing construction that maximizes
+proﬁt across all vacant holdings.
+Given the rent projections for every undeveloped cell, the rent
+associated with the housing type that produces the maximum re-
+turn in each cell i of farm F is speciﬁed as Rmax|i. The developer’s
+WTP for a given farm F is the average Rmax|i over the extent of
+the farm.
+WTPðF; tÞ¼
+P
+j¼Fi
+Rmax jj
+AF
+; ð10Þ
+where AF is the total acreage of farm F.
+3.2.3. Formation of farmer’s willingness to accept (WTA)
+Farmer expectations of land prices are formed using a randomly
+allocated set of twenty prediction models. Each prediction model
+uses one of six different methods for forming predictions based
+on up to 10 years of past land prices from which to extrapolate
+Table 1
+Selection of model parameters.
+Mean (std. dev) farm size, in acres 128 (70.67)
+Mean (std. dev) agricultural return, in $/acre $2486 ($249)
+Building cost per square foot $85–$165
+Infrastructure costs per housing unit a
+One acre lots or smaller $6000–$17,000
+2 acre lots $11,000–$20,000
+5 + acre lots $13,000–$25,000
+Share of income on housing expenditure, ß + c
+Low income .35–.42
+Middle income .27–.34
+High income .18–.26
+Proportion of housing expenditure on land, c/(ß + c) .10 –.90
+Transportation costs (costs/mile)
+Timeb $1.30
+Out of pocket ( BTS, 2007 ) $0.54
+Exogenous rate of population growth 10%
+a Based on from Frank (1989) and Fodor (1997) .
+b We assumed time costs to be a function of average road speed (30 mph),
+average number of workers per house (2), average wage per person ($30/h), value of
+time as a percent of wage (50%), and the road network indirectness coefﬁcient (0.3)
+(this is the ratio of network distance to the Euclidian distance).
+186 N. Magliocca et al. / Computers, Environment and Urban Systems 35 (2011) 183–191
+
+next period’s price expectation (based on Arthur, 1994, Eqs. (A.1)–
+(A.6) in Appendix). A farmer’s decision to sell to a developer or con-
+tinue farming is based on the expected return from selling his farm
+relative to the value of the farm’s agricultural return per acre in
+perpetuity, Vagr. The projected land price for cell i on farm F, PLproj|Fi,
+which consists of spatially discounted (Eq. (A.10) in Appendix) and
+predicted (Eqs. (A.1)–(A.6) in Appendix) price components, is com-
+pared to the farmer’s baseline WTA.
+WTAðFi; tÞ¼ maxfPLprojjFi ; VagrjFi g; ð11Þ
+The farmer’s WTA is dynamically set to the greater of the two
+values. This enables the farmer to capture speculative gains from
+sale of his land when development pressure is high, while enforc-
+ing a rational threshold below which the farmer would be better-
+off farming.
+3.3. Land market interactions
+3.3.1. Bargaining power
+If the developer’s WTP for a given farm is greater than the farm-
+er’s WTA for his land, then the two enter into bilateral negotiation
+to determine the ﬁnal transaction price of each parcel. Bargaining
+power in the land market, e, is adapted from Parker and Filatova
+(2008) and captures differences in the developer’s demand for
+and the farmers’ supply of land at the initial WTP of the developer.
+e ¼ ðdLand /C0 AF/C3 Þ
+ðdLand þ AF/C3 Þ ; ð12Þ
+where dLand is the acreage demanded by the developer and AF/C3 is the
+acreage supplied by participating farmers. F/C3 is the subset of all
+farmers for which the condition WTP > WTA is true. If the developer
+demands more land than farmers supply, e is positive and farmers
+bid above their WTA (Section 3.2.3). If farmers supply more land
+than is demanded by the developer, e is negative and the developer
+will bid below his initial WTP (Section 3.2.1). Bargaining power is
+dynamic because the amount of land supplied by farmers depends
+on the initial WTP of the developer. Also, the developer’s WTP for a
+given farm depends on the level of rents in the housing market.
+Thus, the housing and land markets are explicitly linked.
+3.3.2. Formation of farmer’s asking price (P ask|L)
+After bargaining power is observed (Section 3.3.1), farmers par-
+ticipating in the market ( F/C3 , i.e. WTP > WTA for their farm) form an
+asking price in response to market conditions to maximize their
+gains from trade ( Parker & Filatova, 2008 ).
+PaskjLðF/C3
+i ; tÞ¼ maxfWTAðF/C3
+i ; tÞ/C3ð 1 þ eÞ; VagrjF/C3
+i
+g; ð13Þ
+The asking price of the market-participating farmer, F/C3
+i , is equal
+to or greater than the value of his land in agriculture. If the devel-
+oper demands more land than farmers supply, each farmer will
+mark up his asking price to potentially maximize gains from trade.
+3.3.3. Formation of the developer’s bid price (P bid|L)
+After bargaining power is observed (Section 3.3.1), the devel-
+oper forms a bid price for each farm for which the condition,
+WTP > WTA, is true.
+PbidjLðF/C3
+i ; tÞ¼ minfWTPðF/C3
+i ; tÞ/C3ð 1 þ eÞ; WTPðF/C3
+i ; tÞg; ð14Þ
+The developer’s bid price for the farm of a market-participating
+farmer ( F/C3
+i ) is equal to or less than his initial WTP for the farm. If
+farmers supply more land than the developer demands, the devel-
+oper will mark down his bid price for each farm to maximize both
+gains from trade and proﬁt from sales of houses in that location.
+3.4. Housing market interactions
+3.4.1. Formation of asking prices for houses (P ask|H)
+Houses enter the housing market as either new construction or
+as pre-existing, recently vacated houses. For existing housing, the
+asking price equals the developer’s expected rent, which is formed
+using the price expectation models described in Section 3.2.2 and
+the Appendix (Eqs. (A.1)–(A.6)). For newly constructed houses,
+the asking price equals the developer’s projected rent subject to
+varying levels of rent information, as described in Section 3.2.2
+and speciﬁed by Eqs. (5)–(9).
+3.4.2. Housing market competition
+The set of houses on which consumer c bids, Hj, are identiﬁed by
+the criteria:
+fHj 2 Hn : WTBðc; jÞ P PaskjjXlt g; ð15Þ
+Consumer c will bid on houses for which his WTB is greater than
+or equal to the developer’s asking prices, Pask|j, multiplied by the
+bid level, Xlt for housing type lt. The bid level is the running aver-
+age percentage that sale prices have been above/below the original
+asking prices for houses of type lt in the past.
+The housing market competition factor, HMC, describes the
+competition for housing each consumer faces in the housing mar-
+ket. It is calculated by comparing the number of houses on which
+consumer c will bid to the number of other consumers bidding
+on the same houses:
+HMCc ¼ ðNC /C0 NHÞ
+ðNC þ NHÞ ; ð16Þ
+where NH is the number of houses in Hj and NC is the number of
+other consumers bidding on Hj.
+3.4.3. Formation of consumer bidding for housing
+After HMC is observed (Eq. (16)), consumer c sets his bid price
+for each particular house j in the set Hj in relation to his optimal
+rent for that house, R/C3 (c, j), in response to market conditions:
+Pbidðc; jÞ¼ R/C3 ðc; jÞþ HMCc ½WTPðcÞ/C0 PaskðjÞ/C138 ; ð17Þ
+If HMCc is positive, competition for housing for consumer c is
+high and his bids will be set above his optimal rents. If HMCc,i s
+negative, competition for housing for consumer c is low and his
+bids will be set below the asking prices. If HMCc is zero, the number
+of consumers bidding on consumer c’s set of houses is the same as
+Fig. 2. Initial landscape conﬁguration. Each colored polygon represents the location
+of one of 50 farms. The dark blue semi-circle (top center) represents the initial ‘city’
+location. (For interpretation of the references to colour in this ﬁgure legend, the
+reader is referred to the web version of this article.)
+N. Magliocca et al. / Computers, Environment and Urban Systems 35 (2011) 183–191 187
+
+the number of houses c is bidding on, and his bids will equal his
+optimal rents. The adjustment of consumers’ bid prices in response
+to market conditions allows consumers to try to simultaneously
+maximize their gains from trade and the likelihood that they will
+be the highest bidder.
+3.4.4. Rules for matching consumers with houses
+After the bidding process is completed, the highest bidder
+on each house is identiﬁed. Consumers possessing at least one
+‘winning bid’ are put into a subset of ‘winning bidders’. For each
+consumer in the set of winning bidders, the set of houses for which
+the consumer owns the highest bid is identiﬁed. The consumer’s
+utility is recalculated (using Eq. (1)) for each of these houses using
+his winning bid instead of the initial asking price. Given these new
+levels of utility, the consumer is matched with the house for which
+he is the highest bidder and derives the highest utility. Once a con-
+sumer is matched with a house, both the consumer and house are
+removed from the market. The matching process is reiterated with
+the remaining bids (which are kept constant) until all consumers
+are matched, all houses are occupied, or all positive bids are
+Table 2
+Number of lots by type of house/lot combination, at t = 20.
+Housing type Lot size (acres) Housing type description Mean number of lots Std. dev. Mean annual rents (2007 $) Std. dev.
+1 1=4 acre lots Small house 96 12 8899.29 482.79
+2 Medium house 58 46 12186.06 1022,20
+3 Large house 128 74 15119.46 1006.69
+4 ½ acre lots Small house 175 113 10097.02 1069.66
+5 Medium house 180 124 13204.93 1129.09
+6 Large house 172 74 16692.85 889.26
+7 1 acre lots Small house 506 120 12675.49 497.69
+8 Medium house 220 88 15471.26 621.07
+9 Large house 163 68 19595.76 676.23
+10 2 acre lots Small house 589 104 19794.96 575.73
+11 Medium house 375 92 21823.79 544.95
+12 Large house 141 34 25719.98 976.22
+13 5 acre lots Small house 0 0 – –
+14 Medium house 0 0 – –
+15 Large house 0 0 – –
+16 10 acre lots Small house 40 32 33008.27 4228.99
+17 Medium house 36 29 35303.91 3889.41
+18 Large house 8 12 34579.29 7626.81
+Fig. 3. ‘Average’ development pattern maps for time steps: (a) 5, (b) 10, (c) 15, and (d) 20. Housing types are color-coded from 1 (dark blue) to 18 (dark red).
+188 N. Magliocca et al. / Computers, Environment and Urban Systems 35 (2011) 183–191
+
+exhausted. This process ensures consumers are matched to houses
+that generate their maximum possible utility levels given compet-
+itive bids from other consumers and discrete housing options pro-
+vided by the developer.
+4. Model experiments
+CHALMS was run on an 80 /C2 80 gridded landscape with each
+cell representing an acre for a total region of 6400 acres, or 10
+square miles. The CBD was set in the middle of the top row at coor-
+dinates (1, 40) with an established ex-urban developed area shown
+as the dark blue half-moon at the top of Fig. 2 . Although CHALMS
+was able to replicate 18 different housing types, where type is de-
+ﬁned by lot and housing size, initial development only consisted of
+randomly placed housing types 1–12 (see Table 2 for description of
+housing types). Fifty farms surrounded the initial development and
+are shown as different colored patches in Fig. 2.2 Initially, 334 con-
+sumers participated in the housing market, and an exogenous
+growth rate of 10 percent a year was assumed. Incomes of incoming
+households are assumed to vary from $20,000 for the lowest quintile
+to $200,000 for the highest quintile. 3 Travel costs for households
+were assumed to depend both on time and monetary costs ( Table 1).
+As new households moved to the region, they demanded housing; a
+single developer for the region responded by buying land from farm-
+ers and building houses. Thus, farmland was gradually converted to
+developed uses over time.
+CHALMS was run 30 times 4 and each run tracks growth over a
+20-year period. Farmers’ locations and agricultural returns were held
+constant across all runs, as were the distribution and location of
+housing types in the initial city. Draws from income and consumer
+preference distributions and the initial assignment of all prediction
+models (i.e. for farmers’ price predictions and distance discounting,
+and developer’s price predictions) were allowed to vary randomly
+across each of the 30 runs. Holding landscape features constant
+across runs eliminates sources of geographic variability, while
+exploring the effects of path dependence and stochastic processes
+on development patterns that result from agent heterogeneity.
+Stochastic elements in CHALMS (i.e. random draws from con-
+sumer income and preference distributions and assignment of pre-
+diction models) limit the insight of any single model realization.
+Instead, maps of the most likely, or ‘average’, development pat-
+terns were constructed ( Fig. 3a–d ). For each time step displayed,
+the development pattern consists only of cells that were developed
+above a threshold frequency, which was calibrated to produce an
+‘average’ development pattern that closely approximated the cal-
+culated average percent-developed area and dispersion across 30
+runs. Within each of those cells, the housing type with the highest
+probability of occurrence is mapped. In addition, Fig. 4 shows the
+probability of development at any density occurring across 30
+runs.
+4.1. Results
+Table 2 provides a description of housing and lot sizes associ-
+ated with each housing type, and summary statistics of ﬁnal out-
+comes across 30 model runs. Even though the initial landscape
+conﬁguration was held constant across runs, the housing types
+built across runs showed a good deal of variation. This variation re-
+ﬂected the importance of heterogeneity in consumer demand. The
+most frequently developed housing types were those with small or
+medium sized houses on 1- and 2-acre lots, which were affordable
+for most consumers. No 5-acre lots were built over the entire per-
+iod, but 10-acre lots show up. The absence of 5-acre lots was due to
+the combined effects of high construction costs relative to ex-
+pected rents, and the wealthiest consumers demanding houses
+on 10-acre lots.
+The results exhibit a general development pattern that is con-
+sistent with urban economic theory: as shown in Fig. 5 , housing
+density tends to decrease, and average lot sizes increase, as dis-
+tance from the CBD increases ( Brueckner & Fansler, 1983; Mills,
+1972). Also consistent with urban economic theory, land prices
+tend to decrease with distance from the CBD ( Fig. 6 ) and increase
+over time as population grows and demand for land increases
+(Fig. 7 ). The results also show a pattern that is typical of urban
+‘‘sprawl’’ ( Fig. 8 ): a divergent relationship over time between the
+number of lots and acreage developed ( Heimlich & Anderson,
+2001).
+In the ﬁrst 5 time steps, development density and location were
+primarily driven by consumer demand and relative farm produc-
+tivity. From the initial housing stock, consumers generally derived
+higher utility from 1- and 2-acre lots than from other lot sizes. This
+resulted in strong competition for those housing types and a sub-
+sequent bidding up of their rents. Relatively high rent levels
+prompted the developer to purchase land and capitalize on the
+Fig. 4. Probability of ﬁnal development patterns of any density occurring at t =2 0
+across 30 runs. Land that was always developed is color-coded as dark red, while
+land that had a low probability of developing is color-coded in dark blue.
+Fig. 5. Mean density by zone after 20 time steps. Zones form concentric circles at
+equal intervals away from the CBD. Rounded interval values are shown in miles..
+2 Colors are used in Fig. 2 to delineate the farms but have no other meaning.
+3 These data were based on median household incomes for suburban counties in
+the Mid-Atlantic region (Delaware, Maryland, Pennsylvania, and Virginia) from the
+2000 Census. In general, the model is meant to represent a hypothetical community
+on the urban fringe in one of these states; we parameterize the model using data from
+this region n ¼ z2
+a r2
+d2
+/C16/C17
+.
+4 Thirty runs were determined to be sufﬁcient sample size as given by for estimates
+of mean rents and number of lots ( Table 2 ) at the 95% conﬁdence level.
+N. Magliocca et al. / Computers, Environment and Urban Systems 35 (2011) 183–191 189
+
+strong demand for 1- and 2-acre lots. The development pressure
+ﬁltered through to the land market, where farmers adjusted their
+WTA levels upward attempting to capture gains from sale above
+their return from agriculture. This price signal was strongest close
+to the initial development, resulting in high land prices that de-
+creased with distance. Thus, the ﬁrst farms sold were those with
+relatively low asking prices, distant from initial development
+(weak price signal) and comparatively low productivity (low initial
+asking price). As a result, early development progressed in a ‘leap-
+frog’ pattern ( Figs. 3 a and b) with farms far from initial develop-
+ment sold ﬁrst. Furthermore, because of strong demand and high
+returns net of land prices and construction costs, 1- and 2-acre lots
+were built on the ﬁrst farms sold.
+As time progressed, increased land prices coupled with con-
+sumer demand prompted the construction of houses on compara-
+tively small (1-acre or less) or large (10- acre) lot sizes. Rents for
+these relatively scarce housing types rose faster than those of other
+housing types in the existing housing stock and prompted a shift in
+construction. Concurrently, development pressure and land scar-
+city drove land prices upward as population growth spurred com-
+petition for housing and farmers reacted to an upward trend in
+past land prices. Faced with higher asking prices from farmers
+and consumer demand for scarce housing options, the developer
+shifted lot sizes and location. Generally, smaller lots – i.e., higher
+density housing – occurred on expensive land closer to the initial
+‘city’, while lower density housing was built on remaining land
+far from the initial ‘city’. Spatial and temporal variability around
+this general pattern were due to heterogeneity in farmers’ expecta-
+tions of selling prices and consumer housing demands and the
+resulting proﬁtability in each particular location.
+Fig. 4 provides a sense of the probability distribution of spatial
+outcomes across model runs. Comparisons between Fig. 3 a and b
+and Fig. 4 demonstrate that several farms have a greater than 85
+percent probability of being developed early in any given run.
+Those farms have relatively poor land and sufﬁciently low expecta-
+tions of land prices to prompt early development consistently
+across runs. After time step 10, however, the remaining farms
+shown as developed in Fig. 3 c and d generally have much lower
+probabilities of being developed in any given model run. At this
+point in simulations, land prices are determined more by the
+agents’ price expectation models than by differences in agricultural
+land productivity. Thus, development patterns are less dependent
+on landscape features and become more directly inﬂuenced by sto-
+chasticity inherent in agents’ price expectation models ( Brown
+et al., 2005 ). This leads to increased stochasticity in development
+patterns in the last half of simulations.
+5. Discussion and conclusions
+CHALMS is an ABM of urban growth and land-use that inte-
+grates microeconomic fundamentals into a framework capable of
+capturing full heterogeneity and spatially explicit development
+patterns. Optimizing behavior of heterogeneous consumers, farm-
+ers , and a developer, a spatially differentiated landscape, popula-
+tion growth, and a variety of housing and lot types are included
+as part of the development process. At the same time, bounded
+rationality, or the lack of perfect foresight, is assumed on the part
+of all agents. We use CHALMS to describe the dynamics of the
+development process in a hypothetical ex-urban locale, as well as
+the spatial outcomes.
+CHALMS as it currently exists has some limitations. The current
+version is simulated on a simpliﬁed landscape that lacks natural
+features such as water bodies, topography, or soil quality, which
+would inﬂuence a particular location’s attractiveness for develop-
+ment and/or suitability for agriculture. In the real world, many of
+the features that constitute good agricultural land are often favor-
+able for development, which compounds their inﬂuence on devel-
+opment patterns. In addition, proximity-based valuation of natural
+amenities or publicly provided goods by consumers is not repre-
+sented, which has been shown to signiﬁcantly inﬂuence develop-
+ment patterns ( Filatova et al., 2007 ; Irwin & Bockstael, 2002; Wu
+& Plantinga, 2003 ). Future model iterations will incorporate more
+detailed natural landscape features and associated proximity-
+based valuation to explore their effects on development patterns.
+Another limitation is the representation of only one developer.
+This was a simpliﬁcation made to ease interpretation of simulated
+interactions and outcomes in both the land and housing markets.
+The introduction of competition between developers may change
+current development patterns. Although incorporating the above
+elements into the model’s structure would likely improve its real-
+ism, such elements would also add further complexity into an
+already complex model. Moreover, the existing framework allows
+us to establish baseline development patterns subject to
+heterogeneous consumer preferences and incomes and farm
+productivity without the added complexity of a more detailed
+Fig. 6. Average price of farmland sold for development over 30 runs, at any time
+step, as a function of distance from the CBD.
+Fig. 7. Average price of farmland sold for development over 30 runs in each time
+period.
+Fig. 8. Comparison of number of lots versus acreage developed over time.
+190 N. Magliocca et al. / Computers, Environment and Urban Systems 35 (2011) 183–191
+
+landscape. Thus, further testing of model sensitivities and out-
+comes will take priority before additional landscape features are
+introduced.
+Our results demonstrate qualitative behaviors consistent with
+urban economic theory that emerge from explicitly coupling hous-
+ing and land markets in the ABM framework. The interplay be-
+tween markets and agents’ heterogeneous preferences and
+perceptions reproduces many trends predicted by conventional ur-
+ban economic models but also shows a dispersed, ‘‘leapfrog’’ devel-
+opment pattern that is common in ex-urban areas. This has three
+important implications. First, CHALMS demonstrates that housing
+and land markets inﬂuence and are inﬂuenced by one another.
+Thus, simulating feedbacks that emerge between markets is critical
+for understanding the forces that drive urban growth patterns. Sec-
+ond, our formalization of economic agents shows that microeco-
+nomic decision-making can be incorporated into an ABM
+framework to reproduce regional patterns consistent with those
+produced by conventional spatial equilibrium approaches. Finally,
+by simulating urban growth from the ‘bottom-up’, ABMs allow
+the researcher to represent full agent and environment heteroge-
+neity and build an individual-level understanding of the dynamics
+of growing urban systems—a combination of advantages unique to
+the agent-based modeling approach.
+Acknowledgements
+This research was supported by a US Environmental Protection
+Agency Science to Achieve Results (STAR) grant to Resources for
+the Future. Partial support of the ﬁrst author was provided by
+the National Science Foundation (NSF Integrative Graduate Educa-
+tion and Research Traineeship (IGERT) ’Water inthe Urban Environ-
+ment’ program (Grant No. 0549469) as an UMBC IGERT trainee.
+Any opinions, ﬁndings, and conclusions or recommendations ex-
+pressed in this material are those of the authors and do not neces-
+sarily reﬂect the views of the National Science Foundation.
+Appendix A. Supplementary material
+Supplementary material provides more detailed descriptions of
+agents’ price expectation models and the ’housing market compe-
+tition factor’ associated with this article can be found, in the online
+version, at doi:10.1016/j.compenvurbsys.2011.01.002.
+References
+Alonso, W. (1964). Location and land use . Cambridge, MA: Harvard University Press.
+Anas, A., & Arnott, R. J. (1991). Dynamic housing market equilibrium with taste
+heterogeneity, idiosyncratic perfect foresight, and stock conversions. Journal of
+Housing Economics, 1 , 2–32.
+Arthur, W. B. (1994). The El Farol Problem. In Amer. Econ. Assoc. Papers and Proc.
+(Vol. 84, p. 406).
+Arthur, W. B. (2006). Out-of-equilibrium economics and agent-based modeling. In L.
+Tesfatsion & K. L. Judd (Eds.), Handbook of computational economics: Agent-based
+computational economics (pp. 1551–1564). Amsterdam: Elsevier B.V..
+Arthur, W. B., Durlauf, S. N., & Lane, D. (1997). The economy as an evolving complex
+system II. Santa Fe institute studies in the science of complexity (XXVII) . Wesley:
+Addison.
+Axtell, R. (2005). The complexity of exchange. Economic Journal, 115 (504),
+F193–F210.
+Benenson, I., & Torrens, P. (2004). Geosimulation: Automata-based modeling of urban
+phenomena. London: John Wiley and Sons.
+Brown, D. G., Page, S., Riolo, R., Zellner, M., & Rand, W. (2005). Path dependence and
+the validation of agent-based spatial models of land use. International Journal of
+Geographical Information Science, 19 (2), 153–174.
+Brueckner, J., & Fansler, D. (1983). The economics of urban sprawl: Theory and
+evidence on the spatial sizes of cities. The Review of Economics and Statistics,
+65(3), 479–482.
+Bureau of Transportation Statistics (2007). Average cost of owning and operating
+an automobilea (assuming 15,000 vehicle-miles per year. Research and
+Innovative Technology Administration . <www.bts.gov/publications/national_
+transportation_statistics/html/table_03_14.html>.
+Capozza, D., & Helsley, R. (1990). The stochastic city. Journal of Urban Economics,
+28(2), 187–203.
+Epple, D., & Sieg, H. (1999). Estimating equilibrium models of local jurisdictions.
+Journal of Political Economy, 107 (4), 645–681.
+Ettema, D. (2010). A multi-agent model of urban processes: Modeling relocation
+processes and price setting in housing markets. Computers, Environment, and
+Urban Systems, 35 (1), 1–11.
+Fernandez, L. E., Brown, D. G., Marans, R. W., & Nassauer, J. I. (2005). Characterizing
+location preferences in an exurban population: Implications for agent-based
+modeling. Environment and Planning B: Planning and Design, 32 (6), 799–820.
+Filatova, T., Parker, D. C., & van der Veen, A. (2007). Agent-based land markets:
+Heterogeneous agents, land prices, and urban land use change. Proceedings of
+the 4th conference of the European social simulation associations (ESSA’07),
+Toulouse, France.
+Filatova, T., Parker, D. C., & van derVeen, A. (2009). Agent-based urban land markets:
+Agent’s pricing behavior, land prices and urban land use change. Journal of
+Artiﬁcial Societies and Social Simulation 12(13). <http://jasss.soc.surrey.ac.uk/12/
+1/3.html>.
+Fodor, E. (1997). The real cost of growth in Oregon. Population and Environment,
+18(4).
+Frank, J. E. (1989). The costs of alternative development patterns: A review of the
+literature. Washington, DC: Urban Land Institute.
+Heimlich, R., & Anderson, W. (2001). Development at the urban fringe and beyond:
+Impacts on agriculture and rural land. Economic Research Service, US
+Department of Agriculture. Agricultural Economic Report No. 803.
+Irwin, E. (2010). New directions for urban economic models of land use change:
+Incorporating spatial heterogeneity and transitional dynamics. Journal of
+Regional Science, 50 (1), 65–91.
+Irwin, E., & Bockstael, N. (2002). Interacting agents, spatial externalities, and the
+evolution of residential land use patterns. Journal of Economic Geography, 2 ,
+31–54.
+Kirman, A. P. (1992). Whom or what does the representative individual represent?
+Journal of Economic Perspectives, 6 (2), 117–136.
+Ligtenberg, A., Wachowicz, M., Bregt, A. K., Beulens, A., & Kettenis, D. L. (2004). A
+design and application of a multi-agent system for simulation of multi-actor
+spatial planning. Journal of Environmental Management, 72 , 43–55.
+Manson, S. M. (2001). Simplifying complexity: A review of complexity theory.
+Geoforum, 32 , 405–415.
+McNamara, D. E., & Werner, B. T. (2008). Coupled barrier island–resort model: 1.
+Emergent instabilities induced by strong human–landscape interactions.
+Journal of Geophysical Research – Earth Surface, 113 (F1), F01016.
+Mills, E. S. (1972). Urban economics . Glenview, IL: Scott Foresman.
+Muth, R. F. (1969). Cities and housing . Chicago, IL: University of Chicago Press.
+Otter, H. S., van der Veen, A., & de Vriend, H. J. (2001). ABLOoM: Location behavior,
+spatial patterns, and agent-based modeling. Journal of Artiﬁcial Societies and
+Social Simulation 4(4)2. <http://www.soc.surrey.ac.uk/jasss/4/4/2.html>.
+Parker, D. C., & Filatova, T. (2008). A conceptual design for a bilateral agent-based
+land market with heterogeneous economic agents. Computers, Environment and
+Urban Systems, 32 , 454–463.
+Parker, D. C., Manson, S. M., Janssen, M. A., Hoffmann, M., & Deadman, P. (2003).
+Multi-agent systems for the simulation of land-use and land-cover change: A
+review. Annals of the Association of American Geographers, 93 (2), 314–337.
+Robinson, D. T., & Brown, D. G. (2009). Evaluating the effects of land-use
+development policies on ex-urban forest cover: An integrated agent-based
+GIS approach. International Journal of Geographical Information Science, 23 (9),
+1211–1232.
+Tesfatsion, L. (2006). Agent-based computational economics: A constructive
+approach to economic theory. In L. Tesfatsion & K. L. Judd (Eds.), Handbook of
+computational economics: Agent-Based computational economics (II)
+(pp. 831–880). Amsterdam: Elsevier B.V..
+Tesfatsion, L., & Judd, K. L. (2006). Handbook of computational economics: Agent-
+based computational economics (II) . Amsterdam: Elsevier B.V..
+Veldkamp, A., & Verburg, P. H. (2004). Modelling land use change and
+environmental impact. Journal of Environmental Management, 72 , 1–3.
+Walsh, R. (2007). Endogenous open space amenities in a locational equilibrium.
+Journal of Urban Economics, 61 , 319–344.
+Wheaton, William. C. (1974). A comparative static analysis of urban spatial
+structure. Journal of Economic Theory, 9 , 223–237.
+Wu, J., & Plantinga, A. J. (2003). The inﬂuence of public open space of urban
+spatial structure. Journal of Environmental Economics and Management, 46 (2),
+288–309.
+N. Magliocca et al. / Computers, Environment and Urban Systems 35 (2011) 183–191 191

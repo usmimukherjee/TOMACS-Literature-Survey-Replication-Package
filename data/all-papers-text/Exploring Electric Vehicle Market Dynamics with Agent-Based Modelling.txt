@@ -1,0 +1,184 @@
+Exploring Electric Vehicle Market Dynamics with Agent-Based
+Modelling
+Citation for published version (APA):
+Bertucci, J. P., Clemente, M., Salazar, M., & Hofman, T. (2024). Exploring Electric Vehicle Market Dynamics with
+Agent-Based Modelling: The Impact of Design Strategies and Consumer Characteristics. In H. Lam, E. Azar, D.
+Batur, S. Gao, W. Xie, S. R. Hunter, & M. D. Rossetti (Eds.), Proceedings of the 2024 Winter Simulation
+Conference INFORMS Institute for Operations Research and the Management Sciences. https://informs-
+sim.org/wsc24papers/pos115.pdf
+Document license:
+TAVERNE
+Document status and date:
+Published: 18/12/2024
+Document Version:
+Publisher’s PDF, also known as Version of Record (includes final page, issue and volume numbers)
+Please check the document version of this publication:
+• A submitted manuscript is the version of the article upon submission and before peer-review. There can be
+important differences between the submitted version and the official published version of record. People
+interested in the research are advised to contact the author for the final version of the publication, or visit the
+DOI to the publisher's website.
+• The final author version and the galley proof are versions of the publication after peer review.
+• The final published version features the final layout of the paper including the volume, issue and page
+numbers.
+Link to publication
+General rights
+Copyright and moral rights for the publications made accessible in the public portal are retained by the authors and/or other copyright owners
+and it is a condition of accessing publications that users recognise and abide by the legal requirements associated with these rights.
+            • Users may download and print one copy of any publication from the public portal for the purpose of private study or research.
+            • You may not further distribute the material or use it for any profit-making activity or commercial gain
+            • You may freely distribute the URL identifying the publication in the public portal.
+If the publication is distributed under the terms of Article 25fa of the Dutch Copyright Act, indicated by the “Taverne” license above, please
+follow below link for the End User Agreement:
+www.tue.nl/taverne
+Take down policy
+If you believe that this document breaches copyright please contact us at:
+openaccess@tue.nl
+providing details and we will investigate your claim.
+Download date: 26. Aug. 2026
+
+Proceedings of the 2024 Winter Simulation Conference
+H. Lam, E. Azar , D. Batur , S. Gao, W. Xie, S. R. Hunter , and M. D. Rossetti, eds.
+EXPLORING ELECTRIC VEHICLE MARKET DYNAMICS WITH AGENT-BASED
+MODELLING: THE IMPACT OF DESIGN STRA TEGIES AND CONSUMER
+CHARACTERISTICS
+Juan Pablo Bertucci 1, Maurizio Clemente 1, Mauro Salazar 1, and Theo Hofman 1
+1Dept. of Mechanical Eng. Control Systems Technology, Eindhoven University, Eindhoven, North
+Brabant, NL
+ABSTRACT
+In this paper, we present an agent-based simulation framework to assess the effect of battery electric
+vehicle optimal design methodologies employed by original equipment manufacturers, on their market
+share and customer uptake. First, we create demographically accurate customer agents representing their
+characteristics based on recent real-world data, whereby we implement a choice model enabling each agent
+to make purchases according to their preferences. Second, we develop company agents who design and
+manufacture their vehicles according to the different optimal design methodologies: vehicle-tailored and
+concurrent design. Finally, we compare the evolution of the market over multiple years to obtain final
+profitability of the different strategies and final consumer vehicle adoption, with respect to base scenarios.
+Our results show that leveraging concurrent design increases the attractiveness of electric vehicles for
+customers, leading to increases in sales compared to the traditional vehicle-tailored approach.
+1 INTRODUCTION
+Recent advancements in powertrain design methodologies have enabled complex system-level optimization
+strategies, expanding design spaces. The integration of product family design strategies, such as modularity
+and standardization, with optimal powertrain design allows for trade-offs between energy efficiency and
+production costs. Unlike traditional vehicle-specific designs, concurrent design optimization uses modular
+components across a vehicle family, reducing production costs through economies of scale. However, the
+market impact of these strategies remains unclear.
+This study aims to evaluate whether lower acquisition prices, at the expense of reduced energy efficiency,
+align with customer preferences. Previous research on Tesla BEVs demonstrated significant reductions in
+Total Cost of Ownership (TCO) through concurrent powertrain design, though it did not consider customer
+interactions. J. Kusar’s work supports the cost and time benefits of concurrent design, while other studies
+have applied product family strategies to vehicle bodies and chassis with similar conclusions (Kušar, Rihar,
+Duhovnik, and Starbek 2014) (Fellini, Kokkolaras, Michelena, Papalambros, Saitou, and Perez-Duarte
+2002).
+Agent-based modeling, which simulates complex systems of autonomous entities, provides insights
+into how individual decisions lead to collective outcomes (Schieritz and Milling 2008). This method
+has been used to explore the interaction between customer markets and vehicle portfolios, highlighting
+factors beyond cost, such as driving range, energy efficiency, size, age, customization, and performance.
+Emotional responses and personal attitudes towards electric vehicles also play a significant role in purchase
+decisions, often overlooked in strategic company decisions. In this paper, we develop an agent-based model
+that captures the complex interactions between vehicle manufacturers and customer choices, analyzing the
+impact of different design methodologies on customer preferences and company revenues in a competitive
+market.
+
+Bertucci, Clemente, Salazar , and Hofman
+2 METHODOLOGY
+We develop a model where customers, companies, and factories interact in a shared market environment
+(Figure 1). Customers are segmented by characteristics (age, income, gender, location) and preferences
+(type, price, range, energy consumption, speed). Based on available vehicle offerings, they make purchase
+decisions according to their requirements (Purchase Policy). Companies use distinct design optimization
+procedures, informed by market research and sales data, to determine production volumes and vehicle
+types (Design Policy). We consider three vehicle types (city-car, sedan, cross-over) and two production
+policies (Tailored and Concurrent, following (Clemente, Salazar, and Hofman 2024)). Factories produce
+specific components (engine, chassis, etc.) and receive design orders from companies. Production volume
+and design type influence manufacturing times and costs.
+Companies
+Tailored OEM
+Individual
+Optimization
+/building
+Concurrent OEM
+Concurrent
+Optimization
+/building
+Factories
+/industry
+/industry
+designPolicy1
+designPolicy2
+Market
+Products
+/car
+/truck
+/car
+/truck
+/car
+vehicleType1
+vehicleType2
+vehicleType2
+vehicleType3
+vehicleType1
+Customers
+Market Segment 1
+/user
+/user
+/user/user
+/user
+/user
+/user
+/user
+/user
+/user
+/user
+/user
+/user /solar-panel/d⌢llar-sign/d⌢llar-sign/venus-mars/child
+Market Segment 2
+/user
+/user
+/user/user
+/user
+/user
+/user/user
+/user
+/user
+/user
+/user
+/user
+/user
+/d⌢llar-sign/venus-mars/child/child
+Market Segment 3
+/user
+/user
+/user
+/user/user
+/user
+/user
+/user
+/user/user /solar-panel/d⌢llar-sign/venus-mars/child
+Purchase
+Policy 1
+Purchase
+Policy 2
+Purchase
+Policy 3
+Quarterly Sales
+Market Research
+Figure 1: Diagram of model components.
+3 PRELIMINARY RESULTS
+We analyze the electric vehicle market in the Netherlands, comparing a company using concurrent design
+optimization with one using vehicle-tailored design optimization. Our results show that the concurrent-
+design company achieves 105% more sales and 28% additional final capitalization due to reduced costs
+and production times. Introducing two more companies (one per design strategy) drastically shifts market
+shares, leading to the bankruptcy of one tailored-design company. Higher disposable income, potentially
+from subsidies, increases electric vehicle adoption by 13.92%, with a preference for longer-range models.
+In conclusion, our agent-based simulation framework combines customer and company behaviors to assess
+the impact of different electric vehicle design methodologies. Future work will explore additional market
+scenarios and refine the model to account for dynamic changes in customer behavior and market conditions.
+REFERENCES
+Clemente, M., M. Salazar, and T. Hofman. 2024. “Concurrent Design Optimization of Powertrain Component Modules in a
+Family of Electric Vehicles”. Applied Energy . Under review. Available online at https://arxiv.org/pdf/2311.03167.
+Fellini, R., M. Kokkolaras, N. Michelena, P. Papalambros, K. Saitou and A. Perez-Duarte. 2002. “A Sensitivity-Based
+Commonality Strategy for Family Products of Mild Variation, with Application to Automotive Body Structures”. In 9th
+AIAA/ISSMO Symp. on Multidisciplinary Analysis and Optimization .
+Kušar, J., L. Rihar, J. Duhovnik, and M. Starbek. 2014. “Concurrent realisation and quality assurance of products in the automotive
+industry”. Concurrent Engineering Research and Applications 22(2):162 – 171 https://doi.org/10.1177/1063293X13520315.
+Schieritz, N. and P. M. Milling. 2008. Agents First! Using Agent-based Simulation to Identify and Quantify Macro Structures ,
+139–152. Berlin, Heidelberg: Springer Berlin Heidelberg https://doi.org/10.1007/978-3-540-73665-3_8.

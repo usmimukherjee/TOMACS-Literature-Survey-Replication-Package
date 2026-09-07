@@ -1,0 +1,539 @@
+250 IEEE Transactions on Power Systems, Vol. 13, No. 1, February 1998 
+AUCTION ~AR~ET ~IMUL~TOR FO 
+Jayant Kumar Gerald SheblC 
+Student Member Senior Member 
+Department of Electrical and Computer Engineering 
+Iowa State University 
+Ames, IA 50011 
+Abstract : Through the passage of new public 
+utility regulatory policies, the Federal Energy 
+Regulatory Commission (FERC) encourages an open 
+previous paper describes a framework for price based 
+operation and the associated technical issues in an 
+auction market structure. This paper presents an 
+auction market simulator to experimentally study 
+the aspects of power system operation in price- 
+based environment. The proposed simulator can 
+also be used as a tool to train the system operators 
+how to perform electric power transaction in the 
+deregulated environment. This paper presents the 
+simulation results of auction market for price based 
+operation in the 24-bus, 10-generator IEEE 
+Reliability Test System. 
+market system for price based operation. A 
+Keywords : Brokerage system, Auction market, Decision 
+analysis, Price based operation, electric power commodity, 
+futures and options 
+I. INTRODUCTION 
+Through the passage of new public utility regulatory policies, 
+the Federal Energy Regulatory Commission (FERC) encourages an 
+open market system. The basic premise of the regulatory policies 
+is to create a competitive environment where generation and 
+transmission services are bought and sold under demand and 
+supply market conditions. The open market system will consist 
+of generation companies (GENCOs), distribution companies 
+(DISCOS), transmission companies (TRANSCOs) and independent 
+contract administrator (ICA) [1,2]. The interconnection between 
+these groups is shown in Figure 1. The ICA is independent and 
+disassociated agent for market participants and hence, is assumed 
+to be the auctioneer in the electric marketplace. 
+A thorough discussion of a price based operation in an auction 
+market structure is presented in reference [3]. Reference [5] 
+presents a model for energy brokerage/auction system with reserve 
+margin and transmission losses. This paper uses the described 
+framework in reference [3] and the proposed model in reference [5] 
+to develop an auction market simulator. The developed simulator 
+scheme is used to simulate auction market in the 24-bus, 10- 
+generator IEEE Reliability Test System [41. 
+In this work, we concentrate on the electric power auction in 
+forward market and futures market The financial drain inflicted on 
+traders when hedging their operations in the futures market is 
+slightly higher than the one inflected through direct placement in 
+the forward market. Hence, an optimal mix of futures 
+commitments and forward contracts is difficult to assess and 
+depends on hedging, constraints imposed by different contracts, 
+and cost of different contracts This paper presents an approach to 
+allocate and implement the future contract commitments via 
+forward market simulation. The proposed approach is based on a 
+linear programming formulation This formulation can easily be 
+extended to include stochastic variables, such as fluctuating 
+market prices by using decision analysis methodology [6] 
+There are many technical and legal problems need to be 
+resolved for the suggested industry transition to be successful [3] 
+The proposed simulator can be used to address such problems, at 
+least in part. The issues, such as pricing of transmission losses, 
+priority of transactions, emergency power, etc. can be studied and 
+analyzed by experimental simulation of electric market. The 
+ultimate goal of the developed simulator is to discover the 
+problems associated with the new environment via 
+computer/operator simulation instead of using the actual power 
+grid. 
+In the new environment, the system operators are requred to 
+submit the pnce-based bids to perform electric power transaction 
+This is quite different from what the system operators are 
+accustomed in a vertically integrated industry. The proposed 
+simulator can be used to train the operators how to bid in the new 
+environment. 
+The second section of this paper explains the auction market 
+structure. The third section explains a complete scheme for 
+auction market simulator. The simulation results are reported in 
+the fourth section. The fifth section concludes the paper wlth 
+analytical comments 
+Figure 1. New business environment 
+II. AUCTION MARKET STRUCTURE 
+PE-751 -PWRS-0-05-1997 A paper recommended and approved by Auction market structure can be thought of as a computerized 
+the lEEE Power System Operations Committee of the IEEE Power market as shown in Figure 2. Each of the players has a terminal 
+Engineering Society for publication in the IEEE Transactions on power (PC, workstation, etc.) connected to an auctioneer (auction 
+Systems Manuscript submitted December 10, 1996; made available for mechanism) and a contract evaluator. Players generate bids (buy 
+printing May 15, 1997. and sell) and submit the quotation to the auctioneer. A bid is a 
+specified amount of electricity at a given price. The auctioneer 
+binds. bids (matching buyers and sellers) subject to approval of the 
+contract evaluation. 
+0885-8950/98/$10.00 0 1997 IEEE 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:55:17 UTC from IEEE Xplore.  Restrictions apply.
+
+251 
+D. Planning Market 
+Auction Mechanism 
+Evaluation 
+I I I I I I 
+Figure 2. Computerized market 
+Note that most of the authors previous work [7,8,9,10,11,12] 
+has dealt with multi-lateral contracts (multiple buyers and sellers) 
+to maximize the number of bid awards for each time period of bid 
+matching. This can be shown to be equivalent to the pool 
+operating convention used in the vertically integrated business 
+environment. 
+The major trading objectives in the auction market are 
+hedging, speculation, and arbitrage. Hedging is a defense 
+mechanism against loss and/or supply shortages. Speculation is 
+assuming an investment risk with a chance for profit. Arbitrage is 
+the crossing of sales (purchases) between the markets. This paper 
+assumes that there are four markets commonly operated: cash, 
+futures, planning and swaps as shown in Figure 3. 
+A. Cash Market 
+The two contracts normally traded in cash markets are spot and 
+forward. The spot contracts reflects the current price of 
+transactions. The forward contracts reflect future system 
+conditions. Transactions are executed immediately for spot 
+contracts. In the forward market, prices are determined at the time 
+of contract but the transactions occur at some future time. The 
+auction mechanism for cash market is developed in the reference 
+PI. 
+B. Futures Market 
+A futures market is a place where buyers and sellers can meet 
+readily. A futures market creates competition because it unifies 
+diverse and scattered local markets and stabilizes prices. The 
+contracts in futures market are risky because price movements over 
+time can result in large gains or losses. There is a link between 
+cash market and futures market which allows price volatility. 
+The components of futures contract include trading unit, 
+trading hours, trading months, price quotation, minimum price 
+fluctuation, maximum daily price fluctuation, last trading day, 
+exercise of options, option strike prices, delivery, delivery 
+period, alternate delivery procedure, exchange of futures for, or in 
+connection with physicals, quality specifications, customer 
+margin requirements. Note that delivery, delivery period, 
+alternative delivery procedure, and quality specifications would 
+have to be specified in greater detail than when the industry was 
+vertically integrated. 
+C. Swap Market 
+In the swap market, contract position can be closed with an 
+exchange of physical or financial substitutions, The trader can 
+find another trader who will accept (make) delivery and end the 
+compensated through a price discount or a premium relative to the 
+going price. 
+trader’s delivery obligation. The acceptor of the obligation is 
+The growth of transmission grid requires transmission companies 
+to make contracts based on the expected usage to finance projects. 
+The planning market would underwrite the usage of equipment 
+subject to the long term commitments to which distribution and 
+generation companies ax bound by the rules of network 
+expansion to maintain a fair market place. 
+Time Line into Future 
+Bids Bids Bids b 
+Market 
+Cash 
+Market 
+Genco 
+Bids Bids 
+Figure 3. Electric market 
+IlI. THE AUCTION MARKET SIMULATOR 
+The proposed simulator allows the implementation of futures 
+contracts via forward market simulation. The simulator is 
+developed on the assumptions below; however, the approach 
+descrlbed in this paper is flexible enough to allow these 
+assumptions to be modified if desired. 
+A. Assumptions 
+1. The futures market is a monthly market up to 18 months. The 
+forward market is an hourly market for a 1 month period. Figure 4 
+explicitly depicts this time horizon of the different markets. 
+w++p++...[... I... 
+M1 M2 
+L . 
+L 
+Mx - xth month 
+FUM - Future Market 
+FOM - Forward Market 
+5gure 4. Time horizon of forward and futures market 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:55:17 UTC from IEEE Xplore.  Restrictions apply.
+
+252 
+2. The players are obligated to settle futures contracts in on-peak 
+periods of weekdays via forward market. The allocation of futures 
+contracts in forward market simulation is shown in Figure 5. 
+- M1 
+---------)I FMS 
+- FCA Y 
+FMS 3i 
+* 
+M2 
+-1 
+"1 FMS 
+FCA 
+Figure 5. Market simulation and futures contract allocation 
+3 The overall process of forward market simulation consists of 
+periodic bid development by GENCOs and DISCOs followed by bid 
+matching by auctioneer. This process is repeated several times 
+until the price discovery has occurred in the auction market place 
+The price discovery is defined as the cycle at which the amount of 
+binding contract exceeds a set minimum percentage value. The 
+contracts established at the price discovery cycle IS defined as the 
+closing contract The overall auction process cycle is shown in 
+Figure 6 Thus, the major elements of auction market are (I) rules 
+defining the auction mechanism and contract evaluation, (2) 
+information available to the market players, (3) GENCO bids, and 
+(4) disco bids. 
+I Auction Mechanism I 
+Genco bids 
+4 Disco bids 
+Auction evaluation 
+Figure 6. Auction cycle 
+B. Rules 
+1 The auctioneer will establish interchange achedules between 
+the participating players on hourly basis by using the model 
+developed in reference [SI.. 
+2. The bidding process is performed a fixed number of times 
+within an hour. The auctioneer may decide when the last bids are 
+binding to allow price discovery to occur without excessive 
+gaming of the market. The players do not know which bid will be 
+binding until the auctioneer declares such conditions. However, 
+they do know that there is a maximum number of trials per bidding 
+period. The auctioneer may start another round of bidding if any of 
+the parties wish to bid. 
+3. A bid is a specified amount of electricity at a given price 
+Hence, the players should come up with the pricc of elcctricity for 
+the amount they wish to transact (price per block for a given 
+number of blocks). 
+4. The players are obligated to buy or sell the binding bids 
+declared by the auctioneer. Hence, all local operational 
+constraints ( such as ramp rate constraint, emission constraint, 
+fuel constraints, minimum down times, minimum up times, start- 
+up procedure curves, etc.) must be considered by the players while 
+generating bids for the next trading session or round 
+C. Information Available 
+The auctioneer would post following information on an 
+electronic bulletin accessible to all agents. 
+(1) High bid 
+(3) Low bid 
+(2) Average bid 
+(4) Bids accepted 
+A chronicle of the above mentioned information would 
+describe the trend of the auction market. The trend analysis may 
+be used to explain the expected behavior of players. 
+D. GENCO Bids 
+GENCOs would develop bids primarily based on the plant IiO 
+cuive. Typically, the incremental cost curve (ICC) of a power 
+plant is monotonically increasing. A piece wise lineal ICC is 
+shown in Figure 7. In order to develop a bid, GENCOs need to 
+construct the curve illustrated in the Figure Most of the ICCs are 
+flatter in the lower range of operating points as opposed to much 
+more steeper in the higher range. Thus, more discretizing 
+segments are needed as one moves to higher range of operating 
+points for block bidding 
+It is very evident that the GENCOs need to generate their ICC 
+accurately. All local constraints such as fuel constraints, 
+emission constraints, and ramp rate constraints must be included 
+in the optimization problem. Moreover, the bid development 
+should be done by using not only the incremental cost curve, but 
+also by deciding business strategies with due consideration to 
+moves made by the other players in market place. Information 
+posted on the electronic bulletin should be properly used to do a 
+trend analysis and to conjecture performance of other agents. 
+E. Disco Bids 
+DISCOs would develop bids primarily based on their decremental 
+revenue curve (DRC) as shown in Figure 8. At present, the concept 
+of DRC is not very prevalent. But in the future, DISCOs would 
+have to use strategies based on their DRCs to operate efficiently. 
+There are two major components that would affect the decremental 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:55:17 UTC from IEEE Xplore.  Restrictions apply.
+
+253 
+revenue curve, (a) Delay Scheduling curve [ 131 and (b) interruptible 
+and curtailable rate programs [14]. 
+I 
+I 
+50 100 175 225250 
+Figure 7. GENCO bids at different operating points 
+Profile controlled by 
+techniques of efficient 
+rationing among the 
+customers 
+UMW A 
+10.27 
+13.44 
+9.56 
+- - . - +-- 
+MW 
+200 400 575 850 
+Figure 8. Disco bids at different operating points 
+The most important element that affects the deceremental 
+revenue curve is the ability to shift the load through different time 
+periods to maximize the overall profit in procurement and delivery 
+[13]. This optimization problem can be solved by dynamic 
+programming using any combination of the following: (a) Self 
+generation, (b) Storage (cold water, SMES, etc.), and (c) Demand 
+side management (DSM by moving load and losing some). Under 
+interruptible and curtailable rate programs, a disco offers a bill 
+discount to the participating customers in the exchange for the 
+right to curtail their service under prescribed conditions within 
+prespecified monthly frequency of intermptions. 
+F. Allocation of futures contracr 
+This work assumes that the market players are obligated to 
+fulfill the commitments of futures contracts similar to take-or-pay 
+fuel contracts. The futures contract should be modeled as a separate 
+unit (a generator unit for genco or a load unit for disco) of zero cost 
+in the short term scheduling problem. The basic framework of 
+allocation of futures contract among the on-peak periods of a 
+given month can be given as a profit maximization problem as 
+given below: 
+Maximize: 
+Subject to: 
+smax 
+''S F'auailable 
+s= 1 
+' 0 
+FCavailable 
+FGmax 
+0 
+Pgimin 
+0 
+Pgimax 
+= Expected price in the sth period 
+= Power generation for futures contract in the 
+= Power generation by ith unit in the sth 
+= Cost of production of power generation by 
+= The unsettled amount of futures contract 
+= Maximum allowable settlement of futures 
+= Bidding limit for minimum generation of 
+= Bidding limit for maximum generation of 
+sth period 
+period 
+ith uinit in the sth period 
+contract in one on-peak period 
+the ith unit 
+the ith unit 
+smax = The maximum number of periods in a given 
+Ramp,, 
+forward market simulation. 
+ith unit 
+= Minimum up/down time ramping limit of the 
+The first and second term of objective function (equation (1)) 
+are the total revenue generated and the cost of production 
+respectively. Thus, the objective is to maximize the profit for a 
+given time horizon. Equations (2) and (3) are futures contract 
+allocation constraints. Equations (4) and (5) are bidding 
+constraints for minimum and maximum generation capacity limits 
+respectively. Equation (6) is operational constraint for minimum 
+up and down time ramping limits. 
+An equivalent formulation can be used by DISCOs to solve the 
+futures contract allocation problem. The operational constraints 
+of specific units (such as hydro generation) should be included in 
+the overall profit maximi:zation problem. The aforementioned 
+framework can be easily modified to accommodate such needs. 
+G. The overall scheme for auction market simulator 
+The overall scheme for auction market simulator is described 
+in Figure 9. Initialization i,s done on the basis of operating point 
+and contract agreements. The auction mechanism developed in 
+reference [5] is used to match the submitted bids by the players. 
+The players use future contracts in generating bids to maximize 
+profit by using formulation given in equations (1) - (6). The 
+auctioneer ensures that the current day futures contract allocation 
+is feasible, and then simulates the forward market for the current 
+month. The auction cycle proceeds until the price discovery 
+occurs. The convergence in forward market is defined as the 
+auction cycle in which the number of closing contracts (as defined 
+earlier) in different periods exceed a set minimum percentage 
+value. At each convergence, the operating points are updated in 
+accordance with the established contracts and the simulation 
+proceeds for the next day. 
+IV, SIMULATION FSiSULTS 
+We have developed an auction market simulator far a IO- 
+generator, 24-bus IEEE RTS system. The test system data has been 
+taken from the report prepared by the IEEE PES Reliability Test 
+System Task Force [4]. For simulation purpose, the test system 
+was divided into the 5 GENCOs and 5 DISCOS. The 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:55:17 UTC from IEEE Xplore.  Restrictions apply.
+
+254 
+correspondence of the test system with RTS test system is 
+described in Table 1. 
+The cost functions of GENCOs are assumed to be quadratic curves 
+of the form: a + b*p + c*p2. . The cost curve data for the 
+generating units of the test system are given in appendix. 
+Revenue curves of DISCOs are also modeled as quadratic curves. 
+However, in this example, these curves are generated such that the 
+data allows enough consumer surplus for facilitating the trade 
+game The data related to DISCOs are not shown in this paper. 
+This approach provides a basis of comparison between auction 
+market outcome and the conventional pool dispatch. 
+Genco 
+Table 1. Genco and Disco Buses in IEEE RTS-96 
+Period 1 Period 2 Period 3 
+Mw Mw Mw 
+Incremental cost curve 
+Decremental revenue curve 
+Future contract agreements 
+Figure 9. The overall scheme for auction market simulator 
+An example of 3 period simulation of forward auction market is 
+used to illustrate the power transaction in the proposed framework. 
+Hydro units being the cheapest always enter the basis of the 
+proposed LP model. Hence, they are ignored for this simulation 
+example. Table 2 shows the future contract agreements of the 
+GENCOs. Initial operating points of various units for the three 
+periods are shown in Table 3. 
+4 I 45 I 
+Table 3. Initial operating points of units in RTS 
+I Generator I Period 1 I Period 2 I Period 3 I 
+The simulation process for the agents follow a two step 
+procedure at every auction cycle. First, the futures contract 
+amounts are allocated among the periods by using the 
+deterministic formulation as descnbed in earlier section . The 
+price estimates are generated by a multiarea economic dispatch 
+program. At the second step, the agents update their operating 
+points based on the accepted futures contracts. Then, the bids are 
+generated on the basis of operating points and desired profits. 
+Using these bids, the overall process of auction market simulation 
+for the 3-period is implemented. The simulation results are 
+summarized in Table 4, 5 and 6. 
+Note that the market clearing price is higher than the lambda 
+pool dispatch. This is due to high value of disco bids originally 
+designed to have enough consumer surplus in the system data. 
+Hence, this should not be confused with the high price of 
+transaction. The intent of this example is to show the overall 
+process. The similarity of the proposed approach with the 
+conventional pool dispatch is recognized by observing that all 
+the market clearing prices are correlated with system lambda. 
+Market clearing prices are in the range of 5 to 15% above the value 
+of system lambda due to randomization in profit desired by the 
+market agents 
+V CONCLUSION 
+We have developed an auction market simulator for price based 
+operation. The proposed approach allows the implementation of 
+futures contract via forward market simulation. This simulator can 
+be used to experimentally study various aspects of the deregulated 
+environment. The proposed simulator can also be used to explain 
+the price-based bidding to the system operators. 
+The proposed simulation model provides a single central 
+entity, the ICA responsible for merchandising as well as technical 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:55:17 UTC from IEEE Xplore.  Restrictions apply.
+
+255 
+7. G. Fahd, D.A. Richards, and G.B. Sheble’, “The 
+Implementation Of An Energy Brokerage System Using Linear 
+Programming”, IEEE Trans. on power systems, vo1.7, no.1, pp. 
+8 G. Fahd, and G.B. Sheble’, “Optimal Power Flow Emulation 
+Of Interchange Brokerage System Using Linear Programming”, 
+IEEE Trans. on power systems, vo1.7, no.2, pp. 497-504, 1992. 
+9. D. Anwar, and G.B. Sheble’, “Application Of Optimal 
+Power Flow To Interchange Brokerage Transaction”, Electric 
+Power System Research Journal, vol. 30, no. 1, pp. 83-90, 1995. 
+10. D. Post, S.S. Coppinger, and G.B.Sheble’, “Application 
+Of Auctions As A Pricing Mechanism For The Interchange Of 
+Electric Power”, IEEE Trims. on power systems, vol.10, no.3, pp. 
+11. J. Kumar, K.H. Ng, and G.B. Sheble’, “AGC Simulator 
+For Price Based Operation Part I: A Model”, accepted and to be 
+presented at IEEE PES summer meeting, 96 SM 588-4 PWRS, 
+1996. 
+12. J. Kumar, K.H. Ng, and G.B. Sheble’, “AGC Simulator 
+For Price Based Operation. Part 11: Case Study Results”, accepted 
+and to be presented at IEEE PES summer meeting, 96 SM 373-1 
+PWRS, 1996. 
+13. J. Kumar, and G.B. Sheble’, “Auction Game In Electric 
+Marketplace”, In the proceedings of 58thAmerican Power 
+Conference, Chicago, 11, 1996, pp. 356-364. 
+14. H.P. Chao, “Peak: Load Pricing And Capacity Planning 
+With Demand And Supply Uncertainty”, Bell Journal of 
+Economics, vol. 14, no.1, 1983, pp. 179-190. 
+90 - 96, 1991. 
+1580 - 1584, 1995. 
+Jayant Kumar received his B. E. in Electrical and 
+Electronics Engineering from Birla Institute of Technology, 
+Ranchi, (India) and MSEE from Iowa State University. His 
+interests include economics of power system operation, artificial 
+neural networks and optimization theory. 
+Gerald B. Sheble (M 71, SM 85 ) is a Professor of 
+Electrical Engineering, Iowa State University, Ames, Iowa. His 
+research interests include plower system optimization, scheduling 
+and artificial life techniques. 
+VLI APPENDIX 
+Generator Period 1 Period 2 
+type - (MW) (MW) 
+functions. This will facilitate the bidding process as the bids are 
+directly evaluated in conjunction with the operating conditions 
+and constraints. The issue of acceptance and rejection of bids is 
+resolved disregarding the order of transactions. This is one of the 
+key feature of the model which will reduce the legalities involved 
+in real-time implementation of a deregulated market operation. 
+Furthermore, the practical implementation of the proposed model 
+will reduce burden on the communication requirement. This is 
+highly desirable due to intensive communication needs arising 
+from the increased number of transactions in the new marketplace. 
+Period 3 
+(MW) 
+9.63 9.39 
+Table 6. Transaction parameters 
+8.97 
+Transaction 
+Datameters 
+292.06 
+285.88 
+6.17 
+Market Clearing 
+Price ($/MW) 
+360.81 314.60 
+353.46 304.33 
+7.35 10.26 
+Lambda for Pool 
+dispatch 
+($/MW) 
+Total amount of 
+sell bids 
+accepted 
+Total amount of 
+buy bids 
+accepted 
+Transmission 
+losses due to 
+transactions 
+(MW) 
+VI. REFERENCES 
+1. Federal Energy Regulatory commission, “Notice Of 
+Proposed Rulemaking: Docket No. RM93-3”, Congressional 
+Record, July 30, 1993. 
+2. Federal Energy Regulatory commission, “Notice Of 
+Proposed Rulemaking: Docket No. RM95-8-000”, Congressional 
+Record, March 29, 1995. 
+3. G.B. Sheble’, “Price Based Operation In An Auction 
+Market Structure”, presented at IEEE PES Winter Meeting, 96 WM 
+4.. IEEE Power System Reliability Subcommittee, 
+“Reliability Test System”, presented at IEEE PES Winter Meeting, 
+96 WM 183-7 PWRS, 1996. 
+brokerage system with reserve margin and transmission losses”, 
+to be presented at the IEEE PES winter meeting, 96 WM 190-9 
+PWRS, 1996. 
+6. R A Howard, “ Decision Analysis: Practice And Promise” 
+Management Science, 1988: 679- 675. 
+191-7 PWRS, 1996. 
+5 J Kumar. and GB Shehle’ “Framework for energy 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:55:17 UTC from IEEE Xplore.  Restrictions apply.

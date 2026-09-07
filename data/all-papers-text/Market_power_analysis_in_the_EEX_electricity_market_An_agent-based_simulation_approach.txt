@@ -1,0 +1,947 @@
+1
+  
+Abstract--In this paper, an agent-based modeling and 
+simulation (ABMS) approach is used to model the German 
+wholesale electricity market. The spot market prices in the 
+European Energy Exchange (EEX) are studied as the wholesale 
+market prices. Each participant in the market is modeled as an 
+individual rationality-bounded agent whose objective is to 
+maximize its own profit. By simulating the market clearing 
+process, the interaction among agents is captured. The market 
+clearing price formed by agents’ production cost bidding is 
+regarded as the reference marginal cost. The gap between the 
+marginal cost and the real market price is measured as an 
+indicator of possible market power exertion. Various bidding 
+strategies such as physical withholding and economic withholding 
+can be simulated to represent strategic bidding behaviors of the 
+market participants. The preliminary simulation results show 
+that some generation companies (G enCos) are in the position of 
+exerting market power by strategic bidding. 
+ 
+Index Terms --Agent-based modeling and simulation, EEX 
+market, electricity markets, electricity prices, market power. 
+I.  INTRODUCTION 
+HE wholesale electricity prices at the European Energy 
+Exchange (EEX) have increased by almost 170% in the 
+last seven years, with the average EEX base load spot market 
+price increasing from less than 19 Euros/MWh in 2000 to a 
+price of 50 Euros/MWh in 2006 [1]. The dramatic increase in 
+electricity prices brought serious concerns about market 
+operation. Several attempts have been made to investigate the 
+soar of electricity prices within Germany. Bower et al. applied 
+a model-based simulation approach to investigate the impact 
+of industrial consolidation and the corresponding market 
+power exertion issue in the German wholesale electricity 
+market [2]. The study was done in early 2000, which was 
+before the substantial merger of the utilities in 2000 and 2001. 
+Thus it does not reflect the current status of the market. 
+Müsgens developed a production cost model to derive 
+competitive marginal cost estimators, which are compared 
+with observed electricity prices [3]. The gap between the 
+calculated marginal cost and the market price is interpreted as 
+a signal of market power. A nother similar model proposed in 
+[4] is used to quantify the significance of fundamental factors 
+(like rising fuel cost) and the increasing exercise of market 
+                                                           
+The submitted manuscript was created by UChicago Argonne, LLC, under 
+Contract No. DE-AC02-06CH11357 with the U.S. Department of Energy. 
+All authors are with the Decision and Information Sciences Division, 
+Argonne National Laboratory, 9700 S. Cass Avenue, Argonne, IL 60439, USA 
+(e-mail: jianhui.wang@anl.gov). 
+power on rising prices in the German wholesale electricity 
+market. In these two papers, market power was identified 
+purely based on the difference between the marginal cost and 
+the observed market price. The authors failed to sufficiently 
+describe how the market power was exercised, i.e., no 
+generating companies’ (GenCos’) bidding behaviors were 
+modeled. It has been widely discussed in the literature that 
+modeling the bidding behaviors of market participants can 
+help capture the exercise of market power and help set up 
+corresponding monitoring measures in market design. 
+An effective market design should offer correct incentives 
+to participants for operations and investment. In the short run 
+operations, market power should be monitored and curbed. 
+Economic withholding by raising bidding prices and physical 
+withholding of generation capacity are two common ways to 
+exert market power if a policy is not properly established. For 
+example, in some cases of physical withholding exercised 
+during the California electricity crisis [5], certain GenCos 
+withheld their capacities from the energy market and 
+scheduled the capacities into the reserve market or for 
+maintenance. Consequently, the energy market was in short 
+supply, which led to higher energy prices. From a long-term 
+planning point of view, a well-designed market should 
+encourage a market-based generation capacity expansion. 
+Electricity markets in most parts of the world tend to be 
+oligopolistic with strategic interactions among a limited 
+number of market players. Hence, traditional models based on 
+least-cost dispatch have limited validity when it comes to 
+simulating market behavior. Several research approaches have 
+been proposed to study market behavior and test different 
+market designs. Among these approaches, a game-theory-
+based equilibrium model and agent-based modeling and  
+simulation (ABMS) are two prevailing tools. In [6]-[8], the 
+interactions of market participants are described as a game 
+model to study the possible equilibrium existing in the market. 
+Classical game theory models such as Cournot, Bertrand, and 
+supply function equilibrium (SFE) are employed and differ 
+from each other in terms of bid format. However, game-
+theory-based models often demonstrate the difficulty of 
+modeling the practical market in sufficient detail. A simplistic 
+assumption of the price demand function is usually made to 
+derive the equilibrium price. Moreover, the absence of the 
+dynamic learning nature of market participants in the game 
+models can also lead to inaccuracy in the general conclusions.  
+In comparison, an advantage of the ABMS approach is that 
+it allows for a more realistic representation of the electricity 
+Market Power Analysis in the EEX Electricity 
+Market: An Agent-Based Simulation Approach 
+Jianhui Wang, Member, IEEE, Audun Botterud, Member, IEEE, Guenter Conzelmann, and Vladimir S. 
+Koritarov, Member, IEEE 
+T
+©2008 IEEE.Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:04:36 UTC from IEEE Xplore.  Restrictions apply.
+
+2
+market. Since the objective of ABMS is not necessarily to find 
+an equilibrium solution, one can relax many of the simplifying 
+assumptions underlying game theoretical models. One 
+important application of ABMS in electricity markets is to 
+analyze potential exercise of market power among generation 
+companies. Measuring market power in electricity markets is 
+a complex task. Traditional market power indicators such as 
+the Herfindahl-Hirschman Index (HHI) have limited validity, 
+since they do not capture the impact of transmission and 
+operational constraints in the power system, the relatively low 
+price elasticity of electricity demand, and the complex set of 
+rules that govern today’s electricity markets. By simulating 
+different scenarios of agent behaviors in the electricity 
+market, from competitive production cost bidding to different 
+types of strategic bidding, ABMS can contribute to identifying 
+and measuring the extent of market power exercise in a 
+system. The adaptive interactions of players are captured by 
+representing each market participant as an agent with its own 
+strategy. By using ABMS, not only can the conclusion derived 
+from the simulation better approach reality in the long term, 
+but agents’ transitory behaviors in the shorter term can be 
+observed, which is particularly important to understand since 
+most electricity markets are not yet mature. 
+In this paper, ABMS is used to model the EEX wholesale 
+electricity market. Each generation company is modeled as an 
+individual agent, which can apply a number of different 
+bidding strategies to its generating units in order to maximize 
+profit. The strategic interaction among agents is captured by 
+simulating the daily bidding and market clearing process over 
+time. A system operator agent clears the market and calculates 
+the market prices. GenCos’ profits and consumer costs are 
+calculated for each hour based on the market clearing prices 
+and aggregated over the simulation period. The simulated 
+market clearing prices formed by agents’ production cost 
+bidding are regarded as a benchmark for a competitive 
+electricity market. The gap between the marginal cost and the 
+real market price is considered  as an indicator of possible 
+market power exertion. Various bidding strategies such as 
+physical withholding and economic withholding are utilized to 
+simulate potential strategic bidding behaviors of the GenCo 
+agents.  
+It should be noticed that this  work is a pr eliminary study 
+due to data availability constraints. Direct analysis of the 
+behavior of individual generators requires detailed data not 
+available in the public domain, although key elements would 
+be available to system operators [9]. Hence, the potential 
+market power indentified in this paper needs to be justified 
+later with more detailed available data before final 
+conclusions can be drawn. 
+The rest of the paper is organized as follows: Section 2 
+discusses the liberalized German electricity market. Section 3 
+introduces the agent-based modeling of electricity markets 
+and presents the electricity market complex adaptive system 
+(EMCAS) model. Section 4 shows the market representation 
+in EMCAS and the modeling structure. Case studies are 
+discussed in Section 5. Section 6 concludes the discussion. 
+II.  THE LIBERALIZED GERMAN MARKET 
+According to the Union for the Co-ordination of 
+Transmission of Electricity (UCTE) memo 2006 [10], the 
+German electricity market is the largest in Europe in terms of 
+installed capacity and consumption. The total installed 
+generation capacity amounted to 124,300 MW and the entire 
+consumption was 559.1 TWh in 2006. The generation 
+technology mix consisted of 4% hydropower, 27% nuclear, 
+61% conventional thermal, and 8% of other sources.  
+As shown by Müsgens [3], the previous eight major 
+integrated generation companies in Germany have merged to 
+four during the years 2000 and 2001. RWE and VEW merged 
+but kept the name RWE. Preussen Elektra and Bayernwerk 
+merged to form E.ON. Vattenfall, HEW, VEAG, and 
+BEWAG merged to Vattenfall Europe. In addition, French 
+EdF bought a major stake of the south-western EnBW. While 
+all remaining big players are vertically integrated, they are 
+legally unbundled. The capacity share of the largest four 
+companies increased from 42% of total German generation 
+capacity before these mergers to 61%. 
+The EEX was formed by the merger between LPX Leipzig 
+Power Exchange and the Frankfurt-based European Energy 
+Exchange in 2002 and is the most important energy exchange 
+in continental Europe today [11]. In 2006, 89 TWh of 
+electricity was traded in the EEX spot market, which accounts 
+for about 20% of the whole German power consumption. The 
+rest of consumption is traded either over the counter or bound 
+by long-term contracts. So EEX spot market prices are used in 
+this study as the reference electricity wholesale prices in 
+Germany.  
+III.  AGENT-BASED MODELING OF THE GERMAN WHOLESALE 
+ELECTRICITY MARKET 
+In this paper, generation companies are modeled as GenCo 
+agents whose objective is to maximize their own profit. Each 
+agent is allowed to send its bid into the market to sell electric 
+power in the form of price and quantity pairs. By maximizing 
+the social welfare, the hourly market clearing price can be 
+calculated based on the agents bids. The resulting prices can 
+be compared with historical market prices. 
+A.  ABMS in the Electricity Markets 
+An ABMS system comprises agents that interact and adapt 
+on the basis of their individual strategies and objectives. The 
+agent-based modeling process demonstrates two basic 
+characteristics for each agent in a real-world electricity 
+market: 
+• Each agent is  interactive . The agents will exert a 
+certain influence on the opponents’ strategies by the 
+selection of their own strategies. On the other hand, 
+the agents themselves will be influenced by other 
+agents’ strategies.  
+• Each agent is adaptive. The agent is adaptive to its 
+own bids and other agents’ bids in the evolutionary 
+bidding process. It can learn over time and adjust its 
+bidding strategies on the basis of historical and 
+published information. 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:04:36 UTC from IEEE Xplore.  Restrictions apply.
+
+3
+ 
+In general, to model the agents, two agent rules based on 
+the theory of individuals’ decisions can be applied: 
+• Rational choice: Individuals decide which action is the 
+best for them to take. 
+• Bounded rationality: Individuals’ reasoning is partially 
+rational. Agents’ decisions are progressively refined by 
+means of procedures with limited knowledge and 
+abilities [12]. 
+ 
+ABMS has been used to conduct studies on market design 
+issues in the England and Wales electricity market. Bower and 
+Bunn [13] used ABMS to analyze whether uniform price or 
+the discriminatory auction is better for market auction design 
+in England and Wales with the introduction of the new 
+electricity trading arrangements (NETA). Generation 
+companies are modeled as autonomous adaptive agents that 
+develop their own bidding strategies by using a reinforcement 
+learning algorithm. Bunn and Oliveira [14] developed a 
+detailed multi-agent simulation model for the NETA market. 
+The bidding behaviors of GenCos and demand companies 
+(DemCos) in the bilateral market and real-time balancing 
+markets are simulated as a repeated game using a constant 
+daily load pattern. Bagnall and Smith [15] also used a multi-
+agent model to analyze the UK electricity market. In their 
+model, adaptive agents use hierarchical learning classifier 
+systems to bid into the electricity market. The effect of 
+alternative payment mechanisms on the agent behavior is 
+analyzed. ABMS has also been used in a number of more 
+theoretical studies on simple hypothetical electricity markets.  
+B.  Electricity Market Complex Adaptive Systems (EMCAS) 
+The EMCAS model has been developed at Argonne 
+National Laboratory over the last 5-6 years. EMCAS models 
+the interactions among all major agents in a restructured 
+electricity market. The model includes a detailed 
+representation of bids, dispatch, and settlement in both day-
+ahead and real-time (balancing) electricity markets [16]-[17]. 
+The modeling framework can be described in terms of three 
+main components: agents, interaction layers, and planning 
+periods [18]. 
+Different agents, including GenCos, transmission 
+companies, distribution companies, DemCos, consumers, the 
+system operator, and the regulator, are represented in the 
+model. Through an evolving simulation process, some agents 
+can learn and adapt their behaviors on the basis of updated 
+information.  
+The ABMS modeling system provides the ability to capture 
+and investigate the complex interactions between the physical 
+infrastructures and the economic behavior of market 
+participants. The interaction layers provide the environment in 
+which the agents operate. This environment, as illustrated in 
+Fig. 1, is typically multidimensional; that is, agents operate 
+within several interconnected layers, including a physical 
+layer, several business layers, and a regulatory layer [18]. 
+The planning horizons in EMCAS range from hours in the 
+short term to decades in the long term. In this paper, we use 
+the short-term market simulation. EMCAS can perform a 
+detailed hourly simulation of short-term bidding and market 
+operation, including: 
+ 
+ 
+ 
+Fig. 1.  Interaction layers of EMCAS. 
+ 
+• Chronological simulation of day-ahead (DA) and real-
+time (RT) market clearing using Direct-Current 
+Optimal Power Flow (DC OPF); 
+• Modeling agents’ bidding strategies, including 
+marginal production cost and physical and economic 
+withholding; 
+• Rule-based heuristic learning for GenCo agents; 
+• Price-based unit commitment; 
+• Long-term financial contract and take-or-pay fuel 
+contract modeling; 
+• Short-term and long-term hydropower (run-of-river, 
+storage, pumped storage) optimization; 
+• Hourly simulation of wind generation and other 
+nondispatchable generation technologies such as 
+biomass, solar, etc.; 
+• Planned outages and random forced outages for 
+generation units; 
+• Market design testing, e.g., Locational Marginal Price 
+(LMP) vs. system marginal price (SMP) and level of 
+price cap. 
+ 
+EMCAS has been used for a number of different purposes. 
+For instance, in [19] the model was used to study potential 
+exercise of market power in the future electricity market in 
+the U.S. state of Illinois. A preliminary analysis of CO 2 
+allowance costs, strategic bidding, and demand response in 
+the Central European electricity market was reported in [20]. 
+IV.  EEX MARKET REPRESENTATION IN EMCAS 
+In this paper, the EEX market is modeled with generation 
+companies, demand companies, and a market operator. In the 
+market, generation companies send their bids into the market 
+in the form of generation blocks and prices for each block, 
+while demand companies provide their hourly load, which is 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:04:36 UTC from IEEE Xplore.  Restrictions apply.
+
+4
+assumed to be inelastic. The market operator clears the 
+market based on the GenCos’ bids and the load. The market 
+price is decided by the marginal bid to supply the next MW 
+load at the equilibrium point where generation is equal to 
+load. In the case of strategic bidding, the simulated market 
+price may deviate from the real marginal cost due to changes 
+in the supply curve. 
+ 
+Major assumptions for the EEX study include: 
+• The main focus of the study is on Germany and 
+Austria, which make up the EEX market. 
+• Generation is therefore aggregated in all countries 
+except Germany and Austria. 
+• France is modeled as a net importing node to Germany 
+based on data from UCTE. 
+• A maximum of four pairs of bid generation blocks and 
+prices are used for each generating unit. 
+• Bids of generating units are composed of production 
+cost, emission cost, and markups. 
+• Random forced outages for generation units are 
+included. 
+• Wind generation in Germany is modeled using a 
+random time series. 
+• Hourly loads are deterministic and inelastic. 
+Thirteen countries in Central Europe are modeled in 
+EMCAS, as shown in Fig.2: Germany and Austria (DE+AT), 
+Poland (PL),Czech Republic (CZ), Slovakia (SK), Hungary 
+(HU), Netherlands (NL), France (FR), Switzerland and Italy 
+(CH+IT), Southeast Europe and Romania (SETSO+RO), and 
+Ukraine (UA), among which Switzerland and Italy (CH+IT), 
+Netherlands (NL), and Southeast Europe and Romania 
+(SETSO+RO) are represented as importing nodes. Ukraine 
+(UA) is represented as a transmission node without load and 
+generation. Because EEX covers Germany and Austria, both 
+countries are aggregated as one node. 
+ 
+ 
+Fig. 2.  EEX market representation in EMCAS. 
+ 
+A total of 34 GenCos with 151 thermal units, 5 hydro units, 
+and 1 wind unit are modeled aggregately. GenCos with small 
+capacities are aggregated as local utility companies by 
+technology. The GenCos’ names are represented by letters, 
+since this is a preliminary study. The total generation capacity 
+is 134,160 MW. The fuel types include nuclear, hard coal, 
+lignite, oil, natural gas, hydro, and wind. Hourly market 
+clearing is executed based on the DC-OPF algorithm with a 
+social welfare objective. The market price in EEX is 
+calculated as the locational price at the Germany and Austria 
+node. 
+Hourly load series are from the online data published by 
+UCTE. Transmission line capacity data are from European 
+Transmission System Operators (ETSO) [21] and Deloitte 
+[22]. Generation capacity and ownership and emission 
+allowance prices are from EEX [11]. Heat rates of generators, 
+startup cost and time, fuel prices and heating values, generator 
+forced outage rates (FOR), etc., are estimated based on a 
+variety of other sources [23-24]. 
+We assume that GenCos bid into the day-ahead market 
+once a day, and that rejected bids in the DA market will be 
+available for real-time operations. Bids by GenCos consist of 
+a specified number of bidding blocks and corresponding 
+bidding prices. A number of different GenCo bidding 
+strategies can be simulated. Three of the available strategies 
+are explained as follows: 
+A.  Production Cost Bidding 
+Under the production cost strategy, GenCos act as in a 
+perfectly competitive market. Specified by the heat rate curve 
+and fuel costs, GenCos’ bids are calculated as average 
+incremental production costs for each block of a generating 
+unit. It is also possible to scale up the marginal production 
+cost bids to include fixed operation and maintenance (O&M) 
+costs and emission costs in the bids. 
+The European Union has introduced a system for trading 
+greenhouse gas (GHG) allowances called the European Union 
+Greenhouse Gas Emission Trading Scheme (EUETS). Under 
+EUETS, a quota of emission allowances has been assigned to 
+each member country based on the respective GHG emission 
+targets in the Kyoto treaty. An emission trading market has 
+been established in which GHG allowances can be traded 
+between participants with surpluses or deficits of allowances. 
+Each country allocates its allowances to different national 
+sectors and companies based on a national allocation plan. In 
+most EU countries, the allowances have been grandfathered; 
+that is, the authorities have given them away for free based on 
+historical emission levels and the national Kyoto target. 
+However, use of GHG allowances still has an opportunity cost 
+for the owner, since the allowances can be traded if not used. 
+Hence, a reasonable assumption from a GenCo’s perspective 
+is to add the cost of the GHG emission allowances to the other 
+operating costs. In EMCAS, the cost of GHG emission 
+allowances (or a fraction of the cost) can be added to the 
+individual bidding blocks for generating units based on heat 
+rates and emission factors. The price of the GHG emission 
+allowances is an exogenous input to the model. We include 
+the full cost of GHG allowances in GenCo bids in the base 
+case below. 
+B.  Physical Withholding Based on System Reserve (PWSR) 
+In some markets at certain times, GenCos can try to 
+increase the market price by withholding units during hours 
+when the expected system reserve margin is low. In PWSR, a 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:04:36 UTC from IEEE Xplore.  Restrictions apply.
+
+5
+system reserve forecast for the next day is made based on 
+projections of load and available system capacity. If the 
+expected system reserve is below a trigger point, GenCos will 
+attempt to reduce it even further with a specified target 
+amount. The strategy is only carried out if the target reduction 
+in reserves can be reached within this limit. Units can be 
+withheld in the least profitable unit order or in the highest bus 
+LMP order. In the least profitable unit order, withholding of 
+units will start from the least profitable unit until the target 
+reduction of reserve margin is met. In the highest bus LMP 
+order, the unit located at the bus with the highest LMP will be 
+withheld first in order to increase the LMP even further until 
+the target reduction of reserve margin is satisfied. 
+C.  Fixed Increment Price Probing (FIPP) 
+With FIPP, the idea is that GenCos probe their influence on 
+market prices by changing bidding strategies, dynamically 
+taking into account the outcome of the last day’s dispatch. If a 
+bid block in a certain hour was accepted, GenCos w ill 
+increase the bid price by a specific percentage for the same 
+block in the same hour for the following day. By doing this, 
+GenCos hope to be able to raise the market price, assuming 
+the bid will be still accepted. In contrast, if the block was not 
+dispatched, GenCos will reduce their bids by the same 
+percentage, hoping that  it will be dispatched the following 
+day. A lower limit can be specified for the bid price, e.g., 
+equal to the production cost.  
+V.  SIMULATION RESULTS 
+Three cases are presented to  simulate GenCos’ bidding 
+behavior and their impacts on market prices in the EEX 
+market. Case 1 serves as a base case in which GenCos bid 
+based on the production cost and emission prices. In case 2, 
+FIPP is assigned to GenCos, while PWSR is employed by 
+GenCos in case 3. We focus on the month with highest loads 
+in 2006, i.e., January, since this is typically the period when 
+market power is most likely to occur. Again, due to data 
+availability constraints, the results shown in this preliminary 
+study need to be justified with more available data. Also the 
+model does not account for the pre-existing contracts since 
+they are proprietary information. The results presented below 
+should be interpreted accordingly. 
+A.  Base Case 
+In the base case, production cost-based bids are assumed to 
+be submitted by each GenCo in the market. In this sense, 
+GenCos act as in a perfectly competitive market. 1 The market 
+price will be the marg inal production cost to supply the next 
+MW load. The simulated merit order curve in the first hour of 
+January 1st is shown in Fig. 3. Wind, hydro, and nuclear 
+sources have the lowest marginal costs, followed by coal, gas, 
+and oil units. It should be noted that the merit curve varies 
+between different hours because certain units may be on 
+outages randomly. 
+                                                           
+1 Note that we did not include start-up/shut-down costs and fixed O&M costs 
+in the bids. One can argue that GenCos can justify bids above marginal 
+production costs in order to recover these operational costs from the market 
+clearing price. 
+ 
+0
+50
+100
+150
+200
+250
+300
+350
+Prices (Euro/M
+W
+h)
+Capacity (MW)
+Fig. 3.  Merit curve in first hour January 1st 2006. 
+ 
+The simulated price of the system, which could be regarded 
+as the marginal cost, and the hourly system loads are depicted 
+in Fig. 4. It can be seen that the simulated marginal cost 
+shows a synchronous pattern with the load. The simulated 
+marginal cost (market price) is between 40$/MWh and 
+50$/MWh for most of the time, since coal tend to be the 
+marginal production technology. However, the generation 
+provided by more expensive units, such as natural gas units, 
+drives up the prices in some of the peak load hours.  
+ 
+-5000
+5000
+15000
+25000
+35000
+45000
+55000
+65000
+75000
+85000
+30
+35
+40
+45
+50
+55
+60
+65
+70
+1 31 61 91 121 151 181 211 241 271 301 331 361 391 421 451 481 511 541 571 601 631 661 691 721
+M
+W
+Prices (Euro/M
+W
+h)
+Hours
+Simulated marginal cost Load
+ 
+Fig. 4.  Simulated marginal cost and load in the base case. 
+ 
+The estimated price-cost margins, which are the differences 
+between the simulated marginal costs and the observed EEX 
+market prices, are shown in Fig. 5. This can be used as a 
+measure of market power, since market power often refers to 
+situations where the market price is substantially above the 
+real production cost level. We can see that the price-cost 
+margins are well above zero in peak hours, which indicates 
+that some GenCos may not have bid based on their production 
+cost. Certain markups may have been added in their bids by 
+using bidding strategies to increase the market prices. It can 
+be calculated that the price-cost margin on average accounts 
+for 26.35% of the market prices. EEX prices are higher than 
+the simulated marginal costs 62.9% of the time.  The 
+simulated prices are lower than EEX prices in some off-peak 
+hours since some GenCos bid lower than their production cost 
+in those hours because of the expensive startup costs, load 
+Hard coal and lignite 
+Wind, hydro and 
+nuclear 
+Gas and Oil 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:04:36 UTC from IEEE Xplore.  Restrictions apply.
+
+6
+requirements in the following hours, minimum unit up and 
+down times, and other constraints such as reserve 
+requirements. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Fig. 5. Simulated marginal cost and price-cost margin. 
+ 
+With the observed price-cost margin, the Residual Supply 
+Index (RSI) is used to screen out GenCos that may have the 
+capability to greatly influence the market prices. RSI can be 
+defined as the difference between the total available capacity 
+and a certain company’s available capacity, divided by the 
+load. Since the system available capacity and load change 
+with time, RSI will also vary in different hours. As defined by 
+California Independent System Operator (CAISO), a market 
+with RSI lower than 1.1 for more than 5% of the time is 
+regarded as uncompetitive [25]. 
+The RSI in the base case is shown in Fig. 6. The curve on 
+the top shows that other GenCos except GenCo_B, GenCo_C, 
+GenCo_I, and GenCo_N have very close RSIs, while these 
+four GenCos have significantly lower RSIs comparatively. 
+But for all companies, the RSIs are higher than the threshold 
+of 1.1 for the entire period.  Based on the guidance of CAISO, 
+the figure indicates that there is no single GenCo that has the 
+capability to greatly influence market prices in the EEX 
+market. However, lower RSIs for these four GenCos suggest 
+that these four big companies may deserve further 
+investigation to see if they are in a position of manipulating 
+market prices. 
+ 
+0
+0.5
+1
+1.5
+2
+2.5
+3
+3.5
+1 41 81 121 161 201 241 281 321 361 401 441 481 521 561 601 641 681 721
+RSI value
+Hour s
+GenCo_B GenCo_C
+GenCo_I GenCo_N
+Other GenCos RSI threshold by CAISO
+ 
+Fig. 6.  Hourly RSIs in the EEX market sorted in descending order. 
+ 
+B.  Physical Withholding Based on System Reserve (PWSR) 
+In this case, we simulate the scenario that GenCos apply a 
+physical withholding strategy based on the system reserve 
+margin, which means GenCos will withhold some units from 
+the market to increase market prices by shifting the supply 
+curve to the left. The strategy is assumed to be used in the 
+least profitable unit order by the four largest GenCos 
+(GenCo_B, GenCo_C, GenCo_I, and GenCo_N) with a 
+trigger point of 65% and a target reduction of 3% in the 
+system reserve margin. Fig. 7 shows the difference between 
+simulated market prices in the base case and the PWSR case. 
+It can be seen that the prices in the PWSR case are higher in 
+most of peak hours than in the base case. This is because the 
+relatively low reserve margins in peak load hours trigger the 
+implementation of PWSR. The least profitable units, which 
+are calculated based on the production cost and market prices, 
+are withheld from the market. In comparison, PWSR does not 
+come into effect in off-peak hours, since the reserve margins 
+during that period are higher than the trigger point. The shift 
+in the merit order supply curve due to PWSR at the peak hour 
+of 11AM January 17th is illustrated in Fig. 8. The figure 
+clearly shows a shift to the left of the curve due to the 
+withholding of certain units. The total available capacity 
+decreases from 104,206 MW to 103,496 MW. 
+ 
+20
+30
+40
+50
+60
+70
+80
+1 38 75 112 149 186 223 260 297 334 371 408 445 482 519 556 593 630 667 704 741
+P
+rices (Euro/M
+W
+h)
+Hours
+Base case PWSR
+ 
+Fig. 7.  Simulated market prices in the base case and PWSR case. 
+ 
+0
+20
+40
+60
+80
+100
+120
+140
+Prices(Euro/M
+W
+h)
+Capacity
+Base case PWSR
+ 
+Fig. 8. Merit curves in the base case and PWSR case at 11AM January 17th. 
+C.  Fixed Increment Price Probing (FIPP) 
+In the FIPP case, we first simulate a scenario in which 
+GenCos play the same FIPP strategy without explicitly 
+cooperation. The percentage for GenCos to adjust their bids 
+-60.00
+-40.00
+-20.00
+0.00
+20.00
+40.00
+60.00
+80.00
+100.00
+1 41 81 121 161 201 241 281 321 361 401 441 481 521 561 601 641 681 721
+P
+rice
+s (E
+u
+ro
+/M
+W
+h
+)
+Hours
+Price-cost margin
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:04:36 UTC from IEEE Xplore.  Restrictions apply.
+
+7
+on the basis of the accepted/rejected bids in the same hours 
+for the previous day is set to be 20%. We assume that FIPP 
+will be applied only in peak hours by the four companies since 
+their bids have higher possibilities to be accepted when the 
+load is high. Fig. 9. shows the simulated market prices in this 
+case. Fig. 10 shows the corresponding price duration curves. 
+One can observe that the four companies effectively can 
+increase market prices by using FIPP collectively. Since the 
+market share information is public to the participants in the 
+EEX market, these companies with large market shares know 
+that their bids for some of th eir units in p eak hours will be 
+accepted even if they increase the bidding prices above the 
+production cost level. Also in Fig. 10, we can see that the 
+simulated prices are still much lower than the EEX prices 
+even if the FIPP or PWSR is applied. 
+ 
+0
+20
+40
+60
+80
+100
+120
+1 40 79 118 157 196 235 274313 352391 430469 508547 586625 664 703 742
+Prices (Euro/M
+W
+h)
+Hours
+Base case FIPP  
+Fig. 9.  Simulated market prices in the base case and FIPP case. 
+ 
+Fig. 10.  Price duration curves for historical EEX prices, base case, FIPP case 
+and PWSR case. 
+ 
+The FIPP strategy for single GenCos is also simulated in 
+order to study the potential exercise of unilateral market 
+power. As can be seen in Table 1, the market prices can be 
+increased if one single GenCo uses FIPP, but the magnitude 
+of increase is much lower than the collective FIPP 
+application. This is because all four GenCos bid high in the 
+collective FIPP case and a certain GenCo’s bid will therefore 
+be accepted due to the huge total market shares of the four 
+companies. For the same reason, GenCos can gain positive 
+extra profit in the collective FIPP case. In contrast, an 
+individual GenCo applying the FIPP case has lower profit 
+than in the base case, since it s high bid will be undercut by 
+other GenCos’ low bids. The results indicate that the market 
+power of a single GenCo is limited, since no single GenCo 
+can earn more profit by increasing its bid prices. The single 
+GenCo strategy employment is also simulated in the PWSR 
+case. The results also show that no single GenCo can be more 
+profitable using this strategy, since that GenCo’s generation 
+will be less than in the base case due to physical withholding. 
+But several GenCos can gain more profit than in the base case 
+if they apply the strategy together. 
+TABLE. 1.  STATISTICS OF MARKET PRICES  
+ EEX 
+Price 
+Base 
+Case 
+ 
+FIPP 
+GenCo
+_B 
+FIPP 
+GenCo
+_C 
+FIPP 
+GenCo
+_I 
+FIPP 
+GenCo_ 
+N 
+FIPP All 
+Four 
+GenCos 
+PWSR All
+Four 
+GenCos 
+Average 65.5 48.3 49.2 51.1 51.2 50.3 56.5 49.85 
+Max 699.9 65.6 65. 9 73.5 71.6 68.2 100.0 69.04 
+Min 0.6 41.1 41.1 41.1 41.1 41.1 41.1 41.1 
+Std. Dev. 40.0 4.8 5.8 7.8 7.9 6.9 14.7 6.8 
+% Profit 
+Change   –7.3% –7.3% –5.8% –14.4% 14.5% 4.2% 
+ 
+Fig. 11 shows a summary of GenCos’ profit in the base 
+case and the collective strategy cases. Not surprisingly, the 
+four GenCos are able to obtain higher profit in the strategic 
+bidding cases than the base case. It should be noticed that the 
+four GenCos can st ill earn higher profit  even though they 
+withhold a certain amount of capacity from the market in the 
+PWSR case. This is because the much higher prices cancel 
+out the negative effect of less capacities bid into the market. 
+Another interesting observation is that the strategies by the 
+four companies will have different impact on other 
+companies’ profit. Most of them will also benefit from these 
+four GenCos strategic bidding while some GenCo, like the 
+aggregated natural gas-fired local utility company at the very 
+right-hand side of Fig. 11, may lose more in the PWSR case in 
+comparison to the base case. The reason for this is that natural 
+gas units are usually the marginal units in the market when 
+dispatched. They cannot cover all their production cost since 
+market prices are based on their marginal production cost, 
+while their total production cost is calculated from the average 
+production cost. The average production cost is usually higher 
+than the marginal production cost. In the PWSR case, the 
+natural gas units receive more negative profit by generating 
+more power, since the capacity of some other units is 
+withheld. 
+ 
+ 
+Fig. 11.  Profit analysis for each GenCo in base, PWSR, and FIPP cases. 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:04:36 UTC from IEEE Xplore.  Restrictions apply.
+
+8
+VI.  CONCLUSIONS 
+The potential market power issue in the EEX market is 
+analyzed in this paper. An agent-based simulation and 
+modeling approach is applied to model the strategic behaviors 
+of individual agents in the markets. A base case in which 
+GenCos bid based on their production costs is simulated as a 
+benchmark. The noticeable price-cost margin is identified as 
+the potential market power in the EEX market.  
+Two strategic bidding behaviors for GenCos are employed. 
+The preliminary results show that strategic bidding behaviors 
+by certain GenCos can effectively increase market prices 
+above the production cost level. However, the results indicate 
+that no GenCo has the ability to unilaterally increase its own 
+profit by applying the FIPP or PWSR strategies. However, 
+profits increase substantially when several GenCos bid 
+strategically at the same time. Our future work will focus on 
+improving the level of detail and validity of the input data. 
+Since the study is done with the limited data  reported by 
+GenCos in the EEX market, the future improvement in data 
+will enhance the accuracy of our conclusions. In addition, we 
+will apply other strategies and learning algorithms in the 
+simulation, both for the supply and demand sides of the 
+market.  
+VII.  REFERENCES 
+[1] H. -G. Schwarz, C. Lang, and S. Meier, “Market Power in the German 
+Wholesale Electricity Market: What are the Political Options?,” in The 
+2nd Conference on Energy Economics and Technology, Dresden, 2007. 
+[2] J. Bower, D. W. Bunn, and C. Wattendrup, “A Model-Based Analysis of 
+Strategic Consolidation in the German Electricity Industry,” Energy 
+Policy, vol. 29, no. 12, pp. 987-1005, 2001. 
+[3] F. Müsgens, “Market Power in the German Wholesale Electricity 
+Market,” in Energiewirtschaftliches Institut an der Universität zu Köln 
+Working Paper, Nr 04.03, 2004. 
+[4] H. -G. Schwarz and C. Lang , “The rise in German wholesale electricity 
+prices: fundamental factors, exercise of market power, or both ?,” in 
+Institut für Wirtschaftswissenschaft Working Paper , Nr 02-06,  
+Universität Erlangen-Nürnberg, 2006. 
+[5] J. Bushnell, “California's electricity crisis: a market apart?,” Energy 
+Policy, vol. 32, no. 9, pp. 1045-1052, 2004. 
+[6] Y. Smeers, “Computable equilibrium models and the restructuring of the 
+European electricity and gas markets,” Energy Journal, vol. 18, no. 4, pp. 
+1-31, 1997. 
+[7] B. F. Hobbs, C. Metzler, and J. S. Pang, “Strategic gaming analysis for 
+electric power networks: an MPEC Approach,”  IEEE Transactions on 
+Power Systems, vol. 15, no. 2, pp. 638-645, 2000. 
+[8] E. Kahn, “Numerical techniques for analyzing market power in 
+Electricity,” Electricity Journal, vol. 11, no. 6, pp. 34-43, 1998. 
+[9] S. Harvey and W. Hogan. Market Power and Market Simulations. 
+[Online]. Available:  http://ks ghome.harvard.edu/~whogan/H-H_Market 
+_Power&Simulations_071602.pdf 
+[10] Union for the Co-ordination of Transmission of Electricity (UCTE). 
+[Online]. Available:  http://www.ucte.org/ 
+[11] European Energy Exchange (EEX). [Online]. Available: 
+http://www.eex.com/en/ 
+[12] R. M. Axelrod and W. D. Hamilton, “The Evolution of Cooperation,” 
+Science, vol. 211, no. 4489, pp. 1390-1396, 1981. 
+[13] J. Bower and D. W. Bunn, “Experimental analysis of the efficiency of 
+uniform-price versus discriminatory auctions in the England and Wales 
+electricity market,” Journal of Economic Dynamics & Control , vol. 25, 
+pp. 561-591, 2001. 
+[14] D. W. Bunn and S. Oliveira, “Agent-Based Simulation: An Application to 
+the New Electricity Trading Arrangements of England and Wales,” IEEE 
+Transactions on Evolutionary Computation, vol. 5, pp. 493-503, 2001. 
+[15] A. J. Bagnall and G. D. Smith, “A Multiagent Model of the UK Market in 
+Electricity Generation,” IEEE Transactions on Evolutionary 
+Computation, vol. 9, pp.522-536, 2005. 
+[16] G. Conzelmann, M. North, G. Boyd, V. Koritarov, C. Macal, P. R. 
+Thimmapuram, and T. D. Veselka, “Simulating Strategic Market Behavior 
+Using an Agent-Based Modeling Approach,” in Proc. of the 6th European 
+IAEE Conference, Zurich, Switzerland, 2004. 
+[17] G. Conzelmann, G. Boyd, V. Koritarov, and T. D. Veselka, “Multi-Agent 
+Power Market Simulation Using EMCAS,” in Proc. of the IEEE PES 
+General Meeting, San Francisco, California, 2005. 
+[18] V. Koritarov, “Real-World Market Representation with Agents: Modeling 
+the Electricity Market as a Complex Adaptive System with an Agent-based 
+Approach,” IEEE Power & Energy Magazine , vol. 2, no. 4, pp. 39-46, 
+2004. 
+[19] R. Cirillo, P. R. Thimmapuram, T. D. Veselka, V. Koritarov, 
+G. Conzelmann, C. Macal, G. Boyd, M. North, T. Overbye, and X. Cheng, 
+“Evaluating the Potential Impact of Transmission Constraints on the 
+Operation of a Competitive Electricity Market in Illinois,” Ar gonne 
+National Laboratory, Argonne, IL, USA, ANL-06/16, 2006. 
+[20] A. Botterud, V. Koritarov, and P. R. Thimmapuram, “Multi-Agent 
+Simulations of the Electricity Market in Central Europe,” in Proc. 26 th 
+USAEE/IAEE North American Conference , Ann Arbor MI, USA, Sept. 
+2006.  
+[21] European Transmission System Operators. [Online]. Available:  
+http://www.etso-net.org/ 
+[22] Deloitte Consulting, “Demonstration Script. Strategic regional electricity 
+model,” Deloitte Consulting, Prague Czech Republic, 2006. 
+[23] Energy Information Administration. [Online]. Available: 
+http://www.eia.doe.gov/ 
+[24] Statistical Office of the European Communities. [Online]. Available: 
+http://ec.europa.eu/eurostat 
+[25] California Independent System Operator, “Predicting Market Power Using 
+the Residual Supply Index.” [Online]. Available: 
+http://www.caiso.com/docs/2002/12/05/2002120508555221628.pdf 
+ 
+VIII.  BIOGRAPHIES 
+Jianhui Wang received his B.S. degree in management science and engineering 
+and Master’s degree in technical economics and management from North China 
+Electric Power University, China, in 2001 and 2004, and his Ph.D. in electrical 
+engineering from Illinois Institute of Technology, USA, in 2007. Presently, he is 
+a postdoctoral appointee with the Center for Energy, Environmental, and 
+Economic Systems Analysis (C EEESA) at Ar gonne National Laboratory. His 
+research interests include energy economics and policy, agent-based modeling 
+and simulation, electric power systems optimization, and economics. Dr. Wang’s 
+papers have appeared in the leading energy economics and engineering journals 
+including IEEE Transactions on Power Systems, Energy Policy, and Energy. 
+ 
+Audun Botterud received M.Sc. in i ndustrial engineering (1997) and Ph.D. in 
+electrical power engineering (2003), both from the Norwegian University of 
+Science and Technology. He was previously with SINTEF Energy Research in 
+Trondheim, Norway. In 2005, he joined CEEESA. His research interests include 
+power system planning and economics, stochastic optimization, decision 
+analysis, and agent-based modeling. 
+ 
+Guenter Conzelmann is the Director of CEEESA at Ar gonne National 
+Laboratory. Mr. Conzelmann has an environmental engineering degree from the 
+University of Bingen in Germany. 
+ 
+Vladimir S. Koritarov joined Argonne National Laboratory in 1991 and is 
+presently the Deputy Director of CEEESA. He has 24 years of experience in the 
+analysis and modeling of electric and energy systems in domestic and 
+international applications. He specializes in the analysis of power system 
+capacity expansion options, modeling of hydroelectric and irrigation systems, 
+hydro-thermal coordination, reliability and pr oduction cost analysis, marginal 
+cost calculations, risk analysis, and electric sector deregulation and privatization 
+issues. Before joining Argonne, Vladimir worked as senior power system planner 
+in the Union of Yugoslav Electric Power Industry. He is a graduate of the School 
+of Electrical Engineering, University of Belgrade. 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:04:36 UTC from IEEE Xplore.  Restrictions apply.

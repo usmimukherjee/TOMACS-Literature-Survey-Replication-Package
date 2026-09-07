@@ -1,0 +1,1763 @@
+Chaos, Solitons and Fractals 88 (2016) 3–18 
+Contents lists available at ScienceDirect 
+Chaos, Solitons and Fractals 
+Nonlinear Science, and Nonequilibrium and Complex Phenomena 
+journal homepage: www.elsevier.com/locate/chaos 
+Financial power laws: Empirical evidence, models, 
+and mechanisms /p82 
+Thomas Lux a , ∗, Simone Alfarano b 
+a Department of Economics, University of Kiel and Banco de España Chair of Computational Economics, Department of Economics, 
+University Jaume I Castellón, Spain 
+b Department of Economics, University Jaume I, Castellón, Spain 
+a r t i c l e i n f o 
+Article history: 
+Received 11 January 2016 
+Accepted 25 January 2016 
+Available online 2 March 2016 
+Keywords: 
+Power laws 
+Financial returns 
+Leptokurtosis 
+Volatility clustering 
+Agent-based modeling 
+a b s t r a c t 
+Financial markets (share markets, foreign exchange markets and others) are all character- 
+ized by a number of universal power laws. The most prominent example is the ubiquitous 
+ﬁnding of a robust, approximately cubic power law characterizing the distribution of large 
+returns. A similarly robust feature is long-range dependence in volatility (i.e., hyperbolic 
+decline of its autocorrelation function). The recent literature adds temporal scaling of trad- 
+ing volume and multi-scaling of higher moments of returns. Increasing awareness of these 
+properties has recently spurred attempts at theoretical explanations of the emergence of 
+these key characteristics form the market process. In principle, different types of dynamic 
+processes could be responsible for these power-laws. Examples to be found in the eco- 
+nomics literature include multiplicative stochastic processes as well as dynamic processes 
+with multiple equilibria. Though both types of dynamics are characterized by intermittent 
+behavior which occasionally generates large bursts of activity, they can be based on funda- 
+mentally different perceptions of the trading process. The present paper reviews both the 
+analytical background of the power laws emerging from the above data generating mech- 
+anisms as well as pertinent models proposed in the economics literature. 
+©2 0 1 6 Elsevier Ltd. All rights reserved. 
+1. Introduction 
+While research on power laws in income and wealth 
+dates back to the nineteenth century (Pareto), the atten- 
+tion on power laws in ﬁnancial data is relatively recent. 
+The ﬁrst ever manifestation of power laws in ﬁnance 
+can probably be found in Mandelbrot [99] followed by 
+/p82 The author are thankful for many helpful comments by Claudio 
+Cioﬃ, Dietrich Stauffer and Frank Westerhoff on earlier versions of the 
+manuscript. Financial support from the European Union 7th Framework 
+Programme under grant agreement No. 612955 during the ﬁnal revision 
+of this paper is also gratefully acknowledged. 
+∗ Corresponding author. Address: Olshausenstr. 40, 24118 Kiel, Ger- 
+many. 
+E-mail address: lux@bwl.uni-kiel.de (T. Lux). 
+Eugene Fama’s elaboration (Fama [43] ) published as the 
+immediately succeeding paper in the same issue of the 
+Journal of Business . This breakthrough very much domi- 
+nated the discussion over the next thirty(!) years or so 
+with an immense number of papers dedicated to providing 
+supporting or contradicting evidence for the Paretian or 
+Levy stable hypothesis. While the dust has settled over 
+the last decade and the power-law behavior of large price 
+changes now counts as one of the most pervasive ﬁndings 
+in ﬁnancial economics, it had remained the only power 
+law under discussion in this are a for quite some time. 
+Only recently was it joined by other candidates for 
+Pareto-like behavior. By now well accepted within the 
+scientiﬁc community is a second power law characterizing 
+the temporal dependence structure of volatility. However 
+one tries to proxy the unobservable quantity ‘volatility’ 
+http://dx.doi.org/10.1016/j.chaos.2016.01.020 
+0960-0779/© 2016 Elsevier Ltd. All rights reserved.
+
+4 T. Lux, S. Alfarano / Chaos, Solitons and Fractals 88 (2016) 3–18 
+(most straightforwardly via the squares or absolute values 
+of ﬁnancial returns), the autocorrelations of these entities 
+appear to decay hyperbolically, i.e. Pareto-like. Although 
+this feature is linked to the long known clustering of 
+volatility in ﬁnancial markets, the fact that the depen- 
+dency in the ﬂuctuations is of a long-range type had only 
+been realized in the nineties. Credit for this observation is 
+probably due to Ding et al. [37] , published in the Journal 
+of Empirical Finance . Later on, several papers by physicists 
+emphasized the power law nature of this ﬁnding and its 
+potential root in complex market interactions (cf. Lux [89] ). 
+The power laws in returns and in volatility seem to be in- 
+timately related: none of them was ever observed without 
+the other and it, therefore, seems warranted to interpret 
+them as the joint essential characteristics of ﬁnancial 
+data. 
+Very recently additional power laws have entered the 
+scene: transaction volume (which is strongly correlated to 
+volatility) also appears to be characterized by long-range 
+dependence (although it is not clear whether volatility and 
+volume share the same degree of long memory). Availabil- 
+ity of high- frequency tick-by-tick data has furthermore re- 
+vealed other types of power-law behavior, such as a power 
+law for the number of trades in the New York Stock Ex- 
+change Trades and Quotes Database, cf. Plerou et al. [105] . 
+Similar results are reported for the Japanese stock market, 
+cf. Takayasu [118] . 
+The plan of the remainder of this paper is the follow- 
+ing: Section 2 gives a more formal description of the main 
+ﬁnancial power laws characterizing returns and volatility 
+together with a survey of pertinent literature. After having 
+set the scene, we turn to explanatory models. Section 3 
+deals with the so-called rational bubble model which 
+emerged as a potential explanation of ﬁnancial power laws 
+from the standard body of rational expectations models 
+in economics. Interestingly, this approach points to multi- 
+plicative stochastic processes as a type of data generating 
+process with generic power-laws. This interesting property 
+of the underlying process notwithstanding, the rational 
+bubble model makes grossly incorrect numerical predic- 
+tions about the magnitude of the exponent. In Section 4 
+we, therefore, turn to more recently proposed models in 
+the behavioral ﬁnance literature. From the diversity of 
+available approaches and models, we try to single out the 
+basic ingredients and mechanisms leading to true or at 
+least apparent power laws in simulated data. Section 5 
+attempts to draw some overall conclusions from the hith- 
+erto available body of literature on potential explanations 
+of ﬁnancial scaling laws. 
+2. Empirical power laws in ﬁnance 
+The modern literature in this area starts with Mandel- 
+brot [99] and Fama [43] , who both proposed the so-called 
+Paretian or Levy stable distributions as statistical models 
+for ﬁnancial returns 1 (cotton futures were analyzed in 
+1 The quantity of interest in empirical research in ﬁnancial economics is 
+typically ‘returns’ deﬁned as relative (or logarithmic) price changes over 
+a certain time horizon. Research on the statistical properties of returns 
+started with data at weekly or monthly frequencies but has moved on 
+Mandelbrot’s paper). The theoretical appeal of this fam- 
+ily of distributions is its stability under aggregation. At 
+the time of publication of these papers, it had already 
+been known for some time that a Generalized Central 
+Limit Law holds for distributions with non-convergent 
+(inﬁnite) second moments: while existence of the sec- 
+ond moment warrants convergence of sums of random 
+variables (at least in the IID case and under weak de- 
+pendence) towards the Gaussian, non-convergence of the 
+variance implies convergence of the distribution of sums 
+towards members of the family of Levy stable distribu- 
+tions. Under this perspective, the pronounced deviation 
+of histograms for ﬁnancial returns from the shape of the 
+Normal distribution together with their apparent additivity 
+(daily returns can be expressed as the sum of all intra- 
+daily price changes) was interpreted as striking evidence 
+in favor of the Levy hypothesis. The Levy distributions 
+are characterized by an asymptotic power-law behavior of 
+their tails with an index α (called the characteristic expo- 
+nent) which implies a complementary cumulative density 
+function of returns (denoted by ret in the following) which 
+in the tails converges to: 
+P r(| ret| > x ) ≈ x −α. (1) 
+The Levy hypothesis restricts the power-law for returns 
+to the admissible range of α ∈ (0 , 2) which indicates the 
+mentioned non-convergence of the second moment (with 
+α < 1 not even the mean would converge). Empirical esti- 
+mates based upon the Levy model typically found α hov- 
+ering around 1.7. 
+While this result was conﬁrmed again and again 
+when the parameters of the Levy laws were estimated 
+themselves, other studies raised doubts in the validity of 
+the Levy hypothesis by questioning the stability-under- 
+aggregation property of these estimates (Hall et al., [60] ) 
+or pointed to apparent convergence of sample second 
+moments (Lau et al., [77] ). From the early nineties, how- 
+ever, it became common practice to concentrate on the 
+tail behavior of the distribution itself and estimate its 
+decay parameter via conditional maximum likelihood 
+without assuming a particular distributional model (Hill 
+[63] ). The pertinent literature gradually converged to the 
+insight of an exponent signiﬁcantly larger than 2 and 
+mostly close to 3, cf. Jansen and de Vries [69] ; Lux [85] 
+and Werner and Upper [126] , among others. These results 
+nicely agree with estimates obtained by physicists via 
+their typical log–log regression approach (Cont et al., [33] ; 
+Gopikrishnan et al., [58] ). The approximate cubic form of 
+the power-law of returns is by now accepted as a uni- 
+versal feature of practically all types of ﬁnancial markets 
+(from share markets and futures to foreign exchange and 
+precious metal markets). Note that this ﬁnding implies 
+rejection of the time-honored Levy hypothesis as α ≈ 3 
+means that the decay of the outer part of the distribution 
+is faster than allowed by this family of distributions. The 
+Levy distributions might still be relevant for returns on 
+venture capital and R&D investments, cf. Casault et al. 
+[23] . It seems plausible that these types of very risky 
+to high frequency data over time (daily and intra-daily data up to the 
+highest frequencies at which all tick-by-tick changes are recorded).
+
+T. Lux, S. Alfarano / Chaos, Solitons and Fractals 88 (2016) 3–18 5 
+investments could fall into a different class of distributions 
+or stochastic processes with even more pronounced tails. 
+It is interesting to note that the unconditional distribution 
+of daily returns appears to be remarkably close to the 
+Student t with 3 degrees of freedom (Fergussen and Platen 
+[45] ). However, ﬁnancial returns are not identically and in- 
+dependently distributed, and, thus, are better represented 
+by a stochastic process (or a behavioral model) rather than 
+a time-invariant distribution. 
+The second type of power laws relates to the opales- 
+cent concept of volatility of price ﬂuctuations. Focusing on 
+absolute returns, | ret |, as one of its most frequently ana- 
+lyzed manifestations, the pertinent power law applies to 
+their autocovariance function: 
+E [ | re t t | · | re t t−/Delta1t | ] ≈ /Delta1t −γ . (2) 
+Although the precise value of γ has received less publicity 
+than that of α (maybe because it is not estimated directly 
+but rather via its relation to the so-called Hurst expo- 
+nent or related measures (Lux and Ausloos [89] ), reported 
+statistics are also remarkably uniform across time series 
+with typical values around γ= 0.2–0.3 (Ding et al. [37] ; Lo- 
+bato and Savin [82] ; Vandewalle and Ausloos [120] ; Van- 
+dewalle and Ausloos [121] ; So [111] , Ray and Tsay [107] ). 
+It is also well-known that volatility is highly correlated 
+with trading volume, and long-range dependence carries 
+over to volume as well (Lobato and Velasco [83] ; Rossi and 
+de Magistris [108] , Galati [52] ). Fig. 1 provides an exam- 
+ple for the typical behavior of ﬁnancial data, using a large 
+series of daily observations for the New York Stock Ex- 
+change Composite Index. The somewhat low decay param- 
+eter γ= 0.14 for volatility is a consequence of ﬁtting the 
+whole ensemble of autocorrelations up to lag 200 by one 
+single power law. Concentrating on longer lags we would 
+have obtained a larger decay parameter in line with other 
+estimates. 
+It is worth mentioning that recently mounting evidence 
+speaks in favor of multi-scaling in the temporal dependence 
+structure of ﬁnancial ﬂuctuations: rather than the simple 
+scaling (power) law (2) we might indeed face a continuum 
+of scaling laws for various powers of absolute returns: 
+E [ | re t t | q · | re t t−/Delta1t | q ] ≈ /Delta1t −γ ( q ) . (3) 
+Note that any power q of absolute returns can be in- 
+terpreted as an alternative measure of volatility. With the 
+multi-scaling in Eq. (3) we, thus, get a much more detailed 
+picture of the temporal development of ﬁnancial ﬂuctua- 
+tions, cf. Mandelbrot [100] ; Calvet and Fisher [19,20] ; Lux 
+[88] , Lux and Segnon [95] . Most excitingly, a non-linear de- 
+pendence of the scaling parameter γ on the power q is 
+also a key characteristic of turbulent ﬂuids and has moti- 
+vated the development of so-called multi-fractal models in 
+statistical physics. Recent research shows that these mod- 
+els provide a very versatile, yet simple framework to model 
+asset returns in a parsimonious way, and they have been 
+found to perform at least as good as the time-honored 
+GARCH models in terms of forecasting volatility, and often 
+outperform the later to some extent (cf. Calvet and Fisher 
+[20] , Lux and Morales-Arias [92] , Lux et al. [93] ). 
+It is worth emphasizing that the power-law behavior of 
+large returns and their ﬂuctuations seem to be truly uni- 
+versal and can be found without exception in all ﬁnancial 
+data. This is quite in contrast to many other ‘stylized facts’ 
+in economics, for example concerning macroeconomic data 
+(such as GDP, inﬂation rates etc.). It should also be pointed 
+out that the above power-laws are not at all esoteric con- 
+cepts. Quite to the contrary, they are of tantamount prac- 
+tical importance in ﬁnancial engineering: the probabilistic 
+law governing large returns ( Eq. 1 ) can be applied directly 
+for an assessment of the inherent risk of extreme events 
+(i.e., crashes). Similarly, models covering the temporal de- 
+pendence of volatility depicted in Eqs. (2) and ( 3 ) are of 
+immediate practical use in predicting the future extend of 
+price ﬂuctuations. 
+Various authors have claimed that additional power 
+laws exist in the ﬁnancial arena: Plerou et al. [105] ﬁnd 
+that high-frequency data from the U.S. stock market ex- 
+hibit the following regularities: trading volume (V) behaves 
+like: 
+P r(V > x ) ≈ x −1 . 5 , (4) 
+and the number of trades (N) follows a law: 
+Pr ( N > x ) ≈ x −3 . 4 . (5) 
+Additional results on the distribution of inter- 
+transaction times and related quantities can be found 
+in several studies (e.g. Takayasu [118] ). So far, these ad- 
+ditional regularities have mainly been discussed in the 
+physics literature but have hardly been acknowledged by 
+economists. Because of the limited number of available 
+studies, it is also not clear at present whether these 
+ﬁndings are of a similarly universal nature like (1)–(3). The 
+only exception here is temporal dependence of transaction 
+volume for which substantial statistical evidence has al- 
+ready been gathered and for which pretty much the same 
+pattern has been found as for absolute returns in previous 
+studies (e.g. Lobato and Velasco [83] ). However, the precise 
+numerical laws given in Eqs. (4) and (5) do not appear to 
+be as ubiquitous like the ‘cubic’ law of returns: Farmer and 
+Lillo [44] , for instance, report different behavior of these 
+quantities in the London Stock Exchange, Balakrishnan 
+et al. [11] also ﬁnd no time-invariant and homogeneous 
+power-law behavior across stocks in the U.S. markets. 
+3. Power laws in orthodox ﬁnancial economics: 
+stochastic approaches and rational bubbles 
+Standard textbooks on theoretical and empirical ﬁnance 
+(see O’Hara [102] , for a comprehensive treatment of behav- 
+ioral models, and Campbell et al. [21] for a similarly com- 
+prehensive survey of empirical techniques) lack explicit en- 
+tries on the power-law behavior of ﬁnancial data. It is only 
+via stochastic processes with asymptotic power law behav- 
+ior that they implicitly take into account the existence of 
+the universal scaling laws highlighted in Section 2 . Until 
+very recently, ﬁnancial power laws have, therefore, only 
+been taken into account under a purely statistical perspec- 
+tive. The hallmark of this literature is the (G)ARCH (Gener- 
+alized Autoregressive Conditional Heteroskedasticity) class 
+of processes introduced in Engle [42] . GARCH essentially 
+models returns as a random process with a time-varying
+
+6 T. Lux, S. Alfarano / Chaos, Solitons and Fractals 88 (2016) 3–18 
+Fig. 1. Illustration of the main power law characteristics of ﬁnancial data. Our data are daily recordings of the New York Stock Exchange Composite Index 
+over the period 1988–1998 (a total of 2782 observations). Instead of the index itself, we show its returns deﬁned as the log increments between adjacent 
+trading days (upper left panel). These already show the two main ‘stylized facts’: a large number of extreme positive and negative realizations, and the 
+clustering of volatility, i.e. characteristic switches between turbulent and more tranquil episodes. The power law nature of the ﬁrst feature is underlined by 
+inspecting the log histogram of (absolute) returns (upper right hand). In contrast to a Normal distribution with the same variance (solid line), the triangles 
+for the empirical distribution show a prolongation in the tail which in its outer part has an almost linear shape in agreement with Eq. (1) . The lower 
+panels show absolute returns as a straightforward measure of volatility (left) and their autocorrelations (right). The ACF decays extremely slowly and even 
+after 200 lags has signiﬁcantly positive entries (95% boundaries are demarcated by broken lines). This hyperbolic rather than exponential decay is in line 
+with Eq. (2) . 
+variance which shows autoregressive dependence, i.e. 
+ret t = σt ε t (6) 
+σ2 
+t = α0 + α1 ε 2 
+t−1 + βt σ2 
+t−1 , 
+with ε t ∼ N (0, 1). As this type of auto-correlation is 
+readily apparent in any plot of a ﬁnancial time series 
+(cf. Fig. 1 ), it is not too surprising that GARCH captures 
+the short-run dynamics of volatility quite well. Implying 
+exponential rather than hyperbolic decay of the volatility 
+autocorrelations it nevertheless falls short of providing 
+a stochastic process in accordance with the long mem- 
+ory property depicted in Eq. (2) . However, even with a 
+Gaussian distribution of the increments, the compound 
+unconditional distribution resulting from (6) is character- 
+ized by fat tails and hence is in accordance with Eq. (1) . 
+This relatively simple statistical recipe, therefore, already 
+allows to reproduce one of the universal laws of returns. 
+Reﬁnements of the GARCH approach have, in fact, also 
+covered the scaling in the autocovariances via imposition 
+of an inﬁnite number of lags with hyperbolically decaying 
+weights in the difference equation governing the volatility 
+dynamics, cf. Baillie et al. [9] . 
+Although these statistical models and the myriads of 
+variations on this topic which have come out in the lit- 
+erature are important tools in ﬁnancial engineering, they 
+do not provide an avenue towards an explanation of the 
+empirical regularities. In fact, until very recently, standard 
+models in the theoretical literature were unable to ex- 
+plain even the phenomenological aspects covered by the 
+GARCH models, let alone the asymptotic laws in Eqs. (2) 
+and (3) with their perplexingly precise numerical manifes- 
+tation in the data. To be honest, these regularities were 
+neither well-known among ﬁnancial economists nor did 
+their standard models provide an easy avenue towards ex- 
+planations of such power laws. 
+There is one important exception though in that one 
+ingredient of the received body of models, in fact, pro- 
+duces power law statistics as an immediate consequence 
+of its underlying model structure, which, however, has 
+also been realized only very recently. This class of models 
+is known as models of speculative bubbles with rational 
+expectations (RE bubbles). This theory attempts to explain 
+the rather obvious frequent deviation of market prices 
+from their underlying fundamental value (also known as 
+the ‘intrinsic’ value of an asset which is determined by 
+current expectations about future earning prospects) with- 
+out sacriﬁcing the ‘rationality’ assumption of traditional 
+asset pricing models. 
+Before proceeding to RE bubbles, let us introduce 
+the standard asset pricing model of the textbook Eﬃcient
+
+T. Lux, S. Alfarano / Chaos, Solitons and Fractals 88 (2016) 3–18 7 
+Market Paradigm. The starting point of this approach is the 
+formula for fair or arbitrage-free valuation of an asset: 
+p t = δE[ p t+1 + d t+1 | I t ] (7) 
+with p t the price at time t, δ < 1 the discount factor 
+reﬂecting the time preference of agents, and d t denoting 
+dividends at time t . Eq. (6) says that a fair and arbitrage- 
+free price should be identical to the discounted expected 
+value (conditional on the current information set I t ) of 
+next period’s price plus the dividend paid out in that 
+period. With identical expectations of all agents, the 
+equilibrium price should converge to this benchmark. 
+Otherwise, agents would sell/buy as long as an inequality 
+prevails between the right-hand side and left-hand side 
+of Eq. (7) . Imposing a so-called ‘transversality condition’, 
+lim i →∞ δi E[ p t+ i | I t ] = 0 one can replace p t+1 by the per- 
+tinent arbitrage-free pricing equation at period t + 1 (of 
+course, Eq. (7) has to hold in all periods). Continuing 
+along these lines by further substitution of the pertinent 
+equations at t + 2 , t + 3 , . . . , one obtains: 
+p t = p f,t = 
+∞ ∑ 
+i =1 
+δi E [ d t+ i | I t ] . (8) 
+Eq. (8) postulates that the price should always equal the 
+discounted expected future stream of dividends which is 
+what is also often called the fundamental value of the 
+asset, p f, t . This pricing formula can be seen as a manifesta- 
+tion of the Eﬃcient Market Paradigm postulating that prices 
+reﬂect all available information about the fundamental 
+factors of the underlying asset in an unbiased manner and 
+that they should immediately react to forthcoming new 
+information about these fundamentals. It is worthwhile to 
+note in passing that the traditional view of the Eﬃcient 
+Market Hypothesis is not necessarily inconsistent with 
+observations of power laws in ﬁnancial data since it re- 
+mains agnostic about the structure of the ‘news process’ 
+driving returns. However, it would have to attribute their 
+origin entirely to exogenous factors: all power laws would 
+have to be explained by fundamental valuation factors, 
+E[ d t+ i | I t ] , exhibiting these same characteristics which are 
+then reproduced by price changes reﬂecting changes in 
+fundamentals. Unfortunately, ‘fundamentals’ are essentially 
+unobservable and cover a bundle of diverse factors such 
+as ﬁrm-speciﬁc events, political inﬂuences etc. 
+As pointed out by Blanchard and Watson [13] it re- 
+quires only a minor modiﬁcation of the above assumption, 
+to allow for deviations of prices from fundamental values. 
+Namely, though mathematically convenient, the ‘transver- 
+sality condition’ needed to proceed from (7) to (8) is by no 
+means necessary from a theoretical perspective. Dropping 
+it, however, opens a Pandora’s box of possible asset price 
+paths deviating from fundamental valuation. Blanchard and 
+Watson [13] ﬁrst remarked that without the transversality 
+condition, Eq. (7) does not necessarily exclude per se such 
+weird phenomena like speculative overvaluation and sub- 
+sequent crashes. Quite the opposite, it allows the price to 
+contain a bubble component B t by which it deviates from 
+the fundamental value p f, t : 
+p t = p f,t + B t . (9) 
+Earlier literature had avoided this possibility by assuming 
+B t = 0 . Nevertheless, this framework is still far away from 
+an agnostic view of “anything goes” in ﬁnancial markets. 
+Rather, the rational expectations assumption in Eq. (7) still 
+poses heavy restrictions on admissible bubble dynamics. In 
+particular, only those bubbles are allowed which satisfy: 
+B t = δE[ B t+1 | I t ] , (10) 
+as otherwise e.g. (7) would not hold. 
+A fairly general class of processes obeying (10) can be 
+written as: 
+B t = a t B t−1 + ε t (11) 
+with at a t ∈ A = { a 1 , a 2 , . . . , a n } occurring with probabilities 
+π1 , π2 , ..., πn and ε t IID with mean zero. The only ad- 
+ditional restriction which the a i have to meet is E[ a t ] = 
+n ∑ 
+i =1 
+πi a i = 1 
+δ in order to be in harmony with (10). With both 
+a t and ε t stochastic variables, the bubble process (11) is a 
+so-called multiplicative stochastic process . This kind of ran- 
+dom difference equation had already been studied com- 
+prehensively in Kesten [72] who showed that multiplica- 
+tive processes are generic power-law generators . 2 . He also 
+showed that the power-law exponent for the unconditional 
+distribution of the underlying dynamic variable can be pre- 
+cisely determined from the distribution of the multiplica- 
+tive component. In our notation, the power-law applies to 
+deviations from the fundamental value (B t ) : P rob(| B t | > 
+x ) ∼ x −μ with μ given by: 
+E[ | a t | μ] = 1 . (12) 
+Fig. 2 a and b shows an illustration of the resulting time 
+series and the distribution of B t which, of course, agrees 
+with the theoretical result. Lux and Sornette [96] show 
+that the power-law in the bubble component carries over 
+directly to price changes and also dominates the distribu- 
+tion of returns. 
+What generates the power-law tails of the bubble 
+model? Since the mean value of a t is 1/ δ > 1, the set A has 
+to include at least one element larger than unity (typically, 
+the smallest a i would be set to zero to allow for the possi- 
+bility of a total crash of the bubble). Hence, the realizations 
+of a i will switch between values smaller and larger than 
+one. In a deterministic setting, the former would guarantee 
+convergence towards B ∞ = 0 while the later would yield 
+an explosive dynamics (which would ensue also if we only 
+allow for one single a t = 1 /δ > 1 ). The time-variation of 
+a t , then, generates an intermittent ampliﬁcation of ﬂuctu- 
+ations which, however, only continues as long as it is not 
+interrupted by realizations of a t < 1 (cf. Fig. 2 for an ex- 
+ample). It is remarkable that, in general, the additive noise 
+component, ε t , has no inﬂuence at all on the emerging 
+power-law exponent μ which is fully determined by the 
+distribution of a t . This means that the resulting exponent 
+2 This is true under very mild conditions on the structure of the ran- 
+dom difference equation. A glance at the additional conditions stated in 
+Kesten’s theorem, in fact, shows that they will only be violated by very 
+particular processes, cf. Lux and Sornette [96] . It is worthwhile to note 
+that GARCH and other phenomenological models of time-varying volatil- 
+ity dynamics can also be interpreted as multiplicative stochastic processes 
+(cf. de Haan et al. [36] )
+
+8 T. Lux, S. Alfarano / Chaos, Solitons and Fractals 88 (2016) 3–18 
+Fig. 2. Example of a RE bubble process with A = {0, 0.9, 1.3} occurring with probabilities π(0) = 0 . 1 , π(0 . 9) = 0 . 4 and π(1 . 3) = 0 . 5 , and additive stochastic 
+component ε t following a Normal distribution with mean zero and standard deviation 0.1. The simulation illustrates how this framework generates repeated 
+outbreaks of bubbles (periods of deviations form the fundamental values) which all end in crashes leading to a reversal of the price to its fundamental 
+value. The inlet shows a loglog plot of the inverse of the cumulative distribution function of price changes from the same RE bubble process. The theoretical 
+(exact!) power-law index can be calculated from Eq. (12) . With a simulation over 10 6 time steps, the resulting μ = 0 . 92 (for a discount rate δ = 0 . 99 ) can 
+be nicely observed over at least four orders of magnitude. The slight deviation for very large values is due to the scarcity of observations in the very far 
+tails. 
+μ, in fact, only reﬂects the intrinsic dynamics of rational 
+speculative bubbles (the way B t depends on B t−1 ) while in 
+a sense external factors represented by ε t as well as the 
+fundamental factors affecting the component p f, t in the as- 
+set price given by Eq. (9) have only a very subordinate role. 
+Eq. (11) with arbitrary distributions of its multiplica- 
+tive and additive components, a t and ε t , is a multiplica- 
+tive stochastic difference equation in its most general form. 
+The only restriction on multiplicative processes that could 
+be used as rational bubble processes in a ﬁnance setting 
+is, therefore, the restriction stemming for the assumption 
+of rationality or consistency of expectations (i.e., all agents 
+have correct expectations about both the future develop- 
+ment of the bubble as well as the fundamental compo- 
+nent of the asset price): E[ a t ] = 1 /δ > 1 . Unfortunately, as 
+pointed out by Lux and Sornette [96] , it is exactly this 
+requirement which restricts the admissible range of out- 
+comes to μ < 1 - far off from the empirical ﬁndings of an 
+exponent around three. The important consequence is that 
+this simple and appealing theory of rational bubbles rather 
+than being in harmony with empirical power-laws pro- 
+duces results that are at odds with empirical observations. 
+Since this result applies to the entire class of RE bubble 
+models, it seems that economists have to accept deviations 
+from the ideal case of perfect rationality in order to explain 
+fat tails and clustered volatility. Furthermore, the assump- 
+tion of ‘rational expectations’ in economic models has pro- 
+voked mounting criticism as it requires a capacity of com- 
+putation and information processing of agents far beyond 
+imagination and immense effort s have been devoted re- 
+cently to introduce boundedly rational behavior into eco- 
+nomic models, cf. Brenner [15] . It is also worthwhile to 
+note that ‘rationality’ of expectations can be tested em- 
+pirically and there exists a large body of such tests whose 
+overall outcome is that rational expectations can be ‘over- 
+whelmingly rejected’ (cf. MacDonald [97] ). 
+4. Multi-agent models in behavioral ﬁnance 
+4.1. Overview 
+Although the rational bubble theory can be viewed as a 
+generic power-law generator, it might appear inappropriate 
+in more than one way. First, as we have seen, it generates 
+power-laws which are deﬁnitely at odds with the empirical 
+ones - and hence the perspective of analyzing scaling be- 
+havior, in fact, shows the limitations of this approach. Sec- 
+ond, it shares the conceptual problems of economic mod- 
+els with ‘fully’ rational agents. As Mark Buchanan puts it: 
+“To anyone who is not an economist, the orthodox per- 
+spective that sees people as rational agents who always 
+work out their rational self-interests and act on them, 
+seems more than a little peculiar” (Buchanan [18] ). Clearly, 
+the ‘full rationality’ assumption appears much too strong 
+a statement in the eyes of the layman and seems to be 
+in so striking contrast to observed real-life behavior to 
+let it appear almost ridiculous for those who have not 
+been brought up in this tradition. Although there might be 
+good reasons to use the rationality postulate when tackling 
+certain questions 3 and although the question of rational 
+vs. non-rational expectations might be of minor concern 
+for various economic problems, modeling economic phe- 
+nomena governed by not-fully-rational behavior requires a 
+3 Think of analyses of future effects of ﬁscal or monetary policy mea- 
+sures: a rational expectations framework allows to single out their purely 
+intrinsic effects without mingling them with problems of misperceptions 
+of agents of the economic environment.
+
+T. Lux, S. Alfarano / Chaos, Solitons and Fractals 88 (2016) 3–18 9 
+different approach. This is surely the case with ﬁnancial 
+markets for which it has been observed that their immense 
+trading volume already raises doubts about common ra- 
+tionality and knowledge of such rationality on the part 
+of other agents (Leroy [79] ). Survey studies conﬁrm that 
+market participants themselves attribute a large portion of 
+price ﬂuctuations to bandwagon effects, overreaction and 
+speculative dynamics (Cheung and Wong [29] ). The re- 
+cently mounting literature on experimental asset markets 
+adds credibility to this view by showing that human sub- 
+jects typically produce price bubbles and crashes even in 
+simple laboratory markets (this by now immense literature 
+got started by Smith et al. [110] and has recently been sur- 
+veyed by Palan [104] ). 
+From the power-law perspective, the universal cubic 
+law of price returns and the long-range correlations of 
+volatility suggest to view ﬁnancial data as results of a so- 
+cial process of interacting agents. Models founded on ratio- 
+nal expectations including the RE bubbles theory contain 
+nothing of that sort: agents themselves are typically invis- 
+ible and enter via some equilibrium condition like eg. (7). 
+Of course, one could add a description of the typical be- 
+havior of a rational agent in this framework (the so-called 
+representative agent) but this approach excludes any inter- 
+action of traders and by its focus on steady state solutions 
+does not provide an avenue towards replicating distribu- 
+tional properties of ﬁnancial data. More recently, there- 
+fore, a rapidly growing research area has purposely allowed 
+for deviations from ‘rational’ behavior formalizing ﬁnancial 
+markets as evolving ecologies of multi-agent populations 
+of traders with diverse strategies and expectations. 
+Due to the obvious diversity of trading motives and 
+strategies in real markets, such an approach had always 
+been virtually existent: Keynes’ famous beauty contest 
+parabola of the stock market (Keynes [73] ) undoubtedly 
+presupposes heterogeneous (and hence, non-rational) ex- 
+pectations. Early formal models of interacting groups of 
+traders can be found in Baumol [12] and Zeeman [129] . 
+As has become standard in most of the subsequent lit- 
+erature, these authors distinguish between two types of 
+traders: the ﬁrst, so-called fundamentalists, views asset 
+prices as being determined by fundamental factors alone. 
+These traders would buy/sell if they consider the current 
+market price to be below/above the rationally computed 
+fundamental value (i.e. Eq. 8 ). The second group, mostly 
+called chartists or noise traders, would rather be convinced 
+that asset markets are driven by systematic trends and that 
+patterns exist that could be extracted by means of regres- 
+sions, moving averages or more complex procedures. Typ- 
+ically a short-cut representative rule (like trend-following 
+behavior) is used to introduce this second component into 
+the model. The market price, then, results from the inter- 
+play of the two groups and their respective demand and 
+supply. 
+Hibernating over the highdays of the rational expecta- 
+tions paradigm, the recent literature has seen an enormous 
+surge of work along the lines of these early pioneers. 4 An- 
+4 In fact, the boundaries between rational and non-rational behavioral 
+approaches have become extremely fuzzy. For example, an interesting re- 
+other limitation had, however, to be overcome to tackle the 
+stylized facts of Section 2 . Namely, the interest in economic 
+models has typically been to trace out the effect of changes 
+of one (exogenous) economic variable on other, endoge- 
+nous variables characterizing some sort of market equi- 
+librium. Even with a diverse ensemble of traders, such a 
+comparative static approach is ill suited for explaining dis- 
+tributional characteristics of the data. One, therefore, has 
+to go beyond static models and beyond linear dynamics 
+to account for power-law phenomena as important overall 
+features characterizing ﬁnancial time series. First attempts 
+at analyses of complex data generating processes with be- 
+havioral foundations appeared in the early nineties: lead- 
+ing examples are Kirman [74] , [75] and De Grauwe et al. 
+[34] who propose complex models of interacting specula- 
+tors and study their overall statistical characteristics. While 
+they did not focus on power-laws proper (then still not 
+broadly acknowledged), they both showed that their mod- 
+els could mimic the random walk nature of ﬁnancial prices 
+although their data generating processes were both clearly 
+different from a random walk. Notably, both papers study 
+what we might describe as secondary stylized facts, typi- 
+cal results of certain - unsuccessful - tests of hypothesis of 
+exchange rate formation, and ﬁnd results similar to those 
+obtained with empirical records. 
+Evidence for volatility clustering as an emergent prop- 
+erty of a multi-agent model appeared ﬁrst in Grannan and 
+Swindle [59] . Ramsey [106] offers a rather general per- 
+spective of how a statistical description of agents’ behavior 
+could give rise to time-varying moments as emergent 
+macroscopic characteristics of a market. Simultaneously, 
+ﬁrst attempts appeared at designing market models with 
+heterogeneous autonomous agents using artiﬁcial intelli- 
+gence techniques (genetic algorithms, classiﬁer systems, 
+neural networks) as expectation formation mechanisms. 
+Much of the early literature in this vein is preoccupied 
+with analysis of convergence or not of the learning process 
+of agents to homogeneous rational expectations equilibria 
+(Arthur et al. [8] ; Chen and Yeh [27] ; Arifovic [7] ). It 
+took a while for explanations of empirical characteristics 
+to become a topic in this strand of literature (LeBaron 
+et al. [78] ; Chen and Yeh [27] ; Lux and Schornstein [94] ). 
+Typically, some tendency towards fat tails and volatility 
+clustering is observed, although numerical results are 
+often far from empirical power laws. 5 
+Another current emerging in the early nineties is micro- 
+scopic models of ﬁnancial markets constructed along the 
+lines of multi-particle systems in statistical physics. The 
+ﬁrst example here is Takayasu et al. [119] . Broadly simi- 
+lar approaches are Levy et al. [80] , [81] ; Bak et al. [10] and 
+Cont and Bouchaud [32] . Most of these contributions do 
+either not focus on power-laws or generate scaling laws 
+cent strand of literature analyses the implications of overconﬁdence of 
+some traders and ﬁnds that this kind of misperception might even pro- 
+vide an evolutionary advantage, e.g., Hirshleifer and Guo [64] . 
+5 For example, in a comprehensive analysis of the seminal Santa Fe 
+model of Arthur et al., Wilpert [128] observes that the decay of the auto- 
+correlation of both volatility and volume is exponential rather than hy- 
+perbolic. Interestingly, results become ‘better’ if one includes typical ele- 
+ments of chartist/fundamentalist interaction.
+
+10 T. Lux, S. Alfarano / Chaos, Solitons and Fractals 88 (2016) 3–18 
+different from the empirical ones. In a related approach, 
+Sato and Takayasu [109] derive a multiplicative stochas- 
+tic difference equation as an approximation to the dynam- 
+ics of the microscopic stock market model proposed by 
+Takayasu et al. [119] . Their model consists of a ﬁxed num- 
+ber of dealers who set limit prices at which they are pre- 
+pared to buy or sell stocks. These thresholds are then mod- 
+iﬁed dynamically in reaction to past price trends. Trades 
+occur when the difference between the maximum buy 
+price and the minimum sell price is positive. The mar- 
+ket price is recorded as the average between the marginal 
+bid and ask. Since traders are assumed to follow the ten- 
+dency of the market with their reservation prices, a self- 
+amplifying mechanism comes into play. Its approximation 
+via a stochastic difference equation leads to a structure 
+similar to Eq (11) . Without any further restriction, realistic 
+exponents can be generated if the parameters of the model 
+are appropriately chosen. Similar feedback in similar mod- 
+els brought about the same result in the framework of Bak 
+et al. [10] . In the following, I review in more detail three 
+dominant types of behavioral models which cover a large 
+part of the hitherto available literature. 
+4.2. Models inspired by statistical physics 
+Cont and Bouchaud’s [32] model adopts a lattice-based 
+percolation framework in which clusters of agents with 
+synchronized behavior are formed. Allowing the clusters to 
+enter on the demand or supply side of the market (with 
+identical probability a ) or to stay inactive (with probabil- 
+ity 1-2a ) and adding a typical price adjustment equation 
+for the reaction on imbalances between demand and sup- 
+ply one gets the following dependence of returns on the 
+current conﬁguration of clusters: 
+ret t = 
+p t − p t−1 
+p t−1 
+∼
+∑ 
+buy 
+n s ·s −
+∑ 
+sell 
+n s ·s , (13) 
+with s the cluster sizes and n s the average number of clus- 
+ters containing s sites on both the demand and supply side 
+of the market. With this type of framework, it follows for 
+small a that returns will inherit the well-known scaling 
+law of the cluster size distribution which has been studied 
+extensively in statistical physics. As Sornette et al. [112] put 
+it in their sympathetic review of this approach: “This per- 
+colation model thus applies physics knowledge collected 
+over decades, instead of inventing new models for ﬁnan- 
+cial ﬂuctuations.”
+Despite being a known candidate for generating power- 
+laws, the percolation model has its shortcomings: ﬁrst, 
+in the basic variant described here it is without memory 
+and, hence, unable to produce volatility correlations. Sec- 
+ond, quite the opposite of multiplicative random processes, 
+the percolation model is not a generic power-law mech- 
+anism, it rather needs ﬁne-tuning so that the probability 
+for connection of lattice sites, say q , is close to the so- 
+called percolation threshold q c , a critical value above which 
+an inﬁnite cluster (i.e. a cluster spanning the entire lat- 
+tice) appears. What is more, the power-law emerging in 
+Cont and Bouchaud’s case of inﬁnite connections between 
+sites is unrealistic: it leads to a power-law index 1.5, some 
+way apart from the “universal cubic law”. Finite-size ef- 
+fects and variations of parameters could generate alterna- 
+tive power-laws anywhere between the Levy and the Gaus- 
+sian regime, but ﬁnding a cubic law would necessitate a 
+particular choice of model design (e.g. q slightly above q c , 
+cf. Stauffer and Penna [115] ). 
+The well-known structure of percolation models in 
+physics and wide-spread availability of pertinent simula- 
+tion software has motivated a large number of variations 
+on the Cont–Bouchaud topic. It has been shown that auto- 
+correlation of volatility (and possibly of volume, too) can 
+be obtained by sluggish evolution of cluster conﬁgurations 
+over time, cf. Stauffer et al. [114] . Similarly, if clusters dis- 
+solve or amalgamate after transactions, more realistic re- 
+turn distributions can be obtained (Eguiluz and Zimmer- 
+mann [41] ). Additionally, fundamental values and feedback 
+from market prices have been introduced to make the 
+model more realistic by Chang and Stauffer [24] . Focardi 
+et al. [47] consider latent connections which only become 
+active in certain times, while Iori [66] investigates an Ising- 
+type lattice model with interaction between nearest neigh- 
+bors, but without the group dynamics of the percolation 
+approach. Other extensions include market entries and exit 
+of agents (Wang et al. [124] ) on imitation between clusters 
+(Makowiec et al. [98] ). Still, one of the major drawbacks 
+of this whole class of models is the extreme dependence 
+of the resulting power laws on carefully adjusted param- 
+eters near criticality. Whether and how the market might 
+self-organize towards these critical points remains unclear. 
+Though sweeping a system back and forth through these 
+critical states might yield an interesting perspective (see 
+Stauffer and Sornette [116] ), a behavioral underpinning of 
+such a mechanism is missing. Some models have combined 
+elements of the percolation or Ising-type group dynamics 
+with a distinction between traders with different strate- 
+gies. Investigating the interaction of fundamentalists and 
+boundedly rational traders prone to herding effects (mod- 
+eled via ﬁeld effects in an Ising structure) Kaizoji et al. 
+[70] obtain more realistic asset price dynamics than most 
+models reviewed it this section before, which also are not 
+restricted to particular parameter sets. However, the more 
+generic reproduction of the stylized facts by models with 
+heterogeneous trading strategies (see next section) sug- 
+gests that this aspect of the model might be more rele- 
+vant than the particular arrangement of agents along the 
+lines of the Ising and other models from statistical physics. 
+Kaizoji et al. [70] has nevertheless spawned a sizable liter- 
+ature itself (e.g. Takaishi [117] ). 
+Another recent model rooted in the statistical physics 
+literature offers a very different avenue towards an expla- 
+nation of ﬁnancial power laws: Gabaix et al. [51] , [50] pro- 
+vide a theoretical framework in which Eqs. (1) , ( 2 ), ( 4 ) and 
+( 5 ) are combined with the additional empirical observation 
+of a Zipf law for the size distribution of mutual funds and 
+a square root relationship between transaction volume and 
+price changes ( /Delta1p ≈ V 0.5 ). In this theory, scaling of price 
+changes according to the cubic law (1) results from scaling 
+of transactions which in turn is a consequence of the Zip- 
+ﬁan size distribution of big investors. This explanation via 
+multiple transmissions of power laws between various eco- 
+nomic quantities is actually quite different from all other
+
+T. Lux, S. Alfarano / Chaos, Solitons and Fractals 88 (2016) 3–18 11 
+behavioral models. Since the ultimate source of ﬁnancial 
+power laws in Gabaix et al. is, therefore, the (exogenous) 
+Zipf distribution of large investors, this view is somewhat 
+similar to the eﬃcient market hypothesis (which attributes 
+the power laws to the exogenous news arrival process), 
+while all other models rather view these laws as an emer- 
+gent manifestation of the intrinsic dynamics of speculative 
+markets. As already mentioned above, the power laws for 
+price impact and trading volume have been disputed in 
+subsequent literature. Farmer and Lillo [44] , for instance, 
+emphasize that these regularities are not uniformly found 
+for all stock markets, namely that often price impact grows 
+more slowly than hypothesized by Gabaix et al., and trad- 
+ing volume would not even follow a power-law distribu- 
+tion in all markets. Weber amd Rosenow [125] show that 
+large stock price changes cannot be explained by trading 
+volume alone, but also depend on measures of liquidity of 
+the pertinent market (and on the current density of limit 
+orders). 
+4.3. Interaction models of ﬁnancial markets 
+One of the sources from which interacting agent mod- 
+els have developed is incorporation of herding and conta- 
+gion phenomena into economic models. A ﬁrst approach 
+in this direction can be found in Kirman [74] and Kirman 
+[75] who adapts a simple stochastic model for informa- 
+tion transmission in ant colonies for modeling changes of 
+strategies of traders in a ﬁnancial market. While the orig- 
+inal set-up has ants exchanging information about the di- 
+rection of food sources, the adaptation to a ﬁnancial set- 
+ting replaces them by foreign exchange dealers exchanging 
+information about the accurateness of chartist and funda- 
+mentalist predictions of exchange rates. Agents who meet 
+other traders adopt their strategy with a certain proba- 
+bility, but agents may also undergo autonomous changes 
+of opinion without interaction. Similar models with inter- 
+personal inﬂuences have been proposed by Lux [84] , [86] , 
+[87] , Lux and Marchesi [90] , [91] , Chen et al. [26] , Aoki [6] 
+and Wagner [123] . 
+Alfarano and Lux [1] have a stripped down version 
+of an extremely parsimonious herding model which still 
+appears to do the job of generating appropriate power 
+laws for returns and volatility. They again assume that two 
+different groups interact in the market: the well-known 
+fundamentalists and a second group denoted as noise 
+traders who are assumed to follow the current mood of 
+the market. While the ﬁrst group simply trades on the 
+base of observed mispricing (i.e. differences between price 
+p and fundamental value p f ), noise traders are assumed 
+to be inﬂuenced by contagion dynamics. They can be 
+optimists (buyers) or pessimists (sellers) and switch be- 
+tween both sides of the market with simple probabilities 
+reﬂecting the inﬂuence of the majority opinion: 
+prob(O → P ) = v 
+N P 
+N 
+, prob(P → O ) = v 
+N O 
+N 
+(14) 
+with N P ( N O ) the number of pessimistic (optimistic) agents, 
+υ a time-scaling parameter and N = N O + N P . Adding up 
+excess demand by both fundamentalists and noise traders, 
+the overall difference between demand and supply can be 
+written as: 6 
+ED = T F (p f − p) + T c x, x = 
+N O −N p 
+N 
+(15) 
+with T F , T C constants determining the trading volume of 
+fundamentalists and noise traders (aka chartists). Assum- 
+ing that market equilibrium is attained instantaneously, 
+one can solve for the equilibrium price: 
+p = p f + 
+T c 
+T f 
+x. (16) 
+As can be seen from (16), price changes are generated 
+by both (i) exogenous inﬂow of new information about 
+fundamentals ( p f ) and (ii) endogenous changes in demand 
+and supply brought about via the herding mechanism (i.e. 
+via changes of x ). While traditional ﬁnance models only al- 
+low for the ﬁrst component (for x = 0 , we would end up 
+with Eq. (8) ) and, therefore, have to trace back all features 
+of returns to similar features of fundamentals, behavioral 
+ﬁnance models give a role to the intrinsic dynamics of ﬁ- 
+nancial markets. While this structure is similar to the RE 
+bubble model ( Eq. 9 ), in contrast to rational bubbles the 
+second component in Eq. (16) does not have to obey a re- 
+striction for the rationality or consistency of expectations. 
+As illustrated in a typical simulation in Fig. 3 , these few 
+ingredients detailed above are suﬃcient to generate rela- 
+tively realistic time series for returns whose distributional 
+and temporal characteristics are quite close to empirical 
+ﬁndings. What is the reason for this outcome? The herding 
+mechanism of Eq. (14) produces a bi-modal limiting distri- 
+bution for the fraction of noise traders in the two groups 
+of optimistic and pessimistic traders. Most of the time, one, 
+therefore encounters a majority of the noise traders on ei- 
+ther the supply or demand side of the market (which goes 
+along with undervaluation or overvaluation of the asset 
+price). However, the stochastic nature of the process also 
+leads to recurrent switches from one majority to another. 
+During these periods, large swings in average opinion lead 
+to an increase of volatility which will last for some time 
+until a lock-in occurs again to a stable optimistic or pes- 
+simistic majority. 
+However, as outlined in Alfarano and Lux [1] , at least 
+the temporal scaling of volatility in this model does not 
+follow a true power-law. Because of the Markovian struc- 
+ture of the model, no ‘true’ long-term dependence can 
+exist, although standard tests are typically unable to dis- 
+tinguish between the apparent power-law behavior of 
+this model and true power-law behavior. Similar pre- 
+asymptotic, spurious scaling might occur in the very sim- 
+ilar models of Kirman [74] and Kirman and Teyssiere [76] . 
+Wagner [123] shows that a more detailed statistical analy- 
+sis reveals differences between volatility scaling in real-life 
+markets and the behavior of these simple models. For in- 
+stance, the volatility clusters within a time window are all 
+of the same size in these toy models and small size clus- 
+tering while observed in empirical time series is absent in 
+the simulated data. 
+6 Since optimistic (pessimistic) noise trader would buy (sell), their 
+net contributions to excess demand simply depends on the difference 
+N O −N p .
+
+12 T. Lux, S. Alfarano / Chaos, Solitons and Fractals 88 (2016) 3–18 
+Fig. 3. Typical simulations of the models by Gaunersdorfer and Hommes (2003) and Alfarano and Lux [1] . In the ﬁrst model, the dynamics switches 
+between a locally stable ﬁxed point and a locally stable limit cycle. The high noise level conceals much of the underlying regularity, but leaves the 
+impression of systematic switches between turbulent and tranquil episodes. In the second model, the driving force are stochastic transitions of agents 
+between trading strategies which lead to switches between high and low volatility episodes. Both models can reproduce the phenomenological appearance 
+of empirical series (see Fig. 1 ) and could also give the impression of power laws under standard statistical tests. However, they do not generate power laws 
+in returns and volatility strictu sensu , but only apparent scaling behavior. 
+Certain reﬁnements of this approach provide simu- 
+lated time series which come closer to empirical obser- 
+vations. Aoki [6] consider a stochastic process of interac- 
+tion of chartists and fundamentalists with entry and exit 
+of traders and also achieve to derive a stochastic difference 
+equation for the ensuing returns dynamics with a tail in- 
+dex μ > 1. Finally, Carvalho [22] demonstrates that one can 
+even do without chartist traders or similar self-reinforcing 
+feedback in price formation. Even when only fundamental- 
+ists are present in the market, a multiplicative noise struc- 
+ture can result. Letting fundamentalists react on the differ- 
+ence between market returns and changes of fundamen- 
+tals, and attributing to them identical market power but 
+allowing for activation of each trader with a certain prob- 
+ability only, suﬃces to generate a multiplicative stochastic 
+process via the probability distribution of the number of 
+active traders and, hence, produces power law behavior of 
+returns. 
+Another extension of the simple herding dynamics pre- 
+sented above is the earlier model of Lux and Marchesi [90] , 
+[91] , who add transitions between noise traders and fun- 
+damentalists depending on the proﬁtability of both strate- 
+gies. Lux and Marchesi show that this relatively complex 
+set-up could reproduce empirically realistic scaling laws 
+for both returns and volatility in rather good numerical 
+agreement with empirical data. Various sensitivity analyses 
+also indicate that the numerical results are not very sensi- 
+tive with respect to parameter variations. Furthermore, an 
+analytical approximation via the Master equation frame- 
+work adopted from statistical physics suggests a general 
+robustness of the qualitative appearance of the dynamics. 
+The characteristic switches between tranquil and volatile 
+phases are triggered by recurring temporal deviations from 
+an otherwise stable equilibrium in which the price is close 
+to its fundamental value. The mechanism is this: in the 
+neighborhood of the equilibrium, neither mispricing nor 
+any detectable patterns in the price trajectories exist so 
+that neither the chartist nor the fundamentalist strategy 
+has an advantage. Agents, then, switch between these al- 
+ternatives in a rather unsystematic manner which makes 
+the population composition (in terms of strategies) fol- 
+low a random walk. However, stability of the fundamen- 
+tal equilibrium depends crucially on the ratio of chartists 
+and fundamentalists. This is an insight from practically all 
+models with chartist-fundamentalist interaction and it also 
+features prominently in the Lux/Marchesi framework 7 The 
+random walk in strategy space now makes the population 
+sweep over this threshold every once in a while creating 
+an onset of volatility. 
+In fact, the deterministic approximation of the dy- 
+namic system shows that one can interpret the number of 
+chartists and fundamentalists as a critical parameter of a 
+simpler system in which changes of this variable lead to 
+movements back and forth through a Hopf bifurcation sce- 
+nario. What happens ﬁts the deﬁnition of so-called on-off
+intermittency in physics which describes a dynamic system 
+undergoing phases of temporal (intermittent) bursts of ac- 
+tivity when the variation of one dynamical variable moves 
+it through the bifurcation point of the dynamic process. 
+Typical examples are chaotic attractors coupled to stochas- 
+tic motion or coupled oscillators (Ott and Sommerer [103] , 
+Venkatamarani et al. [122] ). Time series produced in this 
+literature are often perplexingly similar to the phenomeno- 
+logical appearance of volatility clustering in ﬁnancial data 
+7 For any combination of parameters, a threshold value can be com- 
+puted for the fraction of chartists beyond which a loss of stability occurs.
+
+T. Lux, S. Alfarano / Chaos, Solitons and Fractals 88 (2016) 3–18 13 
+and several fractal properties of the time series have been 
+analyzed in the above papers (albeit the ones of particu- 
+lar interest in ﬁnance are not discussed in this literature). 
+Although no theoretical results are available so far for the 
+model of Lux and Marchesi [90] , recent results on some 
+simpler versions (Alfarano et al. [2] ) suggest that under 
+some circumstances, interacting agent models of this type 
+can generate true power laws for returns and volatility. 
+Lux and Marchesi [91] argue that irrespective of the 
+concrete details of the model, the indeterminateness of the 
+population composition in a market equilibrium might be 
+a relatively general phenomenon (because of the absence 
+of proﬁtability of any trading strategy in such a steady 
+state situation) and together with dependence of stability 
+on the population composition, potential on–off intermit- 
+tency should exist in a broad class of behavioral ﬁnance 
+models. Some support for this argument is provided by Lux 
+and Schornstein [94] who consider a quite different multi- 
+agent design of a foreign exchange market with agents en- 
+dowed with artiﬁcial intelligence (genetic algorithm learn- 
+ing). They point out that a similar scenario like in Lux and 
+Marchesi prevails in this framework which also generates 
+behavior close to realistic power-laws in simulated data. 
+Similarly, Giardina and Bouchaud [57] allow more general 
+strategies than Lux/Marchesi, but also ﬁnd a random walk 
+in strategy space to account for the emergence of realistic 
+dynamics. 
+There is one important shortcoming of these models: 
+their outcome usually depends in a sensitive way on the 
+system size (i.e., the number of agents operating in the 
+market). With the increase of the size of the population, 
+the nice dynamic features and power-law statistics get lost 
+(Egenter et al. [40] ). The reason is that with an increasing 
+number of autonomous agents, a law of large numbers 
+comes into play and the stochastic dynamics effectively 
+becomes equivalent to draws from a Normal distribution. 
+However, Alfarano et al. [3] and Irle et al. [67] show that 
+size-dependency might be a consequence of the exact 
+topology of agents’ interaction. In particular, assuming a 
+given intensity of interaction of agents with their neigh- 
+bors (or with a general ﬁeld effect generated by the 
+overall average of the population) implies that with varia- 
+tion of the number of agents (the system size), the relative 
+strength of this component will be declining. Scaling the 
+interaction component in a way to increase along with 
+system size will conserve the interesting dynamics and 
+make the qualitative outcome independent of the number 
+of agents. The increase of the velocity of transmission of 
+information with modern means of communication might 
+provide a rationale supporting an increase of the range 
+of interactions. Alfarano and Milakovi ´c [4] have proposed 
+an alternative solution to the system size dependence 
+in the herding-type models by introducing a particular 
+hierarchical structure among the market participants. 
+Many variations of similar models have meanwhile 
+been published that generate realistic time series (e.g., 
+Horst and Rothe [65] , Ghoulmie et al. [56] , Duarte Queirós 
+et al. [38] ). More recent literature has also turned to rig- 
+orous econometric estimation of the parameters of such 
+agent-based models (cf. Jang [68] , Chen and Lux [28] , 
+Ghonghadze and Lux [55] ). 
+4.4. Another mechanism: switching between predictors 
+and attractors 
+A closely related approach has emerged from an adap- 
+tation of the seminal random utility framework for em- 
+pirical analysis of discrete choice problems 8 (Manski and 
+McFadden [101] ) for formalizing - again - the interplay of 
+the notorious chartists and fundamentalists in speculative 
+markets. This approach dates back to Brock and Hommes 
+[16,17] but its potential to generate realistic time series has 
+only been revealed in subsequent research. Models of this 
+type are very close in terms of economic intuition to those 
+reviewed in the previous section, but have a somewhat dif- 
+ferent ﬂavor from a dynamic systems perspective. 
+Let us illustrate the basic ingredients of these mod- 
+els via an example along the lines of Gaunersdorfer and 
+Hommes [53] , [54] . Our starting point is the distinction 
+between different groups of traders (mostly two) whose 
+excess demand for a risky asset depends on their group- 
+speciﬁc expectation of future price increases and divi- 
+dends: 
+ED i,t = 
+E i,t [ p t+1 + d t+1 − (1 + r) p t ] 
+μσ2 (17) 
+with ED i, t : demand of group i at time t, p t : the price, d t : 
+the dividend, r : the risk-free rate available for a riskless as- 
+set (i.e. government bonds), μ: a parameter of risk aver- 
+sion, and σ2 the variance of the expectation term in the 
+numerator. Eq. (17) , therefore, formalizes demand depend- 
+ing on the risk-adjusted excess returns (the sum of divi- 
+dends and capital gains) of a risky over a riskless invest- 
+ment. Economists know that this kind of demand function 
+can be derived from simple mean-variance utility func- 
+tions as well as from negative exponential utility func- 
+tions under a few additional conditions. With some effort, 
+the more phenomenological excess demand function of the 
+previous chapter could also be cast into such a framework. 
+If there is no additional inﬂow of assets (no new issues for 
+the time being), market equilibrium simply requires that: 
+∑ 
+i 
+n i,t ED i,t = 0 , (18) 
+with n i, t the fraction of market participants subscribing to 
+strategy i at time t . Allowing only for agents who compute 
+in a perfectly rational way the expectation of future price 
+and dividend according to Eq. (7) , we would once more 
+fall back on the fundamental price of Eq. (8) . However, in- 
+troducing ‘boundedly rational’ speculative strategies devi- 
+ations from this fundamental valuation become possible. 
+As an example, Gaunersdorfer and Hommes [54] analyze 
+a model with two groups, i = 1 , 2 , using different expecta- 
+tion formation rules: 
+E 1 ,t [ p t+1 ] = p f + v (p t−1 − p f ) , (19) 
+E 2 ,t [ p t+1 ] = p t−1 + γ (p t−1 − p t−2 ) , 
+together with stationary expectations of dividends 
+E 1 ,t [ d t+1 ] = E 2 ,t [ d t+1 ] = ¯d . Clearly, group 1 can be iden- 
+tiﬁed as a fundamentalist crowd while group 2 has a 
+8 For example, choosing the preferred one from two or more brands of 
+whiskey.
+
+14 T. Lux, S. Alfarano / Chaos, Solitons and Fractals 88 (2016) 3–18 
+chartist prediction technique. The discrete choice frame- 
+work comes into play when modeling the choice of one 
+of these two predictors by the agents in the market. 
+Like in Lux/Marchesi, choice of strategies is governed by 
+objective economic factors. Gaunersdorfer and Hommes 
+use accumulated proﬁts: 
+πi,t = R t ·ED i,t−1 + ρπi,t−1 (20) 
+where R t is the actual return achieved with investment in 
+the period before and ρ is a parameter for the memory 
+of past proﬁtability. Other papers use risk-adjusted proﬁts 
+or utility measures instead of monetary proﬁts as ﬁtness 
+criteria. However, it does not appear from the available lit- 
+erature that these choices would lead to grossly different 
+outcomes. The last step is predictor choice based on the 
+ﬁtness criterion: 
+n i,t+1 = 
+exp (βπi,t ) 
+∑ 
+i 
+exp (βπi,t ) 
+(21) 
+i.e. through the standard discrete choice formalization. β is 
+called the intensity of choice with the extreme cases β = 0 
+( β → ∞ ) leading to constant fractions equal to 0.5 or to- 
+tal polarization (one n i,t = 1 , all others equal to zero if the 
+slightest differences in ﬁtness exist). Often, as in Gauners- 
+dorfer and Hommes [54] , additional factors enter the de- 
+termination of fractions n i, t . 
+Formally, the combined dynamics of predictor choice 
+and price development make up a discrete deterministic 
+system (in the above example it is a difference equation 
+system of order three). Typically one would be able to 
+derive analytical results concerning the number of possi- 
+ble equilibria, local stability conditions and bifurcations of 
+the system dynamics. Because of the highly non-linear na- 
+ture of these systems, many kinds of complex dynamics 
+can arise: limit cycles, chaotic dynamics, homoclinic or- 
+bits as well as co-existence of different types of attractors 
+may all happen for different sets of parameters. The later 
+scenario is of particular interest and can be characterized 
+as another type of ‘intermittend dynamic behavior’: when 
+two or more attractors exist for the deterministic system, 
+adding noise (random shocks) superimposed on the deter- 
+ministic dynamics may trigger switches between different 
+basins of attraction of different limiting sets. For example, 
+with coexistence of a ﬁxed point-attractor and a limit cy- 
+cle, the stochastic movements between both types of dy- 
+namics also goes along with switches between turbulent 
+and tranquil market phases. An illustration is provided in 
+Fig. 3 which exhibits a simulation of the example given 
+by Gaunersdorfer and Hommes [54] . Quite intuitively plau- 
+sible, the market exhibits small ﬂuctuations as long as it 
+hovers within the basin of attraction of the locally stable 
+ﬁxed point (where the price is equal to the fundamental 
+value on average) and the majority of traders chooses a 
+fundamentalist strategy, but onset of more violent ﬂuctua- 
+tions occurs once it traverses to the basin of the limit cycle 
+(with its cyclic dynamics being governed by a prevailing 
+chartist attitude). As can be seen from the resulting dy- 
+namics of returns, at least for certain choices of parameter 
+values, the deterministic origin of the process is almost en- 
+tirely concealed by its stochastic components. As Gauners- 
+dorfer and Hommes show, a number of statistics give quite 
+satisfactory agreement between their simulated data and 
+empirical records. Although they do not estimate power 
+law indices, it seems natural from the simulated time se- 
+ries that their process should be able to mimic the hyper- 
+bolic decay of the returns distribution and the long-term 
+dependence of volatility. 
+Further examples are given by Gaunersdorfer [54] who 
+has a slightly different model set-up which could even lead 
+to coexisting ﬁxed points and chaotic attractors. Other re- 
+cent contributions along very similar lines are Chiarella 
+and He [30] , [31] , Fernandez-Rodriguez et al. [46] , West- 
+erhoff [127] , De Grauwe and Grimaldi [35] , Chang [25] , 
+Ke and Shi [71] , and He and Li [61] . A recent survey 
+of this literature can be found in Hommes (2009). De 
+Grauwe and Grimaldi [35] have an interesting variation 
+of the attractors-switching avenue to intermittent ﬂuctu- 
+ations: introducing transaction costs for the acquisition of 
+fundamental information they obtain a band of inactivity 
+of fundamentalists around the fundamental equilibrium. 
+The price process, then, follows different patterns inside 
+and outside of this transaction cost band which appar- 
+ently also generates intermittent volatility clustering. He 
+and Li [61] provide an analysis of complex dynamics of a 
+continuous-time version of a market with heterogeneous 
+agents switching between strategies. Both De Grauwe and 
+Grimaldi and Westerhoff estimate the tail indices for large 
+returns and obtain numbers in agreement with the styl- 
+ized facts, i.e. numbers in the vicinity of the cubic power 
+law. 
+One of the distinguishing features of the above contri- 
+butions is the assumption of an inﬁnite population of spec- 
+ulators which allows to study the resulting dynamics via 
+systems of deterministic difference equations derived for 
+the inﬁnite population limit. While this is an approach 
+very much in line with traditional economic theorizing, it 
+gives these models a somewhat different ﬂavor compared 
+to the ﬁnite-size multi-agent models reviewed before. In 
+particular, the interplay of noise and deterministic factors 
+is quite different in both approaches: while noise appears 
+on the level of each individual agent in, for instance, per- 
+colation models or the Lux/Marchesi model through the 
+transition probabilities (eg. 14), the inherent ﬂuctuations 
+of the discrete choice approach are averaged out by the 
+assumption of an inﬁnite population in Gaunersdorfer and 
+Hommes [54] . Thence, despite the randomness at the level 
+of the agents and the use of random choice probabilities, 
+Eq. (21) , for instance, leads to a deterministic dynamics 
+under the assumption of an inﬁnite population. The noise 
+component responsible for the switches between attractors 
+has, therefore, to be superimposed on the market dynam- 
+ics and enters on the level of the macroscopic system by, for 
+example adding a stochastic term in the excess demand 
+equation (18) . However, this implies that the noise level 
+has to be relatively large to obtain the results exhibited in 
+Fig. 3 . In fact, inspection of the simulations of this exam- 
+ple shows that the added stochastic component in market 
+excess demand is of almost the same size like fundamen- 
+talists’ average excess demand (with chartists’ average ex- 
+cess demand being equal to the sum of the two other com- 
+ponents). In simulations with realistic time series proper- 
+ties, the ‘signal-to-noise ratio’ in this model is, therefore,
+
+T. Lux, S. Alfarano / Chaos, Solitons and Fractals 88 (2016) 3–18 15 
+Table 1 
+Sources of power laws in ﬁnance. 
+Class of models Source of power law Problems 
+Exogenous explanations Traditional ﬁnance Fundamentals Fundamentals are unobservable 
+Gabaix et al. [51] Zipf’s law for investment capital Neglect of behavioral roots, empirical 
+validity dubious 
+Endogenous explanations RE bubbles Multiplicative dynamics Unrealistic exponents 
+Percolation models, e.g. Cont and 
+Bouchaud [14] 
+Cluster formation Power laws not robust 
+Multi-agent models, e.g. Lux and 
+Marchesi [90] 
+Intermittent dynamics Sensitivity with respect to number of 
+agents 
+Discrete choice models, e.g. Gaunersdorfer 
+and Hommes [54] 
+Switching between attractors Sensitivity with respect to noise amplitude 
+practically equal to one. With hindsight, this may be a 
+necessary requirement for obtaining ‘realistic’ time series 
+as a high noise factor will be required to mask the in- 
+herent deterministic forces prevailing around both the ﬁx 
+point equilibrium and the limit cycle regime. Since, on the 
+other hand, the noise level should not be too high so to 
+not totally dominate the deterministic roots of the dynam- 
+ics, the variance of the added stochastic term is probably 
+a central ingredient of the model. In an empirical applica- 
+tion of a closely related model, Amilon [5] reported un- 
+satisfactory results as many parameters of the structural 
+dynamics turned out insigniﬁcant, and the residuals were 
+not very different with or without the heterogeneous agent 
+dynamics. More supportive results are reported by He and 
+Li [62] in a model with heterogeneous expectations, but 
+without switching between predictions/strategies. Franke 
+and Westerhoff [4 8] , [4 9] , estimate various models of the 
+heterogeneous agent classes in which it turns out that an 
+element of herd behavior plays an important role in ob- 
+taining a good match of the ‘stylized facts’. 
+5. Conclusions 
+In contrast to one recently articulated opinion (Durlauf 
+[39] ) power laws in ﬁnance have never been regarded as 
+curiosities. On the contrary, both the scaling of the tails of 
+the distribution of returns and the long-range dependence 
+of volatility are all-important to practitioners and have 
+motivated a vast statistical and econometric literature. 
+Much of the development of the toolbox in empirical 
+ﬁnance is due to these apparently universal properties of 
+ﬁnancial markets (with Engle’s family of ARCH models the 
+most prominent example). It is, however, also true that 
+economic theory has been altogether silent on behavioral 
+roots of these regularities until very recently. Besides 
+having been regarded as merely statistical ﬁndings outside 
+the realm of economic theory, typically they have mostly 
+been described in a more phenomenological way via the 
+shape of histograms or the apparent clustering of tranquil 
+and turbulent episodes. While a power-law perspective 
+has already appeared in Mandelbrot’s seminal contribution 
+(1963), whether the ‘stylized facts‘ can really be described 
+rigorously by power laws has remained unclear until 
+the nineties. By now, availability of high-frequency data 
+and new analytical tools have led to a consensus of a 
+relatively uniform exponent around three which seems to 
+hold across markets, countries and time periods. Similarly 
+homogeneous evidence is emerging for the long-range 
+dependence of both volatility and volume. 
+Theoretical work trying to explain these features has 
+followed diverse avenues. As depicted in Table 1 we can, 
+in principle, distinguish between exogenous and endoge- 
+nous approaches for explaining ﬁnancial power-laws. The 
+ﬁrst class has only been dealt with in passing in the main 
+text: its major member is the whole body of traditional 
+eﬃcient market models in ﬁnance which would have to 
+attribute all time series properties of ﬁnancial returns to 
+the structure of news about fundamental factors. In this 
+view, scaling in returns and volatility would only mirror 
+scaling in increments and ﬂuctuations of fundamental in- 
+formation. Needless to say, many proponents of behavioral 
+models take the unsatisfactory nature of this explanation 
+as their starting point. An interesting alternative exoge- 
+nous explanation can be found in the recent papers by 
+Gabaix et al. [51] , [50] who derive the cubic law for re- 
+turns from Zipf’s law for the capital of large investors plus 
+some other ingredients. However, the empirical basis of 
+this theory has already been questioned by careful anal- 
+ysis of some of its ingredients. Even if it would go through 
+it would leave one with an unexplained Zipf’s law for the 
+wealth of investors from which the other power laws are 
+derived. 
+Most papers on the topic have, however, pursued a dif- 
+ferent approach focusing on the intrinsic dynamics of spec- 
+ulative interaction in ﬁnancial markets. The ﬁrst example 
+in this second class is the RE bubble theory which, in 
+fact, emerges from relaxation of a minor technical condi- 
+tion of traditional present value models. Although it has 
+the fascinating property of deﬁning a whole class of data- 
+generating processes with generic power laws, numerically 
+these laws are disappointingly far off from the empirical 
+ones. The conclusion to be drawn from this result is that 
+we can exclude this whole class of fully rational models of 
+speculative activity. This leaves one essentially with either 
+the choice of subscribing to the Eﬃcient Market Hypothe- 
+sis of price formation being exclusively governed by funda- 
+mentals, or resorting to one or the other brand of models 
+of speculative activity with bounded rationality. Within the 
+recent econophysics literature, percolation models adopted 
+from statistical physics have attracted the interest of a siz- 
+able number of researchers. Their disadvantage is the lack 
+of robustness: the model parameters have to be ﬁne-tuned
+
+16 T. Lux, S. Alfarano / Chaos, Solitons and Fractals 88 (2016) 3–18 
+to arrive at the required power-laws. As another drawback, 
+most parameters in these models are not easy to interpret, 
+so that an economic assessment of the explanatory power 
+of the resulting dynamics at the critical percolation thresh- 
+old is diﬃcult. 
+In the behavioral ﬁnance literature, several types of 
+models with interaction of different trader groups have 
+been proposed. Typically, interesting time series are ob- 
+tained from some kind of ‘intermittent’ dynamics. A gen- 
+eral conclusion from this body of literature is that some 
+kind of self-ampliﬁcation of ﬂuctuations via herd behavior 
+or technical trading is necessary (and often suﬃcient) to 
+generate time series which are phenomenologically close 
+to empirical records. One of the more important problems 
+of these models is the relationship between system size, 
+deterministic forces and stochastic elements. On the one 
+hand, typical simulation models often suffer from a critical 
+dependence of their ‘nice’ results on the number of agents 
+operating in the market. But also see Alfarano et al. [3] 
+and Irle et al. [67] for avenues to overcome this problem. 
+Models starting with an inﬁnite population, on the other 
+hand, have to adjust the noise level in a way to counter- 
+balance the deterministic core of their market dynamics. 
+In this way, a sizable part of the ﬂuctuation of returns has 
+to be assigned to purely stochastic (fundamental) factors, 
+and the explanatory power of the intrinsic dynamics of the 
+trading process almost by construction would turn out to 
+be limited. 
+The introduction of concepts and models from statis- 
+tical physics has also evoked interesting methodological 
+discussions: while physicists forcefully argue in favor of 
+building simple models of interacting economic agents 
+and neglecting as far as possible details which are not in 
+the center of interest (cf. Stauffer [113] ), some economists 
+have criticized this approach for producing models that 
+are not economically insightful (Durlauf [39] ). Of course, 
+parsimony is also a concern in economic modeling. How- 
+ever, physicists and economists would often differ in their 
+assessment of the essential model ingredients a truly par- 
+simonious model should contain: while physicists would 
+favor interactions, economists would traditionally prefer 
+to emphasize the microeconomic foundations of agents’ 
+behavior. However, having to begin with a full-ﬂetched 
+microeconomic dynamic optimization approach makes 
+modeling of interactions superimposed on the traditional 
+microstructure an even more demanding task. It could 
+also restrict the outcome by adhering to particular forms 
+of utility functions, ways of information acquisition and 
+information processing, trading strategies etc. The relative 
+success of several simple models in explaining a good 
+degree of the hitherto unexplained empirical character- 
+istics of ﬁnancial data casts doubts on the paradigm of 
+micro-foundations in the sense of ‘representative’ individ- 
+ual optimization in economic models (which is a classical 
+example of a reductionist approach). Although analysis 
+of individual optimization is in no way unimportant, 
+exclusively focusing on this aspect of economic life comes 
+with the danger of neglecting the equally important con- 
+sequences of both market-mediated and social interactions 
+of market participants. 
+References 
+[1] Alfarano S , Lux T . A noise trader model as a generator of ap- 
+parent ﬁnancial power laws and long memory. Macroecon Dyn 
+2007;11(S1):80–101 . 
+[2] Alfarano S , Lux T , Wagner F . Estimation of agent-based models: the 
+case of an asymmetric herding model. Comput Econ 2005;26:19–
+49 . 
+[3] Alfarano S , Lux T , Wagner F . Time variation of higher moments 
+in a ﬁnancial market with heterogeneous agents: an analytical ap- 
+proach. J Econ Dyn Control 2008;32(1):101–36 . 
+[4] Alfarano S , Milakovi ´c M . Network structure and n-dependence in 
+agent-based herding models. J Econ Dyn Control 2004;33:78–92 . 
+[5] Amilon H . Estimation of an adaptive stock market model with het- 
+erogeneous agents. J Empir Finance 2008;15(2):342–62 . 
+[6] Aoki M . Open models of share markets with two dominant types of 
+participants. J Econ Behav Organ 2002;49:199–216 . 
+[7] Arifovic J . The behavior of the exchange rate in the genetic algo- 
+rithm and experimental economies. J Polit Econ 1996;104(3):510–
+41 . 
+[8] Arthur WB , Holland JH , LeBaron B , Palmer R , Tayler P . Asset pricing 
+under endogenous expectations in an artiﬁcial stock market. Econ 
+Notes 1997;26:297–330 . 
+[9] Baillie R , Bollerslev T , Mikkelsen H . Fractionally integrated gen- 
+eralized autoregressive conditional heteroskedasticity. J Econometr 
+1996;74(1):3–30 . 
+[10] Bak P , Paczuski M , Shubik M . Price variations in a stock market 
+with many agents. Phys A: Stat Mech Appl 1997;246(3-4):430–53 . 
+[11] Balakrishnan P , Miller J , Shankar S . Power law and evolutionary 
+trends in stock markets. Econ Lett 2008;98:194–200 . 
+[12] Baumol W . Speculation, proﬁtability, and stability. Rev Econ Stat 
+1957;39(3):263–71 . 
+[13] Blanchard O , Watson M . Bubbles, rational expectations and ﬁnancial 
+markets. In: Wachtel P, editor. Crises in the Economic and Financial 
+Structure. Lexington Books; 1982 . 
+[14] Bouchaud J-P , Potters M . Theory of ﬁnancial risks. from statistical 
+physics to risk managment. Univerity press; 20 0 0 . 
+[15] Brenner T . Modelling learning in economics. E. Elgar Publication; 
+1999. ISBN 9781840641349 . 
+[16] Brock W , Hommes C . A rational route to randomness. Econometrica 
+1997;65(5):1059–96 . 
+[17] Brock W , Hommes C . Models of complexity in economics and ﬁ- 
+nance. In: Hey C, Schumacher JM, Hanzon B, Praagman C, editors. 
+System dynamics in economic and ﬁnancial models. Wiley; 1997 . 
+[18] Buchanan M . Ubiquity: the science of history, or why the world 
+is simpler than we think. Weindenfeld & Nicholson; 20 0 0. ISBN 
+9780297643760 . 
+[19] Calvet L , Fisher A . Forecasting multifractal volatility. J Econometr 
+2001;105(1):27–58 . 
+[20] Calvet L , Fisher A . How to forecast long-run volatility: regime 
+switching and the estimation of multifractal processes. J Financ 
+Econometr 2004;2(1):49–83 . 
+[21] Campbell J , Lo A , MacKinlay A . The econometrics of ﬁnancial mar- 
+kets. Princeton University Press; 1997. ISBN 9780691043012 . 
+[22] Carvalho R . The dynamics of the linear random Farmer model. Int 
+Symp Econ Theory Econometr 2004;14(1-4):411–30 . 
+[23] Casault S , Groen A , Linton J . Examination of the behavior of R&D 
+returns using a power law. Sci Public Policy 2013;40(2):219–28 . 
+[24] Chang I , Stauffer D . Fundamental judgement in Cont-Bouchaud 
+herding model of market ﬂuctuations. Phys A: Stat Mech Appl 
+1999;264(1-2):294–8 . 
+[25] Chang S . A simple asset pricing model with social interactions and 
+heterogeneous beliefs. J Econ Dyn Control 20 07;31(4):130 0–25 . 
+[26] Chen S , Lux T , Marchesi M . Testing for nonlinear structure in an 
+artiﬁcial ﬁnancial market. J Econ Behav Organ 2001;46:327–42 . 
+[27] Chen S-H , Yeh C-H . On the emergent properties of artiﬁcial stock 
+markets: the eﬃcient market hypothesis and the rational expecta- 
+tions hypothesis. J Econ Behav Organ 2002;49(2):217–39 . 
+[28] Chen Z , Lux T . Estimation of sentiment effects in ﬁnancial markets: 
+a simulated method of moments approach; 2015 . FinMaP-Working 
+Paper no. 37. 
+[29] Cheung Y-W , Wong C-P . A survey of market practitioners’ views on 
+exchange rate dynamics. J Int Econ 20 0 0;51(2):401–19 . 
+[30] Chiarella C , He X-Z . Heterogeneous beliefs, risk and learning in a 
+simple asset pricing model. Comput Econ 2002;19(1):95–132 . 
+[31] Chiarella C , He X-Z . Dynamics of beliefs and learning un- 
+der al-processes - the heterogeneous case. J Econ Dyn Control 
+2003;27(3):503–31 .
+
+T. Lux, S. Alfarano / Chaos, Solitons and Fractals 88 (2016) 3–18 17 
+[32] Cont R , Bouchaud J . Herd behavior and aggregate ﬂuctuations in ﬁ- 
+nancial markets. Macroecon Dyn 20 0 0;4(02):170–96 . 
+[33] Cont R , Potters M , Bouchaud J . Scaling in stock market data: sta- 
+ble laws and beyond. In: Dubrulle B, Graner F, Sornette D, editors. 
+Scale Invariance and Beyond. Centre de Physique des Houches, 7. 
+Springer; 1997. p. 75–85. ISBN 978-3-540-640 0 0-4 . 
+[34] De Grauwe P , Dewachter H , Embrechts M . Exchange rate theory: 
+chaotic models of foreign exchange market. Blackwell; 1993. ISBN 
+9780631180166 . 
+[35] De Grauwe P , Grimaldi M . Exchange rate puzzles: a tale of switch- 
+ing attractors. Eur Econ Rev 2006;50:1–33 . 
+[36] De Haan L , Resnick S , Rootzén H , De Vries C . External behavior of 
+solutions to a stochastic difference equation with applications to 
+ARCH processes. Stochast Process Appl 1989;32:213–24 . 
+[37] Ding Z , Granger C , Clive WJ , Engle R . A long memory prop- 
+erty of stock market returns and a new model. J Empir Finance 
+1993;1(1):83–106 . 
+[38] Duarte Queirós S , Curado E , Nobre F . A multi-interacting- 
+agent model for ﬁnancial markets. Phys A: Stat Mech Appl 
+2007;374(2):715–29 . 
+[39] Durlauf S . Complexity and empirical economics. Econ J 
+2005;115(504):F225–43 . 
+[40] Egenter E , Lux T , Stauffer D . Finite-size effects in monte carlo 
+simulations of two stock market models. Phys A: Stat Mech Appl 
+1999;268(1-2):250–6 . 
+[41] Eguiluz V , Zimmermann M . Transmission of information and 
+herd behavior: an application to ﬁnancial markets. Phys Rev Lett 
+20 0 0;85(26):5659–62 . 
+[42] Engle R . Autoregressive conditional heteroskedasticity with esti- 
+mates of the variance of U.K. inﬂation. Econometrica 1982;50:987–
+1008 . 
+[43] Fama E . Mandelbrot and the stable Paretian hypothesis. J Bus 
+1963;36:420–9 . 
+[44] Farmer D , Lillo F . On the origin of power-law tails in price ﬂuctua- 
+tions. Quant Finance 2004;4:C7–C11 . 
+[45] Fergusson K , Platen E . On the distributional characterization of daily 
+log-returns of a world stock index. Math Finance 2006;13:14–38 . 
+[46] Fernandez-Rodriguez F , Garcia-Artiles M , Martin-Gonzalez J . A 
+model of speculative behaviour with a strange attractor. Appl Math 
+Finance 2002;9(3):143–61 . 
+[47] Focardi S , Cincotti S , Marchesi M . Self-organization and market 
+crashes. J Econ Behav Organ 2002;49(2):241–67 . 
+[48] Franke R , Westerhoff F . Structural stochastic volatility in asset pric- 
+ing dynamics: estimation and model contest. J Econ Dyn Control 
+2012;36(8):1193–211 . 
+[49] Franke R, Westerhoff F. Why a simple herding model may gener- 
+ate the stylized facts of daily returns: explanation and estimation. J 
+Econ Interact Coordinat, in press. 
+[50] Gabaix X , Gopikrishnan P , Plerou V , Stanley E . Institutional in- 
+vestors and stock market volatility. Quart J Econ 2006;121:461–504 . 
+[51] Gabaix X , Gopikrishnan P , Plerou V , Stanley HE . A theory of 
+power-law distributions in ﬁnancial market ﬂuctuations. Nature 
+2003;36(6937):267–70 . 
+[52] Galati G . Trading volumes, volatility and spreads in foreign ex- 
+change markets: evidence from emerging market countries; 20 0 0 . 
+BIS Working Paper No. 93. 
+[53] Gaunersdorfer A . Endogenous ﬂuctuations in a simple asset pricing 
+model with heterogeneous agents. J Econ Dyn Control 20 0 0;24(5- 
+7):799–831 . 
+[54] Gaunersdorfer A , Hommes CH . A nonlinear structural model for 
+volatility clustering, in: Teyssière, G., and A. Kirman, eds. Long 
+memory in economics. Springer, Berlin; 2007 . 
+[55] Ghonghadze J, Lux T. Bringing an elementary agent-based model to 
+the data: estimation via GMM and an application to forecasting of 
+asset price volatility. Empir Finance, in press. 
+[56] Ghoulmie F , Cont R , Nadal J . Heterogeneity and feedback 
+in an agent-based market model. J Phys: Condens Matter 
+2005;17(14):S1259–68 . 
+[57] Giardina I , Bouchaud J . Bubbles, crashes and intermittency in agent 
+based market models. Eur Phys J B 2003;31:421–537 . 
+[58] Gopikrishnan P , Meyer M , Amaral L , Stanley H . Inverse cubic law for 
+the distribution of stock price variations. Eur Phys J B 1998;3:139–
+40 . 
+[59] Grannan E, Swindle G. Contrarians and volatility clustering SFI 
+working papers. Santa Fe Institute; 1994 . http://books.google.es/ 
+books?id=-pHetgAACAAJ 
+[60] Hall J , Brorsen B , Irwin S . The distribution of futures prices: a test 
+of the stable paretian and mixture of normals hypotheses. J Financ 
+Quant Anal 1989;24(01):105–16 . 
+[61] He X-Z , Li K . Heterogeneous beliefs and adaptive behaviour 
+in a continuous-time asset price model. J Econ Dyn Control 
+2012;36(7):973–87 . 
+[62] He X-Z , Li Y . Testing of a market fraction model and power-law be- 
+haviour in the DAX 30. J Empir Finance 2015;31:1–17 . 
+[63] Hill B . A simple general approach to inference about the tail of a 
+distribution. Ann Stat 1975;3:1163–74 . 
+[64] Hirshleifer D , Luo G . On the survival of overconﬁdent traders in a 
+competitive securities market. J Financ Mark 2001;4(1):73–84 . 
+[65] Horst U , Rothe C . Queuing, social interactions, and the microstruc- 
+ture of ﬁnancial markets. Macroecon Dyn 2008;12(02):211–33 . 
+[66] Iori G . A microsimulation of traders activity in the stock market: 
+the role of heterogeneity, agents’ interactions and trade frictions. J 
+Econ Behav Organ 2002;49(2):269–85 . 
+[67] Irle A , Kauschke J , Lux T , Milakovi ´c M . Switching rates and 
+the asymptotic behavior of herding models. Adv Complex Syst 
+2011;14(3):359–76 . 
+[68] Jang T . Identiﬁcation of social interaction effects in ﬁnancial data. 
+Comput Econ 2013;45(2):207–38 . 
+[69] Jansen DW , de Vries CG . On the frequency of large stock re- 
+turns: putting booms and busts into perspective. Rev Econ Stat 
+1991;73(1):18–24 . 
+[70] Kaizoji T , Bornholdt S , Fujiwara Y . Dynamics of price and trad- 
+ing volume in a spin model of stock markets with heterogeneous 
+agents. Phys A: Stat Mech Appl 2002;316:441–52 . 
+[71] Ke X , Shi K . Stability and bifurcation in a simple heterogeneous as- 
+set pricing model. Econ Model 2009;26(3):680–8 . 
+[72] Kesten H . Random difference equations and renewal theory for 
+products of random matrices. Acta Math 1973;131:207–48 . 
+[73] Keynes J . The general theory of employment, interest and money. 
+Macmillan; 1936 . 
+[74] Kirman A . Epidemics of opinion and speculative bubbles in ﬁnan- 
+cial markets. In: Taylor MP, editor. Money and ﬁnancial markets. 
+Blackwell; 1991 . 
+[75] Kirman A . Ants, rationality, and recruitment. Quart J Econ 
+1993;108(1):137–56 . 
+[76] Kirman A , Teyssiere G . Microeconomic models for long mem- 
+ory in the volatility of ﬁnancial time series. Stud Nonlinear Dyn 
+Econometr 2002;5(4):1–23 . 
+[77] Lau A-L , Lau H-S , Wingender J . The distribution of stock re- 
+turns: new evidence against the stable model. J Bus Econ Stat 
+1990;8(2):217–23 . 
+[78] LeBaron B , Arthur W , Palmer R . Time series properties of an artiﬁ- 
+cial stock market. J Econ Dyn Control 1999;23(9-10):1487–516 . 
+[79] LeRoy S . Eﬃcient capital markets and martingales. J Econ Lit 
+1989;27(4):1583–621 . 
+[80] Levy M , Levy H , Solomon S . A microscopic model of the stock mar- 
+ket : cycles, booms, and crashes. Econ Lett 1994;45(1):103–11 . 
+[81] Levy M , Levy H , Solomon S . Microscopic simulation of the stock 
+market: the effect of microscopic diversity. J Phys 1995;5:1087–107 . 
+[82] Lobato I , Savin N . Real and spurious long-memory properties of 
+stock-market data. J Bus Econ Stat 1998;16(3):261–8 . 
+[83] Lobato I , Velasco C . Long memory in stock-market trading volume. 
+J Bus Econ Stat 20 0 0;18(4):410–27 . 
+[84] Lux T . Herd behaviour, bubbles and crashes. Econ J 
+1995;105(431):881–96 . 
+[85] Lux T . The stable paretian hypothesis and the frequency of large 
+returns : an examination of major German stocks. Appl Financ Econ 
+1996;6(6):463–75 . 
+[86] Lux T . Time variation of second moments from a noise 
+trader/infection model. J Econ Dyn Control 1997;22(1):1–38 . 
+[87] Lux T . The socio-economic dynamics of speculative markets: inter- 
+acting agents, chaos, and the fat tails of return distributions. J Econ 
+Behav Organ 1998;33(2):143–65 . 
+[88] Lux T . The Markov-switching multifractal model of asset returns: 
+estimation via GMM and linear forecasting of volatility. J Bus Econ 
+Stat 2008;26(2):194–210 . 
+[89] Lux T , Ausloos M . Market ﬂuctuations i: scaling, multiscaling and 
+their possible origins. In: Bunde A, Kropp J, Schellnhuber H, edi- 
+tors. The science of disasters: climate disruptions, heart attacks, and 
+market crashes. Springer; 2002. ISBN 9783540413240 . 
+[90] Lux T , Marchesi M . Scaling and criticality in a stochastic multi- 
+agent model of a ﬁnancial market. Nature 1999;397(6719):498–500 . 
+[91] Lux T , Marchesi M . Volatility clustering in ﬁnancial markets: a 
+micro-simulation of interacting agents. Int J Theor Appl Finance 
+20 0 0;3(4) . 
+[92] Lux T , Morales-Arias L . Forecasting volatility under fractality, 
+regime-switching, long memory and student-t innovations. Comput 
+Stat Data Anal 2010;54(11):2676–92 .
+
+18 T. Lux, S. Alfarano / Chaos, Solitons and Fractals 88 (2016) 3–18 
+[93] Lux T , Morales-Arias L , Sattarhoff C . A Markov-switching mul- 
+tifractal approach to forecasting realized volatility. J Forecast 
+2014;33:532–41 . 
+[94] Lux T , Schornstein S . Genetic learning as an explanation of stylized 
+facts of foreign exchange markets. J Math Econ 2005;41(1-2):169–
+96 . 
+[95] Lux T , Segnon M . Multifractal models in ﬁnance: their origin, prop- 
+erties, and applications. In: Chen S-H, Kaboudan M, editors. OUP 
+handbook on computational economics and ﬁnance. Oxford Univer- 
+sity Press (in press); 2015 . 
+[96] Lux T , Sornette D . On rational bubbles and fat tails. J Money, Credit 
+Banking 2002;34(3):589–610 . 
+[97] MacDonald R . Expectations formation and risk in three ﬁnancial 
+markets: surveying what the surveys say. J Econ Surv 20 0 0;14:69–
+100 . 
+[98] Makowiec D , Gnaci ´nski P , Miklaszewski W . Ampliﬁed imitation 
+in percolation model of stock market. Phys A: Stat Mech Appl 
+2004;331(1):269–78 . 
+[99] Mandelbrot B . The variation of certain speculative prices. J Bus 
+1963;36:394–419 . 
+[100] Mandelbrot B . A multifractal walk down wall street. Sci Am 
+1999;280:70–3 . 
+[101] Manski C , McFadden D . Structural analysis of discrete data with 
+econometric applications. Macmillan; 1981 . 
+[102] O’Hara M . Market microstructure theory. Blackwell; 1995 . 
+[103] Ott E , Sommerer J . Blowout bufurcations: the occurrence of riddled 
+basins and on-off intermittency. Phys Lett A 1994;188(1):39–47 . 
+[104] Palan S . A review of bubbles and crashes in experimental asset mar- 
+kets. J Econ Surv 2013;27(3):570–88 . 
+[105] Plerou V , Gopikrishnan P , Gabaix X , Amaral L , Stanley H . Price 
+ﬂuctuations, market activity and trading volume. Quant Finance 
+2001;1(2):262–9 . 
+[106] Ramsey J . On the existence of macro variables and of macro rela- 
+tionships. J Econ Behav Organ 1996;30(3):275–99 . 
+[107] Ray B , Tsay R . Long-range dependence in daily stock volatilities. J 
+Bus Econ Stat 20 0 0;18(2):254–62 . 
+[108] Rossi E , de Magistris P . Long memory and tail dependence in trad- 
+ing volume and volatility. J Empir Finance 2013;22(1):94–112 . 
+[109] Sato A-H , Takayasu H . Dynamic numerical models of stock market 
+price: from microscopic determinism to macroscopic randomness. 
+Phys A: Stat Mech Appl 1998;250(1-4):231–52 . 
+[110] Smith V , Suchanek G , Williams A . Bubbles, crashes, and endoge- 
+nous expectations in experimental spot asset markets. Economet- 
+rica 1988;56:1119–51 . 
+[111] So M . Long-term memory in stock market volatility. Appl Financ 
+Econ 20 0 0;10(2):519–24 . 
+[112] Sornette D , Stauffer D , Takayasu H . Market ﬂuctuations ii: multi- 
+plicative and percolation models, size effects, and predictions. In: 
+Bunde A, Kropp J, Schellnhuber H, editors. The science of disasters: 
+climate disruptions, heart attacks, and market crashes. Springer; 
+2002. ISBN 9783540413240 . 
+[113] Stauffer D . Introduction to statistical physics outside physics. Phys 
+A: Stat Mech Appl 2004;336(1-2):1–5 . 
+[114] Stauffer D , De Oliveira P , Bernardes A . Monte Carlo simulation of 
+volatility clustering in market model with herding. Int J Theoret 
+Appl Finance 1999;2(1):83–94 . 
+[115] Stauffer D , Penna T . Crossover in the Cont–Bouchaud Percolation 
+model for market ﬂuctuations. Phys A: Stat Mech Appl 1998;256(1- 
+2):284–90 . 
+[116] Stauffer D , Sornette D . Self-organized percolation model for stock 
+market ﬂuctuations. Phys A: Stat Mech Appl 1999;271(3-4):496–
+506 . 
+[117] Takaishi T . Multiple time series ising model for ﬁnancial market 
+simulations. J Phys: Conf Ser 2015;574:012149 . 
+[118] Takayasu H . Empirical science of ﬁnancial ﬂuctuations: the advent 
+of econophysics. Springer; 2002. ISBN 9784431703167 . 
+[119] Takayasu H , Miura H , Hirabayashi T , Hamada K . Statistical proper- 
+ties of deterministic threshold elements - the case of market price. 
+Phys A: Stat Mech Appl 1992;184(1-2):127–34 . 
+[120] Vandewalle N , Ausloos M . Coherent and random sequences in ﬁ- 
+nancial ﬂuctuations. Phys A: Stat Mech Appl 1997;246(3-4):454–9 . 
+[121] Vandewalle N , Ausloos M . Sparseness and roughness of foreign ex- 
+change rates. Int J Modern Phys C 1998;9(5):711–19 . 
+[122] Venkatamarani S , Antonser Jr T , Ott E , Sommerer J . On-off intermit- 
+tency: power spectrum and fractal properties of time series. Phys 
+D: Nonlinear Phenom 1996;96(1-4):66–99 . 
+[123] Wagner F . Volatility cluster and herding. Phys A: Stat Mech Appl 
+2003;322(C):607–19 . 
+[124] Wang J , Yang C-X , Zhou P-L , Jin Y-D , Zhou T , Wang B-H . Evolution- 
+ary percolation model of stock market with variable agent number. 
+Phys A: Stat Mech Appl 2005;354:505–17 . 
+[125] Weber P , Rosenow B . Large stock price changes: volume or liquid- 
+ity? Quant Finance 2006;6(1):7–14 . 
+[126] Werner T , Upper C . Time variation in the tail behaviour of Bund 
+futures returns. Discussion Paper 25/02, Deutsche Bundesbank 
+2002 . 
+[127] Westerhoff F . Speculative markets and the effectiveness of price 
+limits. J Econ Dyn Control 2003;28(3):493–508 . 
+[128] Wilpert M . Künstliche Aktienmarktmodelle auf Basis von Classiﬁer- 
+Systems. Knapp; 2004. ISBN 9783831407583 . 
+[129] Zeeman E . On the unstable behaviour of stock exchanges. J Math 
+Econ 1974;1(1):39–49 .

@@ -1,0 +1,977 @@
+Multiscale Agent-Based Consumer
+Market Modeling
+MICHAEL J. NORTH, 1 CHARLES M. MACAL, 1 JAMES ST. AUBIN, 2 PRAKASH THIMMAPURAM, 3
+MARK BRAGEN, 2 JUNE HAHN, 4 JAMES KARR, 4 NANCY BRIGHAM, 4 MARK E. LACY, 4 AND DELAINE HAMPTON 4
+1Center for Complex Adaptive Agent Systems Simulation; and 2Modeling, Simulation, and Visualization
+Group; and 3Center for Energy, Environmental, and Economic Systems Analysis, Argonne National
+Laboratory, Argonne, Illinois 60439; and 4The Procter & Gamble Company, Cincinnati, Ohio 45202
+Received June 8, 2009; revised August 19, 2009; accepted September 8, 2009
+Consumer markets have been studied in great depth, and many techniques have been used to represent them.
+These have included regression-based models, logit models, and theoretical market-level models, such as the
+NBD-Dirichlet approach. Although many important contributions and insights have resulted from studies
+that relied on these models, there is still a need for a model that could more holistically represent the interde-
+pendencies of the decisions made by consumers, retailers, and manufacturers. When the need is for a model
+that could be used repeatedly over time to support decisions in an industrial setting, it is particularly critical.
+Although some existing methods can, in principle, represent such complex interdependencies, their capabil-
+ities might be outstripped if they had to be used for industrial applications, because of the details this type of
+modeling requires. However , a complementary method—agent-based modeling—shows promise for addressing
+these issues. Agent-based models use business-driven rules for individuals (e.g., individual consumer rules for
+buying items, individual retailer rules for stocking items, or individual firm rules for advertizing items) to
+determine holistic, system-level outcomes (e.g., to determine if brand X’s market share is increasing). We
+applied agent-based modeling to develop a multi-scale consumer market model. We then conducted calibra-
+tion, verification, and validation tests of this model. The model was successfully applied by Procter & Gamble
+to several challenging business problems. In these situations, it directly influenced managerial decision mak-
+ing and produced substantial cost savings. /C2112010 Wiley Periodicals, Inc. Complexity 15: 37–47, 2010
+Key Words: consumer market modeling; multiscale modeling; agent-based modeling
+1. INTRODUCTION
+E
+very day, companies that manufacture consumer
+packaged goods (CPG) make decisions that affect the
+characteristics of their products as well as their strat-
+egies for effectively marketing these products to consum-
+ers. Finding answers to common questions, such as how
+Corresponding author: Dr . Michael J. North; Center for
+Complex Adaptive Agent Systems Simulation, Argonne
+National Laboratory, Argonne, IL 60439;
+e-mail: north@anl.gov
+Q 2010 Wiley Periodicals, Inc., Vol. 15, No. 5 COMPLEXITY 3 7
+DOI 10.1002/cplx.20304
+Published online 9 February 2010 in Wiley InterScience
+(www.interscience.wiley.com)
+
+to increase sales levels or how to adapt to marketplace
+changes, requires the companies to consider multiple
+issues across time. For example, when a competitor intro-
+duces a new marketing campaign, the CPG company, to
+craft an appropriate response, must project the campaign’ s
+effect over time—both on sales and on the consumers’
+view of the marketplace. Modeling these and other time-
+based impacts is often difficult because of the complex
+sequence of interlocking, nonlinear behaviors that is often
+an intrinsic part of large-scale markets. For example, imag-
+ine a simple scenario in which one CPG manufacturer
+lowers the price of a product to increase sales. Other man-
+ufacturers may react with even lower prices to remain
+competitive, so that after this price change, the result is
+actually a decrease in the original manufacturer’ s sales.
+At the same time, manufacturers increasingly find their
+decisions interlinked with those of others in the market-
+place (e.g., customers, consumers, suppliers). This interde-
+pendency reflects the new realities in today’ s markets,
+where goals associated with competing for market share
+and position now require an equal emphasis on partnering
+effectively with suppliers and retailers and on anticipating
+and planning for changes in consumer demographics and
+desires. Decisions that must be made include how to gain
+a short-term tactical advantage as well as how to craft
+mid-term and long-term strategies for growth.
+Most consumer market models tend to have a
+‘ ‘piecemeal’ ’ focus; many focus on a single aspect or sub-
+part of the market, such as supply chains for manufac-
+turers, point-of-sale data for individual retailers, or panel
+data for consumers. A holistic approach is needed to com-
+plement these existing piecemeal approaches (e.g., model-
+ers should not have to build separate models for every
+brand in a category). The ‘ ‘virtual market learning lab’ ’
+meets this need.
+The virtual market learning lab is the result of a 6-year
+partnership between Argonne National Laboratory and
+Procter & Gamble (P&G). The goal of this P&G-sponsored
+project has been to develop an innovative, computational
+agent-based model of consumer markets. The resultant
+virtual market learning lab technology represents a new
+milestone at the forefront of agent-based modeling of the
+consumer market in terms of its extraordinary detail,
+broad coverage, and the large number of agents it consid-
+ers. Some of the advances achieved in this project have
+resulted in a joint Argonne/P&G patent application [1].
+The virtual market learning lab has been successfully
+applied by P&G to several challenging business problems,
+in which its use directly influenced managerial decisions.
+This article first briefly surveys the range of techniques
+commonly used for modeling consumer markets, then
+introduces agent-based modeling and compares and con-
+trasts it with traditional approaches. Next the article
+describes the virtual market learning lab and discusses
+its verification and validation. It concludes with a discus-
+sion of the next steps for agent-based consumer market
+modeling.
+2. RELATED WORK
+Although there is an escalating need for models that can
+operate at multiple levels of detail to address strategic as
+well as tactical issues, the limitations of both current tech-
+niques and current data sources in providing robust deci-
+sion support systems pose challenges. Leeflang and Wit-
+tunk [2] have an excellent review of the history of model
+building in support of marketing decisions. This article
+considers both traditional and agent-based approaches to
+modeling consumer markets.
+2.1. Traditional Approaches
+Traditional modeling techniques, while powerful, tend to
+be limited in the (1) number of factors that they can
+incorporate, (2) level of detail on each factor that they can
+accommodate, and (3) behavioral complexity that they can
+account for. Consequently, they may not be sufficient for
+holistically representing interdependent systems, such as
+those that commonly underlie the decisions of consumers,
+retailers, and manufacturers.
+This is not to say there has not been steady progress in
+developing data sources and quantitative models—indeed,
+there has been. Despite this progress, however, manufac-
+turers still find many of the issues raised several decades
+earlier by Little [3] to be relevant today, although in a
+slightly different form. First, models that can be used over
+time to answer short-, mid-, and long-term questions are
+hard to find (‘ ‘good models are hard to find’ ’ [3]). Second,
+finding models that can adapt to the type of data available
+and the granularity decisions require is even harder (‘ ‘good
+parameterization is even harder’ ’ [3]). Third, most models
+do not incorporate all the players in a system or all the
+interactions among those players (‘ ‘most models are
+incomplete’ ’ [3]). Finally, managers have not been gaining
+insight into the dynamics of their marketplace by using
+the models (‘ ‘managers do not understand models’ ’ [3]).
+Today’ s managers have a wealth of models available,
+ranging from stochastic consumer behavior models, which
+excel in providing explanatory power, to empirical models,
+which are excellent with regard to providing tactical sup-
+port. The plethora of models reflects the speed with which
+model developers have capitalized on improvements in
+data sources, improvements in computer speed and mem-
+ory, and analytic advances.
+Managers have come to rely on stochastic behavior
+models. These include brand choice models such as the
+NBD-Dirichlet approach, purchase incidence models, and
+purchase timing models. These models are discussed in
+Refs. [4–7]. Although these models are typically embraced
+3 8 COMPLEXITY Q 2010 Wiley Periodicals, Inc.
+DOI 10.1002/cplx
+ 10990526, 2010, 5, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/cplx.20304 by Dalhousie University, Wiley Online Library on [26/08/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+for their descriptive strengths, they have become impor-
+tant because they allow managers to understand the
+‘ ‘whys’ ’ behind behavior and provide explanatory compo-
+nents that can be used to make predictions. Another
+strength of these models is their scope: they are often
+marketplace representations that encompass the behavior
+in an entire category. However, they can be limited in
+granularity and thus in the types of decisions they can
+readily address. They also have limited capability for han-
+dling true market discontinuities.
+Econometric models (e.g., regression-based, Monte
+Carlo integration [MCI], and multinomial logit [MNL]
+models) have made great strides as decision support tools,
+in part because of their strong performance in tactical
+applications. The statistical analysis of historical data that
+these models employ has been shown to adequately pro-
+vide support for routine decisions [8]. Typically, separate
+models are built to address specific marketing problems
+(e.g., there are different models for product, pricing, and
+advertizing decisions). This strength, however, can also
+become a weakness. If many models and submodels are
+created for a single category, users may have to rely on
+their own imperfect judgment to bridge the gaps among
+disparate model results. Model complexity, real or per-
+ceived, becomes a user issue. Another well-known limita-
+tion is that the models must rely on only a limited range
+of responses: those that are reported on in the historical
+data. Finally, there are limits in the ways the models can
+handle multiple and possibly simultaneous moves by mul-
+tiple competitors across time.
+In spite of the impressive growth in both the number
+of data sources and the degree of detail, which has yielded
+more and better data for econometric modeling and track-
+ing, data challenges remain. For example, although exten-
+sive records on purchases for panels of consumers exist,
+details on the specific contexts behind the purchase data
+are often lacking. Researchers might want to know what
+the consumer actually saw and considered when choosing
+what to purchase.
+Spurred by limitations in syndicated data, another area
+of growth and development has been the design and mod-
+eling of experiments that incorporate more contextual
+marketplace components. Experiments with consumers
+offer a means of control over various elements, such as
+the shelf set and marketing conditions (for multiple
+brands and items). This control enables researchers to
+more fully explore and model the impact of context; for
+example, see Ref. [9]. Furthermore, conditions that are
+outside the range of historical data can be set; this ability
+is a key issue for managers in many practical situations.
+An experimental approach also gives researchers an option
+to conduct a deeper analysis at the individual level, which
+can be an asset in targeting decisions. However, practical
+limitations on the size of the sample and the amount of
+contextual detail that can be presented in an experimental
+setting restrict the scope of these models.
+Some of these challenges have been difficult for tradi-
+tional methods to overcome, in part because the decisions
+to be made and modeled exist within a contextualized sys-
+tem rather than as isolated events. Systems can be both
+difficult to model and difficult for managers to internalize.
+Even seasoned managers may be more skilled at seeing
+immediate causes and effects rather than the whole pic-
+ture. The question is, ‘ ‘When should you deal with simple
+subsystems, and when should you consider the entire sys-
+tem?’ ’ Errors caused by treating systems as a sequence of
+problems to be solved one at a time, without recognizing
+or taking into account interactions, side effects, or reper-
+cussions of decisions, can lead to suboptimal or even cata-
+strophic consequences [10].
+2.2. Agent-Based Approaches
+Agent-based modeling is a relatively new approach for
+modeling consumer markets. It is emerging as an exciting
+complement to traditional statistical approaches, since it
+offers the possibility of using business-driven rules for
+individuals (e.g., ‘ ‘I buy brand X because ... ’ ’) to determine
+holistic, system-level outcomes (e.g., ‘ ‘Brand X’ s market
+share is rising’ ’). As agent-based modeling is a relatively
+new technique, and since this article presents an agent-
+based model of a consumer market, this section defines
+agent-based modeling and compares it with the traditional
+techniques discussed in the previous section.
+2.2.1. Agent-Based Modeling and Simulation
+This section presents a brief overview of agent-based mod-
+eling and simulation. More details can be found in Ref.
+[11]; here is a short summary:
+1. Agents are autonomous decision-making entities or
+self-directed objects.
+2. Agent-based models are made up of agents and a
+framework for agent interactions.
+Agent-based modeling allows the behavior of system
+components (i.e., the agents) to be used to forecast the
+behavior of the overall system. Agent-based modeling is
+being used to simulate a wide range of systems. These
+include industrial supply chains [11], nascent economies
+[12, 13], international political systems [14, 15], possible
+future energy infrastructures [16], and complex commod-
+ity markets [17].
+Although the commonly used traditional techniques for
+modeling consumer markets (discussed in the previous
+section) are powerful with regard to their purposes, they
+are generally not able to provide sufficient levels of detail
+with regard to the interdependent behaviors of consumers,
+retailers, and manufacturers. Some common interdepen-
+Q 2010 Wiley Periodicals, Inc. COMPLEXITY 3 9
+DOI 10.1002/cplx
+ 10990526, 2010, 5, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/cplx.20304 by Dalhousie University, Wiley Online Library on [26/08/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+dencies include the reactions of consumers to combina-
+tions of retailers’ and manufacturers’ behaviors; the reac-
+tions of one retailer to other retailers’ behaviors; the reac-
+tion of one manufacturer to other manufacturers’ behav-
+iors; the reaction of one retailer to the manufacturer’ s
+behavior; etc.
+As previously mentioned, CPG manufacturing compa-
+nies regularly make choices on what characteristics their
+products should have and what marketing strategies they
+should use. In making these decisions, they typically have
+to address many issues to ensure they will increase sales
+while adapting to marketplace changes. The example
+given—of how to react to a competitor’ s marketing cam-
+paign—generally requires the company to project the cam-
+paign’ s effects over time both on sales and on the consum-
+ers’ view of the marketplace. The analysis of these situa-
+tions is often difficult because of the complex sequences
+of interlocking, nonlinear 1 behaviors commonly found in
+large-scale, competitive CPG markets. (As mentioned, if
+one CPG manufacturer lowers its prices to increase sales,
+but competitors lower their prices too, the original manu-
+facturer’ s sales may actually decrease.)
+Some of the traditional methods discussed in the previ-
+ous section can represent such interdependencies by using
+simplifying assumptions. However, they are still limited to
+predicting either (1) only a small number of steps into the
+future (because of the high rates of change that could be
+caused by the feedback that would take place between
+decisions) or (2) long-run averages that ignore the tran-
+sient conditions that occur on the way to equilibrium. Fur-
+thermore, the level of detail required in order to practically
+apply these predictions can sometimes overwhelm the
+current capabilities of these traditional methods. The
+amount of data needed for an analysis is generally a func-
+tion of the number of variables and their combinations
+that need to be estimated. In other words, these methods
+often require an enormous amount of data in order to be
+used. For example, if a company was considering lowering
+the price of a product and wanted to gauge the effect this
+reduction would have on consumers by using a traditional
+method, it would have to obtain data from a long period
+of time in the past when prices had previously been low-
+ered in order to statistically predict the outcome of the
+new scenario.
+As stated earlier, traditional techniques tend to be lim-
+ited in the (1) number of factors that can be included, (2)
+level of detail on each factor that can be accommodated,
+and (3) behavioral complexity that can be accounted for in
+each analysis. Consequently, they usually neither holisti-
+cally represent the detailed interdependencies involved in
+the decisions of consumers, retailers, and manufacturers
+nor can they address the simultaneous need to computa-
+tionally represent the inherently nonlinear behavior (e.g.,
+learning and lock-in) found in marketplaces like the CPG
+marketplace. Traditional methods are typically not able to
+fully account for the fact that each market participant’ s
+subsequent decisions are intimately and sensitively de-
+pendent on all previous decisions by every market partici-
+pant, including itself.
+2.2.2. Agent-Based Modeling of CPG Markets
+There is currently a small amount of work that applies
+agent-based modeling to CPG markets. The work can be
+broken up into two overall categories. The first one models
+the activity within individual retail stores. The second one
+models market-level purchasing trends. Both of these
+types of models are considered here.
+The first major approach to the agent-based modeling
+of consumer markets focuses on consumer activity within
+individual retail stores. The main goal is to study store lay-
+outs or physical plans to improve store sales through bet-
+ter shelf placement of goods. Casti’ s ‘ ‘SimStore’ ’ retail store
+simulation is a good example of this type of model [18]:
+The starting point for SimStore is a real supermarket
+in the Sainsbury chain, one located in the London
+region of South Ruislip. The agents are individual shop-
+pers who frequent this store. These electronic shoppers
+are dropped into the store, and then make their way to
+the various locations in the store by rules such as ‘ ‘wher-
+ever you are now, go to the location of the nearest item
+on your shopping list,’ ’ so as to gather all the items they
+want to purchase.
+The second major approach focuses on market-level
+purchasing trends by simulating the purchasing and usage
+choices of many individual consumers. The main goal is
+to improve the profitability of certain organizations by
+determining how and why consumers select certain prod-
+ucts. Models of this type include those developed by
+Adjali, Dias, and Hurling [19]; Brannon et al. [20]; and
+Schenk, Lo¨ffler, and Rauh [21]. Related papers and articles
+covering other or more general types of consumer market
+modeling include those by Janssen and Jager [22]; Jager
+[23]; Jager, Janssen, and Vlek [24]; Said, Bouron, and Dro-
+goul [25, 26]; and Collings et al. [27]. As described later,
+the virtual market learning lab is different from these
+efforts because of the comprehensiveness of its modeling
+1The term ‘ ‘nonlinear’ ’ here means that changes in system
+outputs are not directly proportional to changes in system
+inputs. For example, consider two simple functions F(x)
+and G(x). If F(1) 5 2, F(2) 5 4, F(3) 5 6, and so on, then
+F(x) is linear (actually F(x) 5 2x). If G(1) 5 2, G(2) 5 4,
+and G(3) 5 1,000,000, then G(x) is nonlinear . Marketplace
+relationships that abstractly resemble G(x) are very com-
+mon.
+4 0 COMPLEXITY Q 2010 Wiley Periodicals, Inc.
+DOI 10.1002/cplx
+ 10990526, 2010, 5, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/cplx.20304 by Dalhousie University, Wiley Online Library on [26/08/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+and the depth of the verification and validation it has
+undergone. The models by Adjali, Dias, and Hurling [19];
+Brannon et al. [20]; and Jager, Janssen, and Vlek [24] are
+considered in more detail here since they represent a good
+spectrum of current work.
+Adjali, Dias, and Hurling [19] describe ‘ ‘the architecture
+for an agent-based consumer behavior model drawing
+from the marketing and the behavioral sciences literature.’ ’
+It then shows ‘ ‘some simulation results exploring and com-
+paring different consumer behavior models using real,
+individual-based market data.’ ’ The Adjali, Dias, and Hurl-
+ing model is based on a real map of a city and thus is
+more spatially detailed than the virtual market learning
+lab model. However, it is also more limited than the virtual
+market learning lab in terms of population size, and it
+does not model the complex interactions among retail
+stores, retail chains, and manufacturers. Thus, it is more
+detailed in one respect but less complete overall and less
+well validated than the virtual market learning lab.
+Brannon et al. [20] discuss a model of the ‘ ‘consumer
+apparel purchase decision’ ’ process. The model uses a sub-
+stantial set of psychological factors that involves motiva-
+tions, preferences, and constraints to represent the meth-
+ods used by consumers to choose items of clothing. The
+result is a detailed model of consumer choice that is inter-
+esting because it attempts to explicitly (rather than implic-
+itly, like the virtual market learning lab) account for con-
+sumer identity and self image. However, the virtual market
+learning lab is a more complete model since it represents
+retail store, retail chain, and manufacturer interactions.
+The virtual market learning lab has also undergone more
+detailed verification and validation.
+Jager, Janssen, and Vlek [24] discuss a model of con-
+sumer agents that uses a ‘ ‘consumat’ ’ approach. This
+approach is described as one that represents consumers
+who use a multitheoretical framework, which combines
+concepts from several different theoretical viewpoints. In
+particular, Jager, Janssen, and Vlek [24] cites ‘ ‘theories
+about human needs ... , motivational processes ... , social
+comparison theory ... , classical and operant conditioning
+theory ... , social learning theory, decision and choice
+theory ... , theory of reasoned action ... , theories on rela-
+tive deprivation ... , and the theory of normative conduct.’ ’
+The Jager, Janssen, and Vlek framework combines these
+ideas by using (1) a two level ‘ ‘pressure system’ ’ that mod-
+els group and individual forces, (2) a two-part ‘ ‘state sys-
+tem’ ’ that represents individual reasoned behavior and
+social orientation, (3) an ‘ ‘impact system’ ’ that defines the
+consequences of consumer choices, and (4) a policy
+‘ ‘response system.’ ’ The result is a rich description of con-
+sumer behavior. However, the virtual market learning lab
+models—and also the Adjali, Dias, and Hurling model and
+Brannon et al. model—are more complete since they rep-
+resent retail store, retail chain, and manufacturer interac-
+tions. In addition, the virtual market learning lab has
+undergone more detailed verification and validation.
+3. VIRTUAL MARKET LEARNING LABORATORY
+The virtual market learning lab is a large-scale, agent-
+based model of consumer markets codeveloped by
+Argonne and P&G. It represents the shopping behavior of
+consumer households and the business behavior of
+retailers and manufacturers in a simulated national con-
+sumer market. All of the major participants associated
+with one category of products (e.g., laundry detergent) are
+simulated during each model run. Figure 1 provides a
+high-level overview of the agents and agent relationships
+used in the model. Figure 1 itself may seem fairly simple.
+However, there is a high level of complexity and feedback
+inherent in the agent interactions. This complexity
+coupled with the need for detailed results precludes high-
+level parametric summarization.
+The Figure 1 agents represent the major participants in
+CPG markets, such as consumer households, retail stores,
+retail regions, retail channels, and manufacturers. The
+agent relationships represent interactions, such as supplier
+options, competitive responses, and management direc-
+tives. This section discusses the virtual market learning
+lab’ s design and implementation relative to the major
+actors and actions. It then outlines the model’ s usage.
+3.1. Virtual Market Learning Lab Structure
+The virtual market learning lab is an agent-based con-
+sumer market model that has been implemented by using
+the Recursive Porous Agent Simulation Toolkit (Repast)
+FIGURE 1
+Overview of the virtual market learning lab agents and agent
+relationships.
+Q 2010 Wiley Periodicals, Inc. COMPLEXITY 4 1
+DOI 10.1002/cplx
+ 10990526, 2010, 5, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/cplx.20304 by Dalhousie University, Wiley Online Library on [26/08/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+toolkit [28]. Repast is a widely used, free and open source,
+agent-based modeling and simulation (ABMS) toolkit that
+is available directly from the Web at http://repast.source
+forge.net [29]. The virtual market learning lab was origi-
+nally developed by using Repast for Java [28] and was
+more recently upgraded to use Repast Simphony [30].
+The virtual market learning lab uses consumer house-
+holds to represent CPG purchasers and users. A household
+is a group of people who live together and, to some
+degree, coordinate their shopping. The virtual market
+learning lab’ s households are composed of shoppers,
+inventories, and consumers, as shown in Figure 2.
+Virtual market learning lab shoppers purchase goods. A
+virtual market learning lab household can have any num-
+ber of shoppers. Typically, each household has a primary
+shopper and possibly a secondary shopper. Shoppers pur-
+chase goods from retail stores and then place the goods
+into one of their household’ s inventories. Shoppers choose
+stores on the basis of their individual store preferences,
+which can evolve over time depending on the shopper’ s
+experiences in each store. Shoppers select goods on the
+basis of consideration sets.
+Consideration sets are based on Miller’ s [31] well-
+known observation that normally people can remember
+and cognitively process at most, ‘ ‘seven plus or minus two
+items at one time.’ ’ There are two kinds of shopper consid-
+eration sets: an in-store consideration set (ISCS) and an
+out-of-store consideration set (OSCS).
+An OSCS represents the products, or abstractions of
+products, consumers have in mind when they shop. It
+contains weighted elements that model abstracted, but
+critical, features of store shelf items or stock-keeping units
+(SKUs). The critical features contained in each OSCS ele-
+ment are determined by the hierarchy of characteristics
+for the product category being considered. For example,
+each laundry detergent OSCS element contains a brand, a
+form (e.g., liquid or powder), and a benefit (e.g., bleach).
+The weights are used to account for advertizing exposure,
+advertizing decay, product usage experiences, and other
+issues or activities outside the retail stores.
+An ISCS represents the short list of retail store SKUs
+that are candidates for purchase during the current shop-
+ping trip. The ISCS contains weighted lists of SKUs. The
+list of SKUs is generated by each shopper on each shop-
+ping trip, as shown in Figure 3. The generation process
+involves applying user-defined filters to match the shop-
+per’ s OSCS elements to the SKUs available on the shelf of
+the retail store where the shopper is shopping. Filters,
+shown in Figure 4, allow model users to specify exactly
+how each shopper in a given category selects items from a
+store shelf. Filters are user input data that can be changed
+as needed by model users. Each shopper’ s filters are
+defined by using a filter sequencer and a tree of filter
+steps. The filter steps act as qualifiers. If a filter is exe-
+cuted successfully, then all of the ‘ ‘child’ ’ filters below it in
+the tree are also executed; otherwise, the child filters are
+ignored. Each filter step itself offers a highly configurable
+matching process that supports many kinds of individual
+examinations of and matches among store shelves, the
+OSCS, and the ISCS. Filter steps also allow SKUs to be
+added to, removed from, and reweighed within the ISCS.
+In addition, filter steps can modify the shopper’ s likelihood
+of purchasing a product on the current shopping trip. Any
+purchases made are stored in the appropriate inventory.
+FIGURE 2
+Virtual market learning lab consumer household.
+FIGURE 3
+Virtual market learning lab shopper and store shelf.
+4 2 COMPLEXITY Q 2010 Wiley Periodicals, Inc.
+DOI 10.1002/cplx
+ 10990526, 2010, 5, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/cplx.20304 by Dalhousie University, Wiley Online Library on [26/08/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+Household inventories represent the product stock kept
+within a given household. Households always have at least
+one inventory, but they may have more than one (e.g., an
+extra inventory for special stocks, such as snacks for
+invited guests). Inventories can be drawn down in several
+ways (e.g., sequential or parallel use of all stored items),
+depending on the category being modeled. Like shopper
+filters, inventory policies are user input data that can be
+changed as needed by model users. Inventory levels and
+other factors are factored into each shopper’ s purchase
+decisions. Multiple shoppers may contribute to each in-
+ventory (e.g., primary and secondary shoppers may supply
+the main household inventory). Each inventory, in turn,
+may act to supply multiple consumers.
+Virtual market learning lab household consumers use
+the products stored in inventories on the basis of a flexible
+set of user-specifiable consumption amount distributions
+(e.g., a normal distribution). Virtual market learning lab
+household consumers are different than standard market
+consumers in the sense that standard market consumers
+purchase, store, and use products, while household con-
+sumers only use products. The purchasing and storage
+activities of standard market consumers are represented
+by shoppers and inventories, respectively. Like shopper fil-
+ters and inventory policies, consumption behavior is user
+input data that can be changed as needed by model users.
+Retail stores represent locations for purchasing goods
+in the given category. They are associated with stocked
+store shelves, advertizing flyers, product displays, tempo-
+rary price reductions (sales), optional inventories, and
+other features. Retail stores are grouped into neighbor-
+hoods. Each neighborhood contains a set of competing
+stores, a population of shoppers who visit the stores, and
+a representative for each retail channel. As each retail
+channel may have a different number of stores (e.g., there
+are many more drug stores than club stores in the United
+States), individual stores may be in more than one neigh-
+borhood. Store membership in multiple neighborhoods
+creates the potential for networks of neighborhoods to
+form. The constraints for neighborhood formation are
+specified by the user within the input data.
+Retail neighborhoods are grouped to form retail
+regions. Regions are used to reflect varying store stocks,
+promotions, features, preferences, etc. on a broad geo-
+graphic basis. The number of regions used depends on the
+category and area being modeled.
+Each retail store belongs to one of several retail chan-
+nels. Each retail channel represents either a type of retailer
+(e.g., food stores) or a specific retailer. Channel-level data
+are used when there is a large number of small retailers
+that have similar stores and strategies or when higher-level
+results are needed. Data for specific named retailers are
+used when there are a small number of large retailers or
+when detailed results are needed. Hybrid combinations of
+channel-level and named retailers can also be used when
+mixtures of results are needed. In all cases, the retailer
+channel information is provided as user-defined input
+data.
+Virtual market learning lab retail channels, regions, and
+stores can operate in one of two modes: scripted mode or
+rules mode. In scripted mode, stores follow a prespecified
+plan for stocking shelves, sales, etc. All channel, regional,
+and store behaviors can be activated through scripts.
+Scripts are normally specified as detailed input data.
+Scripted mode is useful for model calibration, some types
+of model verification and validation, simulation warm-up,
+and tests of specific situations of interest. In rules mode,
+retail channels, regions, and stores react to their current
+conditions by using individualized sets of strategies. Their
+reactions can be a function of various factors, such as
+recent profits, recent sales volumes, or selected targets.
+The reactions can include price changes, sales, promo-
+tions, or stocking changes at the channel, regional, or store
+levels. The virtual market learning lab retail channel,
+region, and store can move back and forth between
+scripted mode and rules mode during a simulation run as
+directed by model users through the input data.
+Manufacturers function similarly to retail channels
+except that they produce rather than resell products. Like
+retail channels, they operate in both scripted and rules
+modes and can move between these two modes as
+directed by input data. Scripted mode can be used to acti-
+vate any manufacturer behavior. Rules mode allows manu-
+facturers to respond interactively to their environment and
+FIGURE 4
+Virtual market learning lab shopper filters.
+Q 2010 Wiley Periodicals, Inc. COMPLEXITY 4 3
+DOI 10.1002/cplx
+ 10990526, 2010, 5, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/cplx.20304 by Dalhousie University, Wiley Online Library on [26/08/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+to change their behavior depending on the results they
+experience. Manufacturers have a variety of ways to react
+to their environments, including changes in offered SKU
+portfolios, advertizing, wholesale pricing, and trade sup-
+port.
+3.2. Virtual Market Learning Lab Usage
+The virtual market learning lab is not intended to predict
+the future behaviors of market participants (e.g., the
+responses of P&G’ s competitors), and it is not intended to
+precisely predict future market outcomes (e.g., next year’ s
+market shares). Rather, it is intended to support testing of
+the robustness of market strategies and to allow an explo-
+ration of the potential drivers for trends. A competitive
+advantage can be gained by using the virtual market learn-
+ing lab because it helps ensure that strategic decisions are
+made with a clear knowledge of the benefits and risks
+associated with each option.
+As mentioned, the virtual market learning lab is
+intended to support robustness testing of market strat-
+egies. For example, imagine that a company is hypotheti-
+cally considering reducing the price of one of its leading
+brands. The virtual market learning lab cannot determine
+if a competitor will reduce the price of its brand in
+response. However, it can automatically generate a range
+of potential response scenarios, each describing a possibil-
+ity of what might happen in response to the initial price
+cut. If a large number of diverse response scenarios were
+executed and all of them were favorable, one might con-
+clude that a price reduction would be relatively safe. How-
+ever, if many of the runs were moderately unfavorable or a
+few runs were extremely unfavorable, one might conclude
+that a price reduction would be risky. Again, the virtual
+market learning lab would not predict market outcomes. It
+would simply allow a diverse range of potential market
+outcomes to be explored in an efficient and objective
+manner.
+In addition to helping users analyze a possible market-
+ing strategy, the virtual market learning lab is designed to
+help users explore the potential causes of trends. For
+example, imagine that there were several competing opin-
+ions on why one kind of coupon distribution schedule
+tends to increase sales much more than other kinds of
+coupon distribution schedules. It might be difficult and
+expensive to test these opinions in actual markets. The vir-
+tual market learning lab provides an efficient platform for
+testing each opinion. To complete the tests, input scenar-
+ios and possibly agent software that represented each of
+the candidate explanations could be configured and exe-
+cuted in the virtual market learning lab, often through
+many stochastic replications. The results from the model
+runs could then be compared to the observed market
+effects. If there were significant mismatches between the
+model results and the real market outcomes for a given
+opinion, one might conclude that that opinion is probably
+not correct, at least for the range covered by the observed
+data. The reverse may or may not be true since the model
+results might match the real world data for coincidental rea-
+sons other than the correctness of the opinion. 2 Of course,
+reproducing one market outcome does not guarantee that
+the theory is correct. However, this approach turns out to be
+powerful in practice. The virtual market learning lab has
+been used to demonstrate that several strongly held ideas
+about consumer behavior do not successfully reproduce
+observed market outcomes. This was accomplished by
+showing that each idea’ s predicted system-level consequen-
+ces do not obtain from the agent-level hypotheses.
+4. MODEL CALIBRATION, VERIFICATION, AND
+VALIDATION
+For purposes of reference, model calibration, verification,
+and validation can be briefly summarized as follows:
+1. Calibration fits a model’ s parameters to data from the
+real system.
+2. Verification checks a model against its specifications.
+3. Validation checks a model against observations of the
+real system.
+For more detailed coverage of these topics, see Refs.
+[11, 32].
+It is important to emphasize that there is no perfect
+model. In the famous words of George Box, ‘ ‘all models are
+wrong, but some models are useful.’ ’ With regard to cali-
+bration, verification, and validation, this statement means
+that for practical purposes, each activity is a function of a
+model’ s intended purpose. Thus, practical models can
+never be universally correct but instead have the potential
+to be calibrated, verified, and validated for a given usage. 3
+Thus, a critical issue for model calibration, verification,
+and validation is to define clearly the intended usage or
+usages of the model.
+As previously discussed, the virtual market learning lab
+is being developed for the specific purpose of providing a
+2This is more generally known as the ‘ ‘model uniqueness
+problem,’ ’ which is a philosophical challenge for all types of
+modeling.
+3Even models from well-understood areas in the physical
+sciences and engineering have these limits. Consider the
+simple example of a civil engineering model that simulates
+the stresses on buildings by using specialized classical
+mechanics. Such a model may work well enough to allow
+complete buildings to be fully designed in silico. However , it
+is almost certainly invalid for simulating extremely small
+objects, since it lacks quantum mechanics, or very large or
+very speedy objects, since it lacks general relativity.
+4 4 COMPLEXITY Q 2010 Wiley Periodicals, Inc.
+DOI 10.1002/cplx
+ 10990526, 2010, 5, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/cplx.20304 by Dalhousie University, Wiley Online Library on [26/08/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+robust strategic planning test bed for brand management
+teams. Efforts testing the virtual market learning lab
+focused on calibration, verification, and validation for this
+usage.
+4.1. Major Model Calibratio n, Verification, and
+Validation Methods
+There are a variety of ways to calibrate, verify, and validate
+models. As the virtual market learning lab is a simulation,
+this section and later sections emphasize methods that
+support simulations. The major methods include design
+walkthroughs, code walkthroughs, manual tracing, manual
+comparisons, automated unit testing, and automated sys-
+tem testing.
+Design walkthroughs involve presenting software
+designs (e.g., flowcharts) to domain experts or independ-
+ent designers (i.e., designers who did not develop the
+modules under examination) and then manually stepping
+through example executions of the design. They allow do-
+main experts and independent designers to confirm or
+refute the correct operation of the design. Code walk-
+throughs are much like design walkthroughs, except that
+they involve presenting software code to domain experts
+or independent programmers (i.e., programmers who did
+not write the modules under examination) and then man-
+ually stepping through example executions of the code. As
+with design walkthroughs, they allow the examiners to
+evaluate the code.
+Manual tracing involves (1) executing a model line by
+line in a debugging program and confirming the correct-
+ness of the operation of the simulation or (2) logging the
+line-by-line execution of a model and then examining the
+resulting data in great detail. Manual comparisons involve
+logging the end results of model execution and then com-
+paring these results to expected values derived from the
+model’ s specifications or against observed data from the
+real system.
+Automated unit tests allow individual modules of soft-
+ware to be automatically executed independent of the rest
+of the model. As a result, the actual programmed behavior
+of software components can be checked against the
+behavior expected on the basis of the component’ s specifi-
+cations or observed data from the real system. Similar to
+automated unit tests, automated system tests allow full
+programs to be automatically executed and checked
+against target data. Thus actual programmed behavior of
+complete programs can be checked against the behavior
+expected on the basis of the software’ s specifications or
+observed data from the real system.
+4.2. Virtual Market Lea rning Lab Calibration,
+Verification, and Validation
+Because of the virtual market learning lab’ s potential stra-
+tegic influence, there is an extremely strong need for cali-
+bration, verification, and validation. In fact, all major
+releases of the model normally undergo an extensive and
+well-documented calibration, verification, and validation
+process that is made up of more than 60 steps. This pro-
+cess has three major phases: model development verifica-
+tion, model development calibration and validation, and
+model pilot study validation. Each of these activities is
+outlined in the sections that follow.
+4.3. Testing Phase 1, Model Development Verification
+In the verification phase, a model is checked against its
+specifications. The virtual market learning lab verification
+process involves the use of design and code walkthroughs,
+manual tracing and comparisons, and automated unit and
+system testing. In particular, major model releases are sub-
+jected to about 30 well-documented verification checks.
+The exact details of the verification checks are docu-
+mented in the virtual market learning lab integrated test-
+ing plan (ITP) spreadsheet. The content of this spread-
+sheet is discussed in sections 4.1 to 4.5.
+4.4. Testing Phase 2, Model Development Calibration,
+and Validation
+In the calibration stage, a model’ s parameters are fitted to
+data from the real system, while in the validation phase,
+the model is checked against observations of the real sys-
+tem. In particular, major model releases are subjected to
+about 10 well-documented calibration steps and about 20
+well-documented validation checks. Many of the tests are
+quantitative. The tests include manual tracing and com-
+parisons and automated system testing. Furthermore,
+many of the quantitative checks have acceptance thresh-
+olds within 1–10%. An example verification check that
+compares virtual market learning lab results to the
+expected theoretical values is shown in Figure 5. This fig-
+ure shows as a percentage on the X-axis the amount of a
+product that is used by a consumer normalized by the
+amount that was recommended by the manufacturer. One
+hundred percent means consumers use exactly the manu-
+facturer’ s recommended amount. More than 100% means
+consumers use more than the recommended amount. The
+Y-axis shows the probability of each normalized usage
+level within a given sample population. The R2 fit value
+between the 81 virtual market learning lab data points and
+the theoretically expected product usage distribution is
+0.996. These results show that the model is correctly
+reproducing consumer product usage levels.
+The data used for calibration and validation include the
+following:
+c Household panel data that include detailed time-series
+purchase histories from hundreds of shoppers covering
+multiyear periods. The shoppers’ identities are made
+suitably anonymous to avoid privacy issues.
+Q 2010 Wiley Periodicals, Inc. COMPLEXITY 4 5
+DOI 10.1002/cplx
+ 10990526, 2010, 5, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/cplx.20304 by Dalhousie University, Wiley Online Library on [26/08/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+c Scanner data from store checkout counters at a variety
+of retail stores. Again, the shopper’ s identities are made
+suitably anonymous to avoid privacy issues.
+c Aggregate and time-series industry statistics, including
+market shares, sales volumes, and advertizing trends.
+c Detailed industry data, including information on retail
+store shelf stocks, product pricing numbers, and prod-
+uct promotion counts.
+The virtual market learning lab was calibrated and vali-
+dated against two full sets of the above-mentioned data
+from independent sources. The sources were the two
+major companies that collect retail data: Nielsen and In-
+formation Resources Inc. (IRI). The following calibration
+and validation work was done:
+1. A full set of IRI data for the laundry detergent and den-
+tifrice categories were successfully used by Argonne
+and by P&G separately for calibration and validation, as
+outlined earlier.
+2. A full set of Nielsen data for the laundry detergent and
+dentifrice categories were successfully used by Argonne
+and by P&G separately for calibration and validation, as
+outlined earlier.
+The exact details of each calibration step and validation
+check have been fully documented in a virtual market
+learning lab ITP spreadsheet that is delivered with each
+major version of the model. The content of this spread-
+sheet is discussed in sections 4.1 to 4.4.
+4.5. Testing Phase 3, Model Pilot Study Validation
+In addition to undergoing the Phase 1 and 2 verification,
+calibration, and validation steps discussed above, the vir-
+tual market learning lab was tested during pilot applica-
+tions for both the laundry detergent and dentifrice catego-
+ries. These pilot application tests were conducted by P&G.
+The tests included manual tracing and comparisons and
+involved the following steps:
+1. Virtual market learning lab input data were set up to
+reflect realistic scenarios of special interest to the P&G
+brand teams.
+2. The model’ s ability to reproduce the conditions of inter-
+est observed in the real system was demonstrated to
+the brand teams.
+3. Narratives of possible future scenarios and/or explana-
+tions for observed but otherwise unexplained or misun-
+derstood market phenomena were provided to the
+teams.
+When new explanations were provided for observed
+market phenomena, they were analyzed by brand team
+members and other domain experts. After investigation
+the explanations held up to scrutiny. Several have even
+been accepted within the virtual market learning lab user
+community as being genuinely ‘ ‘new learning’ ’ about the
+categories under study.
+5. MODEL USE
+In addition to being used to obtain new information about
+the categories under study, the virtual market learning lab
+was successfully applied by P&G to several challenging
+business problems. In these situations, it directly influ-
+enced managerial decision making and produced substan-
+tial cost savings. Furthermore, the model was recently cali-
+brated to be used in an additional category.
+6. CONCLUSIONS AND FUTURE WORK
+As previously discussed, consumer markets have been
+studied extensively by means of a wide range of tools.
+Although many of these tools have been very successful
+with regard to achieving their particular purpose, they have
+generally not been able to provide enough detail on the
+interdependent behavior of consumers, retailers, and man-
+ufacturers. This gap has created a need for holistic models
+of consumer markets. As demonstrated by the virtual mar-
+ket learning lab, agent-based modeling is an approach that
+can be used to successfully create such models.
+The next steps for virtual market learning lab develop-
+ment include increasing the level of geographic fidelity
+and moving to multiple product categories. These steps
+can allow the model to represent an even more compre-
+hensive view of consumer markets.
+FIGURE 5
+Verification check comparing virtual market learning lab results to
+theoretically expected product usage results (R 2 5 0.996).
+4 6 COMPLEXITY Q 2010 Wiley Periodicals, Inc.
+DOI 10.1002/cplx
+ 10990526, 2010, 5, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/cplx.20304 by Dalhousie University, Wiley Online Library on [26/08/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+REFERENCES
+1. Hahn, J.I.; North, M.J. Methods of creating and using a virtual consumer packaged goods marketplace; US Patent and Trade-
+mark Office Patent Application Number 20,080,086,364, 2006.
+2. Leeflang, P .S.H.; Wittink, D.R. Building models for marketing decisions: Past, present, and future. Int J Res Mark 2000, 17,
+105–126.
+3. Little, J.D.C. Models and managers: The concept of a decision calculus. Manage Sci 1970, 16, 466–485.
+4. Ehrenburg, A.S.C. Repeat Buying Theory and Application. North Holland Publishing Company, Amsterdam, 1972.
+5. Nakanishi, M.; Cooper, L.G. Simplified estimation procedures for MCI models. Mark Sci 1982, 1, 314–322.
+6. Guadagni, P .M.; Little, J.D.C. A logit model of brand choice calibrated on scanner data. Mark Sci 1983, 2, 203–238.
+7. Chatfield, C.; Ehrenberg, A.S.C.; Goodhardt, G.J. Progress on a simplified model of stationary purchasing behavior. J R Stat
+Soc 1966, 129, 317–367.
+8. Bucklin, R.E.; Lehmann, D.R.; Little, J.D.C. From decision support to decision automation: A 2020 vision. Mark Lett 1998, 9,
+235–246.
+9. Rogers, G.; Renken, T . The importance of shelf presentation in choice-based conjoint studies. Proceedings of the Sawtooth
+Software Conference, San Diego, CA, Sawtooth Software, Sequim, WA; October 2004; pp 137–144.
+10. Dorner, D. The Logic of Failure: Recognizing and Avoiding Error in Complex Situations. Metropolitan Books: New York, 1996.
+11. North, M.J.; Macal, C.M. Managing Business Complexity: Discovering Strategic Solutions with Agent-based Modeling and
+Simulation. Oxford University Press: Oxford, England, 2007.
+12. Padgett, J.F .; Ansell, C.K. Robust action and the rise of the Medici, 1400-1434. Am J Sociol 1993, 98, 1259–1319.
+13. Padgett, J.F .; Lee, D.; Collier, N. Economic production as chemistry . Ind Corp Change 2003, 12, 843–877.
+14. Cederman, L.-E. Modeling the co-evolution of states and nations. Workshop on Simulation of Social Agents: Architectures
+and Institutions, Chicago, Illinois; Sponsored by Argonne National Laboratory, Argonne, Illinois, 1997.
+15. Cederman, L.-E. Endogenizing geopolitical boundaries with agent-based modeling. Proc Natl Acad Sci USA 2002, 99, 7296–
+7303.
+16. Stephan, C.; Sullivan, J. Growth of a hydrogen transportation infrastructure. Agent 2004 Conference Proceedings, Conference
+on Social Dynamics: Interaction, Reflexivity and Emergence, ANL/DIS-05-6; Co-sponsored by Argonne National Laboratory
+and the University of Chicago, October 7–9, 2004.
+17. North, M.J.; Thimmapuram, P .R.; Macal, C.; Cirillo, R.; Conzelmann, G.; Koritarov, V .; Veselka, T . EMCAS: An agent-based tool
+for modeling electricity markets. Agent 2003: Conference on Challenges in Social Simulation, Argonne National Laboratory,
+The University of Chicago, Chicago, IL, October 2–4, 2003.
+18. Casti, J. BizSim: The world of business—In a box. Complexity Int 2001, 8, 6.
+19. Adjali, I.; Dias, B.; Hurling, R. Agent based modeling of consumer behavior. Abstract in Proceedings of the 2005 North Ameri-
+can Association for Computational Social and Organizational Science Annual Conference, University of Notre Dame, Notre
+Dame, Indiana, 2005.
+20. Brannon, E.; Ulrich, P .; Anderson, L.J.; Presley, A.B.; Thommesen, S. Agent-based simulation of the consumer’ s apparel pur-
+chase decision. National T extile Center Report I98-A09-A1, 2000.
+21. Schenk, T .A.; Lo¨ffler, G.; Rauh, J. Agent-based simulation of consumer behavior in grocery shopping on a regional level.
+J Bus Res 2007, 60, 894–903.
+22. Janssen, M.A.; Jager, W . Simulating market dynamics: The interactions of consumer psychology and structure of social net-
+works. Artif Life 2003, 9, 343–356.
+23. Jager, W . Simulating consumer behaviour: A perspective. In: Environmental Policy and Modeling in Evolutionary Economics;
+Faber, A.; Frenken, K.; Idenburg, A.M., Eds.; Netherlands Environmental Assessment Agency, 2006, Groningen, Netherlands.
+pp. 1–27.
+24. Jager, W .; Janssen, M.A.; Vlek, C.A.J. Consumats in a commons dilemma: T esting the behavioural rules of simulated consum-
+ers. COV Report No. 99-01, Centre for Environment and Traffic Psychology, University of Groningen, 1999.
+25. Said, L.B.; Bouron, T .; Drogoul, A. Multi-agent based simulation of consumer behaviour: T owards a new marketing approach.
+Proceedings of the International Congress on Modelling and Simulation (MODSIM 2001), Canberra, Australia. December
+2001.
+26. Said, L.B.; Bouron, T .; Drogoul, A. Agent-based interaction analysis of consumer behavior. Proceedings of the First Interna-
+tional Joint Conference on Autonomous Agents and Multi-Agent Systems, Bologna, Italy, 2002.
+27. Collings, D.; Reeder, A.A.; Adjali, I.; Crocker, P .; Lyons, M.H. Agent based customer modeling: Individuals who learn from
+their environment. Proceedings of the 2000 Congress on Evolutionary Computation, La Jolla, California, 2000.
+28. North, M.J.; Collier, N.T .; Vos, J.R. Experiences creating three implementations of the Repast agent modeling toolkit. ACM
+Trans Model Comput Simulation 2006, 16, 1–25.
+29. ROAD. Repast Organization for Architecture and Development (ROAD). Available at: http://repast.sourceforge.net. Accessed
+on 1 June 2009.
+30. North, M.J.; Howe, T .R.; Collier, N.T .; Vos, J.R. Repast Simphony runtime system. Proceedings of the Agent 2005 Conference
+on Generative Social Processes, Models, and Mechanisms, ANL/DIS-06-5, Argonne National Laboratory, The University of
+Chicago. Chicago, IL, October 13–15, 2005.
+31. Miller, G.A. The magic number seven plus or minus two. Psychol Rev 1956, 63, 81–97.
+32. Law, A.M. Simulation Modeling and Analysis, 4th edn. McGraw-Hill: New York, 2006.
+Q 2010 Wiley Periodicals, Inc. COMPLEXITY 4 7
+DOI 10.1002/cplx
+ 10990526, 2010, 5, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/cplx.20304 by Dalhousie University, Wiley Online Library on [26/08/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License

@@ -1,0 +1,928 @@
+AI Communications 25 (2012) 295–304 295
+DOI 10.3233/AIC-2012-0537
+IOS Press
+Agent-based modeling under partial and full
+knowledge learning settings to simulate
+ﬁnancial markets
+Filippo Neri
+Department of Computer Information Systems, University of Malta, Msida, MSD 2080, Malta
+E-mail: ﬁlipponeri@yahoo.com
+Abstract. In the paper we show how L-FABS can be applied in a partial knowledge learning scenario or a full knowledge learning
+scenario to approximate ﬁnancial time series. L-FABS combines agent-based simulation with machine learning to model the
+behavior of ﬁnancial time series.
+We also discuss why Partial Knowledge and Full Knowledge learning scenario are relevant to the modeling of ﬁnancial time
+series and how they can be used to assess the robustness of a modeling system for ﬁnancial time series. In a Partial Knowledge
+learning setting usually only the initial conditions of the time series are provided, while in a Full Knowledge learning scenario
+any value of the ﬁnancial time series is exploited as soon as it is available.
+An extensive experimental analysis of L-FABS is reported under a variety of ﬁnancial time series and time frames.
+Keywords: Agent-based modeling and simulation, partial knowledge learning, full knowledge learning, simulated annealing,
+ﬁnancial markets, prediction of SP500, DJIA, Google, SPY time series, 1 minute, 10 minutes, 1 hour, daily time series
+1. Introduction
+Financial markets can be viewed as complex sys-
+tems whose basic entities and interactions can be easily
+described. However, when ﬁnancial markets are taken
+into account as a whole, no theory or empirical method
+is able to explain or predict with certainty what will
+happen during their future evolution. Indeed the pros
+and cons of using quantitative methodologies for their
+studies are still open topic for the scientiﬁc debate [7,
+12].
+The state-of-the-art literature shows that agent-based
+modeling (ABM) is a ﬂexible modeling methodology
+for simulating several types of domains, when inter-
+preted as complex systems, like, for instance, con-
+sumer markets, economies or societies [2,4,5,10,11,
+20,29]. Thus ABM could be a promising candidate
+for investigating ﬁnancial markets. Current research on
+modeling ﬁnancial markets usually focuses on: evalu-
+ating or learning trading strategies for ﬁnancial instru-
+ments (commodities, bonds, shares, etc.) [9,15,27]; or
+developing artiﬁcial markets, whose internal dynamics
+can be controlled, in order to study the formation of no-
+table phenomena (e.g., price bubble) [1,14,28]; or, ﬁ-
+nally, modeling the time series of the values/prices for
+ﬁnancial assets [18,23].1
+By considering the structure of ﬁnancial markets, it
+can be observed that the market as a whole is made up
+of the investment decisions of many individuals, the in-
+vestors. If we try and match this structural perspective
+about ﬁnancial markets with the observations made by
+ABM researchers, we open up the possibility of study-
+ing ﬁnancial markets by using computational simu-
+lation. For researchers active in the software agents
+community, computational simulation takes the form
+of agent-based simulators where hypothesis about the
+decision making process of the individual and about
+the relationships occurring among them could be tested
+[3,10,14,19,29]. One of the main difﬁculties encoun-
+tered by these works stays in tuning the model so that
+the simulated behavior approximate the observed one.
+With this respect machine learning algorithms, and
+simulated annealing [17] in the case of our research,
+can be used to learn the main parameters governing the
+simulation process as discussed in [23].
+1Please consider that the cited papers have been selected with the
+only intent to provide examples of the listed approaches and without
+claim to be an exhaustive list.
+0921-7126/12/$27.50 © 2012 – IOS Press and the authors. All rights reserved
+
+296 F . Neri / ABM under partial and full knowledge learning settings to simulate ﬁnancial markets
+The research reported in this work originates from
+the above thoughts and aims to empirically study how
+well ﬁnancial time series could be approximated by
+combining agent-based simulation with learning algo-
+rithms under two experimental setups: partial knowl-
+edge learning and full knowledge learning.
+In this paper, we report the empirically evalua-
+tion of the Learning Financial Agent Based Simulator
+L-FABS, introduced in [23], over a variety of ﬁnan-
+cial time series (SP500, DJIA, Google, SPY) for dif-
+ferent time intervals and time frames (from 1 min up to
+1 day). The novelties of this paper are:
+(1) the deﬁnition of the partial knowledge learning
+scenario and full knowledge one, we will refer to
+them as PK and FK, respectively, thereafter for
+conciseness;
+(2) the description of how L-FABS can operate under
+the PK and FK learning frameworks;
+(3) the study of the behavior of L-FABS over differ-
+ent time series, time frames, and time intervals to
+evaluate its robustness under several experimen-
+tal settings.
+Please note, as previously said, that this paper is not
+about introducing the learning system L-FABS or dis-
+cussing its architectural choices as this has been done
+elsewhere. However for making the paper self consis-
+tent, L-FABS algorithm is completely described in the
+Appendix, thus allowing for a thorough understand-
+ing of how the ﬁnancial time series can been approxi-
+mated.
+The rest of the paper is organized as follows: in Sec-
+tion 2, we discuss how to measure the approximation
+error between two time series, in Section 3, we discuss
+the differences between PK and FK learning settings,
+in Section 4, the experimental results are reported, in
+Section 5, we compare the performances of L-FABS
+with those of other learning systems before drawing
+the conclusions. In the Appendix, a full description of
+the algorithm implementing L-FABS is given.
+2. Measuring the approximation error between
+two time series
+In order to use a learning algorithm to ﬁnd a model
+for a time series, we need to select some error function
+to be minimized during learning that is able to eval-
+uate how well two time series (the estimated and the
+target one) are similar. The Mean Squared Error and
+the Mean Absolute Percentage Error fulﬁll our require-
+ments and are commonly used in Statistics when two
+data samplings have to be compared. They are deﬁned
+as:
+MSE(X,Y ) = 1
+N
+N∑
+i=1
+(xi −yi)2,
+MAPE(X,Y ) = 1
+N
+N∑
+i=1
+⏐⏐⏐⏐
+xi −yi
+xi
+⏐⏐⏐⏐.
+Given two time series X and Y , the lower the values
+for MSE and MAPE, the closer the two are. MSE pro-
+vides an absolute measure for the error while MAPE
+returns the error measured in percentage terms. The
+squared root of MSE is known as the Standard Error.
+The MSE or Standard Error are useful error measures
+when comparing the approximation error between sev-
+eral estimated time series for the same target one: as
+the time series have the same data range, a measure of
+error in absolute terms makes sense. Instead the MAPE
+is more suitable when comparing the approximation
+error for time series having different data ranges. In
+this case an error expressed as a percentage is more
+suitable in evaluating their degree of similarity. As in
+our work, we will compare time series having different
+value ranges, the MAPE has been chosen to measure
+the approximation error of our system.
+3. Partial Knowledge learning vs. Full Knowledge
+learning
+In this section, we explain the difference between
+learning scenarios where partial or complete knowl-
+edge of the data points in the time series is available.
+This information will facilitate the understanding of
+the experimental setups reported in the following. For
+machine learning researchers, the distinctions between
+partial knowledge learning and full knowledge learn-
+ing can recall the categorization of learning systems
+in as being able to operate when no additional domain
+knowledge is available, apart from the data, or when
+additional domain theory, maybe even a causal model
+of the domain, is available [26].
+In our study, we consider the effect of having access
+or not having access to the real values of a time series
+from time 0 up to the current time t when forecasting
+its future values from time t + 1 and ahead. In gen-
+eral, when making a prediction, all learning systems
+try to exploit every bit of information in order to re-
+
+F . Neri / ABM under partial and full knowledge learning settings to simulate ﬁnancial markets 297
+duce their forecasting error. This is a common and rea-
+sonable approach when employing a machine learning
+system. However, it can also be noted that, when mod-
+eling a time series, the use of all the information up
+to the current time t is generally a necessity to obtain
+an acceptable forecasting error as the majority of the
+learning systems base their predictions on the identiﬁ-
+cation of patterns in the recent part of the target time
+series [8]. Thus it follows that most (if not all) pattern
+learning methods operate under Full Knowledge learn-
+ing scenarios.
+In our research, we will name Full Knowledge sce-
+nario (or FK) a learning set up where all the target
+time series data points up to the current time are avail-
+able to the learner, while we name Partial Knowledge
+scenario (PK) the learning set up where only the ini-
+tial data point of the target time series is available to
+the learner. Most machine learning systems operating
+through pattern matching will not be able to work in
+a PK learning scenario with acceptable approximation
+errors. L-FABS, instead, bases its predictions on the
+simulation of the investment process that underlies the
+market thus L-FABS can either take advantage of all
+the data in the time series or it can just use the initial
+conditions of the market, data at time zero while main-
+taining acceptable approximation errors. L-FABS can
+operate both in a PK or FK learning scenario.
+As the PK scenario exploits less information than
+the FK one, it corresponds to a more difﬁcult learn-
+ing/approximation task. We are interested in the PK
+scenario because it can provide insights about the “ro-
+bustness” of the model acquired by L-FABS. By ro-
+bustness we mean the feature of the model to have in-
+trinsically captured the law of evolution in time of the
+time series which can be measured by the maintenance
+of accuracy in forecasts as the system move far from
+the point of origin.
+4. Empirical analysis
+For the empirical evaluation of L-FABS, we consid-
+ered a few ﬁnancial time series to work with. As usual
+with learning systems, we will train L-FABS on a part
+of the dataset, the learning set, and then we will use
+the remaining part of the dataset as test set to assess
+the performances of the learned model. We will present
+two distinct groups of experiments that differ for the
+considered ﬁnancial time series (SP500, DJIA, Google
+and SPY) and for their time frame (1 min, 10 min, 1 h,
+daily). The ﬁrst group of experiments will be done on a
+daily time frame, while the second set of experiments
+will be done on shorter time frames (intra daily). The
+objective is to support any empirical ﬁndings by eval-
+uating L-FABS on a wide range of operating condi-
+tions.
+4.1. Empirical evaluation on daily time series
+For the ﬁrst group of experiments on a daily time
+frame, the selected datasets are:
+• Dataset SP500a – learning set: SP500 from 3 Jan-
+uary 1994 to 17 December 2003 and test set:
+SP500 from 18 December 2003 to 23 October
+2006.
+• Dataset DJIAa – learning set: DJIA from 3 Jan-
+uary 1994 to 17 December 2003 and test set: DJIA
+from 18 December 2003 to 23 October 2006.
+• Dataset SP500b – learning set: SP500 from 3 Jan-
+uary 2008 to 31 December 2008 and test set:
+SP500 from 2 January 2009 to 20 August 2010.
+• Dataset DJIAb – learning set: DJIA from 3 Jan-
+uary 2008 to 31 December 2008 and test set: DJIA
+from 2 January 2009 to 20 August 2010.
+The reason for selecting Datasets SP500a and DJIAa
+is that they have been used to test other learning algo-
+rithms and are therefore useful to compare our system
+with other ones. Dataset SP500b and DJIAb instead are
+more recent and smaller datasets which can show the
+performances of L-FABS with fewer learning data and
+on turbulent markets such as more recent ones. All the
+datasets contain the daily closing values of the indexes
+and have been freely acquired from the ﬁnance section
+of yahoo.com.
+In term of information available to L-FABS, we will
+explore both the PK and FK learning scenarios. The
+market outlook will be calculated using Sentiment( t,
+1), for short S1, or Sentiment(t, 5), S5 (please refer to
+the Appendix for a description of the Sentiment func-
+tion). And we will forecast botht + 1 andt + 7a sv a l -
+ues of the time series. The seven days ahead prediction
+has been selected as it is the most far ahead prediction
+made by other learning systems and thus can serve as
+an interesting comparison data.
+In Table 1, the results are averaged over 10 runs
+and show the MAPE errors as measured on the test
+sets. The columns in the tables stand for: “Knowledge”
+identiﬁes the learning setting as FK or PK, “Day to pre-
+dict” indicates the number of days ahead for which a
+prediction of the time series is made, “Sentiment” indi-
+
+298 F . Neri / ABM under partial and full knowledge learning settings to simulate ﬁnancial markets
+Table 1
+Experimental ﬁndings on Datasets SP500a, DJIAa, SP500b and
+DJIAb relative to different periods of the SP500 and DJIA time series
+Knowledge Day to predict Sentiment MAPE
+Experimental results on Dataset SP500a
+PK 1 S1 0.930 ± 0.245
+PK 1 S5 1.338 ± 0.637
+PK 7 S1 1.470 ± 0.064
+PK 7 S5 1.721 ± 0.103
+FK 1 S1 0.647 ± 0.008
+FK 1 S5 0.714 ± 0.009
+FK 7 S1 1.383 ± 0.013
+FK 7 S5 1.424 ± 0.015
+Experimental results on Dataset DJIAa
+PK 1 S1 1.102 ± 0.468
+PK 1 S5 1.433 ± 0.596
+PK 7 S1 1.513 ± 0.071
+PK 7 S5 2.117 ± 0.783
+FK 1 S1 0.642 ± 0.012
+FK 1 S5 0.709 ± 0.007
+FK 7 S1 1.414 ± 0.011
+FK 7 S5 1.443 ± 0.011
+Experimental results on Dataset SP500b
+PK 1 S1 1.790 ± 0.269
+PK 1 S5 2.476 ± 0.199
+PK 7 S1 3.661 ± 0.992
+PK 7 S5 3.924 ± 0.317
+FK 1 S1 1.494 ± 0.069
+FK 1 S5 1.642 ± 0.057
+FK 7 S1 3.261 ± 0.089
+FK 7 S5 3.437 ± 0.215
+Experimental results on Dataset DJIAb
+PK 1 S1 1.85 ± 0.677
+PK 1 S5 2.66 ± 0.960
+PK 7 S1 3.72 ± 1.710
+PK 7 S5 3.52 ± 0.216
+FK 1 S1 1.31 ± 0.062
+FK 1 S5 1.43 ± 0.093
+FK 7 S1 3.01 ± 0.241
+FK 7 S5 2.98 ± 0.225
+cates if the Sentiment value is calculated with modality
+S1 or S5, and “MAPE” show the approximation errors.
+The results in Table 1 show lower MAPE values
+when the FK learning is selected instead of the PK one.
+This empirical ﬁnding might suggest that using all the
+information available in the time series up to the cur-
+rent time, before making a prediction, produces better
+forecasts.
+Fig. 1. The actual and predicted SP500 time series when testing
+L-FABS on Dataset SP500b with parameters: PK, S5, Day to pre-
+dict: 6.
+Fig. 2. The actual and predicted SP500 time series when testing
+L-FABS on Dataset SP500b with settings: FK, S1, Day to pre-
+dict: 1. (Colors are visible in the online version of the article;
+http://dx.doi.org/10.3233/AIC-2012-0537.)
+However, as it can be seen, the performances ob-
+tained in the PK learning set up are relatively close to
+those obtained in the FK learning scenario. This ﬁnd-
+ing might support the hypothesis that the time series
+models learned by L-FABS have captured the intrinsic
+dynamics of the target time series.
+In addition, from Table 1, it appears that the predic-
+tions of the next day values are more accurate than the
+predictions made for the seven days ahead values. This
+result appears to be coherent with the intuitive expe-
+rience that the farther a prediction is moved into the
+future, the less accurate it will be (but read about the
+next set of experiments before accepting this ﬁnding as
+valid).
+For the sake of completeness, we also show the
+graphs of two time series as predicted by L-FABS in
+Figs 1 and 2, which are exemplars of the results ob-
+tained over several runs of L-FABS. The predicted time
+series are compared with the actual ones. As it can be
+seen from the graphs, the solid line (actual) and the
+dotted line (predicted) are very close conﬁrming the er-
+ror ﬁgures that have been reported in the tables. The
+graphs also show that under the PK scenario, L-FABS
+
+F . Neri / ABM under partial and full knowledge learning settings to simulate ﬁnancial markets 299
+is able to capture the overall behavior of the time se-
+ries under study, while under the FK scenario, L-FABS
+is able to produce a much closer approximation of the
+time series.
+4.2. Empirical evaluation on time frames of 1 min,
+10 min,1 h
+For the second group of experiments on time frames
+shorter than daily, the selected datasets are:
+• Dataset Google-1m – Time frame: 1 min; learning
+set: Google from 23 February 2012 to 30 March
+2012, and test set: Google from 4 May 2012 to
+11 May 2012.
+• Dataset Google-10m – Time frame: 10 min; learn-
+ing set: Google from 19 September 2011 to
+28 February 2012, and test set: Google from
+29 February 2012 to 11 May 2012.
+• Dataset Google-1h – Time frame: 1 h; learning
+set: Google from 18 December 2009 to 21 Jan-
+uary 2011, and test set: Google from 24 January
+2011 to 11 May 2012.
+• Dataset SPY-1m – Time frame: 1 min; learning
+set: SPY 2 from 23 February 2012 to 30 March
+2012, and test set: SPY from 4 May 2012 to
+11 May 2012.
+• Dataset SPY-10m – Time frame: 10 min; learning
+set: SPY from 19 September 2011 to 28 February
+2012, and test set: SPY from 29 February 2012 to
+11 May 2012.
+• Dataset SPY-1h – Time frame: 1 h; learning set:
+SPY from 18 December 2009 to 21 January 2011,
+and test set: SPY from 24 January 2011 to 11 May
+2012.
+We will again evaluated all the dataset running L-FABS
+under a PK and a FK scenarios.
+The reason for selecting the Datasets about Google
+shares is that the author likes Google’s search en-
+gine and so he has arbitrarily chosen to model the
+price of a share of Google. The Datasets about the
+SPY Etf have been chosen as the SPY can act as a
+proxy for the SP500 index. And because it has not
+been possible in fact to ﬁnd freely available intra
+daily data for the SP500 or DJIA indexes. At the time
+of writing, the data used in this study, for Datasets
+Google-* and SPY-*, can be downloaded for free
+from http://www.dukascopy.com/swiss/english/data_
+feed/csv_data_export/.
+2SPY is the ticker for the Standard and Poor’s Depository Receipt
+Exchange Traded Fund that tracks the performance of the SP500
+index.
+Table 2
+Experimental ﬁndings on Datasets Google-* relative to several time
+frames
+Knowledge Time frame ahead Sentiment MAPE
+Experimental results on Dataset Google-1min
+PK 1 S1 0.130 ± 0.013
+PK 1 S5 0.149 ± 0.015
+PK 7 S1 0.175 ± 0.056
+PK 7 S5 0.175 ± 0.007
+FK 1 S1 0.090 ± 0.002
+FK 1 S5 0.108 ± 0.002
+FK 7 S1 0.144 ± 0.002
+FK 7 S5 0.161 ± 0.003
+Experimental results on Dataset Google-10min
+PK 1 S1 0.415 ± 0.095
+PK 1 S5 0.456 ± 0.064
+PK 7 S1 0.452 ± 0.070
+PK 7 S5 0.541 ± 0.034
+FK 1 S1 0.179 ± 0.007
+FK 1 S5 0.219 ± 0.004
+FK 7 S1 0.377 ± 0.003
+FK 7 S5 0.411 ± 0.013
+Experimental results on Dataset Google-1h
+PK 1 S1 1.329 ± 0.093
+PK 1 S5 1.543 ± 0.226
+PK 7 S1 1.414 ± 0.022
+PK 7 S5 1.667 ± 0.026
+FK 1 S1 0.479 ± 0.012
+FK 1 S5 0.530 ± 0.006
+FK 7 S1 1.189 ± 0.013
+FK 7 S5 1.207 ± 0.005
+As done for the previous group of experiments, the
+following reported results are averaged over 10 runs
+and show the MAPE errors as measured on the test
+sets. In Tables 2 and 3, the performances of L-FABS
+are shown when run on the Datasets Google-* and
+SPY-*. Here are the experimental ﬁndings:
+(a) As observed in the previous set of experiments,
+predicting under a PK setting tends to be more
+difﬁcult that under a FK setup.
+(b) After only a superﬁcial glance at the results,
+one might conclude that predicting 1 time frame
+ahead is easier than predicting 7 time frames
+ahead under the same experimental setup. The
+working hypothesis being that, as the length of
+the time frame increases, so would the approxi-
+mation error. Said in other words, the longer the
+time frame, the more difﬁcult is to predict the
+
+300 F . Neri / ABM under partial and full knowledge learning settings to simulate ﬁnancial markets
+Table 3
+Experimental ﬁndings on Datasets SPY-* for several time frames
+Knowledge Time frame ahead Sentiment MAPE
+Experimental results on Dataset SPY-1min
+PK 1 S1 0.155 ± 0.048
+PK 1 S5 0.206 ± 0.086
+PK 7 S1 0.119 ± 0.011
+PK 7 S5 0.123 ± 0.012
+FK 1 S1 0.068 ± 0.002
+FK 1 S5 0.084 ± 0.002
+FK 7 S1 0.091 ± 0.001
+FK 7 S5 0.108 ± 0.005
+Experimental results on Dataset SPY-10min
+PK 1 S1 0.618 ± 0.716
+PK 1 S5 0.717 ± 0.966
+PK 7 S1 0.279 ± 0.031
+PK 7 S5 0.311 ± 0.014
+FK 1 S1 0.133 ± 0.015
+FK 1 S5 0.153 ± 0.011
+FK 7 S1 0.241 ± 0.005
+FK 7 S5 0.280 ± 0.015
+Experimental results on Dataset SPY-1h
+PK 1 S1 0.895 ± 0.335
+PK 1 S5 0.913 ± 0.161
+PK 7 S1 0.931 ± 0.080
+PK 7 S5 1.062 ± 0.041
+FK 1 S1 0.344 ± 0.013
+FK 1 S5 0.384 ± 0.006
+FK 7 S1 0.825 ± 0.005
+FK 7 S5 0.852 ± 0.004
+correct value of the time series. Thus also nicely
+ﬁtting the Efﬁcient Market Hypothesis that as
+soon as new information is arriving (the longer
+the time frame, the more the incoming informa-
+tion), it is quickly incorporated into the asset
+value changing it in a measure that is very difﬁ-
+cult to estimate on the basis of the past history.
+To rephrase the same concept under another per-
+spective more familiar to developers of trading
+systems, it might appear that it is more difﬁcult
+to predict over longer time frames than shorter
+ones because the behavioral patterns, emerging
+in the time series, can only hold until new infor-
+mation (external to the ﬁnancial market) arrives
+to perturbate its equilibrium. And the longest the
+time frame, the highest will be the amount of
+incoming information perturbating the behavior
+pattern just discovered in the time series to be
+approximate.
+Unfortunately this hypothesis is not generally
+valid as commented in the following point.
+(c) Looking closer at the experimental data, how-
+ever, it is worthwhile to compare the MAPE val-
+ues for SPY-1min, rows one and two to rows
+three and four, and SPY-10min, rows one and
+two to rows three and four, in Table 3. Here it
+clearly appears that predicting the closest value
+(1 time frame ahead) is more difﬁcult than pre-
+dicting the farthest ones (7 time frames ahead).
+So we have an evident contradiction with the
+working hypothesis advanced in point (b).
+In fact, what the experimental results show is
+that one time series (under the given conditions
+of selected time frame, number of time frames
+ahead to be forecasted and time interval) is more
+or less predictable than the others but do not al-
+low the observer to draw any hypothesis on any
+relationships across length of time frames and
+size of the approximation error that is valid for
+every time series.
+(d) Observation (c) hints toward a very interest-
+ing use of a computational tool like L-FABS:
+discovering which time frames, target distance,
+and time series would be easier to approximate
+among a set of candidate time series. The se-
+lected time series (plus associated conditions)
+might then be the focus of a closer study by de-
+velopers of trading strategies because the regu-
+larities in the selected time series could facili-
+tate the development of successful trading rules.
+In the speciﬁc case of the reported experimenta-
+tion, if the author had to operate with SPY-1min
+or SPY-10min, under a PK modality and for the
+given time interval, the author would chose the
+task to predict the time series value that lays 7
+time frames ahead instead of trying to predict
+that at 1 time frame ahead.
+5. Experimental comparison of L-FABS to other
+systems
+For providing a complete evaluation of L-FABS, we
+also compare its performances with respect to those
+obtained on the same datasets by other learning algo-
+rithms for which enough implementation details have
+been reported in the literature. In Table 4, we compare
+L-FABS, a Particle Swarm Optimization algorithm
+
+F . Neri / ABM under partial and full knowledge learning settings to simulate ﬁnancial markets 301
+Table 4
+Experimental results, averaged over 10 runs, for Dataset DJIAa and
+Dataset SP500a
+Dataset Day to PSO MLP L-FABS
+predict MAPE (%) MAPE (%) MAPE (%)
+SP500a 1 0.66 1.00 0.714 ± 0.009
+SP500a 7 1.47 3.11 1.424 ± 0.015
+DJIAa 1 0.65 1.06 0.709 ± 0.007
+DJIAa 7 1.47 5.64 1.443 ± 0.011
+(PSO) [16], and a Multi-Layer Perceptron (MLP) [30]
+when operating on our Datasets SP500a and DJIAa, re-
+spectively. The results for L-FABS are relative to con-
+ﬁguration: Sentiment S5 and the FK learning scenario.
+These results have been reported with the aim to locate
+L-FABS with respect to other learning systems repre-
+sentative of the state of the art and without intention
+lay claim on the superiority of one system over the oth-
+ers.
+The ﬁgures in Table 4 show that the forecasting er-
+rors of L-FABS are better than those obtained by MLP
+and are comparable to those obtained by PSO. The ﬁg-
+ures for PSO and MLP are as reported by the authors
+with no conﬁdence intervals given.
+6. Conclusions
+In the paper, we have reported an extensive empir-
+ical study about the approximation of real ﬁnancial
+time series by using our system L-FABS that exploits
+agent-based simulations together with machine learn-
+ing. L-FABS has been operated under a PK learning
+scenario and a FK learning one. The main results re-
+ported in this work are:
+(1) the description of what a PK learning scenario
+and a FK one are;
+(2) the analysis of the behavior of L-FABS over dif-
+ferent time series, time frames, distances in time
+of the target value, that shows the robustness of
+L-FABS under several experimental settings;
+(3) we also believe that our ﬁndings support the
+working hypothesis that agent-based simulations
+together with learning algorithms are particularly
+suitable for approximating real ﬁnancial time se-
+ries because of their ability to model the struc-
+tures of the processes generating the ﬁnancial
+time series.
+Appendix A: The simple ﬁnancial agent-based
+simulator
+L-FABS [23] is made of two interacting compo-
+nents: the Simple Financial Agent Based Simulator,
+S-FABS, which implement the agent-based simulator
+and a learning algorithm, Simulated Annealing in our
+case. In this section, we describe the agent-based sim-
+ulator S-FABS.
+The abstraction of ﬁnancial markets that we used to
+design L-FABS takes into account that the behavior of
+the investors is driven by two main factors:
+(a) the propensity to take some investment risks to-
+day, by buying a ﬁnancial asset, in exchange for
+a future uncertain reward, when selling the as-
+set; and
+(b) the common consensus (the market sentiment or
+just sentiment) about the future behavior of the
+market itself. If the people believe that the eco-
+nomic outlook will be negative, each individual
+will tend to sell some of her/his assets.
+We can now start describing the main component
+of our simulator: the FinancialAgent. A Financial-
+Agent implements the decision making process un-
+derlying the investment decision of buying, selling
+or holding an asset. In details, a FinancialAgent will
+decide to buy some asset with probability P( X<
+BuyThreshold), or it will hold to its assets with prob-
+ability P(BuyThreshold <X< SellThreshold), or
+it will sell some of its assets with probability P( X>
+SellThreshold). The abstract algorithm for a Finan-
+cialAgent is appearing in Algorithm 1.
+As it can be seen in the algorithm, the probabilities
+to buy/sell/hold are dependent on the current level of
+sentiment about the economy. In fact the probability
+to buy assets increases along with the sentiment, while
+the probability to sell assets decreases when the sen-
+timent is raising and vice versa. Also the amount of
+assets to be bought or sold is set to the average per-
+centual variation over the target time frame (AvgTF-
+Var) of the time series (as measured over the learning
+set). We veriﬁed empirically since an earlier work [22]
+that this value provides reasonable simulation results
+and the function has been kept constant since then.
+Given the code for a FinancialAgent, the simulation
+of the entire ﬁnancial market can be obtained by imple-
+menting the system architecture described by the algo-
+rithm reported in Algorithm 2 thus realizing the Simple
+Financial Agent Based Simulator S-FABS.
+
+302 F . Neri / ABM under partial and full knowledge learning settings to simulate ﬁnancial markets
+Algorithm 1. The FinancialAgent algorithm
+FinancialAgent(AgentId, Sentiment)
+TotAssets = TotalAssetsF(AgentId)
+InvAssets = InvestedAssetsF(AgentId)
+RiskRewardRate = RiskRewardPropF(AgentId)
+BuyThreshold = RiskRewardRate × Sentiment
+SellThreshold = (1 − ((1 − BuyThreshold)/2))
+randomNum = random(1)
+// returns a random number in (0,1)
+if (randomNum < BuyThreshold) then
+// buy some assets
+InvAssets = InvAssets + AvgTFV ar× TotAssets
+endif
+if (randomNum > SellThreshold) then
+// sell some assets
+InvAssets = InvAssets − AvgTFV ar× TotAssets
+endif
+UpdateAssets(AgentId)
+Algorithm 2. T h eS - F A B Sa l g o r i t h m
+S-F ABS(RiskRewardRates)
+round = 1
+maxrounds = DaysToSimulate()
+numDays = numDaysF()
+numAgents = NumOfAgents()
+initialise(numAgents,RiskRewardRates)
+while round < maxrounds do
+Sentiment = Sentiment(round,numDays)
+TotMarketAssets = 0, TotInvAssets = 0
+for i = 1 to numAgents do
+FinancialAgent(i, Sentiment)
+TotMarketAssets += TotalAssetsF(i)
+TotInvAssets += InvestedAssetsF(i)
+endfor
+EstV alue= TotInvAssets / TotMarketAssets
+round = round + 1
+Append(PredictedData, EstV alue)
+endwhile
+In S-FABS, several instances of FinancialAgent are
+created, each one with its own status in terms of own
+assets, invested assets and risk/reward propensity. Then
+an investment round is performed during which each
+agent decides if buying, selling, or holding taking into
+account the Sentiment value for the round. At the end
+of the round, it is possible to measure the percentage
+of invested assets. This percentage is used as an esti-
+mate for one data point of the target time series. If the
+investment round is repeated n times, the output will
+represent an estimate for ann-length time series.
+S-FABS takes as input the vector of risk/rewards
+propensity rates for each Financial Agent. During each
+round, the risk/rewards propensity rates are used in
+combination with the current value of the economic
+sentiment by each Financial Agent to take an invest-
+ment decision.
+For our research we implemented the Sentiment
+function as shown below:
+function Sentiment(time, mavgDays)
+begin = time − 1; end = time-mavgDays
+BearishSentiment = {learned value}
+BullishSentiment = {learned value}
+if (MA VG(PredictedData, begin, end)<
+MA VG(RealData, begin, end))
+then return(BullishSentiment)
+else return(BearishSentiment)
+The variables RealData and PredictedData give ac-
+cess to the time series of the real and predicted val-
+ues. According to our choice for the Sentiment func-
+tion [23], the outlook of the real market is considered
+bullish if the moving average 3 (MA VG) of the pre-
+dicted time series is lower than the moving average of
+the real time series. If this is the case, the Sentiment
+value is set to an high value so that a bullish mood is
+communicated to the agents. The opposite happens if
+the predictions of the system have been higher than the
+real data.
+A ﬁnal point about the Financial Agents in S-FABS.
+In our study, we employ four types or classes of Finan-
+cial Agents to capture the richness in investment deci-
+sions and in size of ﬁnancial transactions that occur in
+real ﬁnancial markets. The four types of investors we
+model are: individual investors (and the likes), banks
+(and the likes), hedge funds (and the likes), and central
+banks (and the likes). They differ in term of the size of
+the assets they can invest in ﬁnancial markets and for
+their risk/reward appetite. In addition, their numerical
+presence is also different. Here are the values we used
+during our simulations (Table 5).
+The ﬁgures in the table are to be read only as a rough
+approximation for the average composition of the types
+and features of the investors operating in ﬁnancial mar-
+kets. Speciﬁc reasons for choosing four types of in-
+vestors and for setting their parameters include: com-
+mon view about who operates in the markets, the de-
+sire to keep the model simple while showing how it
+can preserve the diversity of the investors, and personal
+conversations with investment managers [6].
+3The MA VG function is deﬁned as: MA VG(index, t, n) =∑ n−1
+k=0 index(t − k)/n.
+
+F . Neri / ABM under partial and full knowledge learning settings to simulate ﬁnancial markets 303
+Table 5
+Distribution of investors
+Investor type Total assets (in millions) Number of
+Individual 0.1 150
+Funds 100 100
+Banks 1000 245
+Central banks 10,000 5
+Appendix B: The complete learning simulator
+L-FABS: Adding a learning capability to S-FABS
+In this section, we describe how a learning capa-
+bility can be added to S-FABS so that it may ﬁnd
+the best model for a given time series. The resulting
+system will be called L-FABS. Learning in L-FABS
+consists of ﬁnding the vector of risk/reward propen-
+sity rates plus the BullishSentiment and BearishSen-
+timent values that approximates a given time series
+with a minimum error. This learning setting allows
+for combining S-FABS, the simulation engine, with
+any of the many machine learning algorithms able to
+ﬁnd a vector of values that minimizes a given error
+function. Examples of suitable machine learning al-
+gorithms include genetic algorithms [13,21], decision
+trees [24], neural networks [25], simulated annealing
+[17] and many others. In our study, we decided to use
+simulated annealing because evolutionary algorithms
+proved to be robust and well performing across several
+domains [13,17] and an individual oriented method is
+less computationally expensive than a population ori-
+ented one.
+Simulated annealing [17] is a searching algorithm
+that iteratively searches for the minimum of a given
+function E (the Energy or Error function) by gen-
+erating at each step random candidate points for the
+minimum in the proximity of the current candidate
+minimum point which represents the “center” of the
+exploration. At the end of each step, Simulated An-
+nealing may move the center of its exploration at a
+newly generated point with a given probability. Run-
+ning L-FABS consists of running Simulated Annealing
+to search the vector space of the risk/reward propen-
+sity rates in order to ﬁnd one that minimizes the er-
+ror function. At each round of annealing, the candidate
+vector,s, is used as input to S-FABS. S-FABS then re-
+turns an estimated time series to approximate the given
+targetTimeSeries. The approximation error measured
+by MAPE is used to decide if the candidate vector is an
+improved solution. The template for L-FABS is shown
+in Algorithm 3.
+Algorithm 3. The L-FABS algorithm using Simulated
+Annealing for learning
+L-F ABS(targetTimeSeries)
+s = randomstate()
+//s is a vector of real numbers containing
+// the risk/reward propensity rates
+// plus the BearishSentiment and
+// BullishSentiment values
+e = MAPE(S-F ABS(s), targetTimeSeries)
+T = 1;α = 0.95
+k = 0; kmax = 100; emax = 0
+while (k< kmax) and (e> emax)do
+sn = neighbour(s)
+en = MAPE(S-F ABS(sn), targetTimeSeries)
+if (en <e ) thensbest = sn;ebest = en
+endif
+if (random(1) <P (en,e,T )) thens = sn;e = en
+endif
+k = k + 1;T = T ×α
+endwhile
+return(beststate)
+The neighbor(s) function returns a state in proxim-
+ity of its argument. We implemented it as a function
+that for each value of the vectors randomly adds or de-
+creases it by 0.1 × random(1).P (en,e,T ) is returns 1,
+if the approximation error of the new state,en,i sl o w e r
+than the approximation error of the current state,e;e l s e
+it returns exp( e−en
+T ). This means that even if the new
+state has an higher approximation error than the current
+state, there is a non zero probability that the L-FABS
+will move its exploration center to it. The parameters
+α andT are set to 0.95 and to 1 according to [17].
+References
+[1] W.B. Arthur, J.H. Holland, B. LeBaron, R. Palmer and P. Tay-
+lorm, Asset pricing under endogenous expectation in an arti-
+ﬁcial stock market, in: The Economy as an Evolving Complex
+System II, Santa Fe Institute Studies in the Sciences of Com-
+plexity Lecture Notes, V ol. XXVII, Addison-Wesley, Reading,
+MA, 1997, pp. 15–44.
+[2] R. Axelrod, Agent-based modeling as a bridge between disci-
+plines, in: Agent-Based Computational Economics,L .K e n n e t h
+and L. Tesfatsion, eds, Handbooks in Economics Series, V ol. 2,
+North-Holland, Amsterdam, 2006, pp. 1562–1583.
+[3] E. Bonabeau, Agent-based modeling: methods and techniques
+for simulating human systems, Proceedings of the National
+Academy of Sciences 99(3) (2002), 7280–7287.
+[4] C. Bruun, The economy as an agent-based whole simulat-
+ing Schumpeterian dynamics, Industry and Innovation 10(4)
+(2003), 475–491.
+
+304 F . Neri / ABM under partial and full knowledge learning settings to simulate ﬁnancial markets
+[5] G. Canzian, Three essays in agent-based macroeconomics,
+PhD thesis, Univ. Trento, Italy, 2009.
+[6] A. Cesa, Discussion about how ﬁnancial markets work: an in-
+vestment manager perspective, Personal correspondence with
+the author, 2009.
+[7] M.W. Covel, Trend Commandments: Trading for Exceptional
+Returns, FT Press, Upper Saddle River, NJ, 2011.
+[8] G. Creamer and Y . Freund, Automated trading with boosting
+and expert weighting,Quantitative Finance 4(10) (2010), 401–
+420.
+[9] M.A.H. Dempster, T.W. Payne, Y . Romahi and G.W.P. Thomp-
+son, Computational learning techniques for intraday FX trad-
+ing using popular technical indicators, IEEE Transactions on
+Neural Networks 12(4) (2001), 744–754.
+[10] J.M. Epstein and R. Axtell, Growing Artiﬁcial Societies: Social
+Science from the Bottom up , The Brookings Institution Press,
+Washington, DC, 1996.
+[11] G. Fagiolo and G. Dosi, Exploitation, exploration and innova-
+tion in a model of endogenous growth with locally interact-
+ing agents, in: Laboratory of Economics and Management Pa-
+per Series, Sant’Anna School of Advanced Studies , Pisa, Italy,
+2002.
+[12] E.F. Fama, Efﬁcient capital markets: a review of theory and
+empirical work, The Journal of Finance 25(2) (1970), 383–
+417.
+[13] D. Goldberg, Genetic Algorithms in Search, Optimization, and
+Machine Learning, Addison-Wesley, Reading, MA, 1989.
+[14] A.O.I. Hoffmann, S.A. Delre, J.H. von Eije and W. Jager, Ar-
+tiﬁcial multi-agent stock markets: Simple strategies, complex
+outcomes, in: Advances in Artiﬁcial Economics , Lecture Notes
+in Economics and Mathematical Systems, V ol. 584, Springer-
+Verlag, Berlin/Heidelber, 2006, pp. 167–176.
+[15] G. Kendall and Y . Su, A multi-agent-based simulated stock
+market – testing on different types of stocks, in: Proceedings
+of IEEE Congress on Evolutionary Computation , Canberra,
+A u s t r a l i a ,H .A b b a s s ,K . C .T a n ,B .M c K a y ,D .E s s a ma n d
+T. Gedeon, eds, IEEE Press, Piscataway, NJ, 2003, pp. 2298–
+2305.
+[16] J. Kennedy and R. Eberhard, Particle swarm optimization, in:
+Proceedings of IEEE International Conference on Neural Net-
+works, Perth, Australia, IEEE Press, Piscataway, NJ, 1995,
+pp. 1942–1948.
+[17] S. Kirkpatrick, C.D. Gelatt and M.P. Vecchi, Optimization by
+simulated annealing, Science 220 (1983), 671–680.
+[18] I. Kitov, Predicting conocophillips and exxon mobil stock
+price, Journal of Applied Research in Finance 2 (2009), 129–
+134.
+[19] B. Lebaron, Agent-based computational ﬁnance: suggested
+readings and early research, Journal of Economic Dynamics
+and Control 24 (1998), 679–702.
+[20] L. Marconi, M. Gori and M. Lippi, Computational models for
+short-term prediction of the stock market, Intelligenza Artiﬁ-
+ciale 5 (2011), 217–227.
+[21] F. Neri, Trafﬁc packet based intrusion detection: decision trees
+and generic based learning evaluation, WSEAS Transaction on
+Computers 4(9) (2005), 1017–1024.
+[22] F. Neri, Using software agents to simulate how investors’ greed
+and fear emotions explain the behavior of a ﬁnancial market,
+in: Proceedings of WSEAS Conference ICOSSE’09 ,G e n o a ,
+Italy, WSEAS Press, Athens, Greece, 2009, pp. 241–245.
+[23] F. Neri, A comparative study of a ﬁnancial agent-based sim-
+ulator across learning scenarios, in: Workshop of the Au-
+tonomous Agents and Multi Agents Systems Conference on
+Agent and Data Mining Interaction , L. Cao et al., eds, Lecture
+Notes in Artiﬁcial Intelligence, V ol. 7103, Springer-Verlag,
+Berlin/Heidelberg, 2012, pp. 86–97.
+[24] J.R. Quinlan, C4.5: Programs for Machine Learning ,M o r g a n
+Kaufmann, San Francisco, CA, 1993.
+[25] D.E. Rumelhart, G.E. Hinton and R.J. Williams, Learning in-
+ternal representations by error propagation, in: Parallel Dis-
+tributed Processing: Explorations in the Microstructure of
+Cognition, V ol. 1: F oundations, MIT Press, Cambridge, MA,
+1986, pp. 318–362.
+[26] L. Saitta, M. Botta and F. Neri, Multistrategy learning and the-
+ory revision, Machine Learning 11(2,3) (1993), 153–172.
+[27] S. Schulenburg, P. Ross and S. Bridge, An adaptive agent-
+based economic model, in: Learning Classiﬁer Systems: From
+F oundations to Applications , Lecture Notes in Artiﬁcial In-
+telligence, V ol. 1813, Springer-Verlag, Berlin/Heidelber, 2000,
+pp. 265–284.
+[28] H. Takahashi and T. Takano, Analyzing the inﬂuence of over-
+conﬁdent investors on ﬁnancial markets through agent-based
+model, in: Intelligent Data Engineering and Automated Learn-
+ing, Lecture Notes in Computer Science, V ol. 4881, Springer-
+Verlag, Berlin/Heidelber, 2007, pp. 1042–1052.
+[29] L. Tesfatsion, Agent-based computational economics: growing
+economies from the bottom up, Artiﬁcial Life 8(1) (2002), 55–
+82.
+[30] J. Zirilli, Financial Prediction Using Neural Networks ,I n t e r -
+national Thompson Computer Press, London, 1997.

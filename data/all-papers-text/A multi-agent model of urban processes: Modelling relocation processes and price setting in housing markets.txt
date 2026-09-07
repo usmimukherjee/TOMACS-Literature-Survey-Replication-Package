@@ -1,0 +1,1256 @@
+A multi-agent model of urban processes: Modelling relocation processes
+and price setting in housing markets
+Dick Ettema *
+Utrecht University, Faculty of Geographical Sciences, Urban and Regional Research Centre Utrecht, PO Box 80.115, 3508 TC Utrecht, The Netherlands
+article info
+Article history:
+Received 10 September 2009
+Received in revised form 30 June 2010
+Accepted 30 June 2010
+Keywords:
+Agent based model
+Housing market
+Price setting
+abstract
+This paper introduces an agent-based micro-simulation model of housing market processes. The model
+describes aggregate housing market developments, such as price and turnover, as the outcome of house-
+holds’ decisions to search for a new dwelling, accept an offered dwelling or sell their dwelling. An impor-
+tant feature of the model is that households’ decisions are based on perceptions of housing market
+probabilities. Households update these perceptions based on observed bargaining outcomes in the mar-
+ket. The model was tested in a simulation experiment and appeared to respond plausibly to different
+market settings in terms of prices and households’ perception of the market.
+/C2112010 Elsevier Ltd. All rights reserved.
+1. Introduction
+Land use transport interaction (LUTI) models have been used
+for several decades to evaluate the impact of transportation and
+land use policies. LUTI models describe the mutual interaction
+between land use, transport and accessibility. That is to say,
+they model travel behaviour as a function of the spatial distri-
+bution of functions over space, but also recognise that urban
+development is at least partly inﬂuenced by accessibility. A cru-
+cial element in such models is to model how population, de-
+ﬁned by various segments, is distributed across space, since
+this distribution determines to a large extent which activity
+and travel patterns will evolve. The ﬁrst generation of LUTI
+models (e.g. Lowry, 1963 ) were aggregate models (see Timmer-
+mans, 2003 ), describing the allocation of population as an aggre-
+gate category. Increasingly, however, LUTI models have become
+disaggregate models, culminating in agent-based micro-simula-
+tion models (e.g. Benenson, 1998; Ettema, de Jong, Timmermans,
+& Bakema, 2006; Miller, Hunt, Abraham, & Salvini, 2004; Moeckel,
+Wegener, & Schwarze, 2005; Waddell et al., 2003 ), which de-
+scribe the location behaviour of individual households. These
+models not only adopt a representation of individual house-
+holds, but also deﬁne individual dwellings as spatially ﬁxed
+agents in the model. Given this level of detail, modelling the
+spatial allocation of population across space requires a proper
+representation of households’ decisions to locate into a certain
+dwelling and to switch from one dwelling to another. In other
+words, modelling housing markets becomes increasingly
+important in the context of agent-based LUTI models. It is
+important to note that housing prices play an important role
+in this respect. Competition for housing will increase prices,
+and may force households with smaller budgets to live in
+houses and in places which are not their ﬁrst preference. Even-
+tually, this will also impact on travel patterns, e.g. if they are
+forced to accept longer commute distances.
+Housing market processes and price formation have to some ex-
+tent been addressed by existing agent-based and/or land use mod-
+els. The ILUMASS model ( Moeckel et al., 2005; Wegener, 1985 )
+describes households’ relocations as a search process in which
+households evaluate dwellings one by one and accept a dwelling
+if it provides a signiﬁcant improvement over their current dwell-
+ing. However, the model does not describe how housing prices
+are the outcome of transactions between buyer and seller, which
+in turn depend on spending power and preferences of the buyer
+and perception of the market by buyer and seller. Instead, ILUMASS
+describes price setting as being determined by an aggregate
+function of the number of vacant dwellings in an area. Urbansim
+(Waddell et al., 2003 ) models the spatial distribution of population
+as a yearly allocation process, rather than as the outcome of
+individual housing careers. Price formation is modelled at an
+aggregate level using hedonic regression, which is not depending
+on the demand for housing in the market, but only on characteris-
+tics of the dwelling and its environment.
+Benenson (1998) describes a dynamic model in which the value
+of dwellings is a function of the economic status of residents and
+the value of surrounding houses. The relocation decision of house-
+holds is a function of economic status, local prices and cognitive
+dissonance. However, households do not have a perception of
+0198-9715/$ - see front matter /C2112010 Elsevier Ltd. All rights reserved.
+doi:10.1016/j.compenvurbsys.2010.06.005
+* Tel.: +31 30 2532918; fax: +31 30 2532037.
+E-mail address: d.ettema@geo.uu.nl
+Computers, Environment and Urban Systems 35 (2011) 1–11
+Contents lists available at ScienceDirect
+Computers, Environment and Urban Systems
+journal homepage: www. elsevier.com/locat e/compenvurbsys
+
+market conditions such as vacancy or prices. Also, there is no expli-
+cit representation of individual dwellings.
+Torrens (2007) describes a model based on geographical agents
+(GA), which may be either dwellings or households. This model is
+purely microscopic and introduces vacancy chains, i.e. a moving
+household occupies a vacant dwelling and adds its former dwelling
+to the vacant dwelling pool. Households search for a new dwelling
+after a stress-based relocation decision, using a random search
+methodology. Price setting of vacant dwellings is based on neigh-
+bourhood characteristics (such as average price in the neighbour-
+hood) and includes a discount mechanism to lower the price if a
+dwelling has been on the market for a longer time. It is, however,
+not based on market conditions.
+Taken together, existing multi-agent models of land use and
+residential relocation account well for households’ decisions about
+whether or not to relocate and what dwelling to accept, but repre-
+sentation of price formation takes place in a rather pragmatic, ad
+hoc way. As highlighted by Parker and Filatova (2008) , properly
+modelling land and housing markets in agent-based environments
+requires representation of the process of bidding between buyers
+and sellers, based on both sides’ expectations and perception of
+market opportunities. As a consequence, price cannot be inter-
+preted as an indicator of demand for housing and the potential
+for land development.
+Looking at the broader literature that focuses on modelling
+housing markets, various approaches are observed. A number of
+studies have developed formal economic models of the demand
+for dwellings/real estate ( Arnott, Braid, Davidson, & Pines, 1999;
+Martinez & Roy, 2004; Van der Vlist, Rietveld, & Nijkamp, 2002 ).
+These models typically are formal economic models, assuming that
+households/ﬁrms have complete information and act rationally.
+They also assume that the housing market develops into some
+equilibrium state, where supply, demand and prices are constant.
+For instance, Arnott et al. (1999) provide proof of the equilibrium
+in the housing market, following from aggregate functions of sup-
+ply and demand. These models are limited in that they fail to ac-
+count for the fact that agents in the housing market often have
+imperfect information and may be subject to budget constraints,
+which may lead to volatility of the market. Another aspect that
+they do not take into account is the inherent uncertainty of supply
+and demand in the housing market, which affects household deci-
+sion-making and also the market clearance process. These charac-
+teristics are related to a lack of speciﬁc representation of agents,
+preventing the representation of uncertainty and incomplete
+information adequately.
+Several studies (e.g. Tryfos, 1981; Ben-Shahar, 2002; Turnbull &
+Sirmans, 1993 ) have developed models of price setting and price
+taking under uncertainty. In general, these models acknowledge
+that households are uncertain whether a dwelling will sell at a cer-
+tain price within a certain period or whether a dwelling with cer-
+tain characteristics will be available in the market within a certain
+period. Assuming that households have some idea about the prob-
+ability of these events, the models describe how decisions are
+made that maximise the utility or the expected payoff. However,
+they assume that these probabilities are known and constant,
+whereas in reality these probabilities will change over time. As a
+consequence, these models do not describe how households/indi-
+viduals update their perception of certain market probabilities.
+Devisch, Timmermans, and Arentze (2009) account for this
+shortcoming by explicitly describing transaction as the outcome
+of a bargaining process between buyer and seller, in which buyers
+and sellers update their perceptions of market probabilities based
+on the outcomes of the bidding process. Devisch et al.’s model is
+the ﬁrst to acknowledge the fact that agents learn from market
+events and that they use this information in subsequent bidding
+decisions. However, their model is limited to a bilateral process,
+and ignores the fact that individuals will also learn from transac-
+tions between other agents in which they do not participate. In
+addition, Devisch et al. treat shadow utility (the expected utility
+from cutting of the bidding process and engage in a new bidding
+process with another agent) as exogenous, where it is in reality de-
+rived from observations of market transactions.
+Hence, it is concluded that a considerable literature on model-
+ling housing market processes is available that can be used to
+increase the theoretical underpinning and practical usefulness of
+LUTI models. In line with this observation, this paper presents a
+multi-agent model of household relocations, which describes
+household’s decision to search for another dwelling, the bargaining
+process between house sellers and house buyers and the price
+setting. Important aspects of the approach are:
+1. The incorporation of life cycle effects, leading to changed pref-
+erences over time.
+2. The modelling and updating of households’ perception of the
+availability and prices of dwellings, based on observed market
+transactions.
+3. The modelling of relocations as the outcome of a bargaining
+process.
+4. The impact of uncertainty on households decision-making
+processes.
+The model is implemented as a multi-agent model, implying
+that aggregate housing market characteristics such as price levels
+are the outcome of individual bargaining processes.
+The paper is organised as follows. Section 2 outlines the formal
+model of housing market behaviour that was developed. Section 3
+describes the organisation and operational decisions of a numerical
+simulation used to test the model. Section 4 describes the results of
+the numerical simulation in terms of consistency between behav-
+ioural parameters and context and aggregate market outcomes.
+Section 5, ﬁnally, draws conclusions about the model application
+and charts avenues for further research.
+2. Model description
+Underlying the model system are some central notions. The ﬁrst
+notion is that households have, at all times, the opportunity to
+enter the housing market in order to try to ﬁnd a dwelling that is
+more attractive than their current dwelling. Whether they decide
+to do so, depends on their assessment of the opportunities to
+improve their residential situation. In this respect, we deﬁne a
+set of vacant dwellings, from which a searching household can se-
+lect one. Each vacant dwelling (also termed an offered dwelling), is
+offered at a certain list price, i.e. the price at which the sellers
+wants to sell the dwelling. Second, when searching for a dwelling
+on the housing market, buyers will trade-off the utility of an of-
+fered dwelling against the utility of their current dwelling and
+the expected utility of other dwellings in the market. That is to
+say, they will not accept an offered dwelling if there is a reasonable
+probability of ﬁnding a dwelling with a higher utility in the market.
+Third, when selling a dwelling a household will set the list price
+such as to maximise the expected outcome, based on its perception
+of the probability of selling at a particular price. Fourth, percep-
+tions regarding the probability of selling and the probability of
+being offered a dwelling are updated based on perceived outcomes
+of bargaining processes. The various components of the model will
+be described hereafter in more detail.
+2.1. Searching for a new dwelling
+An important decision in the housing market process is house-
+holds’ decision to actively search for another dwelling. Following
+2 D. Ettema / Computers, Environment and Urban Systems 35 (2011) 1–11
+
+Brown and Moore (1970) we assume that this decision depends on
+a trade-off between the utility derived from the current dwelling
+and the perception of the utility that can be achieved by moving
+to another dwelling. In this respect, we assume that the utility of
+the current dwelling, Uc is a function of characteristics of the dwell-
+ing XD
+i
+/C16/C17
+(e.g. number of rooms, dwelling type, price) and of the
+household XH
+i
+/C16/C17
+(e.g. household composition, income, life cycle
+stage), as in many models of residential preference (e.g. Clark &
+Onaka, 1983; Walker & Li, 2006 ). In equation:
+Uc ¼ fX D
+1 ; ... ; XD
+n ; XH
+1 ; ... ; XH
+n
+/C16/C17
+ð1Þ
+In our model system, the parameters in the utility function are
+treated as exogenous, i.e. representing the intrinsic valuation of a
+dwelling. The same parameters are used to deﬁne the utility de-
+rived from different dwellings. This may be concrete dwellings
+(such as the current or an offered dwelling) or the utility based
+on expected dwelling characteristics (such as the optimal dwelling
+Uo. In this respect, we assume that households hold a perception of
+the optimal utility Uo that they can obtain from the market. This
+optimal utility is the outcome of households’ perception of the
+housing market. Each household will observe other dwellings that
+are available in the market, through adds, Internet, by personal vis-
+it or through hearsay. In particular, we assume that the optimal
+utility is the maximum of the utilities of all dwellings a household
+has perceived in some predeﬁned period:
+Uo ¼ maxðU1; U2; ... ; UnÞð 2Þ
+The optimal utility also depends on characteristics of the dwell-
+ing and of the household itself. Note that the concept of optimal
+utility, does not imply that households optimise their utility by
+exhaustively evaluating a choice set. Instead, they apply a satisﬁc-
+ing mechanism as we will see later. The optimal utility serves to
+trigger households to start a dwelling search process. If the optimal
+utility is larger than the current utility, a household may be trig-
+gered to start searching for another dwelling. However, the differ-
+ence should exceed some threshold value Ts to warrant the costs
+involved in searching and an eventual move:
+Uo > Uc þ Ts ð3Þ
+A straightforward interpretation of the threshold value would
+be to represent the cost of moving, which is balanced against the
+gain in utility. Note that a discrepancy between the utilities of
+the current and the optimal dwelling may be due to various rea-
+sons. First, the utilities of the current dwelling may change because
+of a change in households’ characteristics, e.g. the household com-
+position or the work location. In addition, other dwellings may
+become more attractive, for instance because the household in-
+come has increased. Finally, there may be new dwellings that are
+added to the market that lead to a change in Uo, while leaving Uc
+unchanged. It should also be noted that the optimal utility is only
+an abstract notion that triggers the household to start exploring
+the housing market. The eventual decision to relocate depends
+on many more factors, such as the actual availability of dwellings
+and the household’s perception of it and the outcome of the bar-
+gaining process. This process also includes a trade-off between
+immediate buying/selling of a dwelling versus waiting for a more
+attractive offer and saving or losing money (see Sections 3.2 and
+3.3).
+2.2. Searching and negotiating
+Once a household has decided to enter the housing market to
+search for a new dwelling, its ﬁrst step is to search for available
+dwellings. In this respect, we assume that a household will search
+in databases of available dwellings, and that each dwelling has the
+same probability of being noted by the searching household. We
+further assume that the number of available dwellings a household
+can evaluate is limited to n dwellings. Once an available dwelling
+constitutes a sufﬁcient improvement over the current dwelling,
+the household decides to engage in a bargaining process. This con-
+dition is expressed as:
+Ui > Uc þ Tn ð4Þ
+where Ui is the utility of the ith evaluated dwelling. In the bargain-
+ing process, we assume that a buyer decides whether or not to ac-
+cept an available dwelling at the listed price. This approach is
+different from Devisch et al.’s approach, who allow for buyer and
+seller to engage in a process of bidding and counter bidding.
+Although it is recognised that a process of bidding and counter bid-
+ding constitutes a realistic description of housing market processes,
+we feel that the procedure proposed here adequately represents
+buyers’ and sellers’ considerations regarding acceptance of an of-
+fered dwelling or setting a list price, especially since the perception
+of market probabilities is explicitly modelled. Note also that we as-
+sume one-to-one negotiations between buyer and seller, and do not
+consider transactions as the outcome of auctions. This is done since
+the vast majority of transactions on the Dutch housing markets is
+the outcome of one-to-one negotiations.
+For the buyer to accept the offered dwelling, two conditions
+need to be met. First, the utility of the offered dwelling should con-
+stitute a sufﬁcient improvement over the current dwelling. In
+equation:
+Ui > Uc þ Tb ð5Þ
+Since our current model does not include a bidding/counter bid-
+ding process, the most reasonable assumption would be that
+Tb = Tn. The second condition that needs to be met is that the utility
+of the offered dwelling ( Ui) is larger than the expected utility of
+other dwellings in the market. In other words, a household will
+not accept the offered dwelling if it believes that there is a reason-
+able probability of ﬁnding a more attractive dwelling within a rea-
+sonable time. The expected utility of other dwellings is deﬁned
+relative to the optimal utility Uo. The expected optimal utility
+(E[Uo]) than expresses the utility derived from the optimal dwell-
+ing (Uo) weighted against the probability of obtaining such a dwell-
+ing (further details are provided in Section 3.4). Thus, if both
+necessary conditions are met, ( Ui > Uc + Tb and Ui > E[Uo]), the
+household will decide to buy the dwelling. By deﬁnition, this im-
+plies that the list price, which is accepted, is lower or equal than
+the WTP, deﬁned in economic theory as the maximum price a
+household would want to pay based on its preferences, budget
+and the dwelling characteristics. Although WTP is not a factor in
+our model as such, it would in our approach depend not only on
+dwelling and buyer characteristics, but also on the perception of
+the market, as represented by E[Uo]. If a buying household accepts
+an offered dwelling, it will move to that dwelling, and becomes a
+seller of the original dwelling. That is to say, it will determine
+the appropriate list price (see Section 3.3) and wait for a buyer
+to accept. The model does not include a direct link between the
+price obtained for the previous dwelling and the ability to but
+the new house. Implicitly, this is accounted for by changes in the
+cost sensitivity parameter in Eq. (13) resulting in higher income
+households having a preference for larger and more expensive
+dwelling. In line with practice on the Dutch housing market,
+households buy a dwelling before selling their current one. They
+respond to not selling the dwelling by lowering the list price, in
+the end avoiding a situation of being stuck with two dwellings.
+As noted before, the model assumes that the buyer either accepts
+the offered dwelling or withdraws from the bargaining process.
+This might lead to slightly different results as compared to a
+D. Ettema / Computers, Environment and Urban Systems 35 (2011) 1–11 3
+
+situation where buyers and sellers engage in a Nash bargaining
+procedure with bidding and counter bidding. In particular, if the
+willingness-to-pay of the buyer exceeds the list price set by the
+seller, both agents would be expected to bargain about the distri-
+bution of the consumer surplus. Consequently, the model proposed
+here tends to overpredict the price of realised prices by allocating
+the full consumer surplus to the seller. On the other hand, the list
+price is set by the seller based on the expectation of being able to
+sell the dwelling at time t + 1 if the bargaining process at time t
+fails. This will decrease the sellers willingness to settle for a lower
+price than the list price. Nevertheless, we acknowledge that the
+model could beneﬁt from including a procedure of bidding and
+counter bidding analogous to Devisch et al. (2009) . The emphasis
+of the current model has, however, been on representing the effect
+of the presence of other buyers and sellers on price formation, in
+which case agents’ perceptions of the probabilities of selling and
+receiving an offer and the expected value of selling/buying later
+are crucial (see e.g. Coles & Muthoo, 2003 ).
+2.3. Setting the list price
+As noted before, a household searching a dwelling will respond
+to the list price set by the selling household. We assume that a sell-
+ing household sets the list price L such as to maximise the expected
+selling price ( E[L]). In determining the expected price, we follow
+Tryfos (1981) reasoning. First we assume that for each potential list
+price Li, there is a probability Ps(Li) of selling the house within a gi-
+ven time period. This probability is endogenous and is updated
+based on simulated transaction (see Section 3.5). Obviously, the
+higher the price, the smaller the probability of selling the dwelling.
+In addition, it is assumed that if the dwelling is not sold in period 1,
+it is offered at a reduced list price in period 2, thereby increasing
+the probability of selling. If the dwelling is not sold in period 2 it
+is again offered at a reduced list price in period 3. Following this
+reasoning, the expected price based on list price Li (E[Li]) equals:
+EðLiÞ¼ PsðLiÞLi þð 1 /C0 PsðLiÞÞð1 /C0 d1ÞEða1LiÞð 6Þ
+where d1 is a discount factor, accounting for the disutility of a later
+payoff and a1 is a factor representing the decrease in the list price
+per time step. Thus, using the recursive formulation (6), the
+expected payoff for each list price can be determined. The house-
+hold will then choose the list price resulting in the highest payoff.
+L ¼ max
+i
+½EðLiÞ/C138 ð 7Þ
+In the current model formulation a1 is deﬁned as exogenous. In
+reality, a1 should be based on a seller’s perception of selling prob-
+abilities. For instance, if demand is high the drop of list price
+should be less to maximise the proﬁt. If sellers are assumed to
+act rationally, they may be expected not only to optimise over Li
+but also over a1. In the current version, a1 represents a general no-
+tion that the list price is lowered the longer a dwelling is on the
+market, although the sensitivity of the outcome on a1 is tested in
+various scenarios. In economic theory (see Parker & Filatova,
+2008), the seller would have a certain willingness to accept
+(WTA), which depends on characteristics of the offered dwelling
+and ﬁnancial resources held by the seller. WTA is not represented
+as such in our model, since buyers do not make counter bids and
+only accept (or not) a list price. However, we note that a seller
+would trade-off a counter bid against the option not to sell to the
+buyer and offer at a reduced price in the market. The expected out-
+come of the latter would then determine his WTA.
+2.4. Expected utility of the optimal dwelling
+Likewise, a buying household will make an assessment of the
+expected utility of any dwelling in the market. This expected utility
+is based on the optimal utility Uo, which is based on characteristics
+Xo and Lo. In this respect, we assume that each household has a per-
+ceived probability Po(Xo, Lo) of being offered a dwelling at the opti-
+mal price Lo. We assume that if the household is not offered the
+dwelling at price Lo, it will increase the price it wants to pay with
+a factor a2, thereby increasing the probability Po(Xo, a2Lo) of receiv-
+ing an appropriate offer, but reducing the utility U(Xo, a2L) derived
+from the dwelling. More precisely, the expected utility of an ab-
+stract dwelling with characteristics X and price L can be expressed
+as
+EUðX; LÞ¼ PoðX; LÞUðX; LÞþð 1 /C0 PoðX; LÞÞð1 /C0 d2ÞEUðX; a2LÞð 8Þ
+where d2 is a discount factor representing the disutility of having to
+wait longer for a new dwelling.
+2.5. Perception updating
+In the above, we have deﬁned the setting of the list price and
+the expected utility, based on the probability of selling and the
+probability of receiving an offer of a particular dwelling at a partic-
+ular price. The probability of selling is deﬁned as:
+PsðX; LÞ¼ 1=ð1 þ expðb1 þ b2ðL /C0 SðXÞÞ ð 9Þ
+The probability of receiving an offer is deﬁned as:
+PoðX; LÞ¼ 1=ð1 þ expðc1 þ c2ðL /C0 SðXÞÞ ð 10Þ
+where SðXÞ is the average price of a dwelling with characteristics X.
+Since, in our application size is the only characteristic of dwellings,
+SðXÞ is determined based on the average price per size unit, derived
+from simulated transaction in the previous time period. Thus, we
+assume that the probability of selling and receiving an offer
+depends on the difference between the list price and the average
+market price of a particular dwelling. A higher list price reduces
+the probability of the dwelling being sold, and a lower required
+price (by a buyer) reduces the probability of an offer. According to
+our model, individuals’ beliefs of the above probabilities are repre-
+sented by ‘beliefs’ they hold regarding the parameters beta and
+gamma. In this respect, we assume that individuals update their
+perceptions regarding the parameters b1, b2, c1 and c2 according
+to a Bayesian updating procedure ( Curlette, 2006 ). The Bayesian
+procedure is based in Bayes Theorem, which is deﬁned as:
+PðAjBÞ¼ PðBjAÞPðBÞ
+PðAÞ ð11Þ
+where P(A|B) is the probability of A given evidence B, P(B|A) is the
+probability of B given A, and P(A) and P(B) are the a priori beliefs
+about the probability of A and B. The formula can be used to update
+the a priori belief about the probability of A, given new evidence B.
+For instance, to describe someone’s belief updating about the prob-
+ability that it will rain given that it is cloudy, we could rewrite Eq.
+(11) as:
+PðrainjcloudyÞ¼ PðcloudyjrainÞPðrainÞ
+PðcloudyÞ
+¼ PðcloudyjrainÞPðrainÞ
+PðcloudyjrainÞþ Pðcloudyjno rainÞ ð12Þ
+Assuming the a priori expectation of rain ( P(rain)) is 0.5, that it
+is always cloudy when it rains ( P(cloudy|rain) = 1) and that the
+probability that is cloudy if it does not rain ( P(cloudy|no rain )) is
+0.6, the belief that it will rain given that it is cloudy becomes:
+4 D. Ettema / Computers, Environment and Urban Systems 35 (2011) 1–11
+
+PðrainjcloudyÞ¼ 1 /C3 0:5
+1 /C3 0:5 þ 0:6 /C3 0:5 ¼ 0:625 ð13Þ
+In a similar vein, we assume in our model that buyers and sell-
+ers update their a priori beliefs about the correct parameters b1 and
+b2 (or c1 and c2) based on observations of transactions and their
+likelihood given the initial parameters. In this respect, we assume
+that individuals evaluate a limited number of candidate solution
+sets, being combinations of b1 and b2 (or c1 and c2) values. It is as-
+sumed that values of b1 and b2 (or c1 and c2) can take a limited
+number of values, deﬁned as 90%, 95%, 100%, 105% and 110% of
+the current value. For instance, when updating the Ps(X, L) function,
+the probability that a set of parameters b equals the ‘‘true” set b/C3
+equals:
+Pðb ¼ b/C3 jX1 ... Xn; L1 ... Ln; r1 ... rnÞ
+¼ Pðb ¼ b/C3 ÞPðX1 ... Xn; L1 ... Ln; r1 ... rnjb ¼ b/C3 Þ
+PðX1 ... Xn; L1 ... Ln; r1 ... rnÞ ð14Þ
+In this equation, P(b = b/C3 ) is the a priori probability of b being
+the correct set of parameters. Since in our approach we do not
+work with a ﬁxed set of solutions, but rather deﬁne them relative
+to the most recent estimates, we assume that the a priori probabil-
+ity for all solutions is equal. PðX1 ... Xn; L1 ... Ln; r1 ... rnjb ¼ b/C3 Þ
+represents the probability of a certain set of transaction outcomes,
+given that b is the correct set of parameters. That is to say, the
+probability is derived from observed transactions (sales) and how
+likely they are according to parameters using Eq. (9). This implies
+that we can calculate this probability as the relative goodness-of-
+ﬁt in a similar way as in discrete choice model estimations.
+PðX1 ... Xn; L1 ... Ln; r1 ... rnÞ, ﬁnally, represents the probability that
+a series of particular bargaining outcomes occurs. Although this
+probability can be derived from the probabilities P(b = b/C3 ) and
+PðX1 ... Xn; L1 ... Ln; r1 ... rnjb ¼ b/C3 Þ, it effectively serves to scale
+the sum of the probabilities Pðbi ¼ b/C3 jX1 ... Xn; L1 ... Ln; r1 ... rnÞ
+to unity.
+Thus, effectively, Eq. (11) weights the various sets of possible
+parameters by their goodness-of-ﬁt to the observed data. If we
+term Pðbi ¼ b/C3 jX1 ... Xn; L1 ... Ln; r1 ... rnÞ P(bi) for convenience,
+the new set of parameters is calculated as:
+b ¼
+P
+i¼1;...;N biPðbiÞ
+N ð15Þ
+It is noted that the probabilities of selling and receiving an offer
+are, in reality, not independent of each other. If demand is higher,
+the probability of receiving an offer will diminish whereas the
+probability of selling will ceteris paribus increase. Assuming that
+the Bayesian updating procedure of beliefs is sufﬁciently efﬁcient,
+similar trends would be expected in the perceived probabilities of
+selling and offering. In the case of selling probability, the probabil-
+ity of selling an ‘average’ dwelling should be related to the percent-
+age of vacant dwellings sold per period. It should be noted
+however, that this relationship is not one-to-one, due to heteroge-
+neity in the characteristics of vacant dwellings.
+It is also important to note that our model assumes that all
+households are continuously able to update their perceptions with
+respect to the probability of selling and receiving an offer. Thus,
+also after having completed a transaction, households update their
+perception of the functions (9) and (10) based on bargaining pro-
+cesses and transactions that take place in the market. This may
+lead to a new relocation if the household believes that it can im-
+prove its residential utility according to Eqs. (1)–(3). At this stage
+of the research we have not speciﬁed in detail how the perception
+of bargaining processes and transactions takes place, and we sim-
+ply assume that event e will be known by household h with prob-
+ability p.
+One way in which information is transferred is through mecha-
+nisms such as social learning, in which households learn from
+events experienced by other households that form part of the so-
+cial network, and with whom information is exchanged. Modelling
+this mechanism would however imply the detailed modelling of
+social networks, which we consider a topic for future research.
+Other sources from which information about market transactions
+can be obtained are the Internet or newspaper ads. Representing
+such information acquisition processes falls however outside the
+scope of the current research. Therefore, we adopt the above ap-
+proach, reﬂecting the intuitive notion that each household, even
+when not actively exploring the housing market, will have some
+perception of market characteristics such as the average price level
+and the probability of ﬁnding/selling a dwelling at a particular
+price.
+2.6. To conclude
+The interaction between the various decision-making aspects
+described above is summarised in Fig. 1. The ﬁgure illustrates that
+both buying and selling households base their decisions on their
+perception of the housing market, represented by information
+about transactions in the previous period and the availability of
+vacant dwellings.
+After having updated their perceptions, they decide whether to
+search, negotiate (for a buying household) and how to set the list
+price (for a selling household). When an offered dwelling is ac-
+cepted, this results in a transaction, which then again serves to up-
+date perceptions and beliefs in the next time step. A crucial aspect
+is that households learn about market probabilities and prices
+based on observed transactions.
+Our approach bears resemblance to the approach by Filatova,
+Parker, and van der Veen (2009) in that both models apply an
+agent-based concept, in which buyers and sellers negotiate about
+transactions in a land or housing market, and that aggregate price
+levels result from individual decisions to but or sell. However,
+there are also differences. First, willingness-to pay (WTP) in our
+model is directly related to probabilities of obtaining a utility in
+the longer run versus the price paid now. Thus, it is directly based
+on perception of the market (i.e. probabilities of getting an offer,
+updated by perceived market transactions) and not indirectly mod-
+iﬁed using the number of buyers and sellers, as in Filatova et al.
+(2009). Our model, unlike Filatova et al.’s (2009) model, is not spa-
+tially explicit, and does not incorporate distance. This could be
+added, but assumptions would have to be made about how the
+geographical location of dwellings, relative to facilities and other
+functions, adds to the attractiveness of the dwelling. Also, our
+model does not describe land transactions and spatial develop-
+ments (as Filatova et al. (2009)), but (re)allocation processes within
+a ﬁxed dwelling stock, given individual dynamics of households.
+At this stage, it should be emphasized that the model proposed
+in this paper was deliberately designed as a micro-simulation
+model, that yields insight into the impact of changes in (here)
+exogenous variables such as the percentage of vacant dwellings
+without formally requesting that equilibrium is reached. Formally,
+this approach is in line with complexity theory, in that it assumes
+path dependency and that it formally allows for the fact that prob-
+abilistic procedures may give different outcomes based on identi-
+cal starting values.
+From a more practical point of view, it is noted that the com-
+plexity of our model makes formal proof of convergence problem-
+atic. We are aware that several studies describe analytical
+approaches to ﬁnd the necessary conditions for convergence of
+market systems ( Nyarko, 1997; Schinkel, Tuinstra, & Vermeulen,
+2002). It is noted, however, that the model presented in this paper
+is different in structure. First, it does not include an exogenous
+D. Ettema / Computers, Environment and Urban Systems 35 (2011) 1–11 5
+
+demand function, but instead demand is represented by house-
+holds deciding to acquire a house, which is endogenously mod-
+elled. Second, households in the system are buyers and sellers
+simultaneously, implying that they are responsible for both supply
+and demand and act as buyers and sellers. In addition, agents are
+dynamic in terms of their preferences and may enter or exit the
+market. These additional conditions make analytical proof of mod-
+el convergence increasingly difﬁcult. This is even more the case if
+the model (as is our intention) will be linked to models of demog-
+raphy, transportation and economic activity, as part of an urban
+simulation model system ( Ettema et al., 2006 ).
+Nevertheless, the value of the model depends on its ability to
+simulate in a realistic way the responses on different situation in
+the housing market. To this end, we tested robustness and conver-
+gence behaviour through an empirical approach (see Section 5).
+Not only did we test whether repeated runs lead to similar equilib-
+ria in terms of price and number of transactions, we also tested
+whether changes in housing market lead to plausible results.
+3. Numerical simulation
+3.1. Implementation
+The model described in the above was tested in a numerical
+simulation to test whether the effect of various variables has the
+expected effect. The simulation includes 600 households, deﬁned
+by income and age, and 600 + n dwellings, that are deﬁned by their
+size only. Hence, there are fewer households than dwellings, as in
+the real housing market. Obviously, both households and dwellings
+can be characterised by a much wider range of variables. The
+restriction to size and income has been applied for convenience
+here, but the approach can easily be extended to more variables
+without loss of generality. At the start of the simulation, incomes,
+ages and sizes are randomly assigned to households and dwellings,
+in the following ranges:
+/C15 Household income: this is represented in a cost sensitivity
+parameter ( u2) ranging from [ /C0 0.25 to /C0 0.75].
+/C15 Household age [0–30 years].
+/C15 Dwelling size [300–600 m 3].
+In addition, it is assumed that households derive a utility from a
+dwelling speciﬁed as:
+Ui ¼ u1sizei þ u2 cos ti ð16Þ
+Finally, since size is the only attribute of dwellings, we can de-
+ﬁne a general price level as:
+/C22s ¼
+P
+i¼1;...;N Li=sizei
+N ð17Þ
+where Li is the price at which dwelling i is sold. The model is initial-
+ised by the following actions:
+1. Determine the initial values of u, b, c and /C22s (see Table 1 ). The
+values u1, u2 and /C22s are more or less arbitrary. b and c parame-
+ters were selected to represent more or less realistic initial
+probabilities that dwellings are sold or offered.
+2. Determine list prices for all dwellings. Given sellers’ percep-
+tions of a dwelling being sold for a particular price (according
+to Eq. (9), based on the initial values of beta) the list price is
+set such that the expected price is maximised (see Eq. (7)).
+3. Assign households to a dwelling using a discrete choice model
+(multinomial logit model or MNL, Ben-Akiva & Lerman, 1985 )
+l, based on the utility function (16). The MNL model assigns a
+household to a dwelling with a probability proportional to the
+exponent of the utility, as deﬁned by Eq. (13). To this end, each
+household is randomly offered 10 dwellings, and it then
+Updating perception of
+- prob. of an offer
+- prob. of selling
+- current utility
+- expected optimal utility
+pool of transactions
+pool of vacant and non-vacant dwellings
+decide to
+-s e a r c h
+- negotiate
+- accept offer
+- relocation
+- current dwelling becomes  
+vacant
+pool of transactions
+pool of vacant and non-vacant dwellings
+Updating perception of
+- prob. of an offer
+- prob. of selling
+- current utility
+- expected optimal utility
+Setting the listprice
+Offer a dwelling
+Transaction
+t-1
+t
+Fig. 1. Dynamic process of housing market transactions.
+6 D. Ettema / Computers, Environment and Urban Systems 35 (2011) 1–11
+
+chooses a dwelling according to the probabilities of the MNL
+choice model. As a consequence, households may be forced to
+choose from a suboptimal choice set, which does not include
+their optimal dwelling. This represents limitations in the hous-
+ing market, which may also occur in reality. It also creates a
+base for further simulation, where households may improve
+their residential conditions in the course of years. Note that
+the MNL model is only used to initialise the model, and that
+housing transactions during simulation are based on the more
+advanced search and negotiation system outline above.
+4. For each household, the optimal utility is determined. Since the
+optimal utility is based on observations of other dwellings, we
+randomly draw 10 dwellings for each household. For each
+dwelling, the utility to the household is determined (based on
+size and cost sensitivity). The maximum utility of the 10 dwell-
+ings is considered to be the optimal utility.
+Once the model is initialised, the housing career of each house-
+hold is simulated during a number of time periods. Since this is a
+numerical simulation used to illustrate the model mechanisms,
+the duration of the time periods is arbitrary and does not necessar-
+ily represent one year. Since prices are lowered at the end of each
+period, it would be logical to assume that each time step represents
+a period of several months.
+3.2. Transactions
+In each time period, we simulate a number of events for each
+household. First, given a households’ current utility Uc and its opti-
+mal utility Uo, it is determined whether the household decides to
+search for a better dwelling, using equation 3 and assuming a
+threshold values Ts of 1.05. Thus we assume that the household
+should anticipate an increase in utility of at least 5% to warrant a
+search for another dwelling.
+If a household decides to search for another dwelling, it is as-
+sumed that within each time step, it evaluates 10 dwellings to ﬁnd
+out if it is useful to further explore the offered dwelling. To this
+end, up to 10 vacant dwellings are randomly drawn. The ﬁrst
+dwelling that meets condition 4 is further investigated to ﬁnd
+out if it should be purchased. If none of the dwellings meets the re-
+quired condition, the household decides not to move.
+As noted before, the household will, before accepting he dwell-
+ing, check the probability of ﬁnding a more attractive dwelling in
+the market. Thus, the offered dwelling is accepted if the following
+conditions hold:
+Ui > Uc þ Tb and Ui > E½Uo/C138ð 18Þ
+The above process is simulated for each household. In this re-
+spect, it is assumed that a dwelling can be sold only once during
+each time period, reﬂecting the time needed for transactions. This
+implies that in case of a high demand for dwellings, the available
+dwelling stock can be sold out. To assure that the probability of
+ﬁnding a new dwelling is ceteris paribus equal for all households,
+they are processed in random order. If a household accepts the of-
+fered dwelling, a transaction takes place. The household is re-
+corded as the owner of the new dwelling. Their old dwelling
+becomes vacant and is available on the housing market. As noted
+previously, we assumed, in line with Dutch practise, that buyer
+and seller negotiate one-to one, and that buyers do not compete di-
+rectly with each other in an auction. Indirectly, however, competi-
+tion is accounted for. More buying households (or fewer vacant
+dwellings) will lead to a higher probability of selling (also per-
+ceived) and to higher list and sales prices.
+3.3. Belief updating
+As explained before, outcomes of negotiations are used to up-
+date beliefs. In theory, this would take place on the individual level,
+implying that each individual household has its own probability
+functions (9) and (10) . That is to say, a household would observe
+a number of transactions (which would be different for each
+household) and based on that update its beliefs. In a large-scale
+simulation, this would be computationally burdensome. In addi-
+tion, much of the knowledge is in reality institutionalised in organ-
+isations such as real estate agents, who have a strong impact on
+households’ price setting and acceptance of dwellings. In addition,
+the availability of databases on the Internet makes sure that every-
+one has access to more or less the same information. For these rea-
+sons, the numerical example uses a single updating mechanism for
+all households simultaneously. It is assumed that there exists one
+general belief regarding prices and market probabilities. Although
+this ignores the fact that individuals will have different beliefs, it
+still represents that fact that households have different perceptions
+under different market situations. In addition, working toward an
+individual belief updating mechanism can take place at a later
+stage without materially changing the approach.
+The updating of the beliefs about the probability of selling (Eq.
+(9)) is based on observations of vacant dwellings in the market. For
+each dwelling, the list price in relation to the average market price
+is known, as well as the fact whether the dwelling was sold. Using
+the Bayesian updating procedure, this information is used to up-
+date the values of b1 and b2. Likewise, for each household, the opti-
+mal dwelling and the associated utility is known. For this dwelling
+the list price relative to the average market price is also known.
+During the simulation, we record whether a dwelling with similar
+utility is offered to the household. Again, this provides the input to
+the Bayesian updating procedure, resulting in updated values of c1
+and c2. Finally, the average price level /C22s is updated by calculating
+the average price/m 3 for all sold dwellings in the time period.
+3.4. Updating dwellings and households
+Following each time step the households and dwellings are up-
+dated. First, households’ age is adjusted. As a consequence, their
+cost sensitivity will diminish, reﬂecting a structural increase in in-
+come due to career development. In addition, the cost sensitivity
+(in real terms) may further reduce due to inﬂation. Thus given that
+ut
+2 is the cost sensitivity parameter at time t, utþ1
+2 equals:
+utþ1
+2 ¼ ut
+2jk ð19Þ
+where j is a factor (<1) accounting for diminishing cost sensitivity;
+k is a factor (<1) accounting for inﬂation.
+Since their preferences have changed (and possibly also the
+housing market), the optimal utility is determined again, using
+the same procedure described previously. Thus, both housing mar-
+ket conditions and changed preferences may lead to a change in
+the optimal utility, which in turn may trigger a relocation attempt.
+In addition, we assume that the population of households is dy-
+namic. That is to say, old households (of say 30 years) will leave
+Table 1
+Initial settings of parameters.
+Parameter Initial value
+u1 0.1
+u2 /C0 0.025 to /C0 0.075
+b1 0
+b2 10
+c1 2
+c2 /C0 10
+/C22s 1.2
+D. Ettema / Computers, Environment and Urban Systems 35 (2011) 1–11 7
+
+the housing market, and will in turn be replaced by new house-
+holds of age 0. In case of such an event, the dwelling of the house-
+hold leaving the population becomes available. The new household
+is assigned a random cost sensitivity, and chooses an available
+dwelling using the MNL model outlined before. Note that the total
+number of households remains constant, as does the number of va-
+cant dwellings.
+Following the updating of beliefs about market probabilities,
+the list prices of available dwellings are updated. This is necessary
+since a change in demand, for instance leading to a smaller proba-
+bility of selling, will lead to a different list price. Thus, using the up-
+dated probability functions (9) and (10) , the list price of all vacant
+dwellings is determined, using Eqs. (6) and (7). In order to reﬂect
+heterogeneity in the population, we assume that the discount fac-
+tor is not constant but is a stochastic variable, drawn from a uni-
+form distribution.
+3.5. Scenarios
+The model was run under a number of different scenarios, to
+test the sensitivity of the model to different market conditions.
+These scenarios are deﬁned relative to a base scenario with the fol-
+lowing settings:
+/C15 A vacancy rate of 5% (30 dwellings).
+/C15 Threshold values Ts and Tn of 1.05.
+/C15 A discount factor d1 with mean 0.035 (or 3.5%), drawn from
+interval [0.00–0.07] (representing the disutility of selling the
+dwelling at a later stage).
+After ﬁrst investigating the base scenario, the following scenar-
+ios will be tested relative to the base scenario:
+/C15 Vacancy rates of 20% (120 dwellings), 10% (60 dwellings) and
+2.5% (15 dwellings).
+/C15 Threshold values Ts, Tn and Tb of 1.10.
+/C15 Average discount factors of 0.02 (or 2% interval [0–4%]) and 0.06
+(or 6% interval [0–12%]).
+In each scenario, the model is run for 200 time steps. The result-
+ing market situation is then described using the following
+indicators:
+/C15 UTIL: the average utility that households derive from their
+dwelling,
+/C15 UOPT: the average optimal utility households perceive,
+/C15 Price: the average dwelling price per m 3,
+/C15 %wait: the percentage of households that is offered a dwelling,
+but does not accept it in anticipation of a better dwelling,
+/C15 P0s: the probability that a ‘standard’ dwelling is sold,
+/C15 P0o: the probability of receiving an offer with utility equal to Uo
+or higher,
+/C15 %sold: the percentage of vacant dwellings that is sold in a cer-
+tain time period,
+/C15 #search: the number of households searching a new dwelling,
+/C15 #sold: the number of households buying a dwelling.
+For each scenario, 100 runs were carried out, allowing us to test
+the stability and robustness of the model.
+4. Results
+4.1. Base scenario
+Figs. 2–5 represent the simulation process in the base scenario,
+based on one model run. Comparisons with other runs (not
+included in this paper) suggest that similar patterns arise for the
+other runs. Fig. 2 indicates that in the beginning of the process,
+about 300 households decide to search for a new dwelling, caused
+by a discrepancy between their current and optimal utility. Appar-
+ently, the initial assignment does, for many households, not result
+in a satisfactory dwelling, leading to a high share of households
+searching for another dwelling. During the simulation, the number
+of households searching for a dwelling drops to 160 after about 25
+steps, but then increases to about 400. This may be caused by the
+increasing difference between actual and optimal utility (see Fig. 5)
+which triggers households to look for a more attractive dwelling.
+The number of households that actually succeeds in ﬁnding a
+new dwelling is much lower (20–30) due to the limited amount
+of available dwellings and the limited number of dwellings a
+household can evaluate. This number is rather stable throughout
+the simulation, most likely due to the restriction in the number
+of available dwellings.
+Fig. 3 suggests that the list price and actual price of an average
+dwelling steadily increase during the simulation period, to stabilise
+at about 1000 after 120 time steps. This suggests that the initial
+market price assumed at the start of the simulation is too low
+and does not properly represent supply and demand. We ﬁnd that,
+given sellers perception of selling probabilities, list prices are set
+higher than current market prices, and that sufﬁcient buyers are
+willing to pay these higher prices. The sellers who do not sell in
+a period will lower their prices, so that the actual increase in mar-
+ket prices is less than the difference between list prices and current
+market prices. This process goes on during the duration of the sim-
+ulation. Eventually, the increase will lead to a decrease in demand,
+lower probabilities of selling and lower list prices, leading to a sta-
+bilisation of the prices.
+It should be noted that there are two aspects that make this
+steady increase possible. First, the model allows households who
+sell their dwelling to use the revenue of their old dwelling to ﬁ-
+nance their new dwelling. As a result, price increases in the market
+affect households already owning a dwelling much less serious.
+However, for households who are new to the market and have
+not yet accumulated capital as a result of increased house prices,
+the utility of a new dwelling will be much lower. This mechanism
+accounts for the steadily decreasing utility. Second, the model in its
+current formulation does not take into account budget constraints,
+stemming from the fact that only a limited amount of household
+income can be spent on housing costs. In the current formulation,
+households entering the market will buy the most attractive dwell-
+ing offered to them, even if it would exceed reasonable budget lim-
+itations. Consequently, a decrease in demand due to excessive
+prices is not represented to the extent required. Incorporation of
+0
+50
+100
+150
+200
+250
+300
+350
+400
+450
+1 21 41 61 81 101 121 141 161 181
+time step
+nrsearch
+nrsold
+Fig. 2. Development of number of households searching and buying a dwelling.
+8 D. Ettema / Computers, Environment and Urban Systems 35 (2011) 1–11
+
+budget constraints is therefore seen as a ﬁrst important extension
+to the model.
+We ﬁnd that the perceived probability of being offered a dwell-
+ing with the optimal utility develops to about 30–25% ( Fig. 4). The
+share of households that decides not to accept an offered dwelling
+even if the utility of the offered dwelling ﬂuctuates strongly during
+the simulation period, possibly due to the rather small numbers
+concerned here. On average 30–40% of the households adopt this
+strategy.
+Finally, Fig. 5 suggests that the average current and optimal
+utility steadily decrease during the simulation. This is due to the
+increase in prices that is observed. The price stabiles after about
+120 time steps, after which the utilities also stabilise.
+With respect to the robustness of the proposed model, it is
+noted that the model was tested extensively, by running it 100
+times for the same base settings. These analyses indicated a large
+stability in modelled results. For instance, the average predicted
+price level was 2.21 with a standard deviation of 0.06. With respect
+to convergence behaviour, we found that all 100 runs displayed
+similar convergence behaviour. That is to say, the average change
+in the price level is less than 0.1% over the last 10 time steps. Thus,
+this empirical analysis indicates that the model is robust in the
+sense of predicting the same outcome under similar inputs and
+consistently converges into equilibrium.
+4.2. Different vacancy rates
+The results of scenarios with different vacancy rates are dis-
+played in Table 2 , and reﬂect the effects of various mechanisms.
+An important factor is the percentage households who turn down
+an offered dwelling, in anticipation of a better offer. We ﬁnd that
+this percentage is higher for higher vacancy rates (10–20%), since
+more dwellings are available, and thus the probability of being of-
+fered a better dwelling is large. However, also for a small vacancy
+rate the %wait is high. Here it is the effect of a large difference be-
+tween optimal and actual utility, due to a high price level. This
+large difference may prompt households to turn down an offered
+dwelling more easily. This effect has an impact on other character-
+istics as well. The probability of selling a dwelling is lowest for very
+high and very low vacancy rates, also reﬂected in the percentage
+sold dwellings. The difference between actual and optimal utility
+also seems to be determining the number of households searching
+for a dwelling, which is highest in the high (20%) and low (2.5%)
+vacancy scenarios. Nevertheless, the effect on the price level is as
+expected: the lower the vacancy rate, the higher the price. This
+suggests that the model predicts the price level as the result of
+different (sometimes contradictory) mechanisms in a plausible
+correct way. It should be noted, though, that the outcomes of the
+simulation depend signiﬁcantly on the parameter settings. For in-
+stance, the values for optimal and actual utility, following from
+u1 and u2, highly determine the number of transactions in case
+of high vacancy levels.
+Finally, we point at the consistency that should exist between
+the perceived probability of selling a dwelling and the share of va-
+cant dwellings being sold. Table 2 suggests that the percentage
+sold (%sold) and the perceived probability are in the same order
+of magnitude and that differences between scenarios are consis-
+tently reﬂected by both indices. This suggests that the Bayesian
+perception updating mechanism provides sellers with efﬁcient
+information.
+4.3. Different risk taking proﬁles
+As noted before, the list price is set by trading off the probability
+of selling at the current, high price against the probability of having
+to sell at a lower price at a later time. This trade-off also involves a
+discount factor d2 (see Eq. (8)), representing the disutility of selling
+at a later time, since this involves additional costs and uncertainty.
+In the base scenario, the discount factor d is a stochastic variable
+drawn from a uniform distribution with boundaries [0.93–1.00].
+The stochastic character represents differences between house-
+holds with respect to risk taking inclination. If we interpret the dis-
+count factor as an indicator of risk aversiveness, more and less risk
+aversive scenarios can be obtained by drawing from the uniform
+distributions [0.96–1.00] and [0.88–1.00] respectively. Table 3 ,
+representing the difference between different risk taking scenarios,
+indicates that risk aversiveness does only have a small effect on
+0
+200
+400
+600
+800
+1000
+1200
+1 21 41 61 81 101 121 141 161 181
+time step
+listprice (ref)
+price (ref)
+prob. sell
+Fig. 3. Development of prices and probability of selling.
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+1
+15
+29
+43
+57
+71
+85
+99
+113
+127
+141
+155
+169
+183
+197
+% wait
+prob. offer
+Fig. 4. Development of probability of receiving an optimal offer.
+-25
+-20
+-15
+-10
+-5
+0
+5
+10
+15
+1 21 41 61 81 101 121 141 161 181
+average utility
+av. optimal utility
+price
+Fig. 5. Development of average and optimal utility.
+D. Ettema / Computers, Environment and Urban Systems 35 (2011) 1–11 9
+
+average price levels in our model. In the high-risk scenario, sellers
+are likely to ask higher prices, since the disutility of selling later is
+smaller. As a result, list prices are higher, resulting in higher mar-
+ket prices and lower utilities. In a similar vain, lower risk taking by
+sellers results in lower list prices and slightly higher utilities. In
+this case, the percentage of buyers not accepting an offered dwell-
+ing is slightly higher, probably because the supply of attractive
+dwellings is higher. It should be noted, however, that the effect
+of risk aversiveness is much less than the effect of the vacancy rate.
+4.4. Effect of threshold for searching
+Table 2 suggests that if the threshold to start searching for a
+dwelling is higher, slightly fewer households search for a dwelling,
+as expected. As a result the actual and perceived probability of sell-
+ing a dwelling are lower, resulting in lower list prices and lower
+prices in general. The probability of being offered an attractive
+dwelling is higher, leading to a larger percentage of offered dwell-
+ings being turned down, is lower. Due to the lower prices the aver-
+age and optimal utility is higher as compared to the base scenario.
+5. Conclusions
+This paper has described a multi-agent model of housing mar-
+ket transactions and developments, such as price formation, over-
+all utility and the total demand for dwellings. The proposed model
+is an agent-based micro-simulation model, implying that aggre-
+gate housing market characteristics are the outcome of (simulated)
+decisions of households such as searching for a better dwelling,
+engaging in negotiations, accepting an offer and setting a list price.
+In this respect, the proposed model ﬁts in well with the structure of
+more general multi-agent models of land use and transportation,
+which are based on an individual representation of households
+and dwellings.
+An important property of the proposed model is that all deci-
+sions leading to market clearance are based on households’ percep-
+tions of market probabilities, such as the probability of selling at a
+particular price or receiving an offer with a particular quality, and of
+the overall market price level. These perceptions are updated, based
+on the observed outcomes of bargaining processes. As a result, a dy-
+namic model is obtained, in which relocation patterns and price set-
+ting respond to characteristics of the housing market. This is an
+important improvement over hedonic regression models, in which
+prices are only dependent on characteristics of the dwelling as such.
+Another important characteristic of the model is that the decision
+to relocate is not only determined by of demographic and dwelling
+characteristics, but also by developments on the housing market.
+This is also an improvement over existing relocation models.
+In contrast to some existing models of housing market pro-
+cesses (e.g. Anas & Arnott, 1994 ), the model described in this pa-
+per is not yet spatially explicit, in the sense that the spatial
+location of the new dwelling, relative to the old residential loca-
+tion and work locations, is not yet included in the model, and
+prices and market probabilities are not speciﬁed for speciﬁc loca-
+tions/regions. The speciﬁc contribution of this paper, however,
+lies in the fully endogenous modelling of demand, supply and
+price setting. Future work should improve the spatial representa-
+tion of the current model. Most likely, this will involve the inclu-
+sion of spatial variables (e.g. dummies for regions or accessibility
+measures) in the probability functions (9) and (10) , and in the
+utility function (1).
+The proposed model was programmed and tested in a (non-spa-
+tial) numerical example, to test how the model responds to differ-
+ent housing market scenarios and behavioural assumptions. The
+numerical examples suggest that the model responds in a realistic
+way to changed market characteristics. In particular, if the vacancy
+rate decreases (and supply is less) the prices of dwellings increase
+because selling households set a higher list price, they are less likely
+to lower their list price and buying household are more likely to ac-
+cept an offer in absence of an alternative. However, the simulations
+also suggest that with increasing prices the demand for dwellings
+decreases, eventually leading to an equilibrium situation.
+Given that the model leads to plausible results a number of
+steps for further research can be identiﬁed. First, the behavioural
+Table 2
+Simulation results for different vacancy rates (100 runs).
+Vacancy rate, 20% Vacancy rate, 10% Vacancy rate, 5% Vacancy rate, 2.5%
+Mean SD Mean SD Mean SD Mean SD
+UTIL 46.03 0.32 /C0 2.73 4.85 /C0 19.72 1.73 /C0 28.19 2.68
+UOPT 55.87 0.34 0.30 5.29 /C0 12.99 1.25 /C0 19.18 1.94
+Price 0.03 0.01 1.66 0.17 2.21 0.06 2.46 0.11
+%wait 0.99 0.01 0.61 0.16 0.32 0.20 0.52 0.23
+P0 s 0.00 0.00 0.45 0.05 0.36 0.02 0.33 0.03
+Po 0.45 0.01 0.30 0.03 0.28 0.05 0.32 0.05
+%sold 0.01 0.01 0.42 0.10 0.32 0.15 0.29 0.18
+#search 470.21 6.72 299.78 34.30 400.85 16.94 461.75 19.87
+#sold 0.80 0.86 24.96 6.25 9.74 4.62 4.28 2.70
+Table 3
+Simulation results for different risk taking proﬁles and search thresholds (100 runs).
+d1 drawn from [0.96–1.00] d1 drawn from [0.88–1.00] Tn = 1.15
+Mean SD Mean SD Mean SD
+UTIL /C0 20.93 2.01 /C0 13.06 1.51 /C0 19.53 1.77
+UOPT /C0 13.83 1.39 /C0 8.23 1.19 /C0 12.86 1.25
+Price 2.25 0.08 1.98 0.05 2.20 0.07
+%wait 0.31 0.20 0.50 0.18 0.29 0.19
+P0 s 0.34 0.03 0.47 0.01 0.36 0.02
+P0 o 0.26 0.05 0.33 0.04 0.28 0.05
+%sold 0.31 0.16 0.44 0.13 0.35 0.14
+#search 413.33 16.10 349.32 17.32 400.01 14.92
+#sold 9.34 4.86 13.26 3.83 10.39 4.05
+10 D. Ettema / Computers, Environment and Urban Systems 35 (2011) 1–11
+
+mechanisms should be veriﬁed empirically, to determine the cor-
+rect values of behavioural parameters. Second, the model should
+be upscaled from the current 600 to over one million households
+and dwellings, to facilitate the application in large-scale applica-
+tions. Incorporating the current model in a full-ﬂedged LUTI model
+involves various challenges. First, the housing market model needs
+to be linked to an operational demographic simulation model,
+describing household formation and dissolvation processes. It is
+noted that the interaction between the two models can go two
+ways: not only do demographic processes impact on the demand
+for dwelling, the availability of dwellings also impacts on house-
+hold formation. Second, the housing market module needs to be
+linked to modules describing real estate development. For in-
+stance, in response to an increased demand and higher prices,
+developers may decide to add more dwellings of a particular type
+to the available stock. The exact relationship between demand,
+developers’ behaviour and government regulations is an important
+topic for further research. Finally, the linkage with the transporta-
+tion system is important. The residential location choice of house-
+holds as well as development of new dwellings will affect travel
+patterns, which will in turn affect accessibility of residential loca-
+tions. The change in accessibility may then impact on households’
+preferences for certain locations. This relationship, which is at the
+heart of LUTI models, needs to be properly represented.
+References
+Anas, A., & Arnott, R. (1994). The Chicago prototype housing market model with
+tenure choice and its policy applications. Journal of Housing Research, 5 , 23–90.
+Arnott, R., Braid, R., Davidson, R., & Pines, D. (1999). A general equilibrium spatial
+model of housing quality and quantity. Regional Science and Urban Economics,
+29, 283–316.
+Ben-Akiva, M. E., & Lerman, S. (1985). Discrete choice analysis . Cambridge,
+Massachusetts: MIT-Press.
+Benenson, I. (1998). Multi-agent simulations of residential dynamics in the city.
+Computers, Environment and Urban Systems, 22 , 25–42.
+Ben-Shahar, D. (2002). Theoretical and empirical analysis of the multiperiod pricing
+pattern in the real estate market. Journal of Housing Economics, 11 , 95–107.
+Brown, L. A., & Moore, E. G. (1970). The intra-urban migration process: A
+perspective. Geograﬁska Annaler, 52B , 1–13.
+Clark, W. A. V., & Onaka, J. L. (1983). Life cycle and housing adjustment as
+explanations of residential mobility. Urban Studies, 20 , 47–57.
+Coles, M. G., & Muthoo, A. (2003). Bargaining in a non-stationary environment.
+Journal of Economic Theory, 109 , 70–89.
+Curlette, W. L. (2006). A framework for research studies: Mixed methods through
+combining bayesian statistics and qualitative research in individual psychology.
+Journal of Individual Psychology, 62 , 338–350.
+Devisch, O. T. J., Timmermans, H. J. P., & Arentze, T. A. (2009). An agent-based model
+of residential choice dynamics in nonstationary housing markets. Environment
+and Planning A, 41 , 1997–2014.
+Ettema, D., de Jong, K., Timmermans, H., & Bakema, A. (2006). PUMA: Multi-agent
+modelling of urban systems. In E. Koomen, A. Bakema, J. Stillwell, & H. Scholten
+(Eds.), Land use modeling . Springer.
+Filatova, T., Parker, D., & van der Veen, A. (2009). Agent-based urban land markets:
+Agent’s pricing behavior, land prices and urban land use change. Journal of
+Artiﬁcial Societies and Social Simulation, 12 (13).
+Lowry, I. S. (1963). Location parameters in the Pittsburgh model. Papers and
+Proceedings of the Regional Science Association, 11 , 145–165.
+Martinez, F., & Roy, J. (2004). A model for residential supply. Annals of Regional
+Science, 38 , 531–550.
+Miller, E. J., Hunt, J. D., Abraham, J. E., & Salvini, P. A. (2004). Microsimulating urban
+systems. Computers, Environment and Urban Systems, 28 , 9–44.
+Moeckel, R., Wegener, M., & Schwarze, B. (2005). Simulating land use change by
+modelling persons, households and dwellings. In Paper presented at CUPUM
+conference, London.
+Nyarko, Y. (1997). Convergence in economic models with Bayesian hierarchies of
+beliefs. Journal of Economic Theory, 74 , 266–299.
+Parker, D. C., & Filatova, T. (2008). A conceptual design for a bilateral agent-based
+land market with heterogeneous economic agents. Computers, Environment and
+Urban Systems, 32 , 454–463.
+Schinkel, M. P., Tuinstra, J., & Vermeulen, D. (2002). Convergence of Bayesian
+learning to general equilibrium in mis-speciﬁed models. Journal of Mathematical
+Economics, 38 , 483–508.
+Timmermans, H. J. P. (2003). The saga of integrated land use-transport modeling:
+How many more dreams before we wake up? In Paper presented at the 10th
+international conference on travel behaviour research , Lucerne, 10–15 August,
+2003.
+Torrens, P. M. (2007). A geographic automata model of residential mobility.
+Environment and Planning B, 34 , 200–222.
+Tryfos, P. (1981). On the estimation of bid distributions in real estate markets.
+Management Science, 27 , 587–601.
+Turnbull, G. K., & Sirmans, C. F. (1993). Information, search, and house prices.
+Regional Science and Urban Economics, 23 , 545–557.
+Van der Vlist, A. J., Rietveld, P., & Nijkamp, P. (2002). Residential search and mobility
+in a housing market equilibrium model. Journal of Real Estate Finance and
+Economics, 24 , 277–299.
+Waddell, P., Borning, A., Noth, M., Freier, N., Becke, M., & Ulfarsson, G. (2003).
+Microsimulation of urban development and location choices: Design and
+implementation of UrbanSim. Networks and Spatial Economics, 3 , 43–67.
+Walker, J., & Li, J. (2006). Latent lifestyle preferences and household location
+decisions. In Paper presented to IATBR conference , Kyoto.
+Wegener, M. (1985). The Dortmund housing market model: A Monte Carlo
+simulation of a regional housing market. In K. Stahl (Ed.). Microeconomic
+models of housing markets. Lecture notes in economic and mathematical systems
+(Vol. 239, pp. 144–191). Berlin: Springer-Verlag.
+D. Ettema / Computers, Environment and Urban Systems 35 (2011) 1–11 11

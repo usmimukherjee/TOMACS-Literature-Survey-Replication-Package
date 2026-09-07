@@ -1,0 +1,635 @@
+NEMSIM: Agent-based Simulator for Australia's National 
+Electricity Market 
+ 
+George GROZEV; David BATTEN; Miles ANDERSON; 
+Geoff LEWIS; John MO; Jack KATZFEY* 
+CSIRO Manufacturing and Infrastructure Technology, Melbourne, Australia 
+*CSIRO Atmospheric Research, Melbourne, Australia 
+george.grozev@csiro.au, david.batten@csiro.au; miles.anderson@csiro.au  
+geoff.lewis@csiro.au; john.mo@csiro.au; jack.katzfey@csiro.au 
+Abstract.  NEMSIM is an agent-based simulation model under development that represents Australia's National 
+Electricity Market (NEM) as an evolving system of complex interactions between human behaviour in markets, 
+technical infrastructures and the natural environment. Users of NEMSIM will be able to explore various evolutionary 
+pathways of the NEM under different a ssumptions about trading and investment opportunitie s, institutional changes 
+and technological futures – including alternative learning pa tterns as participants grow and change. The simulated 
+outcomes will help the user to  identify futures that are eco-efficient – e.g. maximi sing profits in a potentially carbon-
+constrained or environmentally regulated future. The NEMSIM project is part of CSIRO's Energy Transformed 
+Flagship research program, which aims to provide innovative solutions for Australia's pressing energy needs. 
+Motivation for the project is the Flagship's mission to develop low emission energy systems and technologies. 
+1. INTRODUCTION 
+Electricity industries in many countries have gone 
+through significant changes and restructuring associated 
+with introduction of markets, competition and new 
+technologies. Also, there is a growing number of 
+implementations of market-based policy instruments for 
+environmental purposes, mainly to reduce greenhouse 
+gas (GHG) emissions. A comp etitive electricity market 
+can be a vehicle to serve the public interest, however, 
+there are a significant number of challenges in 
+designing a market structure able to address 
+complexities of the electricity grid, essential 
+infrastructure and economic performance of the market 
+participants. 
+One instance of these new energy markets is Australia’s 
+National Electricity Market  (NEM), which commenced 
+operations in December 1998. It is a gross pool-type 
+market that comprises four Eastern states: Queensland, 
+New South Wales, Victoria, South Australia and the 
+Australian Capital Territory. Tasmania will be linked to 
+the NEM with the undersea Basslink early in 2006.  
+There is a growing need of better understanding and 
+comprehensive modelling of market operations and 
+evolution for the purposes of market participants, 
+governments and regulators. 
+To answer some of these questions, CSIRO has initiated 
+a research project to develop a multi-agent-based 
+simulation model that represents Australia’s National 
+Electricity Market (NEM) as  a co-evolving system of 
+complex interactions between participants in the NEM 
+and other associated mark ets, and their effects on 
+technical infrastructures and the natural environment. 
+The simulation software is called NEMSIM (see Figure 
+1) and it aims to help in decision making in the face of 
+complexity and uncertainty. 
+ 
+Figure 1: NEMSIM main screen 
+In NEMSIM, agents (representing generator companies, 
+network service providers, retail companies and a 
+market operator) buy and sell electricity in a simulated 
+trading environment. The model is designed to examine 
+scenarios having principal inputs of generator 
+companies’ bidding practices, bilateral financial 
+contracts, transmission network limitations and new 
+investment in generating plants and transmission lines. 
+Regional demand for electricity is based on historical 
+demand patterns and can be varied to suit growth 
+forecasts and exceptional weather conditions. A market 
+operator agent balances the dispatch of supply to ensure 
+that demand is always met within every 30 minutes (the 
+market-clearing trading interval).
+
+In the short term, NEMSIM can solve problems to help 
+power companies improve their bidding in the very 
+dynamic daily energy market. Retailers can use 
+NEMSIM to inform their decisions on medium-term 
+contracts with power genera tors. They can reduce their 
+exposure to short-term price volatility or wholesale 
+price rises by signing contracts for fixed-price bulk 
+power allocations. NEMSIM is also a useful modelling 
+tool for power-generation companies to explore 
+investment in extra generation capacity or network 
+upgrades to accommodate growing demand, or 
+changing patterns of demand. 
+2. MAIN FEATURES 
+The NEMSIM overview structure is shown in Figure 2. 
+The jigsaw part of the diagram represents the various 
+components of interest in a simulation scenario. The 
+principal components are described in following 
+subsections. Agents make decisions under different 
+time horizons. The simulation engine interprets and 
+executes the scenario and generates output results. A 
+graphical user interface is used to monitor, either 
+continuously or periodically, outcomes of agents’ 
+behaviours.  
+2.1 Historical market data 
+The development of NEMSIM is facilitated by six years 
+of historical market data on demand, pricing and power 
+dispatch for the NEM. Being a dynamic, repetitive and 
+informative system, the NEM offers a huge amount of 
+data. NEMSIM uses this data to extract representative 
+patterns of regional demand (on a daily, weekly and 
+seasonal basis), regional prices, supply and demand 
+growth, and so on. The historical database includes an 
+extensive time series of bidding data, an essential 
+source of information about market participants and 
+their trading strategies. NEMSIM can display some 
+historical data (regional prices, regional demand, 
+bidding data) and can configure generator agents to use 
+real bidding data. These are important features for 
+validating the software. 
+2.2 Technical infrastructure 
+Simulated agent life in NEMSIM unfolds in three 
+“environments”: firstly, a trading environment in which 
+transactions can occur in interlinked spot and forward 
+contract markets; secondly, a physical grid of sites, 
+generation units, lines and inter-connectors across 
+which electricity flows, and; thirdly, a natural 
+environment, which provides energy resources and 
+accumulates GHG emissions. Each “environment” is 
+separate from the agents, on which the agents operate 
+and with which they interact.  
+The physical environment of transmission infrastructure 
+imposes several constraints on electricity market 
+operations. For example, the quantity of power sold 
+from one region to another is constrained by the 
+transmission capacity between the two regions. 
+NEMSIM represents the diversity of objects and 
+attributes associated with generation and transmission 
+infrastructure in a simplified form. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Figure 2: NEMSIM Overview Structure 
+ 
+Fuel
+Resources
+GHG
+Emissions
+Companies
+Contract Market
+Spot Market
+Market Operator
+InterconnectorsGenerating
+Plants
+Generating
+Units
+Transmission
+Lines
+Demand Prices
+DispatchBidding
+Power Losses
+Simulated Scenario
+Simulation Engine
+Reports
+0
+5
+10
+15
+20
+25
+30
+123
+Graphs
+Historical
+Data
+Environment
+Technical
+Infrastructure
+Agents
+&
+Markets
+Simulation
+LogTables
+Electricity
+Supplied
+Daily
+Bidding
+Spot
+Prices
+Demand
+Evolution
+Contract
+Prices
+Supply
+Evolution
+Investment
+Decisions
+GHG
+Emissions
+Time
+Horizons
+30 min 
+Dispatch
+Daily
+Decisions
+Weekly
+Decisions
+Monthly
+Decisions
+Yearly
+Decisions
+Longer Term
+Decisions
+User
+Scenario Evaluation
+Data Input
+Input
+Fuel
+Resources
+GHG
+Emissions
+Companies
+Contract Market
+Spot Market
+Market Operator
+InterconnectorsGenerating
+Plants
+Generating
+Units
+Transmission
+Lines
+Demand Prices
+DispatchBidding
+Power Losses
+Simulated Scenario
+Simulation Engine
+Reports
+0
+5
+10
+15
+20
+25
+30
+123
+Graphs
+0
+5
+10
+15
+20
+25
+30
+123
+Graphs
+Historical
+Data
+Environment
+Technical
+Infrastructure
+Agents
+&
+Markets
+Simulation
+LogTablesTables
+Electricity
+Supplied
+Daily
+Bidding
+Spot
+Prices
+Demand
+Evolution
+Contract
+Prices
+Supply
+Evolution
+Investment
+Decisions
+GHG
+Emissions
+GHG
+Emissions
+Time
+Horizons
+30 min 
+Dispatch
+Daily
+Decisions
+Weekly
+Decisions
+Monthly
+Decisions
+Yearly
+Decisions
+Longer Term
+Decisions
+30 min 
+Dispatch
+Daily
+Decisions
+Weekly
+Decisions
+Monthly
+Decisions
+Yearly
+Decisions
+Longer Term
+Decisions
+UserUser
+Scenario Evaluation
+Data Input
+Input
+
+Some key objects (with corresponding attributes in 
+parentheses) are: generating plants (location, unit 
+composition), generating units (maximum capacity, 
+generation technology, ramp rates, efficiency and 
+emission factors) and inter-connectors (transmission 
+technology, adjacent regions, losses).  
+2.3 Agents 
+Agents in NEMSIM are main classes designed to 
+accommodate the complexity and adaptation of market 
+operations. Perhaps one of the most advanced agent-
+based systems for electricity  markets is EMCAS [2], 
+developed by Argonne National Laboratory in the US. 
+However, the adaptation of EMCAS for Australia’s 
+NEM is problematic because of different market 
+structures and operations. Hence, CSIRO decided to 
+develop an agent-based tool specific for Australia’s 
+NEM. The development has been facilitated by using a 
+simulation framework from Swinburne University of 
+Technology, Melbourne, Australia. 
+Company agents can have different goals. As well as 
+maximizing profits, some may wish to increase market 
+share, diversify generation sources or work more 
+closely with end-users. Short-term strategies (e.g. 
+bidding tactics in the NEM) are affected by medium-
+term strategies (e.g. hedged positions in the contract 
+markets). In turn, both are affected by investment 
+decisions and other changes over the longer term. 
+NEMSIM treats agents as being uniquely intelligent, 
+making operational and strategic decisions using the 
+individual information available to them. Also, they are 
+adaptive, learning to modify their behaviour in order 
+better to realise their goals. Learning algorithms will 
+allow agents to look back (learn from their historical 
+performance), look sideways (learn from other 
+participants’ strategies) and look ahead (take future 
+plans and forecasts into account). 
+In an adaptive market like the NEM, no single agent has 
+control over what all the other agents are doing. 
+Because of the way the mark et is structured, however, 
+the marginal bidder can exert more influence on market 
+outcomes. The overall outcome is not always obvious, 
+because it depends on many factors. The aim of 
+NEMSIM is to provide a platform where a population 
+of simulated agents interact, constrained only by 
+realistic rules and the physical grid system. Agents’ 
+individual and collective behaviours then co-evolve 
+from the bottom up, producing both expected and 
+unexpected emergent outcomes at the system level. A 
+significant focus of NEMSIM agents is on bidding 
+strategies. Comprehensive observations of bidding 
+patterns of generator companies in the NEM are 
+provided in [2].  
+2.4 Time horizons for decision making 
+The key purpose of the NEM is to match wholesale 
+supplies of electricity to demand, itself a complex, 
+short-term task. Different operations such as 
+forecasting, bidding, electric ity generation and system 
+stabilising are also important. In the medium-term, 
+companies want acceptable returns on capital and an 
+acceptable maintenance plan. In the long-term, demand 
+for low cost, reliable electricity will continue to 
+increase but, more than likely, in the context of carbon 
+constraints. The timing of such changes is unknown. 
+Thus, new investments requi red in the long-term face 
+substantial uncertainty with respect to environmental 
+regulation. The short, medium and long-term time-
+scales cannot be treated independently, since what 
+happens on one time-scale will affect what happens on 
+another.  
+To permit decision-making and planning for different 
+time horizons, NEMSIM allows various events to be 
+scheduled at different times (e.g. hourly/half-hourly, 
+daily, weekly, monthly, annually and over several 
+years). In particular, it will include feedback loops 
+between the spot (NEM) and c ontract markets, so that 
+the hedging decisions of generators and retailers can be 
+represented. These behavi ours influence incremental 
+investment and the closure decisions of agents. Finally, 
+it can be adapted to explore further external changes, 
+such as the introduction of an emissions trading scheme 
+(see Section 4). 
+2.5 Simulated outcomes 
+The purpose of NEMSIM is not to predict the future, 
+but rather to identify and understand the various 
+alternative futures that could unfold under different 
+conditions – i.e. to analys e “what-if” scenarios. The 
+simulator can also be used to show the possible 
+evolutionary trajectories of a given scenario under 
+given conditions. For example, the introduction of more 
+distributed generation (see Section 3) into the 
+marketplace involves a tran sition from the current 
+paradigm of the centrally disp atched electricity grid to 
+new more decentralised ones. This may involve new 
+markets, new brokers, new technology and new grid 
+structures. NEMSIM is a generative tool that can 
+identify the transition states  needed to reach specific 
+final states such as these. 
+3. DISTRIBUTED GENERATION 
+Distributed generation (DG) is a set of small-scale 
+power generation technologies (up to 10,000 kW) 
+located close to where electricity is used (e.g., a home 
+or business) to provide an alternative to or an 
+enhancement of the traditi onal electric power system 
+with central generation. Small generators such as 
+backup generators and on-site power systems have been 
+used for a long time. On the other hand, new DG 
+technologies (e.g., microturbines, fuel cells, 
+photovoltaic and wind systems) have been developed 
+recently. Distributed generato rs are connected to the 
+distribution part (11-33 kV) of the electricity networks, 
+at or near the end user.  
+Potential benefits from DG are lower cost, higher 
+service reliability, high power quality and increased
+
+energy efficiency. DG is a promising solution for the 
+security of electricity supply, providing distributed and 
+diverse energy source infrastructure. The use of 
+renewable distributed generation can also provide a 
+significant environmental benefit in terms of reducing 
+GHG emissions. DG can be beneficial to both 
+electricity consumers and energy utilities (for example 
+reducing the cost of transmission and distribution 
+system upgrades). Utility deregulation is also one of the 
+reasons for the high level of interest in DG. 
+Because DG helps to manage peak load demands, it 
+could reduce price volatility and companies’ market 
+power. 
+There are significant technical difficulties in 
+implementing the connection of DG, for example most 
+distribution network infrastructure allows power to flow 
+only in one direction.  
+NEMSIM will aid in understa nding the advantages and 
+disadvantages of DG and the impacts of growth in the 
+uptake of DG technologies. For example, Figure 3 
+shows the demand and price graphs for NSW on 1 st of 
+December 2004, which was a very hot day. Around 
+midday, demand peaked, causing the supply system to 
+be stressed, resulting in the market regional pool price 
+jumping to the maximum value of 10,000 $/MWh. If 
+significant DG was available, it could have been 
+engaged mid-morning (perhaps when the price 
+exceeded a threshold value of 320 $/MWh), thereby 
+reducing demand and hence preventing price spikes. 
+The dotted lines in Figure 3 represent the simulated 
+influence of DG on demand and price curves. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Figure 3: DG perturbed demand 
+4. GREENHOUSE GAS EMISSIONS 
+Electricity generation is a substantial source of GHG 
+emissions. According to the Australian Greenhouse 
+Office [3] it contributed 182 Mt of carbon dioxide 
+equivalent emissions (Mt CO 2-e) in 2002 or 33% of net 
+national emissions (550 Mt CO2-e) in Australia. The net 
+emissions are calculated across all sectors under the 
+accounting provisions of Kyoto protocol for Australia. 
+NEMSIM is capable of calculating the GHG emissions 
+associated with electric ity generation of a given 
+simulation scenario. The method is bottom-up type 
+aggregation. The advantages of NEMSIM are that its 
+simulation framework allows quite precise modelling of 
+the emissions up to the level of each generating unit, 
+accommodating a variety of changes in the operational, 
+technological, company, market and regulatory values 
+and parameters. We believe that the main advantage in 
+this sense is the agent-based framework that allows 
+slow changes to accumula te over long periods and 
+sudden changes to be introduced due to the emerging 
+events based on the decision making and interactions of 
+the participating agents. 
+Calculating the GHG emissi ons due to electricity 
+generation is implemented in NEMSIM on a fossil fuel 
+consumption basis using fuel (generation technology) 
+specific emission factors. A set of generation 
+technologies are modelled: conventional black coal - 
+pulverised fuel, conventional brown coal - pulverised 
+fuel, natural gas simple cy cle, etc. New generation 
+technologies and fuel types can easily be added. The 
+main attributes of each ge neration technology are the 
+emission GHG factor ( f) and the net energy efficiency 
+(e) – how much of the embodied energy of the fossil 
+fuel is transformed into electricity energy. 
+Each generating unit is assigned one of the defined 
+generation technologies. The net energy efficiency can 
+also be defined for a selected generating unit (in which 
+case it overrides the same attributes of the assigned 
+generation technology) to a llow flexibility in the long 
+term, when due to different reasons the efficiency may 
+change. 
+GHG emissions for a give n simulation period or 
+simulation scenario are estimated by using the 
+following formula: 
+ 3
+3.6
+10
+g fq e= , where 
+q is the amount of CO 2 equivalent emissions expressed 
+in t; g is the amount of the electricity generation 
+expressed in MWh; f is the emission factor for a given 
+generation technology expressed in kt CO2-e/PJ; e is the 
+net energy efficiency of the generation technology or 
+generating unit (dimensionless); and 3.6 10 -3 is a 
+conversion factor from kt/PJ to t/MWh. The direct 
+values of emission factors are used, which means that 
+emissions associated with extraction and production of 
+the fossil fuels are not considered. This approach allows 
+easier comparison between different plants, companies 
+and regions, however, its accuracy is inferior as it does 
+not include indirect emissions that are usually several 
+percent from direct and they show moderate variability 
+by region, company and technology. 
+An example of a NEMSIM output window for GHG 
+emissions is shown in Figure 4. It displays a day’s 
+simulated GHG emissions, in t CO 2-e, for four coal 
+based units within one generation plant. The values are 
+for a hypothetical scenario and are for illustrative 
+purposes only. 
+0
+2000
+4000
+6000
+8000
+10000
+12000
+14000
+1 19 37 55 73 91 109 127 145 163 181 199 217 235 253 271
+10
+100
+1000
+10000
+Regional 
+Price
+Regional 
+Demand
+320
+NSW – 1/12/2004
+Wholesale regional price [$/MWh]
+Regional demand  [MW]
+No. of five-minutes intervals
+0
+2000
+4000
+6000
+8000
+10000
+12000
+14000
+1 19 37 55 73 91 109 127 145 163 181 199 217 235 253 271
+10
+100
+1000
+10000
+Regional 
+Price
+Regional 
+Demand
+320
+NSW – 1/12/2004
+Wholesale regional price [$/MWh]
+Regional demand  [MW]
+No. of five-minutes intervals
+
+Figure 4: Example of GHG emissions display 
+SUMMARY AND FUTURE WORK 
+In this paper we have presented NEMSIM, an agent-
+based simulation system under development for 
+Australia’s NEM. The multi-agent structure of the 
+system promises to be an effective way of representing 
+the complex interactions between market players and to 
+facilitate modelling of their decision making. It should 
+prove useful to a variety of companies and other parties 
+as they explore future i nvestment opportunities, risk 
+management strategies and changing rules and market 
+structures, for example, under an increasingly carbon-
+constrained future, which may demand increased DG 
+and reduced GHG emissions. 
+Possible future extensions include enhanced agents’ 
+learning capabilities, for example, by using genetic 
+algorithms, integration with power engineering tools to 
+account for grid constraints and including the impact of 
+additional markets such as GHG emissions trading 
+schemes.  
+ACKNOWLEDGMENTS 
+NEMSIM has been developed under a research project 
+that is a component of CSIRO’s Energy Transformed 
+Flagship research program [4 ]. The main mission of the 
+Flagship is to develop new, efficient and low-emission 
+energy technologies for Australia. The authors of the 
+paper are grateful to Mr. Pa ul Graham, Energy Futures 
+theme leader within the Flagship, for his overall support 
+and contributions towards the project development and 
+specifically for the GHG emission modelling.  
+NEMSIM is built using a simulation framework 
+developed by Swinburne University of Technology, 
+Melbourne, Australia. 
+REFERENCES 
+1. Electricity Markets Complex Adaptive Systems 
+(EMCAS), (last visited 10 April 2005), 
+http://www.dis.anl.gov/CEEESA/EMCAS.html 
+2. Hu, X., Grozev, G., Batten D. (2005), “Empirical 
+observation of bidding patterns in Australia’s National 
+Electricity Market”, Energy Policy, vol. 33, no.16, pp. 
+2075-2086. 
+3. Australian Greenhouse Office (2004), “National 
+Greenhouse Gas Inventory – 2002. Factsheet 1: 
+Energy: Stationary sources and fugitive emissions”, 
+Commonwealth of Australia, Canberra,  
+http://www.greenhouse.gov.au/inventory/2002/facts/p
+ubs/01.pdf. 
+4. CSIRO’s Energy Transformed National Research 
+Flagship, 
+http://www.csiro.au/index.asp?type=blank&id=Energ
+yTransformed

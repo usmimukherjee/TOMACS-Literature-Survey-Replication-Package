@@ -1,0 +1,1402 @@
+Renewable and Sustainable Energy Reviews 136 (2021) 110405
+Available online 21 October 2020
+1364-0321/© 2020 Elsevier Ltd. All rights reserved.
+Review and analysis of investment decision making algorithms in long-term 
+agent-based electric power system simulation models 
+Zhenmin Tao a,b, Jorge Andr´es Moncada a,b, Kris Poncelet a,b, Erik Delarue a,b,* 
+a Division TME, Department of Mechanical Engineering, KU Leuven, Celestijnenlaan 300, 3001, Leuven, Belgium 
+b EnergyVille, Thor Park 8310 & 8320, 3600, Genk, Belgium   
+ARTICLE INFO  
+Keywords: 
+Investment decision making algorithms 
+Agent-based simulation modeling 
+Generation expansion planning 
+Optimization modeling 
+ABSTRACT  
+Long-term electric power system planning models are frequently used to provide policy support in the context of 
+the ongoing transition towards a low-carbon electric power system. In a liberalized market, this transition relies 
+on generation company investment decisions. These decisions are shaped by both economic and behavioral 
+factors. Agent-based modeling allows the incorporation of both these factors in the description of the investment 
+decision making process. Nevertheless, there are several challenges associated with the design of agent-based 
+models such as the definition of the model structure and its lack of transparency. In this study, we aim to in-
+crease the transparency of investment decision making algorithms by shedding light on how implicit assumptions 
+of the price projection methods used in these algorithms impact model results. To achieve this goal, we devel-
+oped a core long-term agent-based model to assess different investment decision making algorithms from the 
+literature and we introduced a novel price projection method based on optimization modeling. Our results show 
+that investment decisions vary enormously depending on the assumptions and parameters used in investment 
+decision making algorithms. We also found that our proposed price projection method is robust to parametric 
+deviations. Thus, the proposed investment decision making algorithm enables agent-based modelers to mitigate 
+the potential impacts of hidden implicit assumptions.   
+1. Introduction 
+In a liberalized electricity market, the ongoing energy system tran-
+sition towards a low-carbon electric power system is highly dependent 
+on investment decisions. Many studies have shown that investors’ de-
+cisions are not only driven by economic factors [1,2]. Actors’ behaviors, 
+values, and strategies as well as policies, regulations, and markets also 
+shape the electric power system transition [3,4]. Empirical studies based 
+on interviews with over a hundred industry experts have revealed that 
+investors’ renewable energy technical know-how and a-priori beliefs on 
+the technical effectiveness play much more important roles than tech-
+nical information in investment decision making [5,6]. Other empirical 
+studies highlighted the importance of technology preferences, prior in-
+vestments, and financial status to explain differences in investments. 
+Bergek et al. presented empirical evidence showing that renewable en-
+ergy investments are made by a heterogeneous group of investors and 
+their investments vary among investor types [7]. Accounting for these 
+above-mentioned factors calls for modeling techniques capable of rep-
+resenting investors and their decision-making process explicitly. 
+Agent-based modeling allows the incorporation of both economic 
+and non-economic factors in the description of the investment decision 
+making process [8,9]. Nevertheless, despite numerous benefits, there 
+are several challenges associated with the design of agent-based models 
+such as the definition of the model structure and its lack of transparency. 
+In this study, we aim to increase the transparency of investment decision 
+making algorithms by shedding light on how implicit assumptions of the 
+price projection methods used in these algorithms impact model results. 
+An investment decision making algorithm in a long-term agent-based 
+model typically consists of three steps. First, projections are made 
+regarding the short-run profits/rents (i.e., the revenues subtracted by 
+the operational expenditures) that can be obtained for potential in-
+vestments. Second, these projections are used to evaluate the profit-
+ability of potential investments. The profitability is typically expressed 
+by calculating common metrics, such as the net present value (NPV) or 
+the internal rate of return (IRR). In a third and final step, the most 
+profitable investment, if any, is selected. This process is typically 
+repeated until none of the agents is willing to invest anymore. The main 
+challenge that these models face resides in the first step, i.e., designing a 
+suitable method that allows the agents to make projections of future 
+* Corresponding author. Division TME, Department of Mechanical Engineering, KU Leuven, Celestijnenlaan 300, 3001, Leuven, Belgium. 
+E-mail address: erik.delarue@kuleuven.be (E. Delarue).  
+Contents lists available at ScienceDirect 
+Renewable and Sustainable Energy Reviews 
+journal homepage: http://www.elsevier.com/locate/rser 
+https://doi.org/10.1016/j.rser.2020.110405 
+Received 26 February 2020; Received in revised form 14 July 2020; Accepted 20 September 2020
+
+Renewable and Sustainable Energy Reviews 136 (2021) 110405
+2
+revenue/price streams. Whereas existing agent-based models are 
+aligned on the metrics and criteria used for making an investment de-
+cision (e.g., a non-negative NPV or a minimum IRR), the methods used 
+in different existing long-term agent-based models to project future 
+prices or revenue streams vary strongly (see Section 3.2 for a detailed 
+description). 
+Therefore, this study aims to analyze different price projection 
+methods adopted in existing long-term agent-based electric power sys-
+tem simulation models. Furthermore, a price projection method based 
+on optimization modeling is proposed and evaluated against existing 
+price projection methods on a level playing field – a core long-term 
+agent-based simulation model. This paper contributes to the literature 
+in the following ways:  
+i. The price projection methods in existing long-term agent-based 
+electric power system simulation models are reviewed and 
+compared.  
+ii. The impacts of the methods used to project future prices/revenue 
+streams on the outcome of long-term agent-based models are 
+assessed. Specific attention is given to both the influence of (agent- 
+level) price projection methods on the (system-level) simulation re-
+sults and the ability of price projection methods to take specific 
+scenario-related information into account. 
+iii A price projection method based on optimization modeling is pro-
+posed. The proposed novel method provides a theoretical benchmark 
+for further extension of the long-term agent-based model and allows 
+combining the transparency of optimization models with the flexi-
+bility of agent-based models to consider behavioral aspects. 
+The remainder of this paper is organized as follows. Section 2 re-
+views the development and application of agent-based modeling in the 
+context of electric power systems, specific attention is paid to long-term 
+agent-based models. Section 3 introduces the methods used to carry out 
+the analysis. This section starts with introducing the core long-term 
+agent-based model, followed by detailed descriptions of existing and 
+our proposed price projection methods. Next, Section 4 presents the key 
+data and assumptions adopted in the proof-of-concept case study. Sec-
+tion 5 discusses the results generated by applying different price pro-
+jection methods. Finally, the conclusions are drawn in Section 6. 
+2. Literature survey of agent-based models 
+Over the past decades, agent-based modeling has been used to 
+answer multiple types of research questions in the context of electric 
+power systems. Overall, two sets of agent-based models can be identi-
+fied: short-term agent-based models and long-term agent-based models. 
+These two types of agent-based models are often used for different 
+purposes and the focus of this paper is on long-term agent-based models. 
+A classification of agent-based models and their applications/capabil-
+ities are summarized in Table 1. 
+Short-term agent-based models are mainly used to study the bidding 
+game in a market under different market designs and the resulting 
+market efficiency or exercise of market power. A comprehensive review 
+of short-term agent-based models can be found in Ref. [26,27]. Here-
+under, some of the key studies on short-term agent-based models will be 
+briefly reviewed. The earliest applications of agent-based modeling in 
+electricity markets date back to the late 1990s where there was a global 
+trend of liberalizing electricity markets. Agent-based modeling was 
+identified as a proper method to study the market effectiveness under 
+different market designs, as it allowed relaxing assumptions such as 
+stable market equilibria and price-taking agents. The earliest studies 
+evaluated the market design in two dimensions: market clearing fre-
+quency and pricing mechanisms [10,11]. These earlier models are 
+relatively abstract and built upon assumptions such as 
+profit-maximizing agents, inelastic demand, and congestion-free sys-
+tems. Later, other researchers contributed to the community by 
+extending the abstract model in different directions to answer research 
+questions related to market outcomes under the influences of grid con-
+straints [12,15], unit commitment constraints [16], cross border trading 
+[13] and demand response [17]. 
+Unlike short-term agent-based models that focus on the outcome of 
+spot markets, long-term agent-based models are developed to study the 
+electric power system transition with a time scale varying from years to 
+decades. These studies are usually performed to assess the influence of 
+specific factors such as renewable energy support design [18], CO2 
+market design [28], capacity remuneration mechanisms [20–22], and 
+technological preferences [24] on the evolution of the system. 
+In the past decades, a limited number of agent-based modeling 
+frameworks have incorporated investment decision making at the agent 
+level, for instance PowerACE [29,30], AMIRIS [31], EMCAS [32,33] and 
+EMLab [23,34,35]. PowerACE is an agent-based modeling framework 
+developed to analyze the impact of different market designs (e.g. 
+energy-only market, capacity remuneration mechanisms) and policy 
+measures on investment in renewable energy sources and their contri-
+bution to the security of supply on national and European level [30]. The 
+model aims at coupling different markets (spot market, forward market, 
+Nomenclature 
+j Type of technologies 
+y Year 
+d Day 
+h Hour 
+Δt Time step (typically 1 h) (h) 
+r Interest rate 
+fj,y Fixed cost of technology type j in year y (€/MW/a) 
+Gj,y The installed capacity of technology type j in year y (MW) 
+Wd The weight of representative day d 
+γj,h The capacity factor of technology type j in hour h 
+vj,y,d,h The variable cost of technology type j in year y on 
+representative day d at hour h (€/MWh) 
+gj,y,d,h The actual power output of technology type j in year y on 
+representative day d at hour h (MW) 
+py,d,h The market price in year y on representative day d at hour h 
+(€/MWh) 
+lly,d,h Load loss in year y on representative day d at hour h (MWh) 
+VoLL Value of lost load (€/MWh) 
+fCAPEX
+j The annual investment cost of technology type j (€/MW/a) 
+Pj The principal of technology type j (€/MW) 
+fO&M
+j,y The fixed operational & maintenance cost of technology 
+type j in year y (€/MW/a) 
+vO&M
+j,y,d,h Variable operational & cost of technology type j in year y 
+on representative day d at hour h (€/MWh) 
+vfuel
+j,y,d,h Fuel price of technology type j in year y on representative 
+day d at hour h (€/MWh) 
+μj The energy conversion efficiency of technology type j 
+Ly,d,h The load in year y on representative day d at hour h (MWh) 
+invj,y The investment in technology type j in year y (MW) 
+decj,y The decommissioning in technology type j in year y (MW) 
+nj The lifetime of technology type j  
+Z. Tao et al.
+
+Renewable and Sustainable Energy Reviews 136 (2021) 110405
+3
+CO2 market and reserve market) and has been utilized to address various 
+research questions such as the influence of renewables on spot market 
+prices [36], the economic performance of CO2 market design [37] and 
+the impact of a soft loan on renewable generation expansion [19]. 
+AMIRIS (Agent-based Model for the Integration of Renewables Into the 
+Power System) is a policy design tool used to foster the integration of 
+renewable energy sources into the electricity market. The model is 
+designed to study different renewable energy trading schemes, with 
+specific attention paid to evaluating the effectiveness of a direct mar-
+keting policy1 against the inefficient (yet effective) feed-in-tariff sub-
+sidies. To compare the policy effectiveness, the power producer agents 
+are provided with five different business models and the outcomes can 
+be compared [31]. EMCAS (Electricity Market Complex Adaptive Sys-
+tems) was originally designed without investment decision making 
+module but rather aims to simulate agents’ behavior in the spot market. 
+The original EMCAS consists of generation company agents, trans-
+mission system operator agents, consumer agents and regulator agents. 
+The learning capabilities of agents are provided by genetic algorithms.2 
+With the help of these different types of agents, the model is capable of 
+studying various market organizations such as locational marginal 
+pricing [38], congestions charges [39], bilateral contracts [40] and 
+ancillary service markets [33]. Later, the EMCAS framework has been 
+extended to be capable of studying long-term generation expansion 
+[32]. EMLab (Energy Modelling Laboratory) is a long-term agent-based 
+modeling framework designed to assess the effects of different policy 
+instruments and market designs. These effects are reflected in the form 
+of the aggregation of generation companies’ investment decisions. 
+Hence, the main agents in the model are the electricity generation 
+companies and these agents interact mainly in electricity and CO2 
+markets [34,35]. As a long-term agent-based electric power system 
+model with a minimal time step of one year, EMLab is suitable for 
+capturing factors that influence the system evolution in a time span of 
+years (or even decades) such as capacity mechanisms [22] and emission 
+trading [28]. In Ref. [23], the author validated the EMLab model using 
+sensitivity analyses from multiple aspects: theoretical and empirical. 
+From the theoretical viewpoint, the dynamic behavior of the model and 
+trend of producer profits (as the installed capacity approaches the load 
+peak) are tested. Empirically, the model has been validated by 
+comparing the model output to historical prices. 
+3. Methods 
+To effectively assess the influence of price projection methods on the 
+simulation results, a core long-term agent-based modeling framework is 
+developed and different price projection methods are deployed in its 
+investment decision making algorithm, while keeping all other 
+modeling settings constant. The core agent-based modeling framework 
+is further stripped of distinctive features such as behavioral aspects. That 
+is, in this analysis, we assume all agents to be fully rational, forward- 
+looking price takers. Moreover, we assume that exogenous inputs such 
+as fuel prices and technological costs remain constant. Using this set of 
+assumptions allows obtaining a well-defined benchmark, i.e., the long- 
+run equilibrium serves as a reference solution. More specifically, 
+under this set of assumptions, the agent-based model should converge to 
+the long-run equilibrium.3 The number of converging milestone years 
+varies from case to case, in general, it takes around 4 milestone years. 
+This is mainly due to that, after the 3rd milestone year, all initial ca-
+pacity mixes are fully decommissioned. Deviations from this long-run 
+equilibrium can then be interpreted as impacts of the price projection 
+method used. Note that the aim of using the long-run equilibrium as a 
+reference is to assess possible impacts of price projection methods. The 
+agent-based model was implemented in Julia programming language.4 
+In the rest of this section, the formulation of the core long-term 
+agent-based model and the different price projection methods 
+analyzed in this study are described in detailed. The description of the 
+core long-term agent-based model follows the ODD (Overview, Design 
+concepts and Details) protocol as proposed by Grimm et al. [41]. 
+3.1. Core agent-based simulation model formulation 
+3.1.1. Overview 
+3.1.1.1. Purpose. The purpose of the core long-term agent-based model 
+is to analyze different investment decision making algorithms. This is 
+achieved by deploying different price projection methods in its invest-
+ment decision making algorithm, while keeping all other modeling 
+settings constant. 
+3.1.1.2. Entities, state variables and scales. Three types of agents (en-
+tities) are considered in the core long-term agent-based model: genera-
+tion companies, the market operator and consumers. The main 
+characteristic of a generation company agent is its technology portfolio. 
+The state variable of a market operator is the market electricity price. 
+Consumers are characterized by their load profiles. 
+As a long-term model, the simulation covers several decades while 
+the time resolution is 1 h. Thus, two key concepts are introduced to 
+couple the long-term planning (with a time span of decades) with the 
+short-term operation (with hourly resolution): representative days and 
+milestone years. Fig. 1 shows an exemplary scheme of representative 
+days and milestone years. Intuitively, representative days seek to reduce 
+Table 1 
+Summary of agent-based models used in the context of electric power systems.  
+Classification Key agent decision Key modeling purposes Example(s) 
+Short-term agent-based 
+models 
+Bidding strategies Market efficiency w.r.t. market designs. [10–12] 
+Influence of market power exercise. [13,14] 
+Bidding strategies and their resulting impacts considering technical constraints, cross border trading 
+and demand response. 
+[12,13, 
+15–17] 
+Long-term agent-based 
+models 
+Investment decision 
+making 
+Policy evaluation (e.g. renewable subsidies). [18,19] 
+Energy system transition w.r.t. market designs. [20–23] 
+The influence of agents’ bounded rational behaviors in the long-run. [24,25]  
+1 The details of the direct marketing scheme can be found in Ref. [50]. 
+Overall, this direct marketing strategy grant freedom to wind turbine operators 
+to be able to have a monthly choice to switch between trading in wholesale 
+market and receiving a fixed feed-in tariff.  
+2 Genetic algorithms are a set of machine learning algorithms which are used 
+to search for the optimal solution of a problem. The term “genetic” refers to the 
+evolutionary searching manner which imitates the evolution processes in na-
+ture: selection, crossover and mutation. We refer interested readers to Ref. [51] 
+for a comprehensive explanation of genetic algorithms. 
+3 Note that depending on the price projection method used, the equilibrium 
+computed in the agent-based model does not necessarily converge to a single 
+value but rather revolves dynamically around the equilibrium. In such a case, 
+the average of the dynamic equilibrium is considered as the equilibrium 
+reached by an agent-based model.  
+4 The agent-based model is accessible via: https://github.com/zhe 
+nmin1993/ELDEST-ABM. 
+Z. Tao et al.
+
+Renewable and Sustainable Energy Reviews 136 (2021) 110405
+4
+the actual days in a year by finding a certain number of days and their 
+corresponding weights that minimize the deviation from the full hourly 
+profiles. These profiles include load and intermittent sources such as 
+wind and solar PV. The method of determining representative days is 
+based on [42], in which the boundary days (i.e. peak and minimum load 
+days) are appropriately considered. The resulting reduced load duration 
+curve in contrast with the original load duration curve is shown in 
+Fig. A1 (Appendix I). 
+Without loss of generality, the introduction of milestone years (MYs) 
+is equivalent to the assumption that the system capacity mix will remain 
+unchanged within a certain period of time, i.e., new investments or 
+decommissioning can only happen in certain milestone years. Moreover, 
+new investments are considered to be immediately available from the 
+corresponding milestone year. 
+3.1.1.3. Process overview and scheduling. As indicated by the rectangles 
+in Fig. 2, four main processes are executed in our core agent-based 
+model: bidding in the spot market, determination of the market price, 
+decommissioning of generators and investment in new capacity. The 
+narrative of the core agent-based model is as follows. The bidding 
+process in the spot market is carried out by the energy producers and 
+all generators are assumed to bid their marginal costs.5 Then, the 
+market operator determines the market price by maximizing social 
+welfare. When a milestone year is reached, generation companies first 
+decommission generation units that have reached their lifetimes, 
+followed by an investment process where generation companies make 
+investment decisions sequentially. The investment process is further 
+divided into investment rounds. During each round, each generation 
+company is allowed to invest only once and in one generation unit. 
+The size of a generation unit is fixed and set in a manner that all 
+agents have approximately equal chances of being the first investor in 
+the corresponding investment process, hence the influence of the first- 
+mover advantage can be mitigated. The investment process is termi-
+nated when none of the generation companies has invested in the last 
+round, i.e. no generation companies is willing to invest anymore. It is 
+assumed that preceding generation companies’ investment decisions are 
+known by the subsequent generation companies. During the investment 
+decision making process, the profitability of all types of technologies are 
+determined by calculating their NPVs. 
+3.1.2. Design concepts  
+• Basic principle: the principle applied in the model is the rational 
+choice theory. This theory is used to describe decision making on 
+both spot market bidding and new capacity investments.  
+• Emergence: an important emergent phenomenon in this study is the 
+resulting capacity mix. Other emergent phenomena include the day- 
+ahead market prices and the annual loss of load hours. 
+• Adaptation/Prediction: generation companies adapt their invest-
+ment strategies based on future day-ahead market price projections. 
+Evaluating the generation of these projections is one of the key 
+contributions of this study.  
+• Objective: the objective of the generation companies is to optimize 
+their generation portfolio to maximize profit by investing in new 
+power plants.  
+• Learning: in this core long-term agent-based model, the learning 
+capability has been stripped to simplify the analyses. 
+• Sensing: agents are assumed to know without uncertainty the pre-
+ceding generation companies’ investment decisions.  
+• Interaction: generation companies interact with each other indirectly 
+through the price signals in the day-ahead market. That is, each 
+newly installed power plant will lower the market price, therefore 
+squeeze the profit margin of new investment.  
+• Stochasticity: the order of how generation companies carry out the 
+investment is random.  
+• Observation: the key observation in this study is the system capacity 
+mix, which reflects the impacts of agent-level investment decision 
+making algorithms on system level. Agent level observations such as 
+generation portfolios are out of the scope of this study because the 
+generation companies are assumed to be homogeneous. 
+3.1.3. Details 
+3.1.3.1. Initialization.  
+• Initialization of existing capacity mix 
+The model is initialized with a uniformly distributed existing ca-
+pacity mix in the system, i.e. different types of technologies occupy the 
+same amount of market share. Note that this initialization aims to 
+deviate from the long-run equilibrium solution to ensure that reaching 
+this equilibrium is not a result of the initial capacity mix.  
+• Initialization of generation company agents 
+The model is initialized with 5 generation company agents and the 
+existing capacity mix is assigned to these generation companies 
+randomly. In this study, the initialization of generation companies will 
+not change the results and conclusions as they are homogeneous. 
+3.1.3.2. Input data. In this study, the Belgian electric power system load 
+data6 (with hourly resolution) of the year 2015 is used. A Value of Lost 
+Load (VoLL) of 3000 €/MWh and an interest rate of 5% are also used. To 
+simplify the analyses, this study only considers highly stylized dis-
+patchable technologies, namely base-load, mid-load and peak-load 
+technologies. These technologies resemble respectively nuclear, coal 
+and gas power plants whose techno-economic characteristics are based 
+on the collected data in Ref. [44]. The techno-economic characteristics 
+of these technologies are shown in Table 2. 
+3.1.3.3. Submodels. The algorithm that describes the investment in new 
+power plants consists of three steps. This investment decision making 
+algorithm is followed by every single generation company. First, market 
+conditions regarding the future electric power system are derived by 
+taking capacity mix evolution, fuel prices and load data into consider-
+ation. Second, the future market condition is used to project future 
+market prices. Different price projection methods are elaborated in 
+Fig. 1. An example of the temporal representation via representative days [43].  
+5 Depending on the purpose of the research, this can easily be changed if 
+desirable. 
+6 The data is publicly accessible on the website of ELIA (Belgian transmission 
+system operator). Link: http://www.elia.be/en/grid-data/data-download. 
+Z. Tao et al.
+
+Renewable and Sustainable Energy Reviews 136 (2021) 110405
+5
+Section 3.2. Third, the profitability of each candidate power plant is 
+assessed by calculating its NPV. Finally, the power plant that renders the 
+highest NPV is selected. The NPV calculation takes into account the 
+expected revenue, the expected cost, and the discount factor (repre-
+senting the minimal expected rate of return). The formula to calculate 
+NPV is shown in Eq. (1):  
+where r denotes the annual interest rate and γj,y,d,h represents the ca-
+pacity factors. 
+The fixed cost term fj,y, being independent of the actual electricity 
+generation gj,y,d,h, is the sum of the annualized investment cost fCAPEX
+j and 
+the fixed operation and maintenance (FOM) cost of the corresponding 
+technology fO&M
+j . Mathematically, the fixed costs of each installed gen-
+eration unit calculated as in Eq. (2): 
+fj,y=fO&M
+j +fCAPEX
+j ,∀j∈ J,∀y∈ Y (2)  
+where the investment cost is calculated with Eq. (3): 
+fCAPEX
+j =Pj ⋅ r⋅(1+r)nj
+(1+r)nj   1,∀j∈ J (3) 
+The variable cost term vj,y,d,h, calculated via Eq. (4), is dependent on 
+the actual electricity generation and consist of fuel costs (plus emission 
+costs and taxes) vfuel
+j,y,d,h/μj and variable operations and maintenance costs 
+(VOM) vO&M
+j,y,d,h. 
+vj,y,d,h=vO&M
+j,y,d,h+vfuel
+j,y,d,h
+μj
+,∀j∈ J,∀y∈ Y,∀d∈ D,∀h∈ H (4) 
+The key assumptions that underpin the model structure are listed 
+below7:  
+• The load data is assumed to remain unchanged and repeated every 
+year. For each hour, the load is assumed to be inelastic.  
+• The techno-economic characteristics for all technologies are 
+assumed to be constant over the whole simulation period.  
+• The selection and corresponding weights of the representative days 
+are assumed to remain unchanged in the future.  
+• Generation company agents’ investment decisions are not subject to 
+budget constraints. 
+Fig. 2. Flowchart of the core long-term agent-based model.  
+NPVj=
+∑
+y
+(
+1
+(1+r)y
+(
+ 
+  fj,y ⋅Gj,y
+)
++
+(∑
+d
+∑
+h
+Wy,d ⋅γj,y,d,h ⋅gj,y,d,h ⋅
+ 
+py,d,h  vj,y,d,h
+)
+)))
+(1)   
+7 Note that these assumptions are only essential for this specific theoretical 
+study. One can change these assumptions accordingly if the model is used for 
+case-specific analyses. 
+Z. Tao et al.
+
+Renewable and Sustainable Energy Reviews 136 (2021) 110405
+6
+Note that these assumptions are deployed in this theoretical study 
+that mainly focuses on methodological analyses, and they are essential 
+to enhance the transparency of the analyses. If the model is to be used for 
+a case-specific analysis, these assumptions can be relaxed. 
+3.2. The architecture of different price projection methods 
+In existing long-term agent-based modeling frameworks, two 
+different types of price projection methods can be identified: exogenous 
+price projection methods and endogenous price projection methods. 
+Each type can be further differentiated by the form of essential infor-
+mation provided as input to the corresponding method. Table 3 presents 
+an overview of price projection methods adopted in existing long-term 
+agent-based modeling frameworks. 
+One can distinguish from Table 3 that both types of existing price 
+projection methods rely on a so-called virtual market clearing simulation 
+module. This module determines projections of future electricity prices 
+and operating hours for different investment options by combining the 
+projections of the future capacity mix with fuel prices, demand and 
+technological information. Although the virtual market clearing mod-
+ules are formulated (and named) differently in these referenced frame-
+works, they can all be interpreted as a merit-order based, supply- 
+demand matching market clearing algorithm. 
+We build a generalized merit-order based virtual market clearing 
+simulation module, which is shown in Fig. 3. In the virtual market 
+clearing simulation process, the market is cleared each time step based 
+on the capacity mix projection over a look-ahead horizon. This look- 
+ahead horizon parameter determines how far in the future an agent 
+can have access to information when an investment object is evaluated. 
+This parameter has been named as “forecast period” and “reference year 
+time horizon” in Refs. [32,35], respectively. 
+Given the similarities of how future information is processed, 
+important differences exist in terms of how future capacity mixes are 
+projected. In the following, existing price projection methods will be 
+described in detail, with special attention paid to capacity mix projec-
+tion composition. A novel (endogenous) price projection method is also 
+introduced. 
+3.2.1. Exogenous price projection methods 
+Exogenous price projection methods rely on information about the 
+future system from sources that are independent of the model itself. This 
+information usually appears in one of two forms: future electricity prices 
+or the evolution of the future capacity mix. 
+Projections of future electricity price information can be obtained in 
+various ways. As an example, future electricity prices can be obtained by 
+extrapolating past electricity prices using pattern recognition methods, 
+as in Ref. [46]. A future capacity mix is typically drawn from third-party 
+reports or research findings. With this information, the agents can run a 
+virtual market clearing simulation module to retrieve expected future 
+revenues and infra-marginal rents. 
+Concerning the price projection methods in existing agent-based 
+modeling frameworks, the Exo. 1 price projection method retrieves 
+future price information directly from interviews of market participants. 
+The Exo. 2 electricity price projection method divides future electricity 
+prices into two intervals: the first five years and the further future. 
+During the first five years, it is assumed that the electricity price is the 
+same as the spot market price in the current year. In the further future, 
+the electricity price is calculated based on the capacity mix projection in 
+a published report. 
+Despite the relatively straightforward implementation process, there 
+are clear limitations of exogenous price projection methods. First, the 
+modeling results are fully driven by the exogenously determined ca-
+pacity mix/price projections. That is, the projections (and hence the 
+decisions) of an agent are always in line with the exogenous input, 
+regardless of the actual investment decisions made earlier by other 
+agents. Therefore, the decisions taken by the agents during the 
+simulation do not impact the decisions taken by other agents. In reality, 
+however, there are strong interlinkages. For instance, the market value 
+of wind generations tends to decrease significantly with the total 
+installed wind power capacity. Second, relying on exogenous capacity 
+mix/price projections data results in loss of flexibility in establishing 
+case-specific scenarios. That is, one is restricted to using data from 
+existing reports/surveys. In addition, the lack of interaction among 
+agents results in loss of flexibility in terms of capturing some factors such 
+as social influence8 and endogenous risk perceptions. 
+3.2.2. Endogenous price projection methods 
+As the name implies, in endogenous price projection methods, the 
+agents endogenously project future prices (and corresponding revenues 
+and infra-marginal rents) during the simulation, i.e. the user does not 
+need to supply (all) direct information regarding future electricity prices 
+or the future capacity mix evolution. 
+Examples of agent-based modeling frameworks that have adopted 
+endogenous price projection methods include for instance Ref. [24,32, 
+35]. In these references, the price projection method generally consists 
+of two steps. In the first step, projections are made regarding the future 
+capacity mix. In the second step, the capacity mix projections are used as 
+an input in the virtual market clearing simulation module. 
+The Endo. 1 price projection method is shown in Fig. 4a. Here, agents 
+project the capacity mix in a given future year by starting from the 
+existing capacity mix and adding the already announced or built new 
+capacities (i.e., the investment decisions made by other agents during 
+the course of the simulation) and subtracting the capacities reaching life 
+expectancies before that given year. Although this approach seems 
+reasonable at first sight, in this method the agents implicitly assume 
+that, when projecting the prices in a given future year, no new invest-
+ment decisions will happen between the current model year and a given 
+future year. Given that these future investments make up a bigger share 
+of the capacity mix as one looks further into the future (as a result of 
+decommissioning of existing plants), this method has its limitations for 
+projecting revenue streams further into the future. For this reason, this 
+method henceforth will be referred to as “myopic agents”. The term 
+“myopic” refers to an agent being short-sighted in terms of the infor-
+mation being considered regarding future market conditions. For this 
+method, the choice of the look-ahead horizon could substantially influ-
+ence the resulting macro-system-level capacity mix evolution. As will be 
+shown in Section 5.1, the assumption that the agents do not anticipate 
+investments made in future years makes the simulation results sensitive 
+to different look-ahead horizons. In addition, this method does not allow 
+anticipating expected changes in the capacity mix, such as the possible 
+expectation of increasing penetration of renewable energy sources in the 
+future electricity system. 
+Fig. 4b represents the Endo. 2 price projection method. In addition to 
+the information already considered by the “myopic agents” method, the 
+Endo. 2 price projection method considers projections for future in-
+vestments of competitors. Similar to the “myopic agents” method, the 
+resulting projections of the future capacity mix are then used as inputs in 
+the virtual market clearing simulation module to project future elec-
+tricity prices. For investment decision making, the model presented in 
+Ref. [32] includes uncertainties regarding the load growth, hydropower 
+conditions, and the investments made by competitors in future years. 
+The uncertainties are represented via a scenario tree, as visualized in 
+Fig. 5. As shown on the right-hand side of Fig. 5, for each agent,9 the 
+8 In Ref. [52], social influence is defined as “change in a person’s cognition, 
+attitude, or behavior, which has its origin in another person or group.” 
+9 As this specific study is based on a highly stylized system and mainly fo-
+cuses on simulation results on system level, it is assumed that agents are ho-
+mogeneous. Hence, using one scenario tree for each agent is equivalent to using 
+one common scenario tree for all agents. Nevertheless, the model is designed to 
+allow agents to have diversified scenario tree if desired. 
+Z. Tao et al.
+
+Renewable and Sustainable Energy Reviews 136 (2021) 110405
+7
+uncertainty regarding competitors’ capacity expansion decisions is 
+composed of two layers: the total capacity installed and the distribution 
+of this capacity among different technology types. In the first layer, 3 
+branches varying in the total capacity installed by competitors are 
+considered, and probabilities are assigned to each of these branches. In 
+the second layer, each branch is further split into 3 sub-branches varying 
+in the distribution of the total installed capacity among different tech-
+nology types. It is important to note that, although the agents make 
+endogenous projections of the future capacity mix, the projections in 
+this method are strongly determined by exogenous inputs (i.e., the 
+amount and distribution of capacity investments by competitors in each 
+scenario, and the probabilities assigned to the different scenarios). 
+Therefore, this method will be referred to as the “exogenous scenarios for 
+future investments” method in the remainder of this text. 
+Similar to the exogenous price projection methods, this method has 
+certain clear limitations. The primary limitation is the availability of 
+parameters for the scenario tree, which results in loss of flexibility in 
+establishing case-specific scenarios. Alternatively, one can carefully 
+calibrate the scenario tree with the help of historical system capacity 
+mix development. This type of calibration can influence the simulation 
+results by presuming that the future capacity mix evolves in a similar 
+manner to the past, which has been proved to be inappropriate because 
+of various factors such as the emergence of new technologies and new 
+entrepreneurial competitors [47]. Moreover, as the total capacity 
+parameter determines the residual space for the corresponding agent (to 
+invest in), the new investments in a milestone year are approximately 
+the sum of all agents’ residual space. This interplay between the 
+parameter total capacity and the total number of agents further reduces 
+the transparency of the agent-based model: even small deviations on 
+exogenous inputs to agents’ investment decision making can be ampli-
+fied by the magnitude of the total number of agents and might strongly 
+shape the core macro-system-level results of the model. A sensitivity 
+analysis of the parameters of the scenario tree is carried out in Section 
+4.2. 
+3.2.3. Novel optimization-based price projection method 
+As presented in Fig. 6, in the novel optimization-based price pro-
+jection method, the agents make price projections by solving a genera-
+tion expansion planning problem (i.e., a traditional long-term electric 
+power system optimization model). The interpretation of this method is 
+that each agent assumes that the system capacity mix will evolve in a 
+cost-minimizing manner when making long-term price projections10. 
+For this reason, this method henceforth will be referred to as the “cost- 
+minimizing future investments” method. The information regarding the 
+current capacity mix, already announced investments and future 
+decommissioning plans/expectations is used as input to the generation 
+expansion planning problem. The output information from this gener-
+ation expansion planning problem is twofold: shadow price and capacity 
+mix projections. A similar method has been adopted in Ref. [48], where 
+the authors present a price projection method assuming that the ca-
+pacity mix will reach the optimal portfolio by the end of the look-ahead 
+horizon. The price projection method interpolate prices between a 
+myopic short-term market equilibrium and a long-term greenfield 
+equilibrium, the price information between the short-term and the 
+long-term equilibrium is approximated using an exponential function. 
+One of the fundamental improvements of the (optimization-based) price 
+projection method proposed in this study is that the price information is 
+based on the capacity mix evolution instead of a function-based 
+Table 2 
+Techno-economic characteristics for the considered technologies.  
+Technology Size of one unit (MW) Lifetime (year) VOM (€/MWh) Fuel price (€/MWh) Efficiency FOM (€/kW/a) Capital cost (€/kW) 
+Base-load 100 20 5 3 0.4 80 3000 
+Mid-load 100 20 4 15 0.48 40 1200 
+Peak-load 100 20 4 25 0.6 17 800  
+Table 3 
+Summary of price projection methods in existing long-term agent-based 
+modeling frameworks.  
+Classification Short description of the price projection 
+methods 
+Example 
+(s) 
+Exogenous Exo. 1 Price projection based on the information 
+provided by market participants. 
+[31] 
+Exo. 2 Virtual market clearing with exogenous 
+capacity mix projections with existing 
+reports as input. 
+[29,45] 
+Endogenous Endo. 
+1 
+Virtual market clearing assuming zero future 
+investments. 
+[24,35] 
+Endo. 
+2 
+Virtual market clearing based on an 
+endogenously established capacity mix 
+projection. The uncertainties of competitors’ 
+future investments are exogenous and 
+represented via a scenario tree. 
+[32]  
+Fig. 3. Virtual market clearing simulation.  
+10 This assumption is equivalent to the assumption that agents assume perfect 
+competition (i.e., all agents are price-takers have perfect information, and 
+barriers to entry and exit are small.). 
+Z. Tao et al.
+
+Renewable and Sustainable Energy Reviews 136 (2021) 110405
+8
+approximation, which requires additional calibrations. 
+Depending on the problem at hand, one could either use the shadow 
+prices directly or could derive price forecasts starting from the capacity 
+mix projections. Deriving price forecasts via the capacity mix projections 
+allows considering for instance strategic behavior, negotiations for long- 
+term bilateral contracts and/or allows increasing the level of granular-
+ities by considering different weather years or outage distributions via 
+Monte-Carlo simulations. This provides modelers with the flexibility to 
+capture behavioral (or other) aspects in the context of the ongoing 
+electric power system transition. Fig. 7 illustrates how strategic bidding 
+behavior could be captured in the price forecasts. Note that taking 
+strategic behavior (e.g. market power) into consideration will poten-
+tially result in a different capacity mix projection. Hence, the “genera-
+tion expansion planning” does not necessarily have to be a cost- 
+minimization optimization problem. One of the alternatives is to use 
+MPEC (mathematical programming with equilibrium constraints) for 
+capacity mix projection as presented in Ref. [49], though implementing 
+an MPEC is beyond the scope of this paper. In the bidding game model, 
+each agent could, for instance, use a reinforcement learning algorithm to 
+derive its optimal bidding strategy. Via the learning algorithm, agents 
+will learn whether they can manipulate prices. This method has been 
+proven effective in Ref. [14] to forecast market prices in the context of 
+the New Zealand electricity market. A global overview of the long-term 
+agent-based model with the proposed investment decision making 
+framework and the novel price projection method is shown in Fig. A2 
+(Appendix II). 
+It is important to recall that the goal of the novel price projection 
+method is to enable the agents to base their investment decisions on 
+price projections that are (i) theoretically unbiased, (ii) transparent, (iii) 
+and can be flexibly generated for a range of possible scenarios (e.g., 
+differing in assumptions regarding evolutions of fuel cost, technological 
+improvements, and policies). Although out of the scope of this paper, it 
+is also important to note that the framework is sufficiently flexible to 
+allow considering specific features typical for an agent-based model, 
+such as the modeling of behavioral aspects. 
+The mathematical formulation of the generation expansion planning 
+problem used for price projection or capacity mix projection or both is as 
+follows. Since the optimization model will be dispatched frequently in 
+the course of the simulation, the optimization model has been formu-
+lated in a simple manner to reduce the computational cost. 
+3.2.3.1. Objective function. The objective function (Eq. (5)) aims to 
+minimize the total system cost: 
+min
+Gj,y
+∑
+y
+∑
+j
+(
+ 
+fj,y ⋅Gj,y
+)
++
+(∑
+d
+∑
+h
+Wd ⋅vj,y,d,h ⋅gj,y,d,h ⋅ Δt
+))
++
+(
+VoLL ⋅
+∑
+y
+∑
+d
+(
+Wd ⋅
+∑
+h
+lly,d,h
+))
+(5) 
+The two parts in the objective function represent the cost of elec-
+tricity generation and the cost of load loss, respectively. The cost of 
+electricity generation consists of fixed costs (see Eq. (2)) and variable 
+costs (see Eq. (4)). The cost of load loss is the weighted sum of load loss 
+over the entire optimization horizon multiplied by a fixed value of lost 
+load (VoLL). 
+3.2.3.2. Constraints.  
+• Energy balance constraint: for each time step t, the summation of 
+generators’ gross output and load loss equals the total demand. 
+Fig. 4. Schematic of endogenous price projection methods used in Ref. [35] (a) and [32] (b).  
+Fig. 5. Scenario tree deployed to represent the competitors’ expansion [32].  
+Z. Tao et al.
+
+Renewable and Sustainable Energy Reviews 136 (2021) 110405
+9
+∑J
+j=1
+ 
+gj,y,d,h ⋅ Δt
+)
++lly,d,h = Ly,d,h,∀j∈ J,∀y∈ Y,∀d∈ D,∀h∈ H (6)     
+• Installed capacity constraint: for each year, the capacity mix is 
+updated by adding new investment(s) and subtracting 
+decommissioning. 
+Gj,y=Gj,y  1+invj,y  1  decj,y  1,∀j∈ J,∀y∈ Y (7)     
+• Decommissioning constraint: the decommissioning of technology 
+type j in year y is the investment in technology type j in year y-nj, 
+where nj is the lifetime of the technology. 
+decj,y=invj,y  nj,∀j∈ J,∀y∈ Y (8)    
+• Generation limits: the actual power output of each type of technol-
+ogy is non-negative and should not exceed the installed capacity of 
+the corresponding technology. 
+0≤gj,y,d,h ≤ Gj,y,∀j∈ J,∀y∈ Y,∀d∈ D,∀h∈ H (9)  
+4. Case study set up 
+4.1. Key assumptions and settings of the core long-term agent-based 
+model 
+Recall that this study aims to effectively assess different price pro-
+jection methods. Under the assumption of perfect information and fully 
+rational agents as well as deterministic circumstances, a well-calibrated 
+agent-based model would be expected to reach (or at least approximate 
+very well) the long-run equilibrium. With the goal of benchmarking the 
+solution against the long-run equilibrium solution, it is further assumed, 
+in addition to the assumptions adopted in Section 3.1.3.3, that all agents 
+are fully rational, forward-looking and act as price takers. As shown in 
+Fig. 7, this assumption can be relaxed by running the virtual market 
+clearing simulation with strategic agents. 
+4.2. Configuration of the “exogenous scenarios for future investments” 
+price projection method 
+As discussed in Section 3.2.2, it is challenging to assign appropriate 
+values (both technology distributions and total capacities) for the sce-
+narios representing the future investments that will be made by com-
+petitors. To study the influence of these expectations, a sensitivity 
+analysis is performed in which the exogenously projected investments of 
+Fig. 6. Schematic of the novel optimization-based price projection method of each agent.  
+Fig. 7. An exemplary illustration of price projection taking strategic behavior into consideration.  
+Z. Tao et al.
+
+Renewable and Sustainable Energy Reviews 136 (2021) 110405
+10
+competitors are varied both in terms of the total capacity that is ex-
+pected to be added by competitors in future years as well as in terms of 
+the distribution of technologies in which competitors are expected to 
+invest. In terms of total capacity added, we consider competitors invest 
+up to 85%, 90% and 95% of the load peak.11 In terms of the technology 
+distribution, three different cases are considered. This leads to a total of 
+9 possible cases for the future investments projected to be made by 
+competitors. The parametric combinations and the corresponding tags 
+of these 9 cases are presented in Table 4. 
+5. Results and discussion 
+In this section, the simulation results of a long-term agent-based 
+model with different price projection methods are compared. Specif-
+ically, the following price projection methods are considered:  
+i. The “myopic agents” method (as presented in Section 3.2.2). 
+ii. The “exogenous scenarios for future investments” method (as pre-
+sented in Section 3.2.2).  
+iii. The “cost-minimizing future investments” method (as presented in 
+Section 3.2.3). 
+The potential impacts of these price projection methods on micro- 
+agent-level investment decision making algorithms are reflected at the 
+macro-system-level capacity mix. Hence, a sensitivity analysis is per-
+formed to the corresponding key parameters of different price projection 
+methods. As highlighted in Section 3, different price projection methods 
+have their respective key parameters:  
+i. The look-ahead horizon in the “myopic agents” method and the “cost- 
+minimizing future investments” method12  
+ii. The values assigned to the scenario tree in the “exogenous scenarios 
+for future investments” method13 
+Fig. 8 provides an overview of the capacity mix resulting from 
+different price projection methods and their corresponding sensitivities. 
+The benchmark solution, as discussed in Section 3, for all simulations is 
+the long-run equilibrium, which is computed by a generation expansion 
+planning model that takes the same input data as the agent-based model. 
+The simulation results of the core agent-based model with the three 
+price projection methods incorporated are the averaged value of the 
+oscillations. As can be observed, the “myopic agents” and “exogenous 
+scenarios as future investments” price projection methods are highly 
+impacted by their corresponding key parameters. This is reflected by 
+the substantially varied macro-system-level capacity mix. The pro-
+posed “cost-minimizing future investments” price projection method, on 
+the other hand, is shown to systematically approximate the long-run 
+equilibrium. The following sections provide a detailed analysis of each 
+of the sensitivities considered. 
+5.1. Sensitivity analysis on the look-ahead horizon 
+The look-ahead horizon is a key micro-agent-level parameter in in-
+vestment decision making algorithms since it determines the future in-
+formation that is taken into account in agents’ investment decision 
+making. A perfectly rational and forward-looking agent would base its 
+investment decision on revenue/rent projections within the entire life-
+time of the considered investment. Nevertheless, as outlined in Section 
+1, heterogeneous agents can have particular perceptions of the infor-
+mation and they can be myopic (i.e., have a limited foresight). The look- 
+ahead horizon can be adjusted to represent possible short-sightedness of 
+agents. Adjustments of the look-ahead horizon thus reflect a way of 
+modeling a behavioral aspect. Note that in this work, we aim to establish 
+a robust and theoretically unbiased core long-term agent-based model. 
+Hence, we neglect behavioral aspects. Note also that the current 
+modeling setting has constant fuel prices, technological costs as well as a 
+fixed load profile (i.e., the load profile remains constant over different 
+years in the simulation). In this setting, an agent-based model should in 
+principle be able to approximate the long-run equilibrium on the macro- 
+system-level regardless of the micro-level assumptions on the agents’ 
+look-ahead horizon. Therefore, under the current case study, we 
+consider the robustness of the system capacity mix to changes in the 
+look-ahead horizon as an important indicator of investment decision 
+robustness. As discussed in Section 3.2.2, the look-ahead horizon is 
+particularly important for the “myopic agents” price projection method, 
+as the share of future investments in the future capacity mix grows when 
+looking further into the future. 
+As shown in Fig. 8, the simulation results are highly sensitive to 
+different look-ahead horizons when using the “myopic agents” price 
+projection method. More specifically, the overinvestment grows larger 
+as the look-ahead horizon becomes longer. Peak-load technology ac-
+counts for most of the overinvestment. The simulation results of the 
+agent-based model with the “cost-minimizing future investments” price 
+projection method are more robust under different look-ahead horizons 
+and systematically approximate the equilibrium solution very well. This 
+indicates that the core long-term agent-based model, with investment 
+decision making algorithm integrated, can serve as an ideal theoretical 
+benchmark for further extension of the model. 
+The results in Fig. 8 also show that using the “myopic agents” price 
+projection method with a 5-year look-ahead horizon can approximate 
+the long-run equilibrium. The reason is that using a 5-year look-ahead 
+horizon means that the agents base their investment decisions only on 
+the system status in the first milestone year, thus the observed scarcity is 
+the recent decommissioning and no future information is considered. In 
+a perfectly competitive market, the profit-maximizing agents will make 
+investment decisions that fill the gap in a system cost-minimizing 
+manner. 
+To shed light on why the model is sensitive to the parameter look- 
+ahead horizon, we take the case where agents are assumed to have the 
+longest look-ahead horizon (20 years or the lifetime of the technologies) 
+as an example. Recall that every fifth year is a milestone year, meaning 
+20 years comprise 4 milestone years. With different price projection 
+Table 4 
+Parameters considered for the expansion scenario tree.   
+Distribution (Base/Mid/Peak) 
+Competitors’ total expansion 0.2/0.5/0.3 0.3/0.2/0.5 0.5/0.3/0.2 
+0.95 (a) (b) (c) 
+0.9 (d) (e) (f) 
+0.85 (g) (h) (i)  
+11 In Ref. [32], this parameter is 95% and a sensitivity analysis is performed by 
+reducing this parameter to 90%. However, an agent-level annual investment 
+cap restricts the development of the system capacity. Hence, to dissect the in-
+fluence of this parameter, we remove the agent-level investment cap and 
+further reduce this parameter to 85%. If this parameter is 100%, resulting 
+system capacity mix will be empty because all agents are expecting other agents 
+to completely fulfil the demand.  
+12 Scenario tree is not part of the “cost-minimizing future investments” method, 
+while this method still preserves the parameter look-ahead horizon. 
+13 Note that the look-ahead horizon, yet uncritical, also exists in the “exoge-
+nous scenarios for future investments” method. Further note that, as discussed in 
+Section 3.2.2, although the impact of the competitors’ total expansion param-
+eter is amplified by the total number of agents and we keep the total number of 
+agents constant in this study, similar studies can be carried out by keeping the 
+competitors’ total expansion constant and varying the total number of agents. 
+Nevertheless, the total number of agents, in specific case studies, should be 
+determined by the system one considers. 
+Z. Tao et al.
+
+Renewable and Sustainable Energy Reviews 136 (2021) 110405
+11
+methods, the capacity mix projections of the first agent that is making an 
+investment decision in the first investment round during a typical 
+milestone year are plotted in Fig. 9. 
+When agents make investment decisions assuming that no new in-
+vestments will happen, as shown in Fig. 9a, the first agent in the first 
+investment round will sense zero announced investment (as there is no 
+preceding investment in this milestone year). In combination with the 
+fact that all existing capacities will be decommissioned after three 
+milestone years (or after 15 years), as the youngest existing capacities 
+are the investments placed in the previous milestone year, being 5 years 
+ago. This leads to a huge projected lack of capacity in the fourth mile-
+stone year, even though over-capacities already exist in the first mile-
+stone year. In the virtual market clearing, this lack of capacity is 
+translated into electricity price projections corresponding to the price 
+cap for the entire year, which is obviously not realistic. The projected 
+high prices towards the end of the look-ahead period incentivize in-
+vestments until the point that the future supply gap is almost filled. In 
+addition, expecting supply gaps and corresponding high electricity pri-
+ces only in the last 5 years means the considered investment option tends 
+to be dispatched mainly in this period. Given this low number of pro-
+jected operating hours, the technology with the lowest fixed cost is 
+favored, which explains why peak load technology accounts for most of 
+the overinvestment. 
+A number of measures can be taken to avoid or mitigate this over-
+investment problem. For instance, one could force the agents to be 
+myopic (which is used in Ref. [24,35]) or impose an agent-level annual 
+investment cap (which is used in Ref. [32]). One could also consider 
+adjusting the projected electricity prices, for instance by reducing the 
+high prices observed towards the end of the look-ahead horizon. How-
+ever, requiring agents to behave myopically to forcibly correct unin-
+tended simulation results reduces the applicability of the model (that is, 
+only myopic investment behavior can be considered). Moreover, 
+although introducing corrective actions such as investment caps or price 
+adjustments does allow considering longer look-ahead horizons, it leads 
+to secondary problems (What is a reasonable investment limit? What 
+would be appropriate electricity prices at the end of the look-ahead 
+horizon?) and assumptions that both might require further rectifica-
+tion and reduce transparency. 
+Fig. 9b illustrates the capacity mix foreseen by agents with the “cost- 
+minimizing future investments” price projection method. In such a case, 
+the agents have the abilities to both establish expectations on future 
+investments and keep these expectations according to the intrinsic 
+characteristic of the system. Furthermore, the look-ahead horizon is no 
+longer affecting the investment decisions as the investment is no longer 
+incentivized by the unrealistic high electricity prices that arise only in 
+the last milestone year, but rather by the homogeneously distributed 
+electricity prices over the entire look-ahead horizon. 
+5.2. Sensitivity analysis on the values assigned to the scenario tree in the 
+“exogenous scenarios for future investments” price projection method 
+On micro-agent-level, the expectations of agents about competitors’ 
+expansion plan directly affect their investment decisions by altering the 
+projections of future electricity prices. These affected investment de-
+cisions will ultimately be reflected on the macro-system-level in the form 
+of capacity mix variations. Fig. 10 shows the resulting system capacity 
+mixes for different cases of the competitors’ expansion projections (see 
+Section 4.2 for a detailed description of these cases). The resulting 
+macro-system-level capacity mix for each case is shown in Fig. 10 and 
+summarized in Table 5. 
+Overall, one can observe that the simulation results vary largely 
+depending on the exogenous inputs used. First, by comparing the system 
+capacity mix for different expectations regarding the total capacity 
+projected to be added by competitors in the future (comparing the 
+different capacity mix groups in Fig. 10), one can observe that 
+decreasing the expectation on competitors’ total expansion (from 95% 
+to 90% and 85%) leads to a substantial increase in the total system ca-
+pacity and vice versa. On the one hand, low expectations on competi-
+tors’ total expansion lead to unrealistic high prices in the future and 
+these high electricity prices trigger investments until the future supply 
+Fig. 8. Overview of the impact of key parameters of different price projection methods on the resulting system capacity. The considered price projection methods are 
+described in Section 3.2 and the corresponding pathways to equilibrium are illustrated in Fig. A3. The cases considered for the “exogenous scenarios for future in-
+vestments” method are presented in Table 4. 
+Z. Tao et al.
+
+Renewable and Sustainable Energy Reviews 136 (2021) 110405
+12
+gaps are filled. On the other hand, high expectations on competitors’ 
+total expansion squeeze the investments of all agents and lead to un-
+derinvestment, i.e., all of the agents lack of an investment incentive 
+because they overestimated competitors’ future investments. 
+Second, by comparing the different projections of the technology 
+distribution of the future investments by competitors (comparing the 
+capacity mixes within each group in Fig. 10), it can be seen that the 
+assumed technology distribution can result in a considerable change in 
+the system capacity mix. More specifically, the more a certain type of 
+technology is expected to be invested in by competitors, the less the 
+agents will invest in this technology, and vice versa. Consider the Group 
+1 of Fig. 10 as an example. As the expected proportion of future in-
+vestments in peak-load technology increases from 20% to 30% and 50%, 
+the proportion of peak-load technology in the simulation results de-
+creases from 40.8% to 36% and 22.7%, respectively. A similar trend also 
+holds for investments in base-load technologies. For mid-load technol-
+ogies, it is more complicated as the economic potential for investments 
+in mid-load technologies is also strongly impacted by the projected in-
+vestments in base-load and peak-load technologies. 
+Additionally, one can also find that as the projected total capacity 
+installed by competitors in future years decreases (inter-Group), the 
+technology distribution of the projected investments by competitors 
+(intra-Group) has a smaller impact on the resulting system capacity mix. 
+This is primarily because the influence of these expectations tends to be 
+weaker as the expected investments become less. At the same time, as 
+the projected competitors’ investment becomes less (inter-Group), the 
+driving factor switches from technology distribution to the total capacity 
+added. And as a result, the macro-system-level capacity mixes tend to 
+resemble each other. In fact, in the extreme condition (with the total 
+expansion expectation reduced to zero), these capacity mixes converge 
+to those of the “myopic agents” method. 
+Moreover, although different capacity distribution parameters 
+change the capacity mix, the total amount of capacity remains constant 
+within one total expansion level setting. That is, the total amount of 
+Fig. 9. Capacity mix projections of the first agent that is making an investment decision in the first investment round during a typical milestone year.  
+Z. Tao et al.
+
+Renewable and Sustainable Energy Reviews 136 (2021) 110405
+13
+installed capacity is completely driven by the setting of the expected 
+total amount of competitors’ expansion, instead of the intrinsic char-
+acteristics of the model. 
+5.3. Implications and limitations 
+The analysis above suggests that the assumptions adopted by in-
+vestment decision making algorithms (on agent level) can highly impact 
+the simulation results on system level. Specifically, the system capacity 
+mix is highly sensitive to the parameter look-ahead horizon when the 
+“myopic agents” price projection method is used. This is due to that this 
+method implicitly assumes no new investment will happen in the future 
+and therefore a supply gap will arise, which triggers new investments in 
+the agents’ located milestone year (i.e. milestone year 1) to compensate 
+for the unrealistic under-capacity in the further future. Examination on 
+“exogenous scenarios for future investments” price projection method 
+shows that, the values assigned to the scenario tree regarding competi-
+tors’ investments (on agent level) is dominating the simulation results 
+on the system level. Overall, the two layers on the scenarios tree govern 
+different aspects of the simulation results: the total amount of installed 
+capacity is driven by the expectation on competitors’ total investment, 
+and the share of different types of technologies are mainly influenced by 
+the second layer of the scenario tree (i.e. how competitors’ new in-
+vestments are distributed among candidate technologies). As we have 
+shown, our proposed “cost-minimizing future investments” price projection 
+method requires less exogenous parameters (i.e. scenario tree) and is 
+more robust to the parameter look-ahead horizon. 
+The newly proposed price projection and the analysis performed in 
+this study, however, do have several limitations. From a methodological 
+viewpoint, using the resulting output from a generation expansion 
+planning problem to guide investment decision making implicitly as-
+sumes that the agents are expecting the capacity mix to evolve in a cost- 
+minimizing manner. The electricity market, in reality, is more compli-
+cated. For example, strategic investment behavior or market 
+imperfections can result in deviations from the perfect market outcome. 
+One of the alternatives is to consider the MPEC (mathematical pro-
+gramming with equilibrium constraints) formulation of a generation 
+expansion planning problem, which allows the inclusion of strategic 
+investment behaviors, as presented in Ref. [49]. Moreover, note that the 
+analysis is performed in a highly stylized electric power system where 
+the agents are stripped of distinctive features such as behavioral factors. 
+In reality, there exist many behavioral factors that influence investment 
+decision making. Accounting for these factors can deviate the results 
+from the perfect market outcomes and can mitigate the impact of the 
+existing price projection methods’ underlying assumptions on model 
+outcomes. For instance, employing risk-averse agents can reduce the 
+sensitivity of the parameter look-ahead horizon because the unrealistic 
+profit in the distant future is subject to a very high discount rate. Hence, 
+the existing price projection methods, if adequately parameterized, can 
+also approximate empirical results. 
+6. Conclusion 
+This paper reviewed different investment decision making algo-
+rithms adopted in long-term agent-based electric power system simu-
+lation models. Furthermore, this paper compared three endogenous 
+investment decision making algorithms by benchmarking against the 
+long-run equilibrium. More specifically, sensitivity analyses on the as-
+sumptions adopted by the two existing investment algorithms have been 
+carried out and compared with a novel investment decision making 
+algorithm. 
+Simulation results show that, in an isolated electricity market with 
+highly stylized modeling settings, the investment decisions made by 
+existing investment algorithms are highly sensitive to assumptions 
+regarding certain parameters of the investment decision making algo-
+rithms. Due to the difficulties to properly calibrate these values, the 
+credibility and transparency of simulation results can be influenced by 
+the selection of key parameters. Therefore, it is of great importance for 
+Fig. 10. System capacity mix with different competitors’ expansion projections.  
+Z. Tao et al.
+
+Renewable and Sustainable Energy Reviews 136 (2021) 110405
+14
+modelers to be well aware of the influences imposed by these assump-
+tions and key parameters. 
+Further analysis has shown that the core agent-based model – with 
+the proposed micro-agent-level “cost-minimizing future investments” 
+price projection method adopted – is robust and more transparent in the 
+theoretical modeling settings used in this study. This core agent-based 
+model, with the proposed price projection method integrated, enables 
+agent-based modelers to mitigate the potential impacts of implicit as-
+sumptions (related to modeling specific behavioral aspects) and the in-
+fluence of control variables (e.g., policy instruments), thereby paving 
+the road towards transparent, unbiased, and robust long-term agent- 
+based electric power system simulation models. 
+In light of the results we have presented, future work will focus on 
+developing more elaborated investment decision making algorithms. It 
+is of particular interest to consider risk-averse investment decision 
+making under uncertainty and market imperfections. The uncertainties 
+include but are not limited to load growth uncertainties, fuel price un-
+certainties, and policy uncertainties. The model will then be able to map 
+from these uncertainties to price projection uncertainties, which calls for 
+a stochastic generation expansion planning problem to generate a price 
+projection distribution. Furthermore, future work will incorporate 
+renewable energy sources into the modeling framework. To do so, both 
+the NPV calculation and the price projection method have to be 
+improved. On the one hand, regarding the NPV calculation, revenues 
+from renewable support schemes should be further considered in addi-
+tion to the fixed costs, variable costs and day-ahead market revenues. On 
+the other hand, the optimization problem will have to consider endog-
+enously the impact of renewable support schemes. For instance, an in-
+vestment subsidy can be modelled as a linear fixed revenue at each year 
+for each type of renewable technology, this can be a one-off payment or 
+payments that spread over several years, whereas a market-based sup-
+port scheme (e.g. green certificates market), requires additional con-
+straints to couple with the day-ahead market in a two-stage optimization 
+problem. These future improvements to the agent-based modeling 
+framework will be tested in a specific case study. An interesting case 
+study, where the impact of the incorporation of renewable energy 
+sources, agents’ decision-making under uncertainty, and market im-
+perfections on models results could be demonstrated, it is the analysis of 
+the Belgian nuclear phase-out. 
+Declaration of competing interest 
+The authors declare that they have no known competing financial 
+interests or personal relationships that could have appeared to influence 
+the work reported in this paper. 
+Acknowledgements 
+This research received funding from Fonds Wetenschappelijk 
+Onderzoek (FWO) with grant number S006718N, and the Belgium 
+Federal Public Service Economy, Energietransitiefonds, Neptune 
+project.  
+Appendix I. Reduced load duration curve in contrast with the original load duration curve
+Fig. A1. Reduced load duration curve in contrast with the original load duration curve.  
+Table 5 
+Amount of different technologies in the capacity mixes (unit: MW).   
+Group 1 Group 2 Group 3 
+Technology (a) (b) (c) (d) (e) (f) (g) (h) (i) 
+Base-load 7473 7307 6493 8000 7967 8000 7933 7933 7933 
+Mid-load 207 1967 607 3280 3747 2947 3847 3953 3787 
+Peak-Load 4320 2727 4900 10720 10287 11053 18220 18113 18280 
+Total 12000 12001 12000 22000 22001 22000 30000 29999 30000  
+Z. Tao et al.
+
+Renewable and Sustainable Energy Reviews 136 (2021) 110405
+15
+Appendix II. Flow diagram of the agent-based model  
+Fig. A2. Overview of the agent-based model with the novel price projection method embedded into investment processes.   
+Z. Tao et al.
+
+Renewable and Sustainable Energy Reviews 136 (2021) 110405
+16
+Appendix III. The pathway to equilibrium (of the cases shown in Fig. 8)  
+Fig. A3. The pathway to equilibrium (of the cases shown in Fig. 8).  
+Z. Tao et al.
+
+Renewable and Sustainable Energy Reviews 136 (2021) 110405
+17
+Credit author statement 
+Zhenmin Tao: Conceptualization, Software, Writing - original draft. Jorge A. Moncada: Supervision, Conceptualization, Writing- Review & Editing. 
+Kris Poncelet: Supervision, Conceptualization, Writing- Review & Editing. Erik Delarue: Supervision, Conceptualization, Writing- Review & Editing. 
+References 
+[1] Skea J, Nishioka S. Policies and practices for a low-carbon society. Clim Policy 
+2008;8:S5–16. https://doi.org/10.3763/cpol.2008.0487. 
+[2] Li FGN. Actors behaving badly: Exploring the modelling of non-optimal behaviour 
+in energy transitions. Energy Strateg Rev 2017;15:57–71. https://doi.org/ 
+10.1016/j.esr.2017.01.002. 
+[3] Li FGN, Trutnevyte E, Strachan N. A review of socio-technical energy transition 
+(STET) models. Technol Forecast Soc Change 2015;100:290–305. https://doi.org/ 
+10.1016/j.techfore.2015.07.017. 
+[4] Li FGN, Strachan N. Modelling energy transitions for climate targets under 
+landscape and actor inertia. Environ Innov SocTransitions 2017;24:106–29. 
+https://doi.org/10.1016/j.eist.2016.08.002. 
+Fig. A3. (continued).  
+Z. Tao et al.
+
+Renewable and Sustainable Energy Reviews 136 (2021) 110405
+18
+[5] Masini A, Menichetti E. The impact of behavioural factors in the renewable energy 
+investment decision making process: Conceptual framework and empirical 
+findings. Energy Pol 2012;40(1):28–38. https://doi.org/10.1016/j. 
+enpol.2010.06.062. 
+[6] Masini A, Menichetti E. Investment decisions in the renewable energy sector: An 
+analysis of non-financial drivers. Technol Forecast Soc Change 2013;80(3):510–24. 
+https://doi.org/10.1016/j.techfore.2012.08.003. 
+[7] Bergek A, Mignon I, Sundberg G. Who invests in renewable electricity production? 
+Empirical evidence and suggestions for further research. Energy Pol 2013;56: 
+568–81. https://doi.org/10.1016/j.enpol.2013.01.038. 
+[8] Bale CSE, Varga L, Foxon TJ. Energy and complexity: new ways forward. Appl 
+Energy 2015;138:150–9. https://doi.org/10.1016/j.apenergy.2014.10.057. 
+[9] Allcott H, Mullainathan S. Behavior and energy policy. Science 2010;327(5970): 
+1204–5. https://doi.org/10.1126/science.1180775. 
+[10] Bower J, Bunn DW. Model-based comparisons of pool and bilateral markets for 
+electricity. Energy J 2000;21(3):1–29. 
+[11] Bunn DW, Oliveira FS. Agent-based simulation - an application to the new 
+electricity trading arrangements of England and Wales. IEEE Trans Evol Comput 
+2001;5(5):493–503. 
+[12] Sun J, Tesfatsion L. Dynamic testing of wholesale power market designs: an open- 
+source agent-based framework. Comput Econ 2007;30(3):291–327. https://doi. 
+org/10.1007/s10614-007-9095-1. 
+[13] Maenhoudt M. Strategic behaviour in power wholesale electricity markets - design, 
+implementation & validation of an agent-based simulation platform. Leuven: KU 
+Leuven; 2014. 
+[14] Young D, Poletti S, Browne O. Can agent-based models forecast spot prices in 
+electricity markets? Evidence from the New Zealand electricity market. Energy 
+Econ 2014;45:419–34. 
+[15] Ernst D, Minoia A, Ilic M. Market dynamics driven by the decision-making power 
+producers. In: Proceedings of 2004 IREP symposium-bulk power system dynamics 
+and control-VI. IEEE; 2004. p. 1–6. 
+[16] Bagnall AJ, Smith GD. A multiagent model of the UK market in electricity 
+generation. IEEE Trans Evol Comput 2005;9(5):522–36. https://doi.org/10.1109/ 
+TEVC.2005.850264. 
+[17] Zheng M, Meinrenken CJ, Lackner KS. Agent-based model for electricity 
+consumption and storage to evaluate economic viability of tariff arbitrage for 
+residential sector demand response. Appl Energy 2014;126:297–306. https://doi. 
+org/10.1016/j.apenergy.2014.04.022. 
+[18] Iychettira KK, Hakvoort RA, Linares P, de Jeu R. Towards a comprehensive policy 
+for electricity from renewable energy: designing for social welfare. Appl Energy 
+2017;187:228–42. https://doi.org/10.1016/j.apenergy.2016.11.035. 
+[19] Sensfuss F, Ragwitz M, Genoese M. Simulating the expansion of renewable 
+electricity generation in Germany-An Agent-Based Approach. In: Proceedings of 
+the 29th IAEE international conference; 2006. p. 1–11. 
+[20] Bublitz A, Renz L, Keles D, Genoese M, Fichtner W. An assessment of the newly 
+proposed strategic reserve in Germany. In: International conference on the 
+European energy market. EEM; 2015. p. 1–5. 
+[21] Bhagwat PC, Iychettira KK, Richstein JC, Chappin EJL, De Vries LJ. The 
+effectiveness of capacity markets in the presence of a high portfolio share of 
+renewable energy sources. Util Pol 2017;48:76–91. https://doi.org/10.1016/j. 
+jup.2017.09.003. 
+[22] Bhagwat PC, Richstein JC, Chappin EJL, Iychettira KK, De Vries LJ. Cross-border 
+effects of capacity mechanisms in interconnected power systems. Util Pol 2017;46: 
+33–47. https://doi.org/10.1016/j.jup.2017.03.005. 
+[23] Richstein JC. Interactions between carbon and power markets in transition. Delft: 
+TU Delft; 2015. https://doi.org/10.4233/uuid:0e1dcc59-40f0-4ff9-a330- 
+c185fdfca119. 
+[24] Chen H, Wang C, Cai W, Wang J. Simulating the impact of investment preference 
+on low-carbon transition in power sector. Appl Energy 2018;217:440–55. https:// 
+doi.org/10.1016/j.apenergy.2018.02.152. 
+[25] de Vries L, Heijnen P. The impact of electricity market design upon investment 
+under uncertainty: the effectiveness of capacity mechanisms. Util Pol 2008;16: 
+215–27. https://doi.org/10.1016/j.jup.2007.12.002. 
+[26] Weidlich A, Veit D. A critical survey of agent-based wholesale electricity market 
+models. Energy Econ 2008;30:1728–59. https://doi.org/10.1016/j. 
+eneco.2008.01.003. 
+[27] Ringler P, Keles D, Fichtner W. Agent-based modelling and simulation of smart 
+electricity grids and markets - a literature review. Renew Sustain Energy Rev 2016; 
+57:205–15. https://doi.org/10.1016/j.rser.2015.12.169. 
+[28] Richstein JC, Chappin EJL, de Vries LJ. Cross-border electricity market effects due 
+to price caps in an emission trading system: an agent-based approach. Energy Pol 
+2014;71:139–58. https://doi.org/10.1016/j.enpol.2014.03.037. 
+[29] Genoese M, Genoese F, Fichtner W. Model-based analysis of the impact of capacity 
+markets on electricity markets. In: 9th international conference on the European 
+energy market, EEM, vol. 12; 2012. p. 1–6. 
+[30] Sensfuß F, Genoese M. Agent-based simulation of the German electricity markets: 
+an analysis of the German spot market prices in the year 2001. In: 9th Symposium 
+energieinnovation kurzfassungsband: dritte energiepreiskrise. Anforderungen an 
+die Energieinnovation; 2006. p. 1–12. 
+[31] Reeg M, et al. AMIRIS - an agent-based simulation model for the analysis of 
+different support schemes and their effects on actors involved in the integration of 
+renewable energies into energy markets. In: 23rd International workshop on 
+database and expert systems applications. DEXA; 2012. p. 339–44. https://doi.org/ 
+10.1109/DEXA.2012.54. 
+[32] Botterud A, Mahalik MR, Veselka TD, Ryu H-S, Sohn K-W. Multi-agent simulation 
+of generation expansion in electricity markets. In: 2007 IEEE power engineering 
+society general meeting. IEEE; 2007. p. 1–8. 
+[33] North M, Conzelmann G, Koritarov V, Macal C, Thimmapuram P, Veselka T. E- 
+laboratories: agent-based modeling of electricity markets. In: American power 
+conference; 2002. p. 1–19. 
+[34] Chappin EJL, de Vries LJ, Richstein JC, Bhagwat P, Iychettira K, Khan S. Simulating 
+climate and energy policy with agent-based modelling: the Energy Modelling 
+Laboratory (EMLab). Environ Model Software 2017;96:421–31. https://doi.org/ 
+10.1016/j.envsoft.2017.07.009. 
+[35] De Vries LJ, Chappin EJL, Richstein JC. EMLab-Generation – an experimentation 
+environment for electricity policy analysis. Delft: TU Delft; 2015. 
+[36] Sensfuß F, Ragwitz M, Genoese M. The merit-order effect: a detailed analysis of the 
+price effect of renewable electricity generation on spot market prices in Germany. 
+Energy Pol 2008;36(8):3076–84. https://doi.org/10.1016/j.enpol.2008.03.035. 
+[37] Weidlich A, Sensfuß F, Genoese M, Veit D. Studying the effects of CO2 emissions 
+trading on the electricity market: a multi-agent-based approach. In: Emissions 
+trading. New York: Springer Science+Business Media; 2011. p. 91–101. https:// 
+doi.org/10.1007/978-0-387-73653-2_6. 
+[38] Ghosh DP, Luh PB. Analysis and simulation of payment cost minimization and bid 
+cost minimization with strategic bidders. In: IEEE/PES power systems conference 
+and exposition, PSCE 2011. IEEE; 2011. p. 1–4. 
+[39] Fekete K, Knezevic G, Nikolovski S, Slipac G. Influence of cross-border energy 
+trading on prices of electricity in Croatia. In: 6th international conference on the 
+European energy market, EEM 2009. IEEE; 2009. p. 1–6. 
+[40] Lopes F, Algarvio H, Coelho H. Agent-based simulation of retail electricity markets: 
+bilateral trading players. In: 24th International workshop on database and expert 
+systems applications. DEXA; 2013. p. 189–93. 
+[41] Grimm V, et al. A standard protocol for describing individual-based and agent- 
+based models. Ecol Model 2006;198:115–26. https://doi.org/10.1016/j. 
+ecolmodel.2006.04.023. 
+[42] Poncelet K, Van Stiphout A, Meus J, Delarue E. W. D, ‘LUSYM Invest : a generation 
+expansion planning model with a high level of temporal and technical detail’. 
+2018. Leuven. 
+[43] Poncelet K, Delarue E, William D. Unit commitment constraints in long-term 
+planning models : relevance , pitfalls and the role of assumptions on flexibility. 
+Appl Energy 2020;258. https://doi.org/10.1016/j.apenergy.2019.113843. 
+[44] Schr¨oder A, Kunz F, Meiss J, Mendelevitch R, von Hirschhausen C. Current and 
+Prospective Costs of Electricity Generation until 2050. DIW Berlin; 2013. Berlin. 
+[45] Bublitz A, Ringler P, Genoese M, Keles D, Fichtner W. Agent-based simulation of 
+interrelated wholesale electricity markets. In: 25th International workshop on 
+database and expert systems applications. DEXA; 2014. p. 103–8. 
+[46] Philippo L. Design of an agent-based model for simulating investments in the 
+electricity market. Leuven: KU Leuven; 2017. 
+[47] Wüstenhagen R, Menichetti E. Strategic choices for renewable energy investment: 
+conceptual framework and opportunities for further research. Energy Pol 2012;40: 
+1–10. https://doi.org/10.1016/j.enpol.2011.06.050. 
+[48] Fagiani R, Barquín J, Hakvoort R. Risk-based assessment of the cost-efficiency and 
+the effectivity of renewable energy support schemes: certificate markets versus 
+feed-in tariffs. Energy Pol 2013;55:648–61. https://doi.org/10.1016/j. 
+enpol.2012.12.066. 
+[49] Kwon J, Zhou Z, Levin T, Botterud A. Resource Adequacy in Electricity Markets 
+With Renewable Energy. In: IEEE Transactions on Power Systems. 35; Jan. 2020. 
+p. 773–81. https://doi.org/10.1109/TPWRS.2019.2930934. no. 1. 
+[50] T¨opfer K, Adigbli P, Arnault M. Direktvermarktung von erneuerbaren Energien an 
+der Stromb¨orse - ein deutsch-franz¨osischer Erfahrungsbericht zur Marktintegration 
+von erneuerbaren Energien. DFBEW; 2017. 
+[51] Andriy B. The hundred-page machine learning book. Middletown: Andriy Burkov; 
+2019. 
+[52] Raven BH. Social influence and power. 1964. California, USA. 
+Z. Tao et al.

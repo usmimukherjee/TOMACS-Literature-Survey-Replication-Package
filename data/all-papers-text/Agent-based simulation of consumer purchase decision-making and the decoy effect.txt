@@ -1,0 +1,859 @@
+Agent-based simulation of consumer purchase decision-making
+and the decoy effect ☆
+Tao Zhang ⁎, David Zhang
+Exeter Manufacturing Enterprise Centre (XMEC), School of Engineering, Computer Science and Mathematics, University of Exeter , Room 204, Harrison Building,
+North Park Road, Exeter , Devon, EX4 4QF , UK
+Received 1 March 2006; received in revised form 1 December 2006; accepted 1 February 2007
+Abstract
+Consumer behavior research involves various areas: psychology, marketing, sociology, economics and engineering. This paper presents an
+agent-based model (ABM) of consumer purchase decision-making. The core of this model is a motivation function that combines consumers'
+psychological personality traits with two important kinds of interactions in a competitive market. The model reveals the inner psychological
+mechanism on the basis of which consumers make their choices when facing competing brands on the market. By creating a large number of
+heterogeneous consumer agents in an artificial market, this study uses multi-agent simulation (MAS) to exhibit the emergent decoy effect
+phenomenon, which is a market dynamic phenomenon originating from the individual behavior of heterogeneous consumers and their interactions
+in the real-world complex market. The combined use of the ABM and the MAS method in studying consumer behavior and markets gives one the
+potential to cope with the dynamic changes and complexities in the real-world business environment.
+© 2007 Elsevier Inc. All rights reserved.
+Keywords: Agent; Motivation function; Price sensitivity; Quality sensitivity
+1. Introduction
+The process in which consumers make their purchase
+decisions has long been of great interest to researchers and
+practitioners ( Burnett and Lundford, 1994 ). The purchase
+decision-making process and the interactions among consumers
+based on this process generate market dynamics, such as the
+decoy effect and lock-in, which are hard to explain. Research into
+consumer purchase decision-making and consumers' interactions
+increases the understanding of such market dynamics. Traditional
+studies on consumer decision patterns, such as data mining, focus
+on using static equilibrium-based mathematical and statistical
+techniques to model consumers' socio-demographic and behav-
+ioral data. However, three types of data exist regarding consumer
+purchase decisions: 1) demographic data, 2) behavioral data, and
+3) psychographic data ( Rud, 2001 ). Psychographic data,
+characterized by attitudes, opinions, lifestyle characteristics, or
+personal values, are of great importance in consumer purchase
+decision-making. A challenge to researchers and practitioners is
+how to use psychographic data to model consumer purchase
+decision-making as well as dynamically emergent phenomena in
+markets. This issue involves research in the fields of psychology,
+economics, sociology and marketing, which is in line with the
+research of the agent-based computational simulation of complex
+social systems. Therefore, the newly developed agent concept in
+artificial intelligence has triggered great expectations to cope with
+this topic. An agent is a highly abstract concept, and researchers
+still do not agree about the issues what an agent actually is and
+what exactly constitutes an agent ( Poggi, 1999 ). The general
+Journal of Business Research 60 (2007) 912 – 922
+☆ The authors initially presented this paper at the workshop of agent-based
+simulation of market dynamics and consumer behavior, at the University of
+Surrey, 17–18th, January 2006. Unilever financially sponsored the workshop,
+and the authors would like thank Unilever and the workshop committee for
+providing a chance to present their work. The research was highly supported by
+members of the Exeter Manufacturing Enterprise Center (XMEC), for which
+they deserve praise. The development of this model was based on other
+researchers' previous work, and the program was run in NetLogo, developed by
+researchers in the Northwest University, USA. The authors gratefully
+acknowledge their efforts.
+⁎ Corresponding author. Tel.: +44 1392 263613; fax: +44 1392 217965.
+E-mail address: TZ207@ex.ac.uk (T. Zhang).
+0148-2963/$ - see front matter © 2007 Elsevier Inc. All rights reserved.
+doi:10.1016/j.jbusres.2007.02.006
+
+opinion regarding agents in artificial intelligence is that any entity
+with some of the following attributes can be considered as an
+intelligent agent: 1) autonomous behavior, 2) individual world-
+view, 3) communicative and cooperative capacity, 4) intelligent
+behavior; and 5) spatial mobility ( d'Inverno and Luck, 2004 ).
+Based on these characteristics, agents have been widely applied in
+engineering, computer science, economics, and sociology. Agent-
+based simulation (ABS) is a bottom-up technique that has offered
+a robust tool to cope with the complexities in a complex system
+environment (Grimm et al., 2005). Researchers have used agents
+in the aforementioned areas to simulate machines, software
+entities, economic entities, animals, human beings, and human
+society. In the recent 5 years, the application of agents in
+marketing research has significantly gained momentum (for
+example, the CUBES model (Ben Said et al., 2001), the SimStore
+Model (Casti, 1999), and J-Pop Simulation ( Makoto, 2000), and
+the success of these models has shown that they are effective tools
+in marketing research. Currently researchers are interested in
+using agents and multi-agent systems to simulate consumer
+behavior and marketing dynamics. The purpose of this simulation
+is to optimize supply chains, evaluate the influence of
+governmental economic policies on business, and to improve
+companies' marketing performance in a competitive market by
+achieving an in-depth understanding of the psychology of
+consumers and the sociology of consumer groups or networks.
+The first step is to develop an agent-based consumer purchase
+decision-making model based on the classic psychological
+reasoned action theory (Ajzen and Fishbein, 2005), the conscious
+intention and motivation concept ( McClelland, 1987 )a n d
+consumer–sociological interactions. The core idea of the model
+is that each brand of a product can trigger a purchase motivation
+that drives an agent's purchase decision. When facing multiple
+purchase choices, the agent will calculate all purchase motiva-
+tions, compare them, and choose the one that brings the most
+advantage. This paper introduces an algorithm derived from this
+agent-based consumer purchase decision-making model, to
+control an agent's buying behavior. The authors present this
+algorithm in the form of a motivation function. This study has
+created a virtual market by using a large number of artificial
+consumer agents to simulate the emergent marketing phenome-
+non, called the decoy effect. The algorithm controls these agents'
+buying behaviors. The multi-agent simulation of the decoy effect
+has validated the effectiveness of the agent-based purchase
+decision-making model and provided the potential to explore and
+predict dynamic market variations, e.g. fluctuations in market
+shares, the influence of economic government policies, techno-
+logical innovations, and a market's responses to expected or
+unexpected events. The contents of the sections of this paper are
+the following:
+Section 2 illustrates the consumer purchase decision model
+currently used in marketing science. This traditional model is a
+contrast to the newly developed agent-based purchase decision-
+making model, which highlights the originality of this paper.
+Traditional marketing models dealing with consumer purchase
+decision-making focus more on a management point of view.
+These models identify the many factors that affect consumer
+purchase decisions and behaviors. However, none of them have
+revealed the inner psychological process of the consumer pur-
+chase decision. By introducing the motivation concept, a
+psychological term that measures the degree of a consumer's
+intention to buy a product, the resulting agent-based model can
+fill this gap.
+Section 3 explains the development of the agent-based model
+in detail. First, the section introduces classical behavior
+psychology theories, such as reasoned action, planned behavior
+(Ajzen and Fishbein, 2005 ), and conscious intention and
+motivation ( McClelland, 1987 ), which are the fundamental
+theories of the agent-based purchase decision-making model.
+Next, the section describes the development of the agent-based
+model, which is based on consumer psychology and two kinds of
+sociological interactions in the real market. After that, Section 3
+introduces an algorithm to control agents' buying behaviors,
+taken from the agent-based purchase decision-making model. The
+algorithm has the form of a motivation function, and the authors
+make detailed suggestions concerning its form.
+Section 4 demonstrates the decoy effect, an emergent
+marketing phenomenon, by conducting a multi-agent simula-
+tion. After introducing the details of the decoy effect, including
+the concept and recent studies, Section 4 will focus on the
+simulation experiments, in particular the parameters and
+variables used, the results, and the analysis of these results.
+Finally, Sections 5 and 6 point out the originality and
+significance of the paper, its limitations, and offer suggestions
+for further research.
+2. The traditional theoretical framework for the consumer
+purchase decision
+Since the 1960s, marketing science has produced a huge
+volume of literature on the various aspects of consumer
+behavior. Engel, Blackwell, and Miniard (1995) present the
+most recognized model of consumer purchase decision-making.
+This model divides the consumer purchase decision process into
+5 stages: 1) problem recognition, 2) information search, 3)
+alternative evaluation, 4) purchase decision, and 5) post-
+purchase behavior. Fig. 1 shows this framework.
+With the aid of this model, Engel et al. (1995) have also
+identified some factors that affect consumer purchase decision-
+making. These factors fall into three categories: 1) personal,
+2) psychological and 3) social. The model provides an oper-
+ational marketing management tool, while consumer behavior
+theory has become the most prevalent one in the marketing
+arena. However, so far researchers have published little lit-
+erature on the question how these factors interact to form the
+inner psychological purchase decision-making process.
+3. An agent-based model of the purchase decision-making
+process
+3.1. Psychological theory of behavior and decision-making
+Decision-making is a complex cognitive process involving
+perception, learning and information processing. AsEngel et al.'s
+(1995) model (Fig. 1) shows, most of the consumers' purchases
+913T. Zhang, D. Zhang / Journal of Business Research 60 (2007) 912 –922
+
+are planned behaviors. “A central factor in the theory of planned
+behavior is the individual's intention to perform a given behavior.
+Intentions are assumed to capture the motivational factors that
+influence a behavior; they are indications of how hard people are
+willing to try, of how much of an effort they are planning to exert,
+in order to perform the behavior. As a general rule, the stronger the
+intention to engage in a behavior, the more likely should be its
+performance" (Ajzen, 1991, p181). The reasoned action model
+(Ajzen and Fishbein, 2005), as shown in Fig. 2,a l s os u g g e s t st h a t
+intention is the immediate antecedent of actual behavior,
+influenced by a wide range of background factors. McClelland
+(1987) divides intentions into two categories: conscious intention
+and unconscious intention, while also suggesting that motivation
+is the reflection of conscious intentions formed by observing
+behaviors.
+3.2. The purchase motivation model
+Most of the purchase decisions are reasoned actions.
+Therefore, intention in the purchase decision-making process
+refers to conscious intention, and one can consider motivation as
+the direct determinant of the purchase decision. A method to
+discover motivation is to study what makes people reach logical
+decisions (McFarland, 1974). Based on marketing theory, the key
+stimuli that lead consumers to make their purchase decisions in
+the complex business environment are prices, quality, brands of
+products, advertisements, friends'/families' recommendations
+and disqualifications and consumers' previous purchase experi-
+ences. The consumer's personality traits determine how these
+external stimuli affect him/her.Ajzen (2005)defines personality as
+a characteristic of an individual that exerts pervasive influence on
+a broad range of trait-relevant responses. On this basis the
+consumer purchase motivation model consists of three parts:
+external stimuli, personality traits, and motivation (see Fig. 3).
+3.3. The purchase decision model
+Before constructing the model, the assumption has to be that
+consumers make purchases based on logical decisions, which is
+in line with the reasoned action and conscious intention
+theories. From this perspective, an individual consumer is an
+agent, and a group of artificial agents together with some
+brands within one particular product category form an artificial
+market. All agents have their own personality traits and their
+socio-economic interactions are based on their counterparts in
+the real market. In this virtual market consumer behavior
+depends on which brand an agent would choose, as shown in
+Fig. 4 .
+An agent has two types of interactions. One is the interaction
+between the agent him/herself and the brand managers. This
+type of interaction occurs in various forms of marketing
+activities. For example, interaction with respect to issues such as
+price, quality of the product, advertising, distribution channels,
+etc. The other type refers to the interactions among heteroge-
+neous consumer agents. As Ben Said et al. (2001) indicate, the
+interactions among the consumer agents are based on
+recommendation or disqualification by family, friends or
+opinion leaders, or on rumors among the agent groups, etc.
+These two types of interaction are shown in Fig. 5 .
+Fig. 2. The theory of reasoned action and planned behavior ( Ajzen and Fishbein, 2005 , p194).
+Fig. 1. Traditional theoretical consumer purchase decision model.
+914 T. Zhang, D. Zhang / Journal of Business Research 60 (2007) 912 –922
+
+The stimuli derived from the above two types of interaction
+have a great influence on the agent's motivation to buy the
+product. However, the agents' personality traits determine the
+stimuli's influencing powers, as the purchase motivation model in
+Fig. 3 shows. Therefore, based on the stimuli related to the two
+types of interactions, one can derive their relevant personality
+traits, namely price sensitivity, quality sensitivity, susceptibility,
+and follower tendency. Each stimulus' contribution to the agent's
+purchase motivation is calibrated by the agent's relevant
+personality trait. For example, if an agent is not price sensitive,
+then the price has little influence on his/her motivation to buy a
+product. Additionally, the agent's socio-demographic attributes,
+such as age, income, educational level, and professional status,
+may greatly influence the agent's personality traits. For instance, a
+millionaire might not think a £5 cake is expensive, whereas an
+unemployed person might think it is very expensive, because
+millionaires are less price-sensitive than the unemployed are. Due
+to the great influence of socio-demographic attributes upon the
+agent's personality traits, the purchase decision model has to take
+into account such attributes. Fig. 6 demonstrates the agent's
+purchase decision model.
+3.4. The motivation function
+As shown in Fig. 6, in the purchase decision-making process
+the external stimuli are the independent variables. Once an
+agent has perceived these independent variables, he/she will be
+psychologically processed in line with his/her relevant person-
+ality traits. After the processing, the agent has established a
+purchase motivation. With different choices, the agent will
+achieve different levels of motivation. The preferred choice is
+the one that can bring the agent the largest degree of motivation.
+Purchase decision-making is a cognitive process in which the
+stimuli and personality traits can be defined by certain
+algorithms. Suppose N brands of a product are present in the
+artificial market. If one considers the stimuli as independent
+variables, and the personality traits as the coefficients of these
+independent variables, the motivation function, which repre-
+sents this algorithm, is as shown below:
+Mi ¼ PSi /C2 Pi þ QSi /C2 Qi þ susi /C2 adi þ fti /C2 infli ð1Þ
+Mi is the motivation brand i (i =1 t o N) of a consumer agent.
+QSi is the agent's quality sensitivity parameter to brand i; Qi is
+the quality of brand i; susi is the agent's susceptibility parameter
+to brand i's advertisements; ad i is the advertising intensity of
+brand i;f t i is the agent's follower tendency parameter of the
+perceived influence exerted by other agents regarding brand i;
+infli is the perceived influence exerted by other agents with
+respect to brand i;P Si is the agent's price sensitivity parameter
+to brand i; and Pi is the price of brand i.
+3.5. Model calibration
+In order to computationally simulate the decoy effect, the first
+step is to calibrate the motivation function, i.e. working out the
+detailed formula and setting the proper values of coefficients and
+parameters. In the first part of the motivation function, PS i,t h e
+parameter of the personality trait price sensitivity, is the
+coefficient of the stimulus Pi. A Dutch psychologist, Peter van
+Westendorp, originally devised price sensitivity in the 1970s.
+Price sensitivity is an analysis of price elasticity based on the
+monetary, utilitarian, and emotional value that consumers
+attribute to a product or service. In this model, price sensitivity
+is one of the agent's personality traits and the model uses this
+concept to measure the degree to which price can trigger
+hindrance to an agent's motivation to buy a product . It is a
+negative figure because price definitely has an adverse effect on
+the purchase motivation. Each Pi can trigger a PS i (i =1 t o N)
+based on an agent's price sensitivity personality trait. The price
+sensitivity distribution model (Kim et al., 1995) suggests that the
+lower a brand's price, the less price sensitivity this brand
+Fig. 4. Consumer behavior in an artificial market.
+ Fig. 5. An agents' two kinds of interactions.
+Fig. 3. Purchase motivation model.
+915T. Zhang, D. Zhang / Journal of Business Research 60 (2007) 912 –922
+
+generates, i.e. the brand triggers less hindrance to an agent's
+purchase motivation. K i me ta l ' s( 1 9 9 5 )research also indicates
+that a consumer's price sensitivity is an exponential function of
+the difference between the real price of a product and the expected
+price of the product, as shown in Eq. (2).
+PSi ¼ −aPi −Pe þ k ð2Þ
+where α is a parameter and α N 1, k is a constant (the value of k is
+based on an agent's socio-economic attributes, e.g. millionaires
+are less price sensitive than unemployed persons) and Pe is the
+agent's expected price of this type of product. Pe is difficult to
+derive and can be substituted with the average price of the
+product, i.e. one can set:
+Pe ¼ Pave ¼ 1
+N
+XN
+i¼1
+Pi ð3Þ
+where N is the number of brands of the product, Pi is the price of
+brand i,a n dPave is the average price of all brands of the product.
+Thus based on Eqs. (2) and (3), the result is:
+PSi ¼ −aPi −Pave þ k ð4Þ
+Similar to the first part in the motivation function, QS i,t h e
+parameter of the personality trait quality sensitivity is the
+coefficient of the stimulus Q i. The psychological term quality
+sensitivity serves to measure the degree to which the quality of a
+brand can propel an agent's motivation to buy a product. In terms
+of quality, quality sensitivity is a multi-dimensional variable,
+because a brand may have qualities in different aspects, e.g. a
+mobile phone may be used to make calls, send text or picture
+messages and surf the Internet. Assuming brandi of a product has
+m qualities, then the overall quality of brandi in the model can be
+computed as:
+Qi ¼
+Xm
+j¼1
+WjQij
+where Qij is brand i'sq u a l i t yj,a n d Wj,w h i c hc a nb eu s e dt o
+measure how importantQij is to an agent, is the weight ofQij.T h e
+outlier avoidance consumer psychological theory ( Patel and
+Schlijper, 2004) suggests that, when a consumer chooses a brand,
+the closer the quality of the brand approximates the consumer's
+expected quality of this kind of product, the more sensitive the
+consumer is to the quality of this brand. The mathematical
+formula is then:
+QSi ¼ bjQi −Qej þ L ð5Þ
+where QSi is the parameter of an agent's quality sensitivity
+triggered by brand i's quality Qi, β is a parameter and
+0> β >1 , a n d L is a constant (the value of L i sb a s e do na n
+agent's socio-economic attributes). Consumer lifestyle research
+Fig. 6. The purchase decision model.
+916 T. Zhang, D. Zhang / Journal of Business Research 60 (2007) 912 –922
+
+carried out by Gardyn (2002) indicates that consumers from
+upper social classes pay more attention to the quality of the
+goods and services when making purchase decisions. Qe is the
+agent's expected quality of this type of products, which one can
+substitute with the average quality of all brands of the product
+type, i.e. the formula is:
+Qe ¼ Qave ¼ 1
+N
+XN
+i¼1
+Qi ð6Þ
+where Qave is the average quality of all brands of the product.
+Accordingly, based on Eqs. (5) and (6), this results in:
+QSi ¼ bjQi−Qavej þ L ð7Þ
+In accordance with the third and fourth part of the motivation
+function, an agent accepts the advertisement and influence from
+other people's stimuli, processes them and assigns psychological
+parameters to them on the basis of his/her personality traits,
+susceptibility and follower tendency. In order to highlight the
+price–quality trade-off during the decoy effect, this multi-agent
+simulation of the decoy effect bases the psychological parameters
+produced on the personality traits constants “susceptibility” and
+“follower tendency ”. Hence, the following two equations are
+obtained:
+susi ¼ h ð8Þ
+fti ¼ k ð9Þ
+where θ and λ are two constants.
+Combining the Eqs. (1), (4), (7) –(9), the detailed formula of
+the motivation function is:
+Mi ¼ −aPi −Pave þ k
+/C0/C1
+/C2 Pi þ bjQi−Qavej þ L
+/C16/C17
+/C2 Qi þ h /C2 adi
+þ k /C2 infli
+So an agent's final purchase decision is based on the algorithm:
+max { M1, M2, M3,…, Mi}
+The brand that can bring an agent the largest degree of
+motivation is the agent's final choice.
+4. Multi-agent simulation of the decoy effect
+4.1. The decoy effect
+If two brands of a product are available in a market, brand A
+and brand B, consumers have to make a choice between the two. If
+brand A has a superior quality but its price is much higher than
+that of brand B, consumers face a price/quality trade-off. If
+however, a third brand C (usually called a decoy), which is
+inferior to brand B in both price and quality, appears on the
+market, this may affect consumer choice. V arious experiments
+have shown that, although no consumer will choose brand C
+(which is obviously inferior, as shown in Fig. 7 ), its mere
+appearance causes a substantial shift of preference from A to B.
+Marketing researchers call this effect the decoy effect. This effect
+is one of the most robust biases in consumer choice. V arious
+product classes, ranging from chocolate bars or beer to TV-sets,
+have employed this instrument (Devetag, 1999).
+In a famous study on the decoy effect, Huber, Payne, and
+Puto (1982) asked participants to choose between a five-star
+restaurant, which was a 25-min. drive away and a three-star
+restaurant, which was 5 min away. The subjective benefit of
+the five-star restaurant's better services is equal to the
+subjective benefit of the three-star restaurant's shorter driving
+distance. Two decoy experiments took place. When the
+researchers added a four-star restaurant with a 35-min. drive
+to the choice set as a decoy, the result showed that the
+participants tended to prefer th e five-star restaurant that was
+25 min away. However, when the decoy was a two-star res-
+taurant 15 min away, the result showed that the participants'
+preferences had switched to the three-star restaurant 5 min
+away.
+The Decoy effect illustrates the significant importance of
+consumer psychology, of understanding how consumers
+perceive products, and how consumers judge quality prior to
+purchasing the product (e.g. Doyle et al., 1999 ). This has long
+been of great interest to marketing scientists and psychologists.
+Min (2003) summarizes three types of decoy: an asymmetri-
+cally dominated decoy ( Heath and Chatterjee, 1995; Huber
+et al., 1982), a phantom decoy ( Highhouse, 1982; Pratkanis and
+Farquhar, 1992 ) and a compromise decoy ( Simonson, 1989,
+1992). Although these decoys differ in terms of their
+relationship with other options in a choice set of products,
+their availability and the underlying mechanisms proposed to
+account for their impact all have a positive effect on the target
+product (Min, 2003). The decoy effect mechanism has attracted
+the interests of many researchers and the explanation of this
+phenomenon is a big challenge. Many publications on the
+mechanisms and applications of the decoy effect have appeared
+since the 1980s, including comparison-induced decoy effects
+(Choplin and Hummel, 2005 ), loss aversion ( Highhouse, 1982;
+Tversky and Kahmeman, 1991 ), attribute importance change
+(Huber et al., 1982 ), extending compromise effect models to
+complex purchase decisions based on the decoy effect ( Kivetz,
+2004), ease of justification ( Park, 2005; Simonson, 1989;
+Wedell and Pettibone, 1996 ), and a no-numerical explanation
+(Quesada et al., 2005 ).
+Fig. 7. Decoy effect.
+917T. Zhang, D. Zhang / Journal of Business Research 60 (2007) 912 –922
+
+4.2. The mathematical analysis of an individual decoy effect
+The nature of the decoy effect can be revealed by analyzing an
+individual consumer's motivation that changes from brand A to
+brand B after the introduction of the decoy. For example,
+consider a consumer whose initial choice is brand A, but the
+difference in his/her preferences for brands A and B is very
+small, i.e. MA − MB = e where e is a parameter and is near 0. The
+smaller e is, the easier the consumer is affected by the decoy.
+If d P is used to represent the difference between a brand's
+price and the average price of the product category, while d Q
+serves to indicate the difference between a brand's quality and
+the average quality of the product category, and MA and MB
+denote the consumer's motivations for brand A and B, one
+obtains the following equations:
+dPA ¼ PA−Pave
+dPB ¼ PB−Pave
+dQA ¼ QA−Qave
+dQB ¼ QB−Qave
+MA ¼ −adPA þ k
+/C0/C1
+/C2 PA þ bjdQAj þ L
+/C16/C17
+/C2 QA þ h
+/C2 adA þ k /C2 inflA ð11Þ
+MB ¼ −ad PB þ k
+/C0/C1
+/C2 PB þ bjdQBj þ L
+/C16/C17
+/C2 QB þ h
+/C2 adB þ k /C2 inflB ð12Þ
+After the entry of the decoy, d P′ and dQ′ serve to denote the
+new difference between a brand's price and the average price of
+the product category and the new difference between a brand's
+quality and the average quality of the product category
+respectively. MA and MB, the consumer's new motivations for
+brand A and B, and adA′,i n f lA′ adB′ and inflB′ serve to denote brands
+A and B's new advertising intensities and their influences on
+consumers. On this basis one obtains the following equations:
+dP VA ¼ PA− PA þ PB þ PCðÞ =3
+dP VB ¼ PB− PA þ PB þ PCðÞ =3
+dQ VA ¼ QA− QA þ QB þ QCðÞ =3
+dQ VB ¼ QB− QA þ QB þ QCðÞ =3
+M VA ¼ −adP VA þ k
+/C0/C1
+/C2 PA þ bjdQ VAj þ L
+/C16/C17
+/C2 QA þ h
+/C2 ad VA þ k /C2 inflVA ð13Þ
+M VB ¼ −adP VB þ k
+/C0/C1
+/C2 PB þ bjdQ VBj þ L
+/C16/C17
+/C2 QB þ h
+/C2 adVB þ k /C2 inflVB ð14Þ
+By using Eq. (13) minus Eq. (11), and Eq. (14) minus
+Eq. (12), one obtains the following equations:
+M VA−MA ¼ adPA−adP VA/C0/C1
+/C2 PA þ bjdQ VAj−bjdQAj
+/C16/C17
+/C2 QA þ adVA−adAðÞ /C2 h
+þ infl VA−inflAðÞ /C2 k
+ð15Þ
+M VB−MB ¼ adPB−adP VB/C0/C1
+/C2 PB þ bjdQ VBj−bjdQBj
+/C16/C17
+/C2 Q þ ad VB−adBðÞ /C2 h
+þ infl VB−inflBðÞ /C2 k
+ð16Þ
+Eq. (15) minus Eq. (16) results in Eq. (17).
+M VA −M VB ¼ adPA−adP VA/C0/C1
+/C2 PA− adPB−adP VB/C0/C1
+/C2 PB
+þ bdQ VA−bdQA/C0/C1
+/C2 QA− bdQ VB−bdQB/C0/C1
+/C2 QB
+þ ad VA−adA−ad VB þ adBðÞ /C2 h
+þ infl VA−inflA−infl VB þ inflBðÞ /C2 k þ e ð17Þ
+Suppose E1 is the quality –price average point before the
+entry of the decoy, and E2 is the new quality –price average
+point after the entry of the decoy. Fig. 8 demonstrates their
+relationship.
+Based on the properties of the exponential functions, one
+can analyze the result of Eq. (17). As shown in Fig. 9, αdP′A −
+αdP′A NαdP′B −αdPB N 0, andPA NPB N 0, therefore (αdPA −αdP′A)×
+PA − (αdPB − αdP′B)× PB > 0. On the other hand, with Fig. 10 ,
+Fig. 8. The average points.
+Fig. 9. The changes of price sensitivities.
+ Fig. 10. The changes of quality sensitivities.
+918 T. Zhang, D. Zhang / Journal of Business Research 60 (2007) 912 –922
+
+β |dQ′A|; − β |dQA| >0 , β|dQ′B| − β|dQB| N 0, together with PA N 0
+and PB N 0, results in ( β |dQ′A| − β |dQA|)× QA − (β |dQ′B| − β |dQB|)×
+QB > 0. As the analysis focuses on an individual consumer's
+decoy effect, the model assumes that the decoy's entry does not
+mathematically change ad A,i n f lA,a d B and infl B (i.e. a con-
+s u m e rw h oh a sb e e na f f e c t e db yt h ed e c o yw o u l d
+not exert influence on other consumers), therefore (ad ′A − adA −
+ad′B +a dB)× θ = 0, and (infl′A − inflA −infl′B +i n f lB)× λ =0 . M o r e -
+over, as e i sa s s u m e dt ob en e a rt o0 ,o n ec a ni n f e rt h a tE q .( 1 7 )
+is less that 0, i.e.
+M VA−M VB > 0
+Thus, from the initial MA NMB to the current M′A >M′B,t h e
+consumer has shifted his/her preference from A to B.
+The mathematical analysis of an individual consumer's shift of
+preference is similar to the research on the decoy effect previously
+presented in key publications. Both focus on the aspect of an
+individual consumer's psychology and choice behavior. Howev-
+er, this static equation-based analysis includes many assumptions.
+For example, e is very small, and the entry of the decoy on the
+market does not change ad A,i n f lA,a dB and inflB.A d d i t i o n a l l y ,
+mathematical analysis can only partially explain the decoy effect.
+For example, if the price of the decoy falls into the area betweenP–
+and PA, mathematical analysis can hardly confirm whether Eq.
+(17) is larger or smaller than 0, which causes uncertainty.
+Actually, the shift of an individual consumer's preference is not
+only an independent individual behavioral pattern, but also, and in
+some cases perhaps more so, a pattern strongly related to the
+sociology of consumer groups or networks, e.g. the actual
+Fig. 11. Agents' distribution and interactions. Note: each agent is distributed in a
+grid, named a patch in NetLogo. In the simulation, each patch is the area where
+an agent lives. A grid may have no agents or more than one agent. The
+simulation assumes that an agent has interactions with other agents distributed
+less than 3 times radius away from where it stands. The larger the number of
+times radius, the more interactions an agent has. If the number of times radius is
+equal to the value of screen-edge-x, the simulation becomes a small world
+simulation as each agent fully interacts with all the other agents in the artificial
+market. Advertising intensity is randomly distributed, ranging from 0 to 100 in
+each grid. For details about patches, turtles, number of times radius and screen-
+edge-x, please see the Manual of NetLogo 3.0.2.
+Table 1
+The scale and distribution of variables/parameters in the simulation
+V ariables/
+parameters
+Scale Distribution
+Income 0 –1000 Random normal distribution, μ = 600 and σ =7 5
+L 0–100 Depends on income
+K − 100–0 Depends on income
+ad 0 –100 Random distribution
+PA 80–100 Random distribution
+QA 80–100 Random distribution
+PB 0–20 Random distribution
+QB 0–20 Random distribution
+Pdecoy PB >P decoy >PA Random distribution
+Qdecoy Qdecoy > QB Random distribution
+Influ_out 0 –100 Random normal distribution, μ = 30 and σ =2 0
+susi 0–100 Random normal distribution, μ = 55 and σ =2 0
+fti 0–100 Random normal distribution, μ = 55 and σ =2 0
+A α > 1 Depends on training and testing
+B0 > β > 1 Depends on training and testing
+Fig. 12. Decoy effect: the market situation before and after the decoy's entry.
+A: Market situation before the decoy's entry. B: Market situation after the
+decoy's entry.
+919T. Zhang, D. Zhang / Journal of Business Research 60 (2007) 912 –922
+
+situation in a real market is that the entry of the decoy on the
+market does change adA,i n f lA,a dB and inflB. However, the static
+mathematical model reveals this dynamic process insufficiently.
+From a macro point of view, the decoy effect is a dynamically
+emergent marketing phenomenon that involves the preference
+changes of a large number of consumers and their sociological
+interactions. Therefore, although the decoy effect is not
+fundamentally the result of interactions, by using multi-agent
+computational simulation and taking into account the sociological
+interactions among heterogeneous consumers, one is capable of
+further exploring the decoy effect. However, until now little
+literature on computational simulation of the decoy effect has
+been presented. Based on the aforementioned agent-based
+purchase decision model, the authors exhibit the decoy effect
+dynamically by means of computational simulation.
+4.3. The simulation
+The authors programmed the motivation function with
+NetLogo 3.0.2. In order to reduce the complexity of the
+simulation in this virtual market, the authors used income to
+represent all of the agent's socio-economic attributes, e.g. age,
+housing status, and professional status. The simulation assumed
+the agents' incomes as ranging from 0 to 1000, normally
+distributed with μ = 600 and σ = 75. Agents' price and quality
+sensitivity parameters ranged from 0 to 100 and were controlled
+by the constants k and L, on the basis of the agents' incomes; α
+and β were tested for and adjusted iteratively to model
+optimization. The constants θ and λ, (indications of the agents'
+personality traits susceptibility and follower tendency, normally
+distributed with μ = 55 and σ = 20) ranged from 0 to 100.
+The simulation distributed the artificial consumer agents
+randomly in different areas, and each consumer agent interacted
+with other agents distributed within X (X is adjustable) times of
+radius from where the agent was located ( Fig. 11) The larger X,
+the more interactions the agent had.
+In each area advertising intensity was randomly distributed,
+ranging from 0 to 100. The variable influ_out, normally distributed
+with μ=3 0 a n dσ = 20 and ranging from 0 to 100, represented an
+agent's influence on other agents, and another variable influ_in
+represented the influence an agent perceived from the other
+interacting agents. The simulation started from the assumption that
+an agent interacted with other agents distributed less than 3 times
+radius from where the agent was located, the value of the agent's
+influ_in being the sum of the valuesof these agents' influ_out. With
+more interactions in the simulation, the number of times radius
+increased, which appeared to make the model more complex. The
+random distribution of the price and quality of brand Awas between
+80 to 100, and the price and quality of brand B between 0 and 20.
+Table 1 shows the scales and distrib utions of the variables and
+parameters.
+Fig. 13. The price of the decoy and market share.
+Fig. 14. Shaded area: best decoy area.
+920 T. Zhang, D. Zhang / Journal of Business Research 60 (2007) 912 –922
+
+4.4. Experiment results
+The simulation created an artificial market with 1000
+consumer agents. The computer randomly picked up values of
+parameters and variables of each agent, based on the rules set in
+Table 1, which resulted in a high level of heterogeneity in the
+artificial market. The simulation results show that, at the entry of
+the decoy, the decoy effect was highly obvious. When the model
+ran one time step, the results were as shown in Fig. 12. Y ellow
+agents were those who chose brand B, and blue agents were those
+who chose brand A. The decoy's entry on the market caused a
+substantial shift of preferences from A to B.
+When checking the parameters of the agents who switched
+their preferences, the difference between their motivations for
+brand A ( MA) and their motivations for B ( MB)a p p e a r e dt ob e
+very small. Thus, external stimuli easily lured these agents.
+Therefore, in practical marketing, changes in promotional tactics
+can easily influence this group of consumers. This finding is also
+in line with the assumption thate is very small in the mathematical
+analysis of an individual consumer's preference change.
+However, when checking the agents who never switched their
+preferences, the differences betweenMA and MB were very large,
+so these agents were either loyal to brand A or to brand B. Another
+discovery of the simulation was the best decoy area. When
+checking the decoy's price and market share, the results showed
+that whenever the price of the decoy fell into the area between
+brand B's price and the average price of brand A and B, i.e.
+PB > Pdecoy >(PA + PB) / 2, the shift of the agents' preferences from
+A to B was very explicit. However, if PdecoyN (PA + PB) / 2, the
+decoy effect becomes obscure. The price of decoy and market
+share curves in Fig. 13 demonstrate this. If marketers want to use
+the decoy effect in marketing, they can find a best decoy area
+based on the simulation ( Fig. 14 ). This finding explains the
+uncertainty found in the mathematical analysis.
+The authors conducted further research by changing the
+number of times of radius (from the default, which is 3), which
+can increase the value of influ_in (the influence that an agent
+perceives from other agents). The results show that the decoy
+had lured more agents, which indicates that, in a real business
+environment, intensive market competitions and word-of-
+mouth could decrease consumers' loyalty and make their
+behaviors more changeable and complex. In addition, the
+experimental results show that although the nature of the decoy
+effect is from the consumers' psychological perspective about
+price–quality tradeoff, which seems to be more an individual
+behavior than a group-collective behavior, the consumers'
+sociological interactions still account for a very important part
+of the decoy effect. If one sets the number of times of radius at
+nil (which means no interactions among the agents at all), the
+entry of the decoy only affects a few agents.
+5. Conclusions
+Compared with other research on consumer behavior, the
+agent-based model of consum er purchase decision-making
+and the multi-agent simulation of the decoy effect form a
+novel area in the multidisciplin ary research that integrates
+marketing, psychology, sociology, engineering, and computer
+science. With respect to dynami cally exhibiting and predicting
+market dynamics in a flexible manner, the traditional static
+equilibrium-based statistical and mathematical models lack
+robustness. The kind of computational simulation of consum-
+er behavior presented here, however, has offered a new
+approach to fill this gap. The computational simulation is an
+effective novel business mana gement tool. For example, this
+type of simulation enables one to conduct various experiments
+in the artificial market by chang ing the parameters to find out
+how a real market would respond to expected and unexpected
+events and to predict the evo lution of this market. If the
+fidelity of the agents in the simulation is appropriate, the
+business information gained by t his simulation technique will
+be much more accurate than that gained by traditional
+techniques, such as data mining.
+Significantly, this research has also provided an example of a
+generic method for simulating other complex systems involving
+human beings, whose behavior is difficult to compute. Such
+complex systems include outlets, large supermarkets, political
+elections, complex manufacturing systems and even complex
+ecological systems. The steps in conducting this research are the
+following: 1) setting the simulation scope and defining the
+agents, 2) designing the proper algorithms based on the agents'
+counterparts in the real world to control the agents' behaviors,
+interactions and actions, 3) calibrating algorithms and models,
+4) programming and running the model, 5) testing, validating
+and optimizing the model and, 6) observing and analyzing the
+experiment results. This research route can be referred to as a
+generic research method based on complex system simulation.
+The most important and difficult of the six steps is the algorithm
+design based on the agents' counterparts in the real world. The
+behaviors and actions of the objects in the real world may be
+very complex. If the algorithms are not designed properly, agent
+fidelity may be very low, which could hugely undermine the
+quality of the simulation results. Therefore, researchers should
+pay scrupulous attention to algorithm design.
+6. Recommendation and further research
+In this type of simulation an issue of debate is whether
+consumers' choices are rational. The answer may lie in the
+words of Dr. Bryan D. Gross (2004) , President and Chief
+Executive Officer of MPSI Systems Inc. at a presentation at the
+London School of Economics. When questioned about this, Dr
+Gross replied: “We are all consumers. If we were behaving
+purely at random then our hypotheses would not enable us to
+predict consumer behavior. We might look at the numbers and
+say initially that as far as store location was concerned,
+consumers were behaving very randomly. But when we add the
+other factors and start partitioning up the variability we can
+actually see for example, that although location is a significant
+driver, consumers are making their decisions very logically. One
+of the things that we find is that consumers tend to switch on
+and switch off. We have an analysis that we do for price
+sensitivity and we see consumers switching on and off to price
+as a primary driver. That means that instead of a nice non-linear
+921T. Zhang, D. Zhang / Journal of Business Research 60 (2007) 912 –922
+
+continuous curve we start to see discontinuities. But it's still
+very much the result of logical choice ”.
+One limitation of the simulation is that the model ignores the
+self-learning ability of consumers. In the real world, consumers
+can proactively learn from the environment and gain experi-
+ence. The experience accounts for part of the purchase decision.
+Another limitation of the simulation is that in order to decrease
+the complexity of the model, the researchers used income to
+represent all the agents' socio-economic attributes, including
+marital status, housing status and professional status. To a
+certain degree, this also decreased the degree of agent fidelity.
+Further research will focus on these limitations, aiming at
+establishing an agent-based model of consumer behavior with
+an even higher degree of agent fidelity, and then upgrading this
+model to system level by using a multi-agent system to simulate
+another emergent lock-in market phenomenon.
+References
+Ajzen I. The theory of planned behavior. Org Behav Human Decis Process
+1991;50:179–211.
+Ajzen I, Fishbein M. The influence of attitudes on behavior. In: Albarracin D,
+B. Johnson B, Zanna M, editors. The handbook of attitudes. Mahwah, NJ:
+Erlbaum; 2005. p. 173 –221.
+Ben Said L, Drogoul A, Bouron T. Multi-agent based simulation of consumer
+behavior: towards a new marketing approach; 2001. MODSIM.
+Burnett MS, Lundford DA. Conceptualizing guilt in the consumer decision-
+making process. J Consum Mark 1994;11(3):33 –43.
+Casti J. Firm forecast. New Sci 1999;24:37 –40 (April).
+Choplin JM, Hummel JE. Comparison-induced decoy effects. Mem Cogn
+2005;33(2):332–43.
+Devetag MG. From utilities to mental models: a critical survey on decision rules
+and cognition in consumer choice. Ind Corp Change 1999;8(2):289 –351.
+d'Inverno M, Luck M. Understanding agent system. 2nd ed. Berlin: Springer-
+V erlag; 2004.
+Doyle J, O'Connor D, Reynolds G, Bottomley P . The robustness of the
+asymmetrically dominated effect: buying frames, phantom alternatives, and
+in-store purchases. Psychol Mark 1999;16:225 –43.
+Engel JF, Blackwell RD, Miniard PW. Consumer Behavior. 8th ed. Philadelphia:
+The Dryden Press; 1995.
+Gardyn R. Oh, the good life. Am Demogr, November 2002;24(10):30 –5.
+Grimm V , Revila E, Berger U, Jeltsch F, Mooij WM, Railsback SF, et al. Pattern-
+oriented modelling of agent-based complex system: lessons from ecology.
+Science 2005;310:987–91.
+Gross BD. Complexity science and 21st century issue. Presentation at LSE,
+2004; 2004.
+Heath TB, Chatterjee S. Asymmetric decoy effects on lower-quality versus
+higher-quality brands: meta-analytic and experimental evidence. J Consum
+Res 1995;22:411–20.
+Highhouse S. Context-dependent selection: the effects of decoy and phantom
+job candidates. Org Behav Human Decis Process 1982;65:68 –76.
+Huber J, Payne JW, Puto C. Adding asymmetrically dominated alternatives:
+violations of regularity and the similarity hypothesis. J Consum Res
+1982;9:90–8.
+Kim B, Blattberg RC, Rossi PE. Modeling the distribution of price
+sensitivity and implications for optimal retail pricing. J Bus Econ Stat
+1995;13(3):291 –303.
+Kivetz R, Netzer O, Srinivasan V . Extending compromise effect models to
+complex buying situations and other context effects. J Mark Res
+2004;41:262–8.
+Makoto M. Forecasting hits in the J-Pop market: a practical application of multi-
+agent simulation in Japan. SFI business network: tutorial on complex and
+agent based modeling; 2000.
+McClelland DC. Human motivation. Cambridge: Cambridge University Press;
+1987.
+McFarland DJ. Motivational control systems analysis. London: Academic Press
+Inc; 1974.
+Min KS. Consumer response to product unavailability. Unpublished PhD
+Thesis, the Ohio State University; 2003.
+Park J, Kim J. The effects of decoys on preference reversals: the role of perspective
+and providing justification. J Consum Psychol 2005;15(2):94–107.
+Patel S, Schlijper A. Models of consumer behavior. Report on ESGI 2004; 2004.
+Poggi A. Developing real applications with agent technologies. J Syst Integr
+1999;9(4):311–28.
+Pratkanis AR, Farquhar PH. A brief history of research on phantom alternatives:
+evidence for seven empirical generalizations about phantoms. Basic Appl
+Soc Psychol 1992;13(1):103 –22.
+Quesada J, Chater N, Otto P . An explanation of decoy effects without assuming
+numerical attributes. Proceedings of the 27th annual meeting of the
+Cognitive Science Society; 2005.
+Rud OP . Data mining cookbook: modeling data for marketing, risk, and
+customer relationship management. New York: John Wiley & Sons, Inc;
+2001.
+Simonson I. Choice based on reasons: the case of attraction and compromise
+effects. J Consum Res 1989;16:158 –74.
+Simonson I, Tversky A. Choice in context: tradeoff contrast and extremeness
+aversion. J Mark Res 1992;29:281 –95.
+Tversky A, Kahneman D. Loss aversion in riskless choice: a reference
+dependent model. Q J Econ 1991:1039 –61 (November 1991).
+Wedell DH, Pettibone JC. Using judgments to understand decoy effects in
+choice. Org Behav Human Decis Process 1996;24:49 –65.
+922 T. Zhang, D. Zhang / Journal of Business Research 60 (2007) 912 –922

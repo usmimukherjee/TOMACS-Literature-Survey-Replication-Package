@@ -1,0 +1,798 @@
+An agent-based model for designing a ﬁnancial
+market that works well
+Takanobu Mizuta
+SPARX Asset Management Co. Ltd.,
+Tokyo, Japan
+https://orcid.org/0000-0003-4329-0645
+Abstract—Designing a ﬁnancial market that works well is very
+important for developing and maintaining an advanced economy,
+but is not easy because changing detailed rules, even ones that
+seem trivial, sometimes causes unexpected large impacts and side
+effects. A computer simulation using an agent-based model can
+directly treat and clearly explain such complex systems where
+micro processes and macro phenomena interact. Many effective
+agent-based models investigating human behavior have already
+been developed. Recently, an artiﬁcial market model, which is
+an agent-based model for a ﬁnancial market, has started to
+contribute to discussions on rules and regulations of actual
+ﬁnancial markets. I introduce an artiﬁcial market model to
+design ﬁnancial markets that work well and describe a previous
+study investigating tick size reduction. I hope that more artiﬁcial
+market models will contribute to designing ﬁnancial markets that
+work well to further develop and maintain advanced economies.
+Index Terms —Agent-Based Model, Artiﬁcial Market Model,
+Market Design
+I. A RTIFICIAL MARKET MODEL : AN AGENT -BASED MODEL
+FOR A FINANCIAL MARKET
+A. Importance and difﬁculty of market design
+People have been able to develop advanced economies by
+cooperating to exchange goods for money. Creation of any
+industry requires investment to ﬁrst purchase or build tools
+to make goods. Thus, a ﬁnancial market that enables smooth
+investment is obviously required.
+The economist John McMillan, who used game theory to
+investigate many markets, said “a market works well only if
+it is well designed” [1]. Market design (regulations, rules)
+determines whether a market works well or badly. McMillan
+also concluded that “the economy is a highly complex system.
+It is at least as complex as the systems studied by physicists
+and biologists.” The computer scientist Melanie Mitchell said
+“economies are complex systems in which the simple, mi-
+croscopic components consist of people buying and selling
+goods, and the collective behavior is the complex, hard-to-
+predict behavior of markets as a whole, such as ﬂuctuations
+in stock prices” [2]. A ﬁnancial market is another highly
+complex system where a simple summation of micro processes
+Note that the opinions contained herein are solely those of the authors and
+do not necessarily reﬂect those of SPARX Asset Management Co., Ltd.
+(trader behaviors) never explains macro phenomena (price
+formation). Changing detailed rules, even ones that seem
+trivial, sometimes causes unexpected large impacts and side
+effects. McMillan illustrated this nature as “both God and
+the devil are in the details.” Designing a market well is very
+important for developing an advanced economy, but not easy.
+B. An agent-based model explaining a complex system
+Separately investigating macro phenomena and micro pro-
+cesses unclearly explains complex systems where macro phe-
+nomena and micro processes interact. A mathematical model
+and an empirical study cannot directly treat or clearly explain
+the interactions. A computer simulation using an agent-based
+model, on the other hand, can directly treat and clearly ex-
+plain the interactions 1. An agent-based model includes agents
+modeling trader behaviors and shows macro phenomena as a
+result of their interactions. Agent behaviors that are simple
+but affected by macro phenomena cause complex macro
+phenomena, which are not a simple summation of the agent
+behaviors. Thus, an agent-based model gives researchers new
+knowledge. An agent-based model, requiring no data, is a true
+computer simulation.
+Not only ﬁnancial markets but also social systems are
+complex system. Many studies using agent-based models has
+already succeed to investigate social systems . For examples,
+investigating effects of new creation road ways to trafﬁc jam
+and determining an evacuation route with terror and ﬁre in
+a building. To solve such problems, researchers naturally use
+various approaches: a mathematical model, an empirical study,
+and an agent-based model. Each approach has advantages
+and disadvantages and gives researchers various viewpoints
+and knowledge to ﬁnd unexpected side effects. An agent-
+based model for such problems has been as indispensable as
+a mathematical model and an empirical study.
+C. An artiﬁcial market model = an agent-based model for a
+ﬁnancial market
+An artiﬁcial market model is an agent-based model for a
+ﬁnancial market. Since the 1990s, many signiﬁcant artiﬁcial
+market models [4]–[6] have been developed. Projects building
+generic artiﬁcial market models have been conducted such as
+1Sabzian et al. provide a comprehensive review of agent-based models for
+complex systems [3].978-1-7281-2547-3/20/$31.00 c©2020 IEEE
+400 2020 IEEE Symposium Series on Computational Intelligence (SSCI)
+December 1-4, 2020, Canberra, Australia 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:56 UTC from IEEE Xplore.  Restrictions apply.
+
+the U-mart project in Japan in the 2000s 2. These artiﬁcial
+market models have contributed to explaining the nature of
+ﬁnancial market phenomena such as bubbles and crashes.
+An artiﬁcial market model, however, has rarely been used
+to investigate the rules and regulations of a ﬁnancial market.
+After the bankruptcy of Lehman Brothers in 2008, some
+articles argued that traditional economics had not found ways
+to design markets that work well and anticipated an artiﬁcial
+market model to do so. Indeed, in Science, Battiston et al. [8]
+explained that “since the 2008 crisis, there has been increasing
+interest in using ideas from complexity theory (using network
+models and agent-based models) to make sense of economic
+and ﬁnancial markets,” and in Nature, Farmer and Foley [9]
+explained that “such (agent based) economic models should
+be able to provide an alternative tool to give insight into how
+government policies could affect the broad characteristics of
+economic performance, by quantitatively exploring how the
+economy is likely to react under different scenarios.”
+Financial regulators and exchanges, who decide rules and
+regulations, especially desire an artiﬁcial market model to
+design a market that works well. Indeed, the Japan Exchange
+Group (JPX), which is the parent company of the Tokyo Stock
+Exchange, has published 34 JPX working papers including 10
+papers using an artiﬁcial market model as of June 2020 3.
+Also in Europe, a three-year project (2014-2017) founded
+by the European Commission to integrate macro-ﬁnancial
+modeling for robust policy design included a work package
+named bridging agent-based and dynamic-stochastic-general-
+equilibrium modeling approaches for building policy-focused
+macro-ﬁnancial models4. The Bank of England also published
+a working paper investigating effects of passive funds in a
+bond market using an artiﬁcial market model [10].
+Mizuta [11] reviewed other previous agent-based models
+for designing a ﬁnancial market that works well that are not
+mentioned above.
+II. S UITABLE COMPLEXITY , ADV ANTAGES AND
+DISADV ANTAGES
+Here, I will discuss features that an artiﬁcial market model
+for designing a ﬁnancial market should have. Such models
+aim not to accurately forecast but to design a ﬁnancial market
+that works well. To discuss what a better design is, acquiring
+knowledge of what mechanism affects prices is more important
+than replicating a real ﬁnancial market.
+Such a model needs to reveal possible mechanisms that
+affect price formation through many simulation runs, e.g.,
+searching for parameters or purely comparing the before/after
+of changes. Possible mechanisms revealed by these runs
+provide new knowledge and insights into the effects of the
+changes on price formation in actual ﬁnancial markets. Other
+methods of study, e.g., empirical studies, would not reveal such
+possible mechanisms.
+2Kita et al. provide a comprehensive review [7].
+3https://www.jpx.co.jp/english/corporate/research-study/working-paper/
+index.html
+4http://www.macﬁnrobods.eu/research/workpackages/WP7/wp7.html
++DSSHQHG
+ :LOOKDSSHQ
+$QHPSLULFDO
+VWXG\
+$QDUWLILFLDO
+PDUNHWPRGHO
+Fig. 1. An artiﬁcial market model and an empirical study
+An unnecessary replication of macro phenomena leads to
+models that are over-ﬁtted and too complex. Such models
+would prevent us from understanding and discovering mecha-
+nisms that affect price formation because the number of related
+factors would increase. Indeed, artiﬁcial market models that
+are too complex are often criticized because they are very
+difﬁcult to evaluate [12]. A model that is too complex not
+only would prevent us from understanding mechanisms but
+also could output arbitrary results by over-ﬁtting too many
+parameters. It is more difﬁcult for simpler models to obtain
+arbitrary results, so these models are easier to evaluate. An ar-
+tiﬁcial market model should be built as simple as possible and
+not intentionally implement agents to cover all the investors
+who would exist in actual ﬁnancial markets.
+As Michael Weisberg mentioned, modeling is “the indirect
+study of real-world systems via the construction and analysis
+of models. Modeling is not always aimed at purely veridical
+representation. Rather, the researchers worked hard to identify
+the features of these systems that were most salient to their
+investigations.” [13] Therefore, good models differ depending
+on the phenomena being focused on. Thus, my model is good
+only for the purpose of this study and may be not good
+for other purposes. An aim of my study is to understand
+how important properties (behaviors, algorithms) affect macro
+phenomena and play a role in the ﬁnancial system rather than
+representing actual ﬁnancial markets precisely.
+Fig. 1 shows features of outputs of an artiﬁcial market model
+and an empirical study. Outputs of an empirical study are in-
+cluded in the area that has happened in a real ﬁnancial market.
+The advantage of an empirical study is outputs exclude the all
+area not happening in the past or future. The disadvantage,
+however, is outputs exclude any area happening in the future.
+The advantage of an artiﬁcial market model is outputs
+include the part of the area happening in the future. The
+disadvantage, however, is outputs include the part of area not
+happening in the past or future. An artiﬁcial market model just
+outputs “possible” results to understand the mechanism of a
+market. Discussing whether the results will occur or not needs
+other methods, e.g., an empirical study and a mathematical
+model.
+401
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:56 UTC from IEEE Xplore.  Restrictions apply.
+
+Discussing the outputs of an artiﬁcial market model always
+needs knowledge given by empirical studies and mathematical
+models. A market that works well should be designed by not
+one but several methods (an artiﬁcial market model, empirical
+study and a mathematical model), and the methods should
+collaborate to mutually compensate for their disadvantages.
+Many empirical studies, e.g., Sewell [14], have shown
+that both stylized facts (fat-tail and volatility-clustering) exist
+statistically in almost all ﬁnancial markets. Conversely, they
+have also shown that only the fat-tail and volatility-clustering
+are stably observed for any asset and in any period because
+ﬁnancial markets are generally unstable. This leads to the
+conclusion that an artiﬁcial market should replicate macro
+phenomena existing generally for any asset and any time,
+fat-tail, and volatility-clustering. This is an example of how
+empirical studies can help an artiﬁcial market model.
+III. C ASE STUDY : TICK SIZE REDUCTION
+A. Tick size reduction
+I introduce a paper investigating tick size reduction [15]
+(vol. 2, JPX working paper) as a typical study investigating the
+design of a ﬁnancial market using an artiﬁcial market model.
+The tick size is the minimum unit of a price change. For
+example, when the tick size is $1, order prices such as $99
+and $100 are accepted, but $99.1 ($99.10 cent) is not. Tokyo
+Stock Exchange used Y=1 as the tick size until 18 July 2014
+and has used Y=0.1 (10 sen) since 22 July 2014.
+More stock markets are now making full use of information
+technology (IT) to achieve low-cost operations, especially
+in the United States and Europe. Their market shares of
+trading volume have caught up with those of traditional stock
+exchanges. Thus, each stock is traded at many stock markets
+at once. Whether such fragmentation makes markets more
+efﬁcient has been debated [16], [17]. Many factors, such as
+tick size, speed of trading systems, length of trading hours,
+stability of trading systems, safety of clearing, and variety
+of order types determine the market share of trading volume
+between actual markets. A smallness of the tick size is one of
+the most important factors to compete with other markets.
+Mizuta et al. [15] used an artiﬁcial market model to inves-
+tigate competition, in terms of taking market share of trading
+volume, between two artiﬁcial ﬁnancial markets that have
+exactly the same speciﬁcations except for tick sizes and initial
+trading volume.
+B. Model
+The model of Chiarella and Iori [18] is very simple but
+replicates long-term statistical characteristics observed in ac-
+tual ﬁnancial markets: a fat tail and volatility clustering. In
+contrast, that of Mizuta et al. [15] replicates high-frequency
+micro structures, such as execution rates, cancel rates, and
+one-tick volatility, that cannot be replicated with the model
+of Chiarella and Iori [18]. Only fundamental and technical
+)XQGDPHQWDO
+([SHFWHG
+UHWXUQ
+([SHFWHG
+SULFH
+0DUNHWSULFH
+)XQGDPHQWDOSULFH
+5DQGRP
+YDULDEOH
+7HFKQLFDO
++LVWRULFDOUHWXUQ
+1RLVH
+MDJHQWQXPEHU
+WWLPH
+/g184/g184
+/g185
+/g183
+/g168/g168
+/g169
+/g167 /g14/g14/g32
+/g166
+t
+jj
+t
+jhjt
+f
+j
+i ji
+t
+je urwP
+Pwwr /g72,,2,1
+,
+, log1
+jtt
+jh
+t PPr
+/g87/g16
+/g32 /log,
+tP
+fP j
+t/g72
+)exp( ,, je
+tt
+je
+t rPP /g32
+Fig. 2. An agent model
+strategies existing generally for any market and any time 5 are
+implemented to the agent model.
+The number of agents is n. First, at time t =1 , agent 1
+orders to buy or sell the risk asset; then at t =2 agent 2 orders
+to buy or sell. At t =3 ,4,,,n , agents 3,4,,,n respectively
+order to buy or sell. At t = n+1, going back to the ﬁrst agent,
+agent 1 orders to buy or sell, and at t = n+2,n +3,,n +n,
+agents 2,3,,,,n respectively order to buy or sell, and this
+cycle is repeated. Note that t passes even if no deals have
+occurred. An agent j determines an order price and buys or
+sells by the following process. Agents use a combination of
+the fundamental value and technical rules to form expectations
+on a risk asset return (Fig. 2). The expected return of agent j
+at t is
+rt
+e,j =( w1,j log Pf
+Pt−1 +w2,j log Pt−1
+Pt−τj −1 +w3,jϵt
+j)/Σ3
+iwi,j,
+(1)
+where wi,j is the weight of term i for agent j and is indepen-
+dently determined by random variables uniformly distributed
+on the interval (0,wi,max) at the start of the simulation for
+each agent. Pf is a fundamental value and is constant 6.I n
+addition, Pt is the market price of the risk asset, and ϵt
+j is
+determined by random variables from a normal distribution
+with average 0 and variance σϵ. Finally, τj is independently
+determined by random variables uniformly distributed on the
+interval(1,τmax) at the start of the simulation for each agent 7.
+The ﬁrst term of Eq. (1) represents a fundamental strategy:
+the agent expects a positive return when the market price is
+lower than the fundamental value, and vice versa. The second
+term of Eq. (1) represents a technical strategy: the agent
+expects a positive return when the historical market return is
+positive, and vice versa.
+5Many empirical studies found these strategies, which are comprehensively
+reviewed by Menkhoff and Taylor [19].
+6This enables focusing on phenomena in short time scales, as the funda-
+mental price remains static.
+7When t<τ j , however, rt
+h,j =0 .
+402
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:56 UTC from IEEE Xplore.  Restrictions apply.
+
+2UGHU
+SULFH
+'HWHUPLQHG
+ZLWKUDQGRP
+ك
+X\RQHVKDUH
+exp(,
+t
+je
+t PP /g32
+tP
+jo
+tP ,
+dje
+t PP /g14,
+dje
+t PP /g16,
+3ULFH
+([SHFWHG
+SULFH
+Fig. 3. Scattering the order prices around the expected price.
+After the expected return has been determined, the expected
+price is
+Pt
+e,j = Pt exp(rt
+e,j). (2)
+The order price Pt
+o,j is determined by random variables
+normally distributed with average Pt
+e,j and standard deviation
+Pσ , where Pσ is a constant. (Fig. 3) Whether to buy or sell
+is determined by the magnitude relationship between Pt
+e,j and
+Pt
+o,j :
+when Pt
+e,j >P t
+o,j , the agent places an order to buy one
+share, but
+when Pt
+e,j <P t
+o,j , the agent places an order to sell one
+share8.
+Scattering the order prices around the expected price enables
+the distribution of order prices in a real ﬁnancial market to be
+replicated and a simulation to run stably.
+Agents always order only one share. The model adopts a
+continuous double auction, so when an agent orders to buy
+(sell), if there is a lower price sell order (a higher price buy
+order) than the agent’s order, dealing immediately occurs. Such
+an order is called “market order”. If there is not a lower price
+sell order (a higher price buy order) than the agent’s order,
+the agent’s order remains in the order book. Such an order is
+called “limit order”. The remaining order is canceled after tc
+from the order time. Agents can short sell freely. The quantity
+of holding positions is not limited, so agents can take any
+shares for both long and short positions to inﬁnity.
+The agents trade one stock at two markets: A and B (Fig.
+4). The two stock markets have exactly the same speciﬁcations
+except for the minimum unit of a price change (tick size) per
+Pf , ΔPA,ΔPB and initial share of trading volume, WA,WB .
+The agents should decide to which market they order: A or B.
+The model of market selection is almost the same as an
+order allocation algorithm (Smart Order Routing, SOR) used
+in a real ﬁnancial market. Each agent determines a market
+to which to order for every order. When the agent order is
+buy (sell), the agent searches for the lowest sell (highest buy)
+8When t<t c, however, to generate enough waiting orders, the agent
+places an order to buy one share when Pf >P t
+o,j , or to sell one share when
+Pf <P t
+o,j .
+$JHQWV
+2WKHUFDVHV
+'LVWULEXWLQJRUGHUVRQPDUNHWVKDUHV
+0DUNHW
+ڶ
+0DUNHW
+%
+0DUNHW$/DUJHLQLWLDOPDUNHWVKDUH/DUJHWLFNVL]H
+0DUNHW%6PDOOLQLWLDOPDUNHWVKDUH6PDOOWLFNVL]H
+0DUNHWRUGHUDQGEHVWSULFHVGLIIHU
+2UGHULQJWRWKHPDUNHWZLWKWKHEHVWSULFHLVEHWWHU
+Fig. 4. A model selecting a market to which to order.
+
+
+
+
+
+
+
+
+
+
+
+0DUNHWVKDUHRIPDUNHW$
+GD\V
+̆3% 
+̆3$ 
+̆3$ 
+Fig. 5. The time evolution of market shares of trading volume for tick sizes
+that are not too small.
+orders of each market. These prices are called “best prices.”
+When best prices differ between two markets and the order
+will be a market order in least one of the markets, the agent
+orders to buy (sell) in a market in which the best price is
+better, i.e., lower (higher) in the case of the buy (sell) order.
+In other cases, i.e., when the best prices are exactly the same
+or the order will be a limit order in both markets, the agent
+orders to buy (sell) in market A with probability WAɼ
+WA = TA
+TA +TB
+, (3)
+where TA is the trading volume of market A within last tAB ,
+and the calculating span of WA and TB is that of market B. To
+summarize, if the market order and best prices differ, agents
+order to buy (sell) in the market in which the best price is
+better than that in the other market. In other cases, agents
+order to buy (sell) in markets depending on the market share
+of trading volume.
+C. Simulation Results
+Mizuta et al. [15] investigated the transition of market
+shares of trading volume involving two markets. The two
+stock markets (A and B) had exactly the same speciﬁcations
+except for tick sizes per Pf , ΔPA,ΔPB and initial market
+403
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:56 UTC from IEEE Xplore.  Restrictions apply.
+
+
+
+
+
+
+
+
+
+
+
+
+0DNHWVKDUHRIPDUNHW$
+GD\V
+̆3% 
+̆3$ 
+̆3$ 
+Fig. 6. The time evolution of market shares of trading volume for tick sizes
+that are too small.
+     
+       
+       
+       
+       
+       
+       
+       
+0DUNHWVKDUHRI
+PDUNHW$DW
+7LFNVL]HVRIPDUNHW%
+7LFNVL]HV
+RIPDUNHW
+$
+Fig. 7. The market shares of trading volume for various ΔPA and ΔPB .
+share of trading volume WA =0 .9,WB =0 .1. They set
+n = 1000,w 1,max =1 ,w 2,max =1 0,w 3,max =1 ,τmax =
+10000,σϵ=0 .06,Pσ =3 0,tc = 20000,Pf = 10000, and
+tAB = 10000 (5 days). Simulations are ran to t = 10000000.
+Fig. 5 shows the time evolution of market share of trading
+volume of market A, where ΔPA =0 .1%,0.01% and ΔPB =
+0.01%.I nt h e ΔPA =Δ PB =0 .01 the market shares slightly
+moved. In ΔPA =0 .1, which is 10 times greater than ΔPB =
+0.01, market B took market share of trading volume from
+market A.
+On the other hand, Fig. 6 shows the case in which ΔPA =
+0.001%,0.0001% and ΔPB =0 .0001%, which is 1/100 of
+that in Fig. 5, and ΔPA also became 1/100. Market B could not
+take market share despite ΔPB being 1/10 of ΔPA. Therefore,
+competition under tick sizes that are too small does not affect
+the taking of market share of trading volume.
+The relationship between tick size and taking market share
+of trading volume is investigated. Fig. 7 shows the market
+shares of trading volume of WA at 500 days for various ΔPA
+and ΔPB . The following two borderlines,
+ΔPA ≤ ΔPB (dashed line), (4)
+ΔPA < σt ≃ 0.05% (solid line), (5)
+are drawn where σt is the standard deviation of return for one
+tick, which was small enough.
+In the region in which at least Eq. (4) or (5) is satisﬁed,
+market share of trading volume of market A is rarely taken.
+In the region in which neither Eq. (4) nor (5) is satisﬁed, under
+
+
+
+
+
+
+
+
+
+
+
+
+
+0DUNHWVKDUHRIPDUNHW$
+DWGD\V
+9RODWLOLW\
+7LFNVL]HRIPDUNHW$
+9RODWLOLW\OHIW
+0DUNHWVKDUHRIPDUNHW$DWGD\VULJKW
+Fig. 8. Tick sizes, volatility and market share of trading volume.
+WLPH
+,PSRVVLEOH
+WRWUDGHDW
+PDUNHW$
+0DUNHW
+SULFH
+0DUNHW$QHYHUUHSUHVHQWV
+2UGHUVPRYHWRPDUNHW%
+WLPH
+QRWQHHGPDUNHW%0DUNHW$UHSUHVHQWVWKHP
+7LFNVL]HRI
+PDUNHW$
+̆3$t/g86
+!̆3$t/g86
+(QRXJK
+UHVROXWLRQ
+DWPDUNHW$
+0DUNHW
+SULFH 7LFNVL]HRI
+PDUNHW$
+Fig. 9. Mechanism taking market share of trading volume.
+the dashed and solid lines, market share of trading volume of
+market A is rapidly taken. This shows that when the tick size
+of market A is smaller than σt, market share of trading volume
+of market A is rarely taken even if the tick size of market B
+is much smaller than that of A.
+Fig. 8 shows the standard deviation of return for one tick
+(volatility), σt, and market share of trading volume of market
+A at 500 days, WA for various ΔPA where ΔPB =0 .0001%.
+The left vertical axis and horizontal axis are logarithmic
+scales. Eq. (4) was never satisﬁed for all ΔPA in Fig. 8. The
+horizontal dotted line is σt = σt. On the left side, σt equals
+σt and σt does not depend on ΔPA. This means that the
+difference in tick size does not affect price formations where
+tick sizes are smaller than σt.
+On the right side, ΔPA is larger, σt is larger. This implies
+that the prices normally ﬂuctuate less than ΔPA; however,
+price variation less than ΔPA is not permitted. Thus, price
+ﬂuctuations depend on ΔPA. In this case, market share of
+trading volume rapidly deceases in accordance with increasing
+ΔPA. On the left side, however, the shares are stable.
+Fig. 9 summarizes the above discussion. When ΔPA is
+larger than σt (Fig. 9 top), if ΔPB is smaller than ΔPA, there
+404
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:56 UTC from IEEE Xplore.  Restrictions apply.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0DUNHWVKDUHRI376
+9RODWLOLW\
+7LFNVL]HRI7RN\RVWRFNH[FKDQJH
+9RODWLOLW\OHIW
+0DUNHWVKDUHRI376ULJKW
+Fig. 10. An empirical analysis for tick sizes, volatility, and market share of
+trading volume.
+is a large amount of trading in market B inside ΔPA. Thus,
+market B takes market share of trading volume from market A.
+When ΔPA is smaller than σt (Fig. 9 bottom), even if ΔPB
+is very small, price ﬂuctuations cross many widths of ΔPA
+and sufﬁcient price formations occur only in market A. Thus,
+market B can rarely take market share of trading volume from
+market A.
+D. An empirical analysis comparing with the simulation re-
+sults
+Next, Mizuta et al. [15] analyzed empirical data and com-
+pared them with the simulation results shown in Fig. 9, using
+Japanese stock market data. The data period included all
+business days in the 2012 calendar year. The number of stocks
+analyzed is 439, which were selected by TOPIX 500 9 over
+the entire index data period, had the same minimum unit of
+a price change for every month end, and were traded every
+business day.
+Fig. 10 shows the standard deviations for 10 seconds of
+each stock (volatility), σt (triangles), which is the averaged
+standard deviation of return for 10 minutes except for opening
+prices for every day, and ΔP is market share of the trading
+volume of the Proprietary Trading System (PTS) 10 of each
+stock (circles) with tick sizes per averaged prices at the end
+of every month of the Tokyo Stock Exchange 11. The right
+vertical axis is upside down to easily compare with Fig. 9.
+The horizontal dotted line is σt = σt.
+9TOPIX 500 is a free-ﬂoat capitalization-weighted index that is calculated
+on the basis of the 500 most liquid and highly market capitalized domestic
+common stocks listed on the Tokyo Stock Exchange ﬁrst section.
+10Electric trading systems outside stock exchanges are called PTSs in Japan.
+A PTS is very similar to an Alternative Trading System (A TS) and Electronic
+Communications Network (ECN) in other countries.
+11Mizuta et al. used the data from the Tokyo Stock Exchange to calculate
+ΔP and σt. They used Bloomberg data to calculate the market share or
+trading volume of the PTS, which is its entire trading volume divided by
+those of Japan ʟs traditional stock exchanges and PTS, where PTSs are Japan
+Next PTS J-Market, Japan Next PTS X-Market, and Chi-X Japan PTS, and
+where Japan ʟs traditional stock exchanges are the Tokyo, Osaka, Nagoya,
+Fukuoka, and Sapporo stock exchanges and JASDAQ.
+On the left side, σt, which equaled σt, did not much depend
+on ΔP . On the right side, ΔP and σt were larger. These
+results are similar to those in Fig. 9. The market share of
+trading volume of PTS deceased along with ΔP . When ΔP
+was larger, PTS more easily took market share of trading
+volume, and σt tended to increase along with ΔP .
+E. Summary of the case study: tick size reduction
+A market having a tick size larger than volatility will lose
+market share of trading volume to other markets. In contrast,
+a market having a tick size smaller than volatility, even if
+the tick size is larger than those of other markets, will rarely
+lose market share to other markets. A tick size smaller than
+volatility rarely affects competition of market share between
+ﬁnancial markets, whereas a tick size larger than volatility
+enlarges the volatility and prevents adequate price formation.
+This simulation study is the ﬁrst to discuss an adequate tick
+size12. An empirical study cannot investigate tick sizes that
+have never been used in an actual ﬁnancial market or isolate
+a direct effect on price formation affected by many factors.
+In contrast, an artiﬁcial market model can isolate the pure
+contributions of changing a tick size to price formation and
+simulate a tick size that has never been used. An artiﬁcial
+market model has these advantages over an empirical study.
+After the simulation study of Mizuta et al. [15], the math-
+ematical model of Nagumo et al. [21] achieved the same
+result. In this way, an artiﬁcial market model can indicate
+new problems that studies using mathematical models and
+empirical analysis should solve.
+IV . C ONCLUSION
+In this paper, I introduced an artiﬁcial market model, which
+is an agent-based model for a ﬁnancial market, to design a
+ﬁnancial market that works well. An artiﬁcial market model
+has recently started to contribute to discussions on rules
+and regulations of actual ﬁnancial markets such as tick size
+reduction. The contribution has not been great yet but will
+become greater soon.
+Some readers may think tick size reduction is a trivial
+matter for a ﬁnancial market. This is, however, important
+and should not be underestimated. Changing detailed rules
+sometimes causes unexpected large impacts and side effects.
+John McMillan illustrated this nature as “both God and the
+devil are in the details” [1]. Detailed design can determine
+whether a ﬁnancial market develops or destroys an advanced
+economy. Designing a market well is very important for
+developing and maintaining an advanced economy, but not
+easy.
+I hope that more artiﬁcial market models will contribute to
+designing a ﬁnancial market that works well to further develop
+and maintain advanced economies.
+12Darley and Outkin [20] investigated tick size reduction using an artiﬁcial
+market model when NASDAQ, a stock exchange in the U.S., was planning
+tick size reduction. They showed, for example, a market can be unstable
+when some investment strategies increase. However, their model had too many
+parameters and they focused on which investors earned more, which prevented
+them from discussing a good design of a ﬁnancial market.
+405
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:56 UTC from IEEE Xplore.  Restrictions apply.
+
+REFERENCES
+[1] J. McMillan, Reinventing the bazaar: A natural history of markets .W .
+W. Norton & Company, 2002,
+https://books.wwnorton.com/books/Reinventing-the-Bazaar/.
+[2] M. Mitchell, Complexity: A guided tour . Oxford University Press, 2009,
+https://global.oup.com/academic/product/complexity-9780195124415.
+[3] H. Sabzian, M. A. Shaﬁa, A. Bonyadi Naeini, G. Jandaghi, and M. J.
+Sheikh, “A review of agent-based modeling (abm) concepts and some
+of its main applications in management science,” Iranian Journal of
+Management Studies , vol. 11, no. 4, pp. 659–692, 2018,
+http://dx.doi.org/10.22059/ijms.2018.261178.673190.
+[4] K. Izumi and T. Okatsu, “An artiﬁcial market analysis of exchange
+rate dynamics,” Evolutionary Programming V , Proceedings of the Fifth
+Annual Conference on Evolutionary Programming , pp. 27–36, 1996,
+http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.100.3293.
+[5] W. Arthur, S. Durlauf, D. Lane, and S. E. Program, “Asset pricing under
+endogenous expectations in an articial stock market,” The economy as
+an evolving complex system II , pp. 15–44, 1997,
+https://www.crcpress.com/p/book/9780201328233.
+[6] T. Lux and M. Marchesi, “Scaling and criticality in a stochastic multi-
+agent model of a ﬁnancial market,” Nature, vol. 397, no. February, pp.
+498–500, 1999,
+https://doi.org/10.1038/17290DO.
+[7] H. Kita, K. Taniguchi, and Y . Nakajima, Realistic Simulation of Finan-
+cial Markets . Springer, 2016,
+https://dx.doi.org/10.1007/978-4-431-55057-0.
+[8] S. Battiston, J. D. Farmer, A. Flache, D. Garlaschelli, A. G. Haldane,
+H. Heesterbeek, C. Hommes, C. Jaeger, R. May, and M. Scheffer,
+“Complexity theory and ﬁnancial regulation,” Science, vol. 351, no.
+6275, pp. 818–819, 2016,
+http://science.sciencemag.org/content/351/6275/818.
+[9] J. D. Farmer and D. Foley, “The economy needs agent-based modelling,”
+Nature, vol. 460, no. 7256, pp. 685–686, 2009,
+https://www.nature.com/articles/460685a.
+[10] K. Braun-Munzinger, Z. Liu, and A. Turrell, “Staff working paper no.
+592 an agent-based model of dynamics in corporate bond trading,”
+Bank of England, Staff Working Papers , 2016,
+http://www.bankofengland.co.uk/research/Pages/workingpapers/2016/
+swp592.aspx.
+[11] T. Mizuta, “A brief review of recent artiﬁcial market simulation (agent-
+based model) studies for ﬁnancial market regulations and/or rules,” SSRN
+Working Paper Series , 2016,
+http://ssrn.com/abstract=2710495.
+[12] S.-H. Chen, C.-L. Chang, and Y .-R. Du, “Agent-based economic models
+and econometrics,” Knowledge Engineering Review , vol. 27, no. 2, pp.
+187–219, 2012,
+http://dx.doi.org/10.1017/S0269888912000136.
+[13] M. Weisberg, Simulation and Similarity: Using Models to Understand
+the World. Oxford Studies in the Philosophy of Science, 2012,
+https://dx.doi.org/10.1093/acprof:oso/9780199933662.001.0001.
+[14] M. Sewell, “Characterization of ﬁnancial time series,” Research Note,
+University College London, Department of Computer Science , no.
+RN/11/01, 2011,
+http://ﬁnance.martinsewell.com/stylized-facts/.
+[15] T. Mizuta, S. Hayakawa, K. Izumi, and S. Y oshimura, “Investigation
+of relationship between tick size and trading volume of markets using
+artiﬁcial market simulations,” in JPX working paper , no. 2. Japan
+Excgange Group, 2013,
+https://www.jpx.co.jp/english/corporate/research-study/working-paper/
+index.html.
+[16] T. Foucault and A. J. Menkveld, “Competition for order ﬂow and smart
+order routing systems,” The Journal of Finance , vol. 63, no. 1, pp. 119–
+158, 2008,
+https://doi.org/10.1111/j.1540-6261.2008.01312.x.
+[17] M. O’Hara and M. Y e, “Is market fragmentation harming market
+quality?” Journal of Financial Economics , vol. 100, no. 3, pp. 459–
+474, 2011,
+https://doi.org/10.1016/j.jﬁneco.2011.02.006.
+[18] C. Chiarella and G. Iori, “A simulation analysis of the microstructure of
+double auction markets,” Quantitative Finance , vol. 2, no. 5, pp. 346–
+353, 2002,
+https://doi.org/10.1088/1469-7688/2/5/303.
+[19] L. Menkhoff and M. P . Taylor, “The obstinate passion of foreign
+exchange professionals: technical analysis,” Journal of Economic Lit-
+erature, pp. 936–972, 2007,
+http://www.jstor.org/stable/27646888.
+[20] V . Darley and A. V . Outkin, Nasdaq Market Simulation: Insights on a
+Major Market from the Science of Complex Adaptive Systems . World
+Scientiﬁc Publishing Co., Inc., 2007,
+https://www.worldscientiﬁc.com/worldscibooks/10.1142/6217.
+[21] S. Nagumo, T. Shimada, N. Y oshioka, and N. Ito, “The effect of tick
+size on trading volume share in two competing stock markets,” Journal
+of the Physical Society of Japan , vol. 86, no. 1, p. 014801, 2017,
+https://doi.org/10.7566/JPSJ.86.014801. [Online]. Available: https://doi.
+org/10.7566/JPSJ.86.014801
+406
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:56 UTC from IEEE Xplore.  Restrictions apply.

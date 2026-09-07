@@ -1,0 +1,809 @@
+Cognitive-Agent-Based Modeling of a Financial Market
+C´elia da Costa Pereira, Alessia Mauri, and Andrea G. B. Tettamanzi
+Dipartimento di Tecnologie dell’Informazione
+Universit`a degli Studi di Milano
+Via Bramante 65, I-26013 Crema (CR), Italy
+Email: celia.pereira@unimi.it, amauri@crema.unimi.it, andrea.tettamanzi@unimi.it
+Abstract
+This paper describes our experience in building an evo-
+lutionary system for agent-based modeling of a ﬁnancial
+market. The system uses a type of BDI agents, which
+are deliberative agents with a mental state deﬁned by a
+belief base and by a set of desire-generation rules. Beliefs
+are graded and trust in information sources is taken into
+account. At any moment, an agent generates a set of desires
+and selects a consistent subset thereof, whose elements are
+adopted as goals, to be achieved by executing actions.
+The market structure is realistic, albeit simpliﬁed: a single
+asset is assumed to exist, that is traded on the market in
+indistinguishable, standardized contracts against payment of
+money. The price of trades is continuously determined by
+means of a single-price auction, which crosses buy and sell
+orders to maximize market liquidity. Every agent has, at any
+moment, an available amount of money and an inventory of
+asset contracts, which, valued at market price and added to
+the available money, yields the agent’s net asset value (NA V).
+To determine their economical behavior , the agents have
+access to a set of technical indicators made available by
+the market, which constitute the sources of their beliefs, and
+to their current balance, which constitutes their knowledge.
+The agents participating in the market evolve by means of
+an evolutionary algorithm: they undergo selection based on
+their NA V , replication with random mutations, and recombi-
+nation. When an agent replicates, its properties are divided
+among the offspring. This evolutionary process favors the
+reproduction of proﬁtable traders, allowing the emergence
+of “sensible” behaviors.
+The market thus simulated has been analyzed both in
+quantitative and in qualitative terms. The analysis has
+demonstrated that the model exhibits several traits that are
+typical of real-world ﬁnancial markets.
+1. Introduction
+In the last decade, agent-based modeling has become a
+widely accepted tool for studying the dynamics of ﬁnancial
+markets [1]. Agent-based modeling is the computational
+study, carried out by means of simulation, of economies
+that are modeled as evolving systems of autonomous in-
+teracting agents [2]. The main advantage of agent-based
+over analytical models is that they allow the removal of
+restrictive assumptions and can, thus, lead to a more realistic
+description of the system under investigation.
+A prototypical and very inﬂuential example of an agent-
+based system of this kind is the Santa Fe Institute Artiﬁcial
+Stock Market (SFI-ASM) [3]. The traders in the SFI-ASM
+have the same utility function; at each period, they have
+to decide how much to invest in risky stock, which pays a
+stochastic dividend, and how much to keep in cash, which
+yields a risk-free return. Traders differ from one another
+in the way they compute their expectations about future
+prices and dividends from the same information set by
+means of sets of rules that are a modiﬁed version of John
+Holland’s classiﬁer system [4]. Each agent uses its own
+genetic algorithm (GA) to alter its rules by replacing poorly
+performing rules with new, possibly better ones. The SFI-
+ASM is able to reproduce many of the stylized facts of real-
+world ﬁnancial markets [1].
+While usually agent-based models of economies rely on
+very simple agents, we thought interesting to investigate
+the use of richer, more sophisticated agent types, that more
+closely reproduce the characters of the participants in real-
+world economies, namely people. A distinctive character of
+human participants in the ﬁnancial markets is their having
+cognitive capabilities, and their deciding their behaviour
+through rational deliberation. An agent model that strives
+to capture these aspects is the BDI (belief, desire, intention)
+model [5].
+In this work, we consider beliefs, desires, and goals, in
+addition, following [6], we allow an agent to believe a piece
+of information to a degree. Such degree depends on the trust
+the agent has in the source of information. At any moment,
+an agent generates a set of desires and selects a consistent
+subset thereof, whose elements are adopted as goals, to be
+achieved by executing suitable actions.
+A fundamental idea which underlies our approach to
+agent-based modeling is to let the agents participating in
+the market evolve under the pressure of competition-driven
+selection: proﬁtable agents proliferate, while unproﬁtable
+agents become extinct.
+The paper is organized as follows: the structure of the
+2009 IEEE/WIC/ACM International Joint Conference on Web Intelligence and Intelligent Agent Technology
+978-0-7695-3801-3/09 $26.00 © 2009 IEEE
+DOI 10.1109/WI-IAT.2009.121
+20
+2009 IEEE/WIC/ACM International Conference on Web Intelligence and Intelligent Agent Technology - Workshops
+978-0-7695-3801-3/09 $26.00 © 2009 IEEE
+DOI 10.1109/WI-IAT.2009.121
+20
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:51:27 UTC from IEEE Xplore.  Restrictions apply.
+
+market is presented in Section 2; Section 3 describes the
+agents used to model market participants; the details of how
+market participants evolve are illustrated in Section 4. Sec-
+tion 5 analyzes the market simulations both in quantitative
+and qualitative terms and Section 6 concludes.
+2. Market Structure
+The market structure is realistic, albeit simpliﬁed: a single
+asset is assumed to exist, that is traded on the market as
+a commodity, in indistinguishable, standardized contracts
+against the payment of money. We make the simplifying
+assumption that the asset does not pay dividends and the
+money does not earn interests. Likewise, we assume no
+transaction fees are claimed by the market and no expenses
+are payable for the storage and transportation of the asset.
+To participate in the market, the agents must enter buy
+or sell orders specifying the quantity (number of contracts)
+and the limit price (per contract), including 0 and +∞,s o
+that “market orders” can be simulated.
+Differently, in the SFI-ASM there are two kinds of in-
+vestment: free-risk stocks, comparable to real-world bonds,
+and risky stocks. The risky stocks are in ﬁnite supply.
+Furthermore, they pay a stochastic dividend that changes
+over time and whose current value is unknown to the agents.
+Also the low-risk assets, comparable to our money, pay a
+constant interest rate [7].
+The orders entered by the participants are matched by
+the market by executing a single-price auction every time
+a new order is received. This is very realistic, in that a
+single-price auction underlies the structure of practically
+all real-world regulated ﬁnancial markets, whose rules may
+differ in subtle details of how special cases are handled, or
+how continuous negotiation is started, stopped, halted, and
+resumed. Single-price auctions determine the actual price
+of trades in a way that maximizes the number of contracts
+traded and, therefore, market liquidity.
+Rather than negotiating the price through an auction,
+in the SFI-ASM there is a particular agent, called the
+“specialist,” which initializes the price formation process by
+setting a “trial price,” equal to last period’s price. Based on
+this price, the agents submit their bids and offers. If they
+do not match, the specialist announces a new trial price and
+the process goes on iteratively as long as the number of bids
+and offers do not exactly match [1].
+Every agent has, at any moment, an available amount of
+money and an inventory of asset contracts, which, valued
+at market price and added to the available money, yields
+the agent’s net asset value (NA V). An agent’s NA V is the
+primary indicator of its performance.
+The agents operate in a regime of incomplete information,
+in that every agent knows its current money balance and
+asset inventory, as well as the orders it submits, but cannot
+directly observe neither the orders entered by the other
+market participants, nor the balance and inventory of its
+peers. Instead, to determine their economical behavior, the
+agents have access to a set of technical indicators made
+available by the market, which constitute the only sources
+of their beliefs.
+2.1. Market Simulator
+The market simulator is inspired to the Environment-
+Rules-Agents (ERA) scheme [8], whereby the model con-
+sists of four layers:
+1) the environment layer, where the agents interact — in
+our case, this is the market;
+2) the agents layer;
+3) the rules layer, where the rules that deﬁne the bahavior
+of agents are represented and executed;
+4) the rule-construction layer, where the algorithms that
+allow agent behavior to evolve or adapt are deﬁned
+— in our case, this is the evolutionary algorithm
+described in Section 4.
+Practically all ﬁnancial markets are order-driven: partici-
+pants express their willingness to buy or sell a security or a
+commodity at a given price by placing an order. An offer to
+buy at a given price or less is called a bid; an offer to sell
+at a given price or more is called an ask. Bids and asks for
+the same security or commodity are usually placed on two
+“books”, ranked from the best (or, in case of tie, earliest) to
+the worst (or, in case of tie, latest). Then, matching orders
+in the books are executed according to that ranking [9].
+The market simulator essentially receives orders from the
+participating agents, organizes them into the bid and ask
+books, matches them by means of a single-price auction, and
+clears the trades by transferring the appropriate amounts of
+money and asset among the agents. Furthermore, the market
+simulator saves the market clearing price for each period
+into a log, and uses the logged prices to evaluate a number
+of technical indicators, which are “published”, i.e., made
+available to all participating agents.
+The above cycle, called a period, which is the clock that
+measures time in a simulation, is repeated over and over. We
+will denote by t the current period in a simulation. Every
+given number of periods, which is a fundamental parameter
+of a simulation, a generation of the evolutionary algorithm
+is performed.
+2.2. Single-Price Auction
+Single-price auction (also known as call auction) is an
+algorithm for determining a market clearing price that max-
+imizes the volume traded when bid and ask orders are
+matched.
+The auction considers two order books, of bids and asks,
+and progressively matches the highest bids with the lowest
+21
+21
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:51:27 UTC from IEEE Xplore.  Restrictions apply.
+
+T able 1. T echnical indicators maintained by the market
+and available to participating agents. The depth of an
+indicator is the number of periods (including the
+current) it must look into the past.
+# description depth
+1 Price went up this period 2
+2 Price went up one period ago 3
+3 Price went up two periods ago 4
+4 Price went up three periods ago 5
+5 Price went up four periods ago 6
+6 Price > 5-period SMA 6
+7 Price > 10-period SMA 11
+8 Price > 20-period SMA 21
+9 Price > 5-period EMA 6
+10 Price > 10-period EMA 11
+11 Price > 20-period EMA 21
+12 Price / 5-period SMA > 20-period SMA 21
+13 Price / 5-period SMA > 50-period SMA 21
+14 Price / 5-period EMA > 20-period EMA 21
+15 Price / 5-period EMA > 50-period EMA 21
+16 Price / 5-period SMA went up this period 7
+17 Price / 5-p’d SMA went up one period ago 8
+18 Price / 5-p’d SMA went up two periods ago 9
+19 Price / 10-period EMA went up this period 12
+20 Price / 10-p’d EMA went up one period ago 13
+21 Price / 10-p’d EMA went up two periods ago 14
+22 MACD 26
+asks, removing matching orders from the books, until all
+orders that can match are consumed. In this process, larger
+orders are allowed to be ﬁlled by more than one smaller
+order and vice versa .
+A single clearing price (whence the name of the auction)
+is determined based on the last pair of bid and ask orders
+matched (even partially), and used to clear all matching
+orders.
+Several choices for how the clearing price is determined
+are implemented in real-world stock exchanges. Our market
+simulator adopts the common and rather neutral solution of
+ﬁxing a clearing price equal to the average between the bid
+price and the ask price of the last pair of orders matched,
+which are also the closest prices of all the matching pairs.
+2.3. Technical Indicators
+A technical indicator is a short-term statistics of a time
+series used by technical analysts to predict future price
+movements of ﬁnancial instruments.
+The available technical indicators, summarized in Table 1,
+are divided into ﬁve categories:
+1–5) variation of prices;
+6–11) comparison between prices and mobile averages;
+12–15) comparison between the ratios of price to fast and
+price to slow mobile averages;
+16–21) variation of the ratios of price to a mobile average;
+22) the MACD technical indicator.
+A moving average is the average of the prices of a
+ﬁnancial instrument over a given time period. Generally
+speaking, moving averages tend to smooth out the short-term
+oscillations of a time series and identify longer-term trends.
+The two most popular types of moving average indicators
+are the simple moving average ( SMA) and the exponential
+moving average ( EMA). The difference between these in-
+dicators is uniquely on the weight each of them carry to
+recent prices compared to old prices. SMA considers equally
+important all the prices in a considered period, whereas
+EMA considers that recent prices are more important than
+the old ones. In general, a buy signal is generated when the
+instrument’s price rises above a moving average and a sell
+signal is generated when the instrument’s price falls below
+a moving average.
+Simple and exponential moving averages may be used
+by comparing them with the current price of the asset. For
+both forms, we consider the moving average of closing
+values over the n days before t, with n ∈{ 5, 10, 20}
+noted SMAn(t) and EMAn(t) respectively, and we then
+consider the position of the price xt with respect to the
+simple (exponential) moving average, noted xt : SMAn(t)
+(xt : EMAn(t)), as follows:
+xt : SMAn(t)=l n xt
+SMAn(t) (1)
+and
+xt : EMAn(t)=l n xt
+EMAn(t). (2)
+If the above logarithms are negative, i.e., the price at period
+t is lower than the moving average/exponential moving
+average value for the previous n periods, this means that
+the price tends to decrease. Otherwise, it means the price
+tends to increase. In order to give market participants further
+information about the trend, indicators #16–21 analyze also
+how the above result evolves from period t − 1 to t.
+The Moving Average Convergence/Divergence (MACD)
+is a technical indicator which shows the difference between a
+fast and a slow EMA of closing prices. The simplest version
+of this indicator is composed of two lines: the MACD line,
+which is the difference between the two EMAs, and a signal
+line, which is an EMA of the MACD line itself. Using the
+standard periods of 12 and 26 periods yields
+MACD(t) = EMA 26(t) − EMA12(t). (3)
+The signal line consists of an EMA9 of the MACD line, to
+further smooth the trend of market price values:
+signal(t) = EMA 9(t; MACD). (4)
+The difference between the MACD and the signal line,
+histogram(t) = MACD(t) − signal(t). (5)
+Technical indicator #22 gives a buy indication when either
+the histogram or MACD change their sign from negative to
+positive, and a sell indication when either the histogram or
+MACD change their sign from positive to negative.
+22
+22
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:51:27 UTC from IEEE Xplore.  Restrictions apply.
+
+3. The Agents
+The participants in the market are modeled as cognitive
+agents, with a mental state consisting of beliefs, knowledge,
+and desires, whose behavior is governed by a deliberative
+process that generates goals from beliefs, knowledge, and
+desires.
+Furthermore, the agents are evolutionary, in the sense that
+they are individuals of an evolutionary algorithm, whose
+details are illustrated in Section 4. Therefore, every agent
+has a genome, which determines what might be called its
+“instincts”, in practice a set of parameters that inﬂuence the
+way the agent reacts to stimuli from the environment, i.e., the
+market. These parameters, which are genetically determined,
+do not change during the agent’s entire lifetime, whereas the
+agent’s mental state may change in response to changes in
+the market and in the agent’s ﬁnancial conditions.
+The cognitive agent model is essentially the one discussed
+in [10]. However, besides explicitly considering the agent’s
+beliefs, desires, and goals like in [10], we also explicitly
+consider the agent’s knowledge. Here, as usual [11], an
+agent’s knowledge refers to information it has direct access
+to, whereas beliefs refer to anything the agent cannot directly
+observe, like, in our case, future states of affairs.
+Therefore, an agent has knowledge of its balance and
+inventory, as well as of the orders it sent to the market;
+likewise, an agent has beliefs on the future movements of
+the price of the asset, i.e., it can be bearish, if it believes
+prices are going down, or bullish, if it believes prices are
+going up.
+An agent’s desire can be usefully regarded as a candidate
+goal, i.e., a motivation that must meet other conditions to
+become a goal.
+The mental state of agents changes when their knowledge
+changes, which happens when an order is executed and/or
+the market sets a new price for the asset, or when their
+beliefs change, based on a number of technical indicators
+made available by the market.
+Knowledge, beliefs, desires, and goals are represented by
+means of fuzzy propositions, i.e., propositions whose degree
+of truth can take any value between 0 and 1.
+3.1. Fuzzy Propositions
+Fuzzy sets, introduced by Zadeh [12], are a generalization
+of classical sets obtained by replacing the characteristic
+function of a set A with a membership function μA, which
+can take up any value in [0, 1]. The value μA(x) or, more
+simply, A(x) is the membership degree of element x in A,
+i.e., the degree to which x belongs in A. The support of A,
+supp(A), is the set of all x such that A(x) > 0.
+The usual set-theoretic operations of union, intersection,
+and complement can be deﬁned as a generalization of their
+counterparts on classical sets by introducing two families of
+operators, called triangular norms and co-norms. In practice,
+it is usual to employ the min norm for intersection and the
+max co-norm for union. Given two fuzzy sets A and B,
+and an element x, (A ∪ B)(x) = max {A(x),B (x)}, (A ∩
+B)(x) = min {A(x),B (x)}, and ¯A(x)=1 − A(x).
+Deﬁnition 1 (Fuzzy Interpretation): A fuzzy interpreta-
+tion is an assignment of truth degrees in [0, 1] to all atomic
+propositions (or atoms, for short) deﬁned in the problem
+domain. Given a set of atoms A, a fuzzy interpretation is
+a function I : A→ [0, 1], which assigns a truth degree
+I(p) ∈ [0, 1] to all atoms p ∈A .
+Note that a fuzzy interpretation is, in all respects, a fuzzy
+set of atoms.
+3.2. Mental State
+Desires (or motivations) are necessary but not sufﬁcient
+conditions for action. When a desire is met by other con-
+ditions that make it possible for an agent to act, that desire
+becomes a goal. Therefore, given this technical deﬁnition
+of a desire, all goals are desires, but not all desires are
+goals. The main distinction we made here between desires
+and goals is that goals are required to be consistent whereas
+desires need not be.
+Deﬁnition 2 (Language): Let A be a set of atomic propo-
+sitions and let L be the propositional language such that
+A∪{ ⊤ , ⊥ }⊆L , and, ∀φ, ψ ∈L , ¬φ ∈L , φ ∧ ψ ∈L ,
+φ ∨ ψ ∈L .
+The inner “program” of an agent, which determines the
+arising of desires based on its knowledge and beliefs, is
+constituted by a set of desire-generation rules, deﬁnes as
+follows.
+Deﬁnition 3 (Desire-Generation Rule): A desire-
+generation rule is an expression of the form
+R = {κR,βR,ψ R ⇒+
+D d | κR,βR,ψ R ∈L ,d ∈
+{a, ¬a},a ∈A }1.
+Intuitively this means that: “an agent desires d as much as
+it knows κR, believes βR, and desires ψR. Given a desire-
+generation rule R, we shall denote rhs(R) the literal on the
+right-hand side of R.
+The state of an agent is completely described by a
+fourtuple S = ⟨K, B, RJ , J⟩, where
+• K is a fuzzy interpretation on A (knowledge);
+• B is a fuzzy interpretation on A (beliefs);
+• RJ is a set of desire-generation rules, such that, for
+each desire d, RJ contains at most one rule of the
+form δ ⇒+
+D d;
+• J is a fuzzy set of literals.
+K and B are the fuzzy interpretations which deﬁnes the
+degree to which the agent respectively knows and believes
+each atom in A. RJ contains the rules which generate
+1. The unconditional counterpart of this rule is δ ⇒+
+D d which means
+that the agent (unconditionally) desires d to degree δ.
+23
+23
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:51:27 UTC from IEEE Xplore.  Restrictions apply.
+
+desires from beliefs and other desires (subdesires). J con-
+tains all literals (positive and negative form of atoms in
+A) representing desires which may be deduced from the
+agents’s desire-generation rules. We suppose that an agent
+can have inconsistent desires, i.e., for each desire d we can
+have J (d)+ J (¬d) > 1.
+Deﬁnition 4 (Degree of Activation of a Rule): Let R be
+a desire-generation rule. The degree af activation of R,
+Deg(R),i sg i v e nb y
+Deg(R) = min( K(κR), B(βR), J (ψR))
+and for its unconditional counterpart R = δ ⇒+
+D d:
+Deg(R)= δ.
+Deﬁnition 5 (Degree of Justiﬁcation): The degree of jus-
+tiﬁcation of desire d is deﬁned as
+J (d) = max
+R∈RJ :rhs(R)=d
+Deg(R).
+This represents how rational it is the fact that an agent
+desires d.
+Deﬁnition 6 (Goal Set): A goal set in state S is a fuzzy
+set of desires G such that:
+1) G is justiﬁed: G⊆J , i.e., ∀d ∈{ a, ¬a}, a ∈A ,
+G(d) ≤J (d);
+2) G is consistent: ∀d ∈{ a, ¬a}, a ∈A , G(d)+
+G(¬d) ≤ 1.
+While changes in the agent’s knowledge are straightfor-
+ward, changes in the belief set B caused by the acquisition
+of a new piece of information are modeled by the belief
+change operator deﬁned as follows [6].
+Deﬁnition 7 (Belief Change Operator): Let a ∈A and
+β be a literal representing the incoming information from a
+source the agent trusts to a degree α, and let B be the agent’s
+fuzzy belief set. The new fuzzy set of beliefs B′= B∗ α
+β is
+such that, for all a ∈A ,
+B′
+i(a)=
+⎧
+⎨
+⎩
+B(a) · (1 − α)+ α, if β |= a;
+B(a) · (1 − α), if β |= ¬a;
+B(a), otherwise.
+(6)
+Changes in the desire set J and, therefore, in the agent’s
+goals, G, are computed, after updating knowledge and be-
+liefs, by iteratively applying the rules in RJ until a ﬁxpoint
+is reached, as described in [6].
+3.3. Genome
+The genome of an agent determines, ﬁrst of all, its
+initial mental state, including a set of desire-generation
+rules that make up RJ . This is accomplished by an index
+S ∈{ 0, 1,..., 7} which selects one of eight pre-deﬁned
+initial mental states.
+Furthermore, the genome encodes the degree to which the
+agent will trust each technical indicator. This is where the
+trust degree α mentioned in Deﬁnition 7 comes from.
+T able 2. The genes of an agent.
+# Symbol Range Meaning
+0 S 0,..., 7 One of eight pre-deﬁned initial mental states
+1 α1 [0, 1] Trust in technical indicator #1
+...
+...
+...
+...
+22 α22 [0, 1] Trust in technical indicator #22
+23 gb1 [0, 1] Fraction of money the agent is willing to
+invest at each period
+24 gb2 [1, 25] Minimum threshold for asset
+25 gb3 [0, 1] Incentive to buy if asset below threshold
+26 gb4 [−2, 0] Parameter for price concession
+26 gb5 [−2, 0] Parameter for price concession adaptation
+28 ga1 [0, 1] Fraction of asset the agent is willing to divest
+at each period
+29 ga2 [90, 115] Maximum threshold for asset
+30 ga3 [0, 1] Incentive to sell if asset above threshold
+31 ga4 [−2, 0] Parameter for price concession
+32 ga5 [−2, 0] Parameter for price concession adaptation
+Finally, the genome contains ﬁve parameters that deter-
+mine the bidding behavior of an agent and ﬁve parameters
+that determine its asking behavior.
+In summary, the genome of an agent consists of a vector of
+1 initial mental state selector, 22 trust degrees in [0, 1], plus
+10 parameters for the bidding and asking behavior, described
+in the next subsection, whose ranges and meanings are given
+in Table 2.
+The range [−2, 0] for parameters gb4, gb5, ga4, and ga5
+were determined in such a way as to guarantee that the
+orders generated by an agent have always a positive limit
+price.
+The ranges of the minimum and maximum thresholds
+for the agent’s asset inventory are expressed as an absolute
+number of contracts and were determined empirically, to
+avoid the existence of passive agents, i.e., agents that never
+trade (because they choose to stay completely liquid or fully
+invested), but also to avoid having agents whose behavior is
+too heavily constrained by their genome, for example with
+gb2 = ga2 or with a very small ga2 − gb2. Passive agents
+would have no inﬂuence on the dynamics of the market,
+and would thus be irrelevant to our investigation; however,
+they would be a waste of resources, hence our choice to
+avoid them. On the other hand, agents whose behavior is
+completely constrained genetically would defeat the purpose
+of adopting a cognitive model for agents.
+3.4. Action
+Once an agent has determined its goal, which essentially is
+to buy or to sell, a different module is in charge of translating
+that abstract goal into a concrete order. This task implies
+determining the quantity and the limit price of the order.
+The atomic propositions deﬁned in our model are the
+following: (i) the price is going up ( u); (ii) the money
+balance is above the minimum threshold ( m); (iii) the asset
+24
+24
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:51:27 UTC from IEEE Xplore.  Restrictions apply.
+
+inventory is above the minumum threshold ( a); (iv) buy ( b);
+(v) sell ( s). Therefore, A = {u, m, a, b, s}.
+For example, a very simple set of desire-generation rules
+for an agent may be the following:
+⊤,u ,⊤⇒ +
+D b, (7)
+⊤, ¬u, ⊤⇒ +
+D s. (8)
+In words, if an agent believes prices are going up, it desires
+to buy; if it believes prices are going down (actually, not
+going up), it desires to sell.
+As stated above, whereas a goal is just a proposition,
+b or s, the corresponding actions are, respectively, buy or
+sell orders for a given number of asset contracts at a given
+limit price. The order parameters (i.e., price and quantity)
+are determined as described below.
+Let A be the number of contracts of the asset in the
+agent’s inventory, M the agent’s money balance, pt−1 the
+last clearing price of the asset, and G(b), G(s) ∈ [0, 1] the
+degrees to which b and s are adopted as goals by the agent.
+Furthermore, let gb1,...,g b5 be the genetically inherited
+parameters that determine the agent’s bidding behavior,
+and ga1,...,g a5 the genetically inherited parameters that
+determine the agent’s asking behavior.
+The bid price, pbid, and quantity, qbid, of the buy order
+that will be placed as the action to achieve goal b are
+determined by the agent as follows:
+1) the total value of the bid, Vbid is determined as
+Vbid =
+{
+M (gb1 +( 1 − gb1)gb3G(b)), A<g b2,
+Mgb1,A ≥ gb2;
+2) a price concession ct is determined as
+ct =2 G(b)+ gb4,
+if the order is being placed for the ﬁrst time, or, if the
+order had been placed in the previous period with a
+concession ct−1 and was not ﬁlled, as
+ct = ct−1 +( 1 − ct−1)(4G(b)+ gb5);
+the idea is that the price concession an agent is willing
+to pay to have its order ﬁlled keeps on increasing as
+long as the order is not ﬁlled;
+3) ﬁnally, the bid price and quantity are set as
+pbid = pt−1ct,
+qbid = Vbid/pbid.
+Conversely, the ask price, pask, and quantity, qask, are
+determined by the agent as follows:
+1) the quantity of the ask, qask is determined as
+qask =
+{ A(ga1 +( 1 − ga1)ga3G(s)), A<g a2,
+Aga1,A ≥ ga2;
+2) a price concession ct is determined as
+ct =2 G(s)+ ga4,
+if the order is being placed for the ﬁrst time, or, if the
+order had been placed in the previous period with a
+concession ct−1 and was not ﬁlled, as
+ct = ct−1 +( 1 − ct−1)(4G(s)+ ga5);
+3) ﬁnally, the ask price is set as
+pask = pt−1(1 − ct).
+3.5. Comparison with SFI-ASM Agents
+In the SFI-ASM, the agents take their investment de-
+cisions by using a pool of market forecasting rules that
+determine the value of some variables involved in the linear
+forecast computation of next period’s price and dividend.
+The market forecasting rules follow this model: IF market
+meets certain conditions THEN variables have certain con-
+stant values. Agents can use different rules, but those rules
+are static. Differently, in our simulator, every agent uses
+the same rules, but the parameters of those functions are
+different for every agent [7].
+The evolutionary algorithm focuses on different aspects in
+the two simulators: in the SFI-ASM, the whole rule pools
+are involved, while in our simulator only the parameters are
+evolved by the algorithm.
+A last, but important, difference between the two models
+involves the ﬁtness function. In the SFI-ASM, the ﬁtness
+calculation is based on the accuracy and complexity of the
+rule pools. In our simulator, ﬁtness is based on the NA V of
+an agent. In other words, we select trading rules that have
+led the agent to gain more wealth than its peers, while the
+SFI-ASM selects predictive rules considered successful a
+priori.
+4. Evolutionary Algorithm
+EAs [13], [14] are a broad class of stochastic optimization
+algorithms, inspired by biology and in particular by those
+biological processes that allow populations of organisms to
+adapt to their surrounding environment: genetic inheritance
+and survival of the ﬁttest. Each individual of the population
+represents a point in the space of the potential solutions
+for the considered problem. The evolution is obtained by
+iteratively applying a (usually quite small) set of stochastic
+operators, known as mutation, recombination, and selection.
+Mutation randomly perturbs a candidate solution; recombi-
+nation decomposes two distinct solutions and then randomly
+mixes their parts to form novel solutions; and selection repli-
+cates the most successful solutions found in a population
+at a rate proportional to their relative quality. The initial
+population may be either a random sample of the solution
+space or may be seeded with solutions found by simple
+local search procedures, if these are available. The resulting
+process tends to ﬁnd, given enough time, globally optimal
+25
+25
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:51:27 UTC from IEEE Xplore.  Restrictions apply.
+
+solutions to the problem much in the same way as in nature
+populations of organisms tend to adapt to their surrounding
+environment.
+An evolutionary algorithm is used by the simulator to
+make the agents participating in the market evolve according
+to their trading proﬁciency.
+The evolutionary algorithm proceeds concurrently with
+the trading activity in the market. A generation is performed
+at regular intervals, whose length, i, measured in trading
+periods, is a parameter of the simulation.
+4.1. Representation
+The parameters listed in Table 2, which make up the
+genome of an agent, are encoded as an array of 33 ﬁxed-
+point numbers.
+4.2. Initialization
+The genomes of the agents in the initial population are
+generated at random. However, every agent is constructed so
+that it takes only 11 of the 22 available technical indicators
+into account.
+4.3. Fitness and Selection
+The ﬁtness of an agent is given by its NA V . At each
+generation, the 30% of the individuals having the lowest
+NA V is eliminated from the simulation. The remaining 70%
+is given a chance of reproducing.
+The properties (money and asset inventory) of the agents
+that become extinct are distributed to the surviving agents,
+proportionately to their NA V . This guarantees that the total
+stock of money and of the asset are constant. Furthermore,
+being NA V -proportionate, the redistribution of properties
+does not bias the relative wealths of the surviving agents.
+The surviving agents are selected for reproduction with a
+probability proportional to their NA V . Selection is elitist, in
+that the agent with the highest NA V is always selected at
+least once.
+4.4. Reproduction
+As many new agents are generated by reproduction as
+became extinct, so that the population size remains constant
+over the generations.
+First of all, a clone of the agent with the highest NA V
+is inserted into the population. Then, until the population is
+complete, two of the surviving agents are selected and a new
+agent is created from them by recombination and mutation.
+Recombination is performed by uniform crossover,
+whereas mutation applies a Gaussian perturbation (with
+mean 0 and standard deviation 0.01) to every gene of an
+agent’s genome.
+The new agent thus generated inherits 25% of the prop-
+erties of both parents. Therefore, the NA V of both parents,
+and their probability to be selected, decreases by 25% for
+each agent they generate. This, once again, guarantees that
+the total stock of money and of the asset remains constant,
+while favoring the reproduction of wealthy (and proﬁcient)
+agents.
+5. Experiments and Results
+Three simulation scenarios have been investigated, which
+differ by the number i (i ∈{ 0, 10, 100}) of trading periods
+between two successive generations of the evolutionary
+algorithm. All simulations have been carried out with a
+population of 100 agents.
+Figure 1 shows typical price dynamics in the three simu-
+lation scenarios. We have observed a consistent pattern over
+the simulations that have been carried out: prices seem to
+follow a random walk, but their series is little volatile and
+mean-reverting when evolution acts continuously ( i =1 );
+as more trading periods are allowed between generations
+(i =1 0 ), price becomes very unstable and bubbles and
+severe crashes appear; if an even longer interval between
+generations is allowed (i = 100), the behavior of the market
+is similar, qualitatively, but bubbles and crashes become
+more frequent and less severe. V olatility too decreases:
+whilst the variance of price is around 600 for i =1 0 ,i t
+dives to around 125 for i = 100.
+By looking at the simulation logs, we discovered that
+crashes usually occur in the ﬁrst trading period after a gener-
+ation of the evolutionary algorithm has been performed. At
+those moments, the composition of the population of agents
+changes substantially, when below-average agents are wiped
+out by selection and replaced by the offspring of above-
+average agents; all of a sudden, the collective behavior of
+the traders has changed, and the market must ﬁnd a new
+equilibrium. A similar complexity regime has been observed
+in the SFI-ASM as well [1] with fast learning. Like in
+the SFI-ASM, when evolution proceeds more slowly, this
+phenomenon tends to get damped.
+The distribution of log-returns of the time series of asset
+prices is leptokurtic:
+• for i =1 , excess kurtosis is 44;
+• for i =1 0, excess kurtosis is 1.28;
+• for i = 100, excess kurtosis is 7.44.
+Figure 2 shows that the ﬁnal distribution of wealth (money
++ asset inventory) in a population depends on the interval
+i between generations. The tendence is for the wealth to
+become less equally distributed for larger intervals between
+generations.
+26
+26
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:51:27 UTC from IEEE Xplore.  Restrictions apply.
+
+i =1 i =1 0 i = 100
+Figure 1. Market price of the asset in three simulation scenarios, with different values of i, the number of periods
+between two successive generation of the evolutionary algorithm.
+Figure 2. Distribution of wealth in two simulation sce-
+narios: with i =1 0 (dark bars) and i = 100 (light bars).
+6. Conclusion
+The simulated market exhibits the key stylized facts of
+real ﬁnancial markets, such as volatility clustering, leptokur-
+tosis of log-returns, bubbles and crashes, and mean-reverting
+time series.
+The main difference between our approach to agent-based
+modeling and the SFI-ASM is that in the SFI-ASM, a
+GA is used by each agent participating in the market as a
+learning algorithm. Therefore, there are as many independent
+GAs as agents in the system. In our approach, instead,
+individual agents don’t learn, but the population of all agents
+participating in the market is subjected to an evolutionary
+algorithms and, thus, evolves as a whole. Since agents are
+evaluated based on their proﬁciency at trading with their
+peers, what we have here is a kind of competitive co-
+evolution, which is typical of artiﬁcial life.
+A limitation of our approach in the current version is that
+the desire-generation rules of the agents can be just one
+of eight possible pre-deﬁned sets. A natural extension for
+future work would be to let evolution ﬁgure out the set of
+desire-generation rules without any constraints.
+References
+[1] N. Ehrentreich, Agent-Based Modeling , ser. Lecture Notes in
+Economics and Mathematical Systems. Berlin: Springer,
+2008, vol. 602.
+[2] L. Tesfatsion, “Agent-based computational economics: mod-
+eling economies as complex adaptive systems,” Information
+Sciences, vol. 149, no. 4, pp. 263–269, 2003.
+[3] R. G. Palmer, W. B. Arthur, J. H. Holland, and B. LeBaron,
+“Artiﬁcial economic life: A simple model of a stockmarket,”
+Physica D , vol. 75, pp. 264–274, 1994.
+[4] J. H. Holland, Adaptation in Natural and Artiﬁcial Systems .
+Ann Arbor: The University of Michigan Press, 1975.
+[5] A. S. Rao and M. P . Georgeff, “Modeling rational agents
+within a BDI-architecture,” in KR’91. Morgan Kaufmann,
+1991, pp. 473–484.
+[6] C. da Costa Pereira and A. Tettamanzi, “Goal generation with
+relevant and trusted beliefs,” in Proceedings of AAMAS’08 .
+IFAAMAS, 2008, pp. 397–404.
+[7] S. Joshi and M. Bedau, “An explanation of genetic behavior
+in an evolving ﬁnancial market,” Santa Fe Institute, Working
+Paper 98-12-114, 1998.
+[8] P . Terna, “Economic experiments with swarm: a neural net-
+work approach to the self-development of consistency in
+agents’ behavior,” in Economic Simulations in Swarm: Agent-
+Based Modelling and Object Oriented Programming . Kluwer
+Academic, 2000, pp. 73–104.
+[9] L. Harris, Trading and Exchanges: Market Microstructure for
+Practitioners. Oxford University Press, 2002.
+[10] C. da Costa Pereira and A. Tettamanzi, “Goal generation and
+adoption from partially trusted beliefs,” in Proceedings of
+ECAI 2008 . IOS Press, 2008, pp. 453–457.
+[11] J. van Benthem, “Dynamic logic for belief revision,” Journal
+of Applied Non-Classical Logics , vol. 17, no. 2, pp. 129–155,
+2007.
+[12] L. A. Zadeh, “Fuzzy sets,” Information and Control , vol. 8,
+pp. 338–353, 1965.
+[13] K. A. De Jong, Evolutionary Computation: A uniﬁed ap-
+proach. Cambridge, MA: MIT Press, 2002.
+[14] A. E. Eiben and J. E. Smith, Introduction to Evolutionary
+Computing. Berlin: Springer, 2003.
+27
+27
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:51:27 UTC from IEEE Xplore.  Restrictions apply.

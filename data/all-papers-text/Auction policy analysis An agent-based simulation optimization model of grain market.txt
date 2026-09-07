@@ -1,0 +1,637 @@
+Proceedings of the 2016 Winter Simulation Conference
+T. M. K. Roeder , P . I. Frazier , R. Szechtman, E. Zhou, T. Huschka, and S. E. Chick, eds.
+AUCTION POLICY ANALYSIS: AN AGENT-BASED SIMULATION OPTIMIZATION MODEL
+OF GRAIN MARKET
+Jingsi Huang
+Lingyan Liu
+Leyuan Shi
+Department of Industrial Engineering and Management
+College of Engineering
+Peking University
+Beijing 100871, P. R. CHINA
+ABSTRACT
+National grain reserve is important in terms of responding to disasters and the unbalance between supply and
+demand in many countries. In China, the government supplements grain supply through online auctions.
+This study focuses on the auction policy of national grain reserve. We develop an agent-based simulation
+model of China’s wheat market with detail descriptions of different agents, including national grain reserve,
+grain trading enterprises and grain processing enterprises. Based on this model, the Optimal Computing
+Budget Allocation (OCBA) simulation optimization method is adopted to analyze the characteristics of
+optimal decision variables under different scenarios, with an objective to minimize the ﬂuctuation of
+wheat price. We obtain some insights about operations of national grain reserve. As the ﬁrst agent-based
+simulation model about national grain reserve and grain market, this model can be widely used in agricultural
+economics, and can provide policy supports to the government.
+1 INTRODUCTION
+Grain security is one of the most important issues worldwide. The stable development of grain market is
+the footstone of a country’s economy system. Since China is a country feeding about 19% of the world’s
+population using only 7% of arable land, a stable grain market price is critical to ensure social stability.
+This work is motivated by China’s national grain reserve auction policy, and we establish an agent-based
+simulation model to characterize grain market participants’ behavior to ﬁnd some insights to support the
+government’s grain auction strategy.
+In China, the government sets a minimum purchase price every year. When grain market price is lower
+than that price, the government starts to procure grain until market price is higher than that price. To
+supplement grain supply, the government releases grain to the market through an online auction mechanism.
+In accordance with the mechanism, national grain reserve (NGR) decides the minimum sale price, the
+auction quantity and the auction time interval. The government will hold an auction periodically and public
+the minimum sale price and the auction quantity to all bidders. When getting auction message, bidders can
+bid for auction items with a bidding price higher than the minimum sale price, and bidders with higher
+price will have priority in bidding the auction. According to historical auction data of wheat and rice
+during last three years, an auction time interval is one week, and the auction quantities stay the same.
+Under this auction strategy, the average successful transaction rate is less than 25%. While a lot of public
+resources are occupied by NGR, the effect of stabilizing market price is unnoticeable. To solve this issue,
+we ﬁrst establish an agent-based simulation model to describe the auction mechanism and grain market
+participants’ decision strategy. Then, we evaluate NGR’s optimal decision variables (includes the auction
+978-1-5090-4486-3/16/$31.00 ©2016 IEEE
+3417
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:39 UTC from IEEE Xplore.  Restrictions apply.
+
+Huang, Liu, and Shi
+time interval, the auction quantity and the minimum sale price) to minimize the ﬂuctuation of grain market
+price.
+Existing literatures on grain market policy can be classiﬁed into three research issues: price policies,
+production supporting policies and grain reserve policies. Many researches use computable general equi-
+librium models to analyze the effect of price policies on grain market, such as Hosoe (2004), Yu and Jensen
+(2010) and Mason and Myers (2013). Besides, some researches focus on evaluating production supporting
+policies’ regulation effects to grain market (Hansen, Tuan, and Somwaru 2011). However, there are few
+research studies about grain reserve policy, and this paper is motivated by the issue. Miao and Zhong
+(2006) analyzes the correlations between grain reserve and market price using the annual data from 1978
+to 2005, and indicates that national grain reserve affects grain market price from its incremental level and
+stock level. Wang and Li (2013) analyzes the effects of state-owned grain auction on market price using
+vector autoregressive approach, and concludes that auction performs as a signal of demand and supply
+rather than a balance tool under the scenario of abundant supplies. These researches analyze the effects
+of national grain reserve from the view of macro-economy, and ignore the behavior strategy of different
+market agents and their interactions, which are quite important to evaluate the policy inﬂuences.
+To mirror the real grain reserve system as closely as possible, in this paper, we develop a simulation model
+that comprises all participants of the grain reserve system, and simulate their operations and interactions.
+Agent-based modeling (ABM) offers such a conceptual framework to solve this modeling problem, because
+it simulates market participants as autonomous decision-making and heterogeneous entities called agents.
+Each agent individually assesses its decision environment, and makes decisions based on a set of rules.
+Besides, it is ﬂexible and it can capture emergent phenomena (Bonabeau 2002). Although there is no
+direct study about agent-based modeling of grain reserve system, this method has been applied to evaluate
+policy effect in other ﬁelds, and obtains some inﬂuential models. Happe, Balmann, and Kellermann (2004)
+builds the Agricultural Policy Simulator (AgriPoliS), it analyzes farmers’ structural change and endogenous
+adjustment reactions in response to a policy change, and many researches analyze effects of different
+policies or in different regions based on this model (Bert et al. 2011; Zimmermann and Heckelei 2012).
+In the electricity market, an Electricity Market Complex Adaptive Systems (EMCAS) simulates every
+participant’s behavior, and it is used to evaluate efﬁciencies of different regulation policies (North et al. ).
+A lot of researchers analyze different countries’ regulation policies based on EMCAS model (North et al.
+; Conzelmann et al. ). All above literatures prove the capability of agent-based model in policy analysis
+ﬁeld, which motivates us to develop such a simulation platform to analyze the effectiveness of grain reserve
+policy.
+In this paper, we develop an agent-based simulation model of national grain market with detail
+descriptions of different agents including state-owned national grain reserve (NGR), the wholesaler grain
+trading enterprises (GTE), and grain processing enterprises (GPE). Based on this model, we analyze the
+optimal decision variables of grain reserve auction policy ( includes the auction time interval,the auction
+quantity and the minimum sale price) under different scenarios using optimal computing budget allocation
+(OCBA) method, aiming at minimizing price inﬂuences. Some insights of NGR’s operation strategy under
+current auction policy are provided in this research.
+The remainder of this paper is organized as follows. In section two, we develop the basic model of
+grain reserve system, and we formulate simulation optimization structure in section three. Then a case
+study of wheat market is provided in section four. Finally the paper is concluded with a short summary.
+2 SIMULATION: AGENT-BASED GRAIN MARKET SIMULATION
+This agent-based model is established to analyze the auction policy of national grain reserve, thus, the
+behavior strategy, transaction process and information interactions of national grain reserve (NGR), grain
+trading enterprises (GTE), and grain processing enterprises (GPE) are taken into consideration. We simplify
+farmers and ﬁnal consumers as constant parameters. We assume that all grain is purchased by national grain
+3418
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:39 UTC from IEEE Xplore.  Restrictions apply.
+
+Huang, Liu, and Shi
+reserve (NGR), grain trading enterprises (GTE) and grain processing enterprises (GPE) at the beginning
+of simulation period, and the demand of GPE follows a distribution in accordance with empirical data.
+In this model, NGR serves as the grain reservoir, which releases grain to the market through an online
+auction to regulate the grain market. GTEs serve as grain traders, and they sell grain purchased from
+farmers in the beginning to GPEs during the total period. GPEs are processors who process grain bought
+from NGR and GTEs into ﬁnished goods and sell them to ﬁnal consumers. Behavior and decision strategies
+of agents and their information interactions are discussed as follows.
+2.1 Agent NGR: National Grain Reserve
+NGR is under the management of the government, it releases grain to the market through auction to realize
+regulation. The government’s regulation objectives are to keep the balance between supply and demand
+of grain market and to minimize the ﬂuctuation of market price. In this research, in accordance with the
+NGR’s regulation target, the simulation model’s objective is to minimize the ﬂuctuation of market price.
+According to the auction historical data from National Grain Trade Center of wheat and rice in the
+last three years, we ﬁnd that the NGR holds an auction once a week, the auction amounts of every auction
+remain the same, and the auction is subdivided into items with equal quantity of grain. In addition, the
+minimum sale price is decided in accordance with market price. Therefore, we assume NGR holds an
+online auction every T days with a constant total auction quantity Q, and each auction-item’s auction
+quantity equals B except for the last one, which equals Q− (n− 1)B, where n is the amount of auction
+items. The minimum sale price of auction is ωPr(t), where Pr(t) represents raw-grain’s market price in
+the t-th day, and ω is the minimum sale price ratio ( ω∈ (0,1)). The objective function of the simulation
+model is to minimize market price ﬂuctuation, and we describe it as
+min price f luctuation = ∑
+t
+(Pr(t)− P),
+where P is the long-term average market price. At the beginning of an auction, the NGR sends messages
+to all GPEs, and then collects bids from bidders. Every time the NGR makes deal with the bidder with
+highest bidding price among untreated bidders until the remain auction quantity is lower than this bidder’s
+bidding quantity. If no bidder bids the auction, the auction will be cancelled.
+2.2 Agent GTE: Grain Trading Enterprise
+GTEs serve as wholesalers of the grain market, who hold an initial level of grain reserve, and sell them
+to GPEs to maximize their proﬁt.
+GTEs receive orders sent from GPEs at the beginning of every day and rank these orders by order
+price from high to low. Then, GTEs decide the total amount to sell in day t W (t) according to their own
+inventory level, buyers’ price and purchase quantity, and their expectation of grain market price in the
+future. If GTEs predict that the market price will rise, they will reduce the sales and leave more grain to
+the future. Then GTEs satisfy collected orders from the highest-price order to the lowest one until W (t) is
+lower than the current order’s purchase quantity. At the end of the day, GTEs send ships to GPEs whose
+order is satisﬁed, and orders unsatisﬁed will be rejected without backlog.
+2.3 Agent GPE: Grain Processing Enterprise
+GPEs have an explicit objective to maximize their proﬁt. Their decision process can be classiﬁed into sales
+process, production process and procurement process. Details are described as follows:
+Sales process: There are a large number of participants in the ﬁnished goods market, so we assume
+this market as a perfect competition market, where all participating enterprises are price taker. Moreover,
+we assume that the demand of ﬁnished goods D(t) follows normal distribution
+D(t)∼ N(u(t), σ ).
+3419
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:39 UTC from IEEE Xplore.  Restrictions apply.
+
+Huang, Liu, and Shi
+The mean u(t) follows a function with historical average demand A, ﬁnished product price Pw and price
+elasticity ε. The variance σ is constant:
+u(t) = A· Pw(t)ε
+At the beginning of every day, GPEs collect the accumulated demand and satisfy it if the inventory of
+ﬁnished goods I f (t) is available, and unsatisﬁed demand will be the lost sale without backlog.
+1. If I f (t) > D(t), the demand is satisﬁed and I f (t) is reduced to I f (t)− D(t);
+2. If 0 < I f (t) < D(t), the demand is partially satisﬁed and I f (t) is reduced to 0;
+3. If I f (t) = 0, all demand become lost sale .
+Production process: We assume that a ”make-to-stock” policy is applied to conduct the production
+process. GPE ﬁrst needs to decide whether to produce or not. If a GPE chooses to produce, the production
+quantity q(t) is decided based on demand D(t), ﬁnished-good’s inventory levelI f (t), raw-grain’s inventory
+level Ir(t), production capacity C and transfer rate θ (the amount of ﬁnished goods made by one unit of
+raw grain). Besides, q(t) depends highly on the potential proﬁtability φ (t), (φ (t) = Pw(t)− Pr(t)), where
+Pw(t) is the price of ﬁnished goods and Pr(t) is the price of raw grain.
+If φ (t) is larger than a given level φ0, GPEs produce to replenish the ﬁnished-good’s inventory up to
+its maximum inventory capacity F; otherwise, another inventory threshold f will take the place of F. The
+detail rules are characterized as follows:
+1. If φ (t) > φ0, q(t) = min{Ir(t)/θ ,C, F− I f (t)};
+2. If φ (t) < φ0, I f (t) < f , q(t) = min{Ir(t)/θ ,C, f− I f (t)};
+3. If φ (t) < φ0, I f (t) > f , q(t) = 0; enterprises do not have motivation to produce .
+Procurement process: After sales and production processes, GPEs need to determine whether to
+procure or not. If a GPE needs to procure, it then need to choose a supplier, and to decide the purchase
+price and procurement amount. GPEs can procure raw grain either from NGR or GTEs. NGR sales grain
+through an online auction, and GTEs sale grain through traditional order form. GPEs choose procurement
+channel in accordance with current inventory level of raw grain, the minimum sale price, and market price.
+In addition, their historical procurement records and expectation of future price have important inﬂuence
+on the decision of procurement. If GPEs expect that the raw grain market will be oversupplied, and the
+minimum sale price does not meet their expectation, they prefer to purchase raw grain through order channel
+with GTEs. Otherwise, participating in an auction channel is a better choice.
+Auction channel: When the ith GPE receives auction messages sent by NGR, it will bid for the auction
+if two below conditions are satisﬁed:
+1. The ith-GPE’s inventory level of raw grain Ir(t) below Cr− B. And the bidding quantity equals
+B⌊Cr− Ir(t))/B⌋.
+2. The minimum sale price of auction is lower than the acceptable price of theith-GPE. In our simulation
+model, the acceptable price of ith GPE is relative to his risk attitude, the urgent degree of procurement and
+procurement history. For example, if a GPE fails to achieve an order or a bid last few days, he will raise
+his acceptable price to improve his bidding competitiveness.
+When these two conditions are satisﬁed, a GPE bids the auction with a bidding price and bidding
+quantity. Otherwise, GPEs choose to purchase raw grain from GTEs.
+Order channel: GPEs ﬁrst decide whether to send an order to GTEs or not. If yes, then decide
+the purchase quantity, order price and which GTE to choose. Consider the varying raw-grain price, to
+mirror reality, we refer a proved price-dependent base-stock procurement policy according to Berling
+and Mart´ınez-de Alb´eniz (2011). Base on this policy, GPE’s optimal inventory upper levels change with
+observed raw-grain market prices, and when the current inventory level is below to that optimal level, a
+GPE chooses to purchase with GTEs. Otherwise, he chooses to do nothing.
+3420
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:39 UTC from IEEE Xplore.  Restrictions apply.
+
+Huang, Liu, and Shi
+The decision process of ith-GPE’s order price is similar with its acceptable price of auction channel,
+and it randomly select its supplier among all GTEs. Finally, a GPE send an order to the selected supplier
+with content of order quantity and order price. When an order is rejected by the supplier, it becomes void.
+Thus, the GPE has to repeat the ordering process next day.
+3 SIMULATION OPTIMIZATION USING OCBA
+Based on the simulation model we proposed, this paper intends to minimize the ﬂuctuation of grain market
+price. We then use wheat market as an example. Considering the practicability of the government’s
+operation, we deﬁne the optimization model as discrete. Because the scale of simulation designs in our
+problem is large, and it is difﬁculte to obtain optimal objective solution with limited computing budget. To
+solve this problem, an optimization method is adopted to design the optimal computing budget allocation
+rules to simulation designs to reduce the total computation cost. To identify the best simulated design,
+the criterion used to compare the designs need to be ﬁrst speciﬁed. One commonly studied measure is
+the alignment probability or the probability of correct selection (PCS), which is deﬁned as the probability
+that the selected design is the true best. The indifference-zone (IZ) approach for the budget allocation
+problem typically allocates the simulation budget to provide a frequentist guarantee for the probability of
+correct selection (Dudewicz and Dalal 1975, Nelson, Swann, Goldsman, and Song 2001). That is, we need
+to determine how to measure the evidence of correct selection. The optimal computing budget allocation
+(OCBA) framework follows a Bayesian methodology and allocates additional simulation replications by
+solving the problem as an optimization problem, in which PCS is maximized given a ﬁxed simulation
+budget (Chen et al. 2000, Chen et al. 2008, Chen ). Since Optimal Computing Budget Allocation (OCBA)
+framework is proved more efﬁcient than other classical methods (Branke, Chick, and Schmidt 2007), and
+it is widely used in various complex problems (He, Chick, and Chen 2007; Lin and Huang 2014; Song,
+Qiu, and Liu 2016), we adopt OCBA as our simulation optimization methodology.
+The objective function of OCBA is to ﬁnd an optimal budget allocation rule to maximize the probability
+of correct select (PCS) the true best design under a constant computing budget.
+max P(CS)
+s.t. n1 + n2 + ... + nk = N, ni∈ n, i = 1, ...k,
+where N is the total number of simulation replications (budget), k is the total number of designs,
+ni means the replications of i-th design, and n is the set of non-negative integers. Its main idea is to
+efﬁciently allocate replications based on the sample means and variables of each iteration. The details of
+the computing budget allocation rule are described as follows (Chen, Lin, Y ¨ucesan, and Chick 2000):
+Step 1: Input N, k, ∆ (additional computing budget of each iteration).
+Step 2: Set initial iteration r as 0, then perform n0 simulation replications for each design, which
+satisﬁes
+nr
+1 = nr
+2 = ... = nr
+k = n0
+Step 3: If ∑k
+i=1 nr
+i < N, go to Step 4. Otherwise, go to Step 7.
+Step 4: In accordance with the outputs of the simulation runs, we calculate the sample mean fi
+and sample standard deviation si, i = 1,2, ...,k of each design, and b = argmin i fi.
+Step 5: Increase the computing budget as∆, and calculate the new budget allocationnr+1
+1 , nr+1
+2 , ...,nr+1
+k
+according to
+nr+1
+i
+nr+1
+j
+=
+( si/( fb− fi)
+s j/( fb− f j)
+)2
+, i⁄= j⁄= b
+nr+1
+i = sb
+vuu√
+k
+∑
+i=1,i⁄=b
+( nr
+i
+si
+)2
+3421
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:39 UTC from IEEE Xplore.  Restrictions apply.
+
+Huang, Liu, and Shi
+Step 6: Perform additional max(nr+1
+i − nr
+i ,0) simulations for design i, i = 1, ...,k, and let r = r +1,
+go to Step 3.
+Step 7: In accordance with the outputs of the simulation runs, we identify the optimal design
+b = argmin i f j.
+4 CASE STUDY OF WHEAT MARKET
+The agent-based simulation was implemented using the software AnyLogic. It is the ﬁrst and only tool
+that brings System Dynamics, Discrete Event, and Agent Based methods together within one modeling
+language and one model development environment.
+In this paper, we simulate China’s wheat market as a numerical case, because wheat is one of the most
+important agricultural products in China, and it is the major grain that the Chinese government is regulating
+under current reserve policy.
+The simulation time period covers the whole non-acquisition period, from October to May in the next
+year. In order to study the efﬁciency of the decision variables, including the auction time interval T , the
+auction quantity Q and the minimum sale price ratio ω under current auction policy, we analyze the optimal
+variable combination (T, Q, ω) in three different scenarios of supply and demand.
+In these experiments, we deﬁne the auction time interval T to be 3, 4, 5, 4, 7, 8, 9, because the average
+auction time interval in these years is seven days. For the auction quantity Q, the average auction quantities
+of 2013, 2014, 2015 are 900000, 640000, and 840000 ton. Therefore, we deﬁne the alternatives set of Q
+to be 400000-1000000 ton, with 50000 a step (totally 13 alternatives). The minimum sale price ratio ω is
+deﬁned as 99%, 99.2%, 99.4%, 99.6%, 99.8%, 100%.
+In addition, we deﬁne the total computation budgets N as 5000, the initial number of simulations n0
+as 5, and the one-time increment ∆n as 30. The average computation time of one replication is 6.17s.
+4.1 Initialization of Wheat Market
+We design simulation runs using historical data in 2014. According to the statistical information published
+by State Grain Administration, there are 3248 wheat processing enterprises (GPE) in China. The GPEs’
+scale (daily processing capacity) follows a distribution in Table 1. Most of GPEs are medium scale (200-
+400), there is a big group of small-scale GPEs in Chinese wheat market, and large-scale wheat GPEs are
+relatively few.
+Table 1: GPEs’ production scale distribution.
+Daily capacity(ton) <30 30-50 50-100 100-200 200-400 400-1000 >1000
+No. of GPE 247 197 492 724 898 567 123
+Daily output (ton) 7.4 23.9 43.3 93.5 181.7 362.2 1066.9
+A grain trading enterprise(GTE) also stores grain. Thus we suppose that all GTEs provide wheat
+reserve. Based on the Chinese Grain Almanac of 2013, the number of market-oriented GTE is about 15500
+(excluding state-owed GTE), and the scale distribution is described in Table 2.
+Table 2: Scale distribution of GTEs.
+Scale(kiloton) <25 25-50 50-100 >100
+No. of GTE 11964 1814 1114 608
+We ﬁrst input the full size and 1 /5 size of GTEs and GPEs in the simulation model, and we run 1000
+times to obtain mean and variance values. In order to improve simulation speed, we reduce the scale of the
+GTEs and GPEs into 1 /5 equidistantly, which means 1 agent in our simulation represents 5 enterprises in
+reality. Under this assumption, there are 650 GPEs and 3100 GTEs in our model. For full size simulation,
+the run time is 30s for each replication, and for 1 /5 size, the run time is 6.17s for each replication. The
+3422
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:39 UTC from IEEE Xplore.  Restrictions apply.
+
+Huang, Liu, and Shi
+mean value of the two cases are 5632.25 and 5503.90, the difference is acceptable and the simulation run
+time is much shorter for the 1 /5 size case.
+Because it is difﬁcult to ﬁnd the data of wheat daily demand, we use the demand tendency by searching
+news and interviewing some wheat processing enterprises. We ﬁnd two peaks of wheat demand in one
+year: one in September, and the other one in January. We assume that the demand A(t) follows the demand
+tendency in Figure 1. Other parameters about system environment, agent behavior strategies and GPEs’
+Figure 1: The curve of wheat demand tendency.
+expected grain values in the simulation are listed in Table 3.
+Table 3: Other parameters and values, whereAi and Ci represent ith-GPE’s demand and production capacity.
+Parameters Values Data source
+Initial price(RMB) 2500 National Grain and Oils Infor-
+mation Centre
+Price elasticity of ﬁnished goods -0.7 Assumption
+GPEs’ transfer rate 73.1% http://www.grainnews.com.cn
+Fi: ith-GPE’s maximum inventory level of ﬁnished goods 10 Ai Survey from Beijing Grain Group
+fi: ith-GPE’s minimum inventory level of ﬁnished goods 5 Ai Survey from Beijing Grain Group
+ri: ith-GPE’s inventory level of raw grain 40 Ci Survey from Beijing Grain Group
+B: the average quantity of grain for an item (ton) 800 Survey from Beijing Grain Group
+From Figure 2, we ﬁnd even though the annual demand of wheat is relatively stable, the annual yield
+varies because of the change of grain-support policies and natural disasters. Firstly, in order to motivate
+farmers to produce grain effectively, the government establishes production support subsidies (includes
+subsidies for superior crop varieties, machine purchasing subsidies), direct subsidy and minimum purchase
+price policy to improve farmers’ income. The change and abolition of these policies may reduce farmers’
+enthusiasm, according to the yield data and policy from 1999 to 2003. Secondly, China is one of the few
+natural disaster-prone countries in the world, droughts, ﬂoods and earthquakes great inﬂuence the yield.
+All these reasons bring about the scenario of insufﬁcient supply.
+We design three scenarios according to the yield and demand, which are the oversupply scenario,
+the insufﬁcient supply scenario and the balance scenario. The oversupply scenario is a situation that the
+annual supply is more than the annual demand (we suppose a 5% surplus of supply). On the contrary, the
+insufﬁcient supply scenario describes a situation that the annual supply is less than the annual demand,
+and the balance scenario means a balance of annual supply and demand of grain market. The initial grain
+reserve of each types of agents (NGR, GTE and GPE), the price tendency and the expectation of agents
+vary quite a lot in different scenarios. Thus, the optimal variable combination ( T ,Q and ω) under different
+scenarios shows different characteristics. We analyze the characteristics of the optimal variable combination
+under different scenarios using OCBA simulation optimization methods in 4.2-4.4.
+3423
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:39 UTC from IEEE Xplore.  Restrictions apply.
+
+Huang, Liu, and Shi
+Figure 2: The supply and demand chart of wheat (1992-2015).
+4.2 Oversupply
+China’s wheat production has increased for eleven straight years. However, the demand does not grow
+at that speed, and the imports of wheat and other succedaneums increase the situation of oversupply.
+The oversupply scenario is the most common scenario in China’s grain market under the background of
+continuous growth of wheat yield.
+In this scenario, the price of wheat decreases to the minimum purchase price that the government
+sets during the acquisition period, and then the government implements the procurement policy. On the
+contrary, GTE and GPE do not have a strong desire to reserve many wheat considering that the supply of
+market is sufﬁcient enough to fulﬁll their demand. Therefore, a large amount of wheat is purchased by the
+government. We assume that in this scenario, the supply is 5% more than the demand of wheat market,
+and the average ratios of total grain reserve from NGR, GTE, GPE are 40%, 50% and 10% respectively.
+The optimal auction strategy for the government under this oversupply scenario is T = 4, Q = 600000
+and ω = 99%, and the optimal result is 2483. The result represents that when the NGR holds an auction
+every 4 days with 600000 auction quantity, and set the minimum sale price as 99% of the market price, we
+can obtain the minimum annual price ﬂuctuation as 2483. Based on this result, we analyze each variable’s
+sensitivity of T , Q and ω in Figure3 , while the other two variables are constant.
+0
+1000
+2000
+3000
+4000
+5000
+0.99 0.992 0.994 0.996 0.998 1
+price fluctuation
+ω
+0
+1000
+2000
+3000
+4000
+5000
+3 5 7 9
+price fluctuation
+T
+2450
+2500
+2550
+2600
+2650
+400000 500000 600000 700000 800000
+price fluctuation
+Q
+a b c
+Figure 3: Variable sensitivity of ω, T and Q under oversupply scenario, where 3 -a,3 -b and3 -c represent
+the ﬂuctuation of wheat price under different ω, T and Q.
+• When T and Q are constant (T = 4 and Q = 600000), from Figure3 -a, we ﬁnd that the ﬂuctuation
+of wheat price keeps stable and low when ω equals 99%-99.6%. When the value of ω becomes
+larger, the ﬂuctuation of price increases rapidly. We conclude that the minimum sale price ratio ω
+plays an important role in stabling wheat price, and the critical point to stable wheat price is 99.6%.
+3424
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:39 UTC from IEEE Xplore.  Restrictions apply.
+
+Huang, Liu, and Shi
+• When Q and ω are constant ( Q = 600000 and ω = 99%), from Figure 3 -b, we ﬁnd the minimum
+ﬂuctuation of wheat price at T = 4. When T < 4, the auction is held too often that it may convey
+the signal of oversupply to wheat market, which results in the decline of wheat price. When the
+auction time interval T > 4, the supply of wheat in the grain market become insufﬁcient, and GPEs
+have to raise their auction price to win the bid, which leads to the growth of wheat price.
+• When T and ω are constant (T = 4 and ω = 99%), from Figure3 -c, the ﬂuctuation of wheat price
+follows a u-shape curve, and the minimal ﬂuctuation point is located in Q = 650000. The reason is
+similar to that of T : when Q is small, the market supply is insufﬁcient, and to win the bid, GPEs
+have to increase the auction price in the end of the non-acquisition period. When the value of Q
+is large, the auction conveys the signal of oversupply to the market, and the signal cause price
+ﬂuctuations.
+4.3 Balance
+The most idealized state of the market is the balance of supply and demand scenario. Under this scenario,
+the wheat price is relatively stable. The government purchases moderate grain reserve in the beginning,
+while GTEs and GPEs purchase more raw grain compared with the quantity under oversupply scenario.
+We assume the average ratios of total grain reserve from NGR, GTE and GPE are 30%, 55% and 15%.
+The optimal design under balance scenario is the same with oversupply scenario(T = 4, Q = 600000, ω =
+99%), and the result is 2842. The optimal auction strategy in balance scenario is same with that in oversupply
+scenario, because the NGR holds a moderate regulation under oversupply scenario and it does not release
+all reserved grain purchased in this year.
+The variable analysis of T , Q and ω are shown in Figure 4 .
+2700
+2800
+2900
+3000
+3100
+3200
+400000 500000 600000 700000 800000
+0
+1000
+2000
+3000
+4000
+5000
+3 4 5 6 7 8 9
+0
+1000
+2000
+3000
+4000
+5000
+0.99 0.992 0.994 0.996 0.998 1
+price fluctuation
+ω
+price fluctuation
+T
+price fluctuation
+Q
+a b c
+Figure 4: Variable sensitivity of ω, T and Q under balance scenario, where 4 -a,4 -b and4 -c represent the
+ﬂuctuation of wheat price under different ω, T and Q
+• When T and Q are constant ( T = 4 and Q = 600000), from Figure 4 -a, we ﬁnd the ﬂuctuation of
+wheat price keeps stable and low whenω equals 99%-99.6%, but increases rapidly whenω > 99.6%.
+The curve is similar to that of oversupply scenario. The minimum sale price ratio ω plays an
+important role in stabling wheat price, and the critical point to stable wheat price is 99.6%.
+• When Q and ω are constant ( Q = 600000 and ω = 99%), we obtain the minimum ﬂuctuation of
+wheat price at T = 4 (see Figure4 -b). When T < 4, the auction is held too often that it may convey
+the signal of oversupply to wheat market, which results in the decline of wheat price. When the
+auction time interval T > 4, the supply of wheat in the grain market become insufﬁcient, and GPEs
+have to raise their auction price to win the bid, which leads to the growth of wheat price.
+• When T and ω are constant (T = 4 and ω = 99%), the curve of price ﬂuctuation in balance scenario
+is different with the oversupply scenario (see Figure 4 -c). The minimal ﬂuctuation point is located
+3425
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:39 UTC from IEEE Xplore.  Restrictions apply.
+
+Huang, Liu, and Shi
+in Q = 600000. When Q is small, the market supply may be insufﬁcient, GPEs have to increase the
+auction price to win the bid, which causes a large price ﬂuctuation; and when Q becomes larger,
+the auction conveys the signal of oversupply to the market, therefore, the price ﬂuctuation increases
+when Q > 600000 .
+4.4 Insufﬁcient Supply
+In this scenario, wheat market price is higher than the government’s minimum purchase price, and the
+government’s reserve level is lower. Under this scenario, GTE and GPE have stronger desire to purchase
+as many wheat as possible, in case of the increase of market price in the future. Therefore, at the beginning
+period, wheat is mainly purchased by GTE and GPE. We suppose that the insufﬁcient supply ratio is 5%,
+and the average ratios of total grain reserve from NGR, GTE, GPE are 15%, 60% and 25%.
+The optimal auction interval T is 5, the auction quantity Q is 400000 ton, and the minimum sale
+price ratio ω is 99%, under this optimal design, the minimum annual price ﬂuctuation is 3688, which is
+much larger than those of other two scenarios. That is because of the restriction of initial reserve of the
+NGR, NGR has to increase its auction interval T and reduce the auction quantity Q to realize a long-time
+regulation to the wheat market. The minimum sale price ratio ωs are the same in three scenarios. The
+variable analysis of T , Q and ω are shown in Figure 5 .
+0
+1000
+2000
+3000
+4000
+5000
+6000
+400000 500000 600000 700000 800000
+0
+1000
+2000
+3000
+4000
+5000
+6000
+3 5 7 9
+0
+1000
+2000
+3000
+4000
+5000
+6000
+0.99 0.995 1
+price fluctuation
+ω
+price fluctuation
+T
+price fluctuation
+Q
+a b c
+Figure 5: Variable sensitivity of ω, T and Q under insufﬁcient supply scenario, where 5 -a,5 -b and5 -c
+represent the ﬂuctuation of wheat price under different ω, T and Q
+• When T and Q are constant ( T = 4 and Q = 600000), we ﬁnd that variable sensitivities of ω is
+similar to those of other scenarios (see Figure 5 -a), but the annual price ﬂuctuation is higher than
+other two scenarios because of the insufﬁcient supply.
+• When Q and ω are constant(Q = 600000 and ω = 99%), we obtain the optimal auction interval T
+between 5 and 6. When T become larger, the ﬂuctuation rate of wheat price is less than the other
+two scenarios (see Figure 5 -b). Because the NGR has insufﬁcient wheat reserve to regulate the
+wheat market for a long time as T becomes larger.
+• When T and ω are constant (T = 4 and ω = 99%), from Figure5 -c we ﬁnd that the ﬂuctuation of
+wheat price increases with the auction quantity Q, which is quite different with those of two above
+scenarios. The reason may be that the NGR will realize a longer regulation of grain market when
+Q is small under the situation that the NGR has insufﬁcient wheat reserve under this scenario.
+5 CONCLUSIONS
+This paper develops an agent-based simulation model of China’s grain market with detail descriptions of
+different agents, including national grain reserve, grain trading enterprises and grain processing enterprises.
+Based on this model, we analyze the characteristics of optimal combination of decision variables under
+3426
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:39 UTC from IEEE Xplore.  Restrictions apply.
+
+Huang, Liu, and Shi
+different scenarios using OCBA simulation optimization method. In summary, the insights of this simulation
+model are as follows.
+1. The minimum sale price ratio ω and auction time intervalT have greater inﬂuences on the ﬂuctuation
+price than the auction quantity Q in any scenario. 2. The optimal auction strategy of oversupply and balance
+scenarios are similar. Both the value of auction time interval T and the value of auction quantity Q are
+close to the mean value, and a lower minimum sale price ratio ω contributes to stable market price. 3. The
+minimum ﬂuctuation price under insufﬁcient supply scenario is larger than those of other two scenarios. To
+ensure an overall regulation effect, the government should increase the auction time interval T and reduce
+the auction quantity Q.
+This is the ﬁrst agent-based simulation model about China’s national grain reserve auction policy and
+the grain market. To simulate the accurate decision strategy of market agents in this simulation model, we
+referred to relevant literatures, investigated grain processing enterprises and grain trading enterprises, and
+interview several ofﬁcials of State Administration of Grain. This model can be modiﬁed to evaluate the
+response of grain market under different situations, such as the breakout of emergencies and implementation
+of the new policies. This simulation model can further be modiﬁed through subdividing market agents,
+and correspondingly, more uncertainties need to be consid ered. We also can subdivide the GPE agents
+in accordance with the usage of raw grain they purchased. Furthermore, the performance measures of
+simulation can be more comprehensive through considering more objectives. We leave all these work to
+the future study.
+ACKNOWLEDGMENTS
+This work has been supported in part by State Administration of Grain, China under grants 201413003,
+by National Natural Science Foundation of China under grants 71371015.
+REFERENCES
+Berling, P., and V . Mart ´ınez-de Alb´eniz. 2011. “Optimal Inventory Policies When Purchase Price and
+Demand are Stochastic”. Operations Research 59 (1): 109–124.
+Bert, F. E., G. P. Podest ´a, S. L. Rovere, ´A. N. Men ´endez, M. North, E. Tatara, C. E. Laciana, E. Weber,
+and F. R. Toranzo. 2011. “An Agent Based Model to Simulate Structural and Land Use Changes in
+Agricultural Systems of the Argentine Pampas”. Ecological Modelling 222 (19): 3486–3499.
+Bonabeau, E. 2002. “Agent-based Modeling: Methods and Techniques for Simulating Human Systems”.
+Proceedings of the National Academy of Sciences 99 (suppl 3): 7280–7287.
+Branke, J., S. E. Chick, and C. Schmidt. 2007. “Selecting A Selection Procedure”. Management Science 53
+(12): 1916–1932.
+Chen, C.-H. Stochastic Simulation Optimization: An Optimal Computing Budget Allocation. World scientiﬁc.
+Chen, C.-H., D. He, M. Fu, and L. H. Lee. 2008. “Efﬁcient Simulation Budget Allocation for Selecting
+An Optimal Subset”. INFORMS Journal on Computing 20 (4): 579–595.
+Chen, C.-H., J. Lin, E. Y¨ucesan, and S. E. Chick. 2000. “Simulation Budget Allocation for Further Enhancing
+the Efﬁciency of Ordinal Optimization”. Discrete Event Dynamic Systems 10 (3): 251–270.
+Conzelmann, G., G. Boyd, V . Koritarov, and T. Veselka. “Multi-agent Power Market Simulation Using
+EMCAS”. 2829–2834: 2005 IEEE Power Engineering Society General Meeting.
+Dudewicz, E. J., and S. R. Dalal. 1975. “Allocation of Observations in Ranking and Selection with Unequal
+Variances”. Sankhy¯a: The Indian Journal of Statistics, Series B 37:28–78.
+Hansen, J., F. Tuan, and A. Somwaru. 2011. “Do China’s Agricultural Policies Matter for World Commodity
+Markets?”. China Agricultural Economic Review 3 (1): 6–25.
+Happe, K., A. Balmann, and K. Kellermann. 2004. “The Agricultural Policy Simulator (AgriPoliS): An
+Agent-based Model to Study Structural Change in Agriculture (Version 1.0)”. Technical report, Leibniz
+Institute of Agricultural Development in Central and Eastern Europe (IAMO).
+3427
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:39 UTC from IEEE Xplore.  Restrictions apply.
+
+Huang, Liu, and Shi
+He, D., S. E. Chick, and C.-H. Chen. 2007. “Opportunity Cost and OCBA Selection Procedures in Ordinal
+Optimization for A Fixed Number of Alternative Systems”. IEEE Transactions on Systems, Man, and
+Cybernetics, Part C: Applications and Reviews, 37 (5): 951–961.
+Hosoe, N. 2004. “Crop Failure, Price Regulation, and Emergency Imports of Japan’s Rice Sector in 1993”.
+Applied Economics 36 (10): 1051–1056.
+Lin, J. T., and C.-J. Huang. 2014. “A Simulation-based Optimization Approach for A Semiconductor Photobay
+with Automated Material Handling System”. Simulation Modelling Practice and Theory 46:76–100.
+Mason, N., and R. Myers. 2013. “The Effects of the Food Reserve Agency on Maize Market Prices in
+Zambia”. Agricultural Economics 44 (2): 203–216.
+Miao, Q., and F. Zhong. 2006. “China’s Grain Reserve: Changes in the Scale and the Impacts on Grain
+Supplies and Price”. Issues in Agricultural Economy 11:9–14.
+Nelson, B. L., J. Swann, D. Goldsman, and W. Song. 2001. “Simple Procedures for Selecting the Best
+Simulated System When the Number of Alternatives is Large”. Operations Research 49 (6): 950–963.
+North, M., G. Conzelmann, V . Koritarov, C. Macal, P. Thimmapuram, and T. Veselka. “E-laboratories:
+Agent-based Modeling of Electricity Markets”. 15–17. 2002 American Power Conference.
+North, M., P. Thimmapuram, R. Cirillo, C. Macal, G. Conzelmann, G. Boyd, V . Koritarov, and T. VESEL-
+KA. “EMCAS: An Agent-based Tool for Modeling Electricity Markets”. 2003 Agent Conference on
+Challenges in Social Simulation :253.
+Song, J., Y . Qiu, and Z. Liu. 2016. “Integrating Optimal Simulation Budget Allocation and Genetic Algorithm
+to Find the Approximate Pareto Patient Flow Distribution”. IEEE Transactions on Automation Science
+and Engineering 13:149–159.
+Wang, S., and X. Li. 2013. “Does Auction of China’s Grain Reserve Affect Market Price? Case Study of
+Wheat”. Chinese Rural Economy 2:61–70.
+Yu, W., and H. G. Jensen. 2010. “China’s Agricultural Policy Transition: Impacts of Recent Reforms and
+Future Scenarios”. Journal of Agricultural Economics 61 (2): 343–368.
+Zimmermann, A., and T. Heckelei. 2012. “Structural Change of European Dairy Farms–A Cross-Regional
+Analysis”. Journal of Agricultural Economics 63 (3): 576–603.
+AUTHOR BIOGRAPHIES
+JINGSI HUANG is pursuing a Ph.D in the Department of Industrial Engineering and Management at
+Peking University. She received a B.S. in Finance from the University of North China Electric Power
+University. Her research interests are in agent-based simulation, information sharing and mechanism design
+theory, with applications to grain system. Her email address is huangjingsi@pku.edu.cn.
+LINGYAN LIU is pursuing a M.S. degree in the Department of Industrial Engineering and Manage-
+ment at Peking University. She received a B.S. in industrial engineering from Tsinghua Universty. Her
+research interests lie in agent-based simulation, simulation optimization, with applications to grain market
+regulation. Her email address is liulingyan@pku.edu.cn.
+LEYUAN SHI is a Professor in the Department of Industrial Engineering and Management at Peking
+University. Her research is devoted to the theory and applications of large-scale optimization algorithms,
+discrete-event simulation and modeling, and analysis of discrete dynamic systems. She is currently an
+Editor of the IEEE Transactions on Automation Science and Engineering , and an Associate Editor of
+Discrete Event Dynamic Systems . Dr. Shi is a member of INFORMS, and a fellow of IEEE. Her email
+address is leyuan@coe.pku.edu.cn.
+3428
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:39 UTC from IEEE Xplore.  Restrictions apply.

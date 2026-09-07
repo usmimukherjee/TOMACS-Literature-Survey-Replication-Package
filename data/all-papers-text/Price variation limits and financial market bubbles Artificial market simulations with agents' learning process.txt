@@ -1,0 +1,758 @@
+Price Variation Limits 
+and Financial Market Bubbles: 
+Artificial Market Simulations 
+with Agents' Learning Process 
+Takanobu Mizuta 
+SPARX Asset Management Co. Ltd. 
+and 
+School of Engineering, 
+Kiyoshi Izumi 
+School of Engineering, 
+The University of Tokyo 
+and 
+Shinobu Yoshimura 
+School of Engineering, 
+The University of Tokyo 
+The University of Tokyo 
+Email: mizutata@gmail.com 
+http://www.geocities.jp/m izuta_tal 
+Abstract-
+Financial exchanges sometimes employ a "price variation 
+limit", which restrict trades out of certain price ranges within 
+certain time spans to avoid sudden large price fluctuations. 
+We built an artificial market model implementing a learning 
+process to replicate bubbles that has the continues double auction 
+mechanism and investigated price variation limits. We surveyed 
+an adequate limitation price range and an adequate limitation 
+time span for the price variation limit and found a parameters' 
+condition of the price variation limit to prevent bubbles. The 
+price variation limits are expected to be an especially effective 
+way to prevent bubbles, so the model should be able to replicate 
+bubbles. When we gave a bubble-inducing trigger, which is a 
+rapid increment of the fundamental value, a bubble occurred in 
+the case in which the model implemented the learning process 
+and did not occur in the case without the process. We also showed 
+that a hazard rate enables verification of whether the models can 
+replicate a bubble process or not. 
+I. INTRODUCTION 
+Financial exchanges sometimes employ a "price variation 
+limit", which restrict trades out of certain price ranges within 
+certain time spans to avoid sudden large price fluctuations. For 
+example, Tokyo Stock Exchange employs two kinds of price 
+variation limits that adopt different time spans: one is "daily 
+price limit" which restricts price fluctuations within a single 
+trading day, and the other is "special quote", which restricts 
+within three minutes [1]. Most Asian stock exchanges (Tokyo, 
+Taipei, Shanghai, Shenzhen, Seoul, and so on) employ the 
+price variation limits, but many American and European stock 
+exchanges do not because there is a debate over whether the 
+price variation limit makes financial market more efficient or 
+not. Because so many factors cause price formation in actual 
+markets, an empirical study can not isolate a pure contribution 
+of the price variation limit to price formation. Therefore, it 
+is very difficult to discuss about a pure effect of the price 
+variation limit only by results of empirical studies. Simulation 
+study will help us to discuss about this very well. C. Yeh and 
+978-1-4673-5921-4/13/$3l.00 ©2013 IEEE 
+PRESTO, JST 
+C. Yang investigated the effectiveness of price variation limits 
+in an artificial market, and showed that price variation limits 
+help to reduce volatility and price distortion [2]. However, 
+no simulation studies have investigated an adequate limitation 
+price range or an adequate limitation time span for the price 
+variation limit in bubble situations. The price variation limits 
+are expected to be especially effective to prevent bubbles, 
+so simulation studies investigating the price variation limits 
+should use artificial market models replicating bubbles. 
+In many previous artificial market studies 1, the models are 
+verified to see whether they can explain the stylized facts such 
+as a fat-taiI2, volatility-clustering3, and so on. However, many 
+complex models cannot explain larger numbers of stylized 
+facts and/or are not more precise than simpler models [4]. 
+Therefore, some have argued that the models should explain 
+stylized facts as simply as possible in line with the "Keep It 
+Simple Stupid" principle. In fact, very simple models such as 
+[9], [10] explain main stylized facts. In these simple models, 
+parameters of agents are fixed at the beginning of a simulation 
+run and are never changed for the whole simulation run. The 
+agents change neither investment strategy nor parameters of 
+the strategy to earn better return using feedbacks of mar­
+ket information; price change, trading volume, and so on. 
+Hereinafter, we call such agents' changing "learning". "Non­
+learning" models such as [9], [10] have been accepted as valid 
+because the modes can explain main stylized facts. 
+On the other hand, many artificial market models include 
+the learning process [11]-[14] because many empirical studies 
+have pointed out that the learning processes of investors are 
+I Excellent reviews are [3], [4]. 
+2This means that the kurtosis of price returns is positive. There are empirical 
+studies for the fat-tail [5], [6]. 
+3This means that the square returns have positive autocorrelation, and the 
+autocorrelation slowly decays as its time separation becomes larger. There are 
+empirical studies for the volatility-clustering [6]-[8]. 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:05:41 UTC from IEEE Xplore.  Restrictions apply.
+
+very important for financial markets, especially for bubble 
+phenomena. In [15]-[17], investors received information of 
+a continuous positive return, and they learned that a mo­
+mentum strategy makes earnings. [18] analyzed questionnaire 
+data about trading strategies of foreign exchange investors 
+and showed that in a bubble investors tend to switch their 
+fundamental trading strategies to momentum trading strategies. 
+[19] investigated stock market data and showed that investors 
+switch strategies. These empirical studies all show that the 
+learning process of investors plays an important role in a 
+bubble. 
+In this study, we built an artificial market model imple­
+menting a learning process to replicate bubbles on the basis 
+of the model of [10], and investigated a price variation 
+limit. We surveyed an adequate limitation price range and 
+an adequate limitation time span for the price variation limit 
+and found a parameters' condition of the price variation limits 
+to prevent bubbles. The price variation limits are expected 
+to be an especially effective way to prevent bubbles, so the 
+model should be able to replicate bubbles. When we gave 
+a bubble-inducing trigger, which is a rapid increment of the 
+fundamental value, a bubble occurred in the case with the 
+model implementing the learning process but did not occur in 
+the case without the process. We also showed that a hazard 
+rate [20], [21] enables verification of whether the models can 
+replicate a bubble process or not. 
+The paper is structured as follows; in section 2, we explain 
+details of our artificial market model. In section 3, we show 
+results of simulations investigating the relationship between 
+bubble and a learning process of agents. In section 4, we 
+investigate effectiveness of several price variation limits in 
+our model implementing the learning process. The paper's 
+conclusions are presented in section 5. 
+II. ARTIFICIAL MARKET MODEL 
+We built a simple artificial market model on the basis of 
+the model of [10]. The model treats only one risk asset and 
+non-risk asset (cash) and adopts a continuous double auction4 
+to determine a market price of the risk asset. The number 
+of agents is n. At first, at time t = 1, an agent 1 orders 
+to buy or sell the risk asset; after that at t = 2 an agent 2 
+orders; at t = 3, 4, , ,n , an agent 3, 4, , ,n orders respectively. 
+At t = n+ 1, going back to the first, the agent 1 orders, and at 
+t = n+2, n+3" n+n, an agent 2, 3" " n orders respectively, 
+and this cycle is repeated. Note that time t passes even if no 
+deals are done. An agent j determines an order price and buys 
+or sells by the following process. Agents use a combination 
+of fundamental value and technical rules to form expectations 
+on a risk asset returns. An expected return of the agent j is 
+where Wi,j is weight of term i of the agent j, and is determined 
+by random variables of uniformly distributed in the interval 
+(0, Wi,max) at the start of the simulation independently for 
+each agent. Pf is a fundamental value that is constant. pt is a 
+market price of the risk asset at time t. (When the dealing is 
+not done at t, pt remains at the last market price pt-I, and at 
+t = 1, pt = Pf ) .E; is a noise determined by random variables 
+of normal distribution with an average 0 and a variance (Jf. 
+r�,j is a historical price return inside an agent's time interval 
+Tj, and r�,j = log (pt / pt-Tj). Tj is determined by random 
+variables uniformly distributed in the interval (1, T max) at the 
+start of the simulation independently for each agent. The first 
+term of Eq. (1) represents a fundamental strategy: an agent 
+expects a positive return when the market price is lower than 
+the fundamental value, and vice verse. The second term of Eq. 
+(1) represents a technical strategy: an agent expects a positive 
+return when historical market return is positive, and vice verse. 
+After the expected return has been determined, an expected 
+price is 
+t t ( t ) Pe,j = P exp re,j . (2) 
+We modeled an order price P�,j by random variables of 
+uniformly distributed 5 in the interval (P;,j - Pd, P;,j + Pd), 
+where Pd is a constant. A minimum unit of a price change 
+(tick size) is OP, we round off a fraction of less than OP. 
+Buy or sell is determined by a magnitude relation between 
+the expect price P;,j and the order price P�,j' that is, 
+When P;,j > P�,j' the agent orders to buy one share, 
+When P;,j < P�,j' the agent orders to sell one share. 
+Agents always order only one share. Our model adopts the 
+continuous double auction, so when an agent orders to buy 
+(sell), if there is a lower price sell order (a higher price buy 
+order) than the agent's order, dealing is immediately done. If 
+there is not, the agent's order remains in the order book. The 
+remaining order is canceled an tc after the order time. Agents 
+can short sell freely. The quantity of holding positions is not 
+limited, so agents can take any shares for both long and short 
+positions to infinity. 
+We also developed a model implementing a learning process 
+of agents. Every agent learns just before every ordering. 
+If there is only the first term (representing a fundamental 
+strategy) or second term (representing a technical strategy) 
+in Eq.(I), an expected return rl,j (i = 1, 2) at time t of an 
+agent j is 
+(3) rL = 10gPf/pt, 
+r� . = rth . 1 ( P ) ,) ,)' 
+WI,j log ---f + W2,jr�,j + W3,jE;, . WI,j + W2,j + W3,j P respectively. We define rI,J = log pt / pt-tt where tt is a (1) constant evaluation term. wt,J is changed when both r�,J and 
+4 A continuous double auction is an auction mechanism where multiple 
+buyers and sellers compete to buy and sell some financial assets, respectively, 
+in the market, and where transactions can occur at any time whenever an offer 
+to buy and an offer to sell match [22]. 
+5To stabilize simulation runs for the continuous double mechanism, order 
+prices must be covered widely in order book. Therefore, we set P�,j by 
+random variables. 
+2 2013 IEEE Conference on Computational Intelligence for Financial Engineering & Economics (CIFEr) 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:05:41 UTC from IEEE Xplore.  Restrictions apply.
+
+case 1 
+10100 
+10050 
+10000 
+<1l 
+() 9950 -.: 
+0. 
+9900 
+9850 
+9800 
+0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 
+N M � It') to r- eo '" 
+time 
+Fig_ 1_ A time evolution of market prices in case 1 (the fundamental value 
+is constant Pf = 10000)_ 
+<1l 
+20000 
+18000 
+16000 
+-g 14000 
+0. 
+12000 
+10000 
+8000 
+o 0 0 
+o 0 
+o 0 
+o 0 
+o 0 
+N 
+o 
+o 
+o 
+o 
+o 
+M 
+case 2 
+---- non-learning 
+-learning 
+------- fundamental value 
+0 0 0 0 0 
+0 0 0 0 0 
+0 0 0 0 0 
+0 0 0 0 0 
+0 0 0 0 0 
+� It') to r- eo 
+time 
+Fig_ 2_ A time evolution of prices in case 2 (at first Pf 
+changed to Pf = 15000 after t = 100000)_ 
+rf - are the same signs, ,) 
+0 
+0 
+0 
+0 
+0 
+'" 
+10000 and 
+Wi,j +- Wi,j + krLuL(Wi,max - Wi,j), (4) 
+On the other hand, when both rf,j and rf,j are opposite signs, 
+(5) 
+where U;,j is random variables of uniformly distributed in 
+the interval (0, 1) for each t,j,i, k is constant. Besides 
+this process, Wi,j is reset, random variables of uniformly 
+distributed in the interval (0, Wi,max), occurring with small 
+probability, m. In this way, agents learn better parameters and 
+switch to the investment strategy that estimates correctly: the 
+fundamental strategy or technical strategy. 
+III. LEARNING PROCESS AND BUBBLE 
+In this study, we set n = 1000, Wl,max = 1, W2,max 
+10, W3,max = 1, Tmax = 10000, af = 0.03, Pd = 1000, tc 
+10000, oP = 1. We ran simulations to t = 10000000. 
+We compared the case of the model without the learning 
+process (non-learning) and the case with the learning process 
+(learning). For constants for the learning process, we set 
+case 2, learning 
+10% -fundamental weight (left axis) 100% 
+9% - - technical weight (right axis) 98% 
+� 8% 96% 
+..c � 
+-� 7% 94% ..c 
+" bD 
+" 6% 92% -iii 
+" 2 5% 90% -;;; c: " 0 
+E 4% 88% -" '" ..c 
+-0 
+3% 86% 
+0 
+c: 11 .2 2% 84% 
+1% 82% 
+0% 80% 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+� 0 0 0 0 0 0 0 0 '" M ... U') "" r- eo C> 
+time 
+Fig_ 3_ Time series of a fundamental strategy weight and a technical strategy 
+weight in case 2 with learning_ 
+k = 4, m = 0.0l, tt = 10000. We also investigated two 
+cases: the fundamental value PJ was fixed to 10000 in case 1; 
+Pj was 10000 until t = 100000 and changed to 15000 after 
+t = 100000 in case 2. It is well known that, at first, bubbles 
+are triggered by an increment of some fundamental values and 
+then a market price increases more than the incremented fun­
+damental value [23], [24]. Therefore, we investigated whether 
+bubbles occur or not in case 2, which includes the bubble­
+inducing trigger. 
+A. Verification by traditional stylized facts 
+Fig. 1 shows time evolution of market prices in case 1. The 
+solid and dashed lines represent the cases with and without 
+the learning process, respectively. In both cases, the results 
+are very similar. Fig. 2 shows time evolution of prices in 
+case 2. In the case of non-learning (dashed line), after the 
+fundamental value PJ changed at t = 100000, the market 
+price increased to 15000, which was the new fundamental 
+value. The price slightly exceeded the new fundamental value 
+initially, but it soon converged. On the other hand, in case 2, 
+the price went far 18000 beyond the new fundamental value. 
+This phenomenon corresponds to a bubble in real financial 
+markets6. After that, the price fell to 14000 below 15000, 
+the new fundamental value. After this overshoot, the price 
+increased to the new fundamental value and converged. As 
+seen from the above, only in case 2 with learning can the 
+model replicate bubble phenomena. Table I lists stylized facts 
+in each case. We used returns for 100 time units' intervals 
+to calculate the statistical values for the stylized facts? In 
+all runs, we can find that both kurtosis and autocorrelation 
+coefficients for square returns with several lags are positive, 
+6 After a bubble, a crush (burst) usually occurs in real financial markets_ We 
+have also replicated the crush_ Note that we could not discuss the amplitude 
+and/or the time length of bubbles are reasonable or not comparing to the real 
+market bubbles, because we have not calibrated as for price levels and time 
+lengths_ 
+7In this model, time passes by an agent just ordering even if no dealing is 
+done_ Therefore, the returns for one tick (one time) include many zero returns, 
+and they will bias statistical values_ This is the reason we use returns for 100 
+time units_ 
+2013 IEEE Conference on Computational Intelligence for Financial Engineering & Economics (CIFEr) 3 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:05:41 UTC from IEEE Xplore.  Restrictions apply.
+
+TABLE I 
+STYLIZED FACTS IN EACH CASE, WHICH ARE AVERAGE VALUES OF 100 SIMULATION RUNS. A RUN OF LENGTH i IS A SEQUENCE OF POSITIVE RETURNS. 
+A HAZAR D RATE REPRESENTS THE CONDITIONAL PROBABILITY THAT A RUN ENDS AT i, GIVEN THAT IT LASTS UNTIL i. 
+case 1 
+non-learning 
+kurtosis 3.018 
+lag 
+1 0.134 
+2 0.101 
+3 0.076 
+autocorrelation 4 0.060 
+coefficient for 5 0.052 
+square return 6 0.040 
+7 0.036 
+8 0.030 
+9 0.026 
+i 
+1 56% 
+2 55% 
+3 55% 
+4 54% 
+hazard rate 5 54% 
+6 53% 
+7 52% 
+8 52% 
+9 53% 
+which means that all runs replicate "traditional" stylized facts: 
+fat-tail and volatility-clustering. When we tested our models 
+using the "traditional" stylized facts, all the models passed the 
+test8. However, as we noted, the models without the learning 
+process could not replicate the bubble phenomena. 
+B. Verification by hazard rate 
+In the actual financial markets including bubbles, the prob­
+ability that a run (sequence of observations of the same sign) 
+of positive returns will end should decline with the length of 
+the run i [20], [21]. A hazard rate H (i) is used for the test of 
+bubbles. H(i) represents the conditional probability that a run 
+ends at i, given that it lasts until i. For example, if there are 
+100 samples that return positive runs i days and 40 times the 
+next day after those samples are negative returns, the H(i) 
+is 40%. Empirical studies show that H(i) decline with the 
+length of run i if observation data include bubble phenomena 
+[20], [21]. This means that the bubble returns tend to continue 
+to be positive and this tendency becomes stronger as runs of 
+positive returns become longer. 
+Table II shows that, in case 2 with learning, hazard rates 
+H(i) declined most drastically, increasing i. This indicates 
+STo focus elementary processes, we have made our model simpler as long 
+as we can discuss about the elementary processes. Therefore, we have not 
+tried to calibrate the model as for quantitative price levels and time lengths. 
+We can compare qualitative directions of stylized facts of the model with that 
+of real markets but can not quantitative levels. 
+case 2 
+learning non-learning learning 
+5.394 2.079 3.180 
+0.125 0.219 0.325 
+0.105 0.164 0.293 
+0.087 0.133 0.274 
+0.074 0.118 0.261 
+0.061 0.108 0.253 
+0.054 0.100 0.247 
+0.048 0.092 0.241 
+0.045 0.087 0.237 
+0.039 0.082 0.238 
+55% 56% 55% 
+52% 55% 50% 
+50% 53% 45% 
+49% 52% 40% 
+45% 48% 36% 
+44% 45% 29% 
+41% 40% 26% 
+40% 35% 22% 
+40% 30% 19% 
+that this case simulation can replicate a significant bubble 
+like those occurring in actual markets. In case 1 with learn­
+ing, H(i) declined shallowly. This indicates that some small 
+bubbles occurred even though there was no bubble-inducing 
+trigger, the rapid fundamental value increment. On the other 
+hand, in case 1 without learning, H(i) did not decline and no 
+bubbles occurred. In case 2 without learning, H(i) declined 
+much more slowly than in case 2 with learning. This indicates 
+that the cases replicate only small bubbles even though they 
+included the bubble-inducing trigger. As just described, only 
+simulations implementing both the learning process and the 
+fundamental value increment replicated big bubbles like those 
+occurring in actual markets. 
+Fig. 3 shows a time series of fundamental strategy 
+weights (L· WI,j/ Li Lj Wi,j) and technical strategy weights 
+(Lj W2,j/ ti Lj Wi,j) in case 2 with learning. During the 
+bubble, from about t = 100000 to t = 200000, the technical 
+strategy weight increased and the fundamental strategy weight 
+declined. This is consistent with empirical studies [18], [19] 
+that show that investors tend to switch from the fundamental 
+to the technical strategy during a bubble. 
+To summarize these points, only in case 2 with learning did 
+we find the bubble consistent with empirical studies. On the 
+other hand, in the case of non-learning, the model could not 
+replicate a bubble. We suggested that when the aim of models 
+is testing bubbles and/or testing regulations during bubble, it 
+is possible that the model should include learning process of 
+4 2013 IEEE Conference on Computational Intelligence for Financial Engineering & Economics (CIFEr) 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:05:41 UTC from IEEE Xplore.  Restrictions apply.
+
+case 2, learning 
+20000 
+18000 
+16000 
+Q) 
+-g 14000 
+"-
+12000 - non Price Limit 
+---- Price Limit 
+10000 ----- fundamental value 
+8000 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 '" '" .q- '" <0 r- eo en 
+time 
+Fig_ 4_ Time series of prices in the cases without and with the price variation 
+limit, 6.Pp{ = 1000, tp{ = 30000_ 
+TABLE IT 
+HAZA RD RATES H(i) IN CASE 2 WITH LEARNING_ 
+case 2 lerning 
+non Price Limit Price Limit 
+i 
+1 55% 55% 
+2 50% 53% 
+3 45% 49% 
+4 40% 47% 
+hazard rate 5 36% 44% 
+6 29% 42% 
+7 26% 40% 
+8 22% 36% 
+9 19% 31% 
+agents. We also suggested that traditional stylized facts (fat-tail 
+and volatility-clustering) could not verify a model replicate of 
+bubble phenomenon but the hazard rate could. 
+IV. PRICE VARIATION LIMIT 
+We investigated effectiveness of the price variation limit. 
+We simulated only case 2 with learning that replicates bubble 
+because the price variation limit is expected to be effective 
+especially in bubbles9• In this study, we modeled the price 
+variation limit as follows. Any agents can freely order a price 
+from pt-tpl - flPpl to pt-tpl + flPpl, where tpl is a constant 
+time span, and flPpl is a constant price. Any order prices 
+of buy above pt-tpl + flPpl are changed to pt-tpl + flPpl, 
+and any order prices of sell under pt-tpl - flPpl are changed 
+to pt-tpl - flPpl. This prevents trading that prices outside 
+pt-tpl _ 
+flPpl, pt-tpl + flPpl. 
+Fig. 4 shows time series of prices in the cases without and 
+with the price variation limit, flPpl = 1000, tpl = 30000. In 
+the case with the price variation limit, the market price took 
+longer to reach the new fundamental price (Pj = 15000) than 
+9We also analyzed case 2 without learning in the same way, but there is 
+little difference between the cases with and without the price variation limit 
+case 2, learning, Price Limit 
+10% 
+9% 
+100% 
+98% 
+-fundamental weight (left axis) 
+- - technical weight (right axis) 
+.... 8% 96% 
+..c 
+bD 
+7% -iii 94% 
+.... 
+..c 
+bD 
+;: 6% 
+] 
+<:: 5% 
+" 
+92% -iii 
+;: 
+90% "iii 
+_51 
+E 4% '" " 3% <:: 
+-= 2% 
+88% <:: 
+..c 
+86% 
+0 
+2l 
+84% 
+1% 82% 
+0% 80% 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+� 0 0 0 0 0 0 0 0 '" M ... en "" r- eo C> 
+time 
+Fig_ 5_ Time series of a fundamental strategy weight and a technical strategy 
+weight in the case with the price variation limit 
+in the case without the price variation limit, but the bubble al­
+most vanished. Table II shows hazard rates in the case without 
+the price variation limit and in the case with the price variation 
+limit. In the case with the price variation limit, hazard rates 
+increased and bubbles did not occur. Fig. 5 shows time series 
+of a fundamental strategy weight (2:: - WI,j/ 2::i 2::j Wi,j) and 
+a technical strategy weight (2::j W2,j/2::i 2::j Wi,j) in the case 
+with the price variation limit. In contrast to in the case without 
+the price variation limit (Fig.3), during the bubble, from about 
+t = 100000 to t = 200000, the technical strategy weight 
+did not increase but the fundamental strategy weight did. The 
+price variation limit restricted agents switching to the technical 
+strategy and prevented bubbles occurring. 
+Next, we investigated optimization of flPpl, tpl. The price 
+variation limit prevents bubbles but also causes converging 
+speed of market prices to the fundamental value to go slower. 
+The most efficient market, an ideal market, prevents bubbles 
+and achieves immediate convergence to the new fundamental 
+value. However, no market achieves both at once. To make 
+amplitude of a bubble smaller, market prices converge to fun­
+damental prices more slowly. On the other hand, if you speed 
+up converging speed of market prices to the new fundamental 
+value, occurrence of a bubble is unavoidable. Therefore, it is 
+important to search for better parameters, flPpl, tpl, preventing 
+bubbles and not trying to make the converging speed much 
+slower. 
+Table III lists max prices from new fundamental value (max 
+price minus 15000) for various flPpl, tpl ' and Table IV lists 
+reaching times to new fundamental value divided by 1000 for 
+various flPpl, tpl. The reaching times are measured from a 
+time when fundamental value is increased, t = 100000."-" 
+shows the case where market price could not reach the new 
+fundamental price until t = 600000. 
+Table III indicates that when tpl is longer and/or flPpl 
+is smaller, bubbles are smaller. On the other hand, Table 
+IV indicates that when tpl is shorter and/or flPpl is larger, 
+converging speed to the fundamental value is faster. These 
+tables suggest that the faster convergence to the new funda-
+2013 IEEE Conference on Computational Intelligence for Financial Engineering & Economics (CIFEr) 5 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:05:41 UTC from IEEE Xplore.  Restrictions apply.
+
+TABLE III 
+MAX PRICES FROM NEW FUNDAMENTAL VALUE (MAX PRICE MINUS 15000) FOR VARIOUS 6.Pp/, tp/. "- " SHOWS THE CASE IN WHICH MARKET PRICE 
+COULD NOT REACH THE NEW FUNDAMENTAL PRICE UNTIL t = 600000. A SHADOW AREA SATISFIES AN INEQUALITY CONSTRAINT, 
+6.Ppt!tp/ < V c:: 0.128, WHERE V IS A CONVERGING SPEED TO THE FUNDAMENTAL VALUE WITHOUT THE PRICE VARIATION LIMIT. 
+max price from new tpi 
+fundamental value 1000 2000 3000 4000 7000 10000 15000 20000 25000 30000 40000 50000 
+100 1,374 475 285 205 115 76 
+200 3,236 1,421 728 485 224 146 97 72 
+300 3,450 3,020 1,378 900 387 233 134 106 90 86 
+400 3,482 3,501 2,381 1,307 565 339 164 112 95 93 85 
+700 3,347 3,470 3,366 3,311 1,395 734 363 211 120 94 90 83 
+1000 3,494 3,357 3,229 3,578 2,633 1,388 681 421 267 122 93 91 .L:iPpl 1500 3,512 3,356 3,424 3,404 3,407 3,019 1,384 607 286 208 184 183 
+2000 3,454 3,595 3,334 3,317 3,682 3,493 2,408 1,094 580 452 411 418 
+2500 3,475 3,357 3,497 3,368 3,262 3,466 3,524 2,007 1,442 508 103 100 
+3000 3,436 3,443 3,598 3,431 3,268 3,330 3,365 2,921 1,602 1,190 980 931 
+4000 3,359 3,398 3,374 3,607 3,673 3,378 3,338 3,351 3,433 1,701 477 401 
+5000 3,556 3,467 3,317 3,509 3,440 3,162 3,486 3,311 3,320 3,231 1,345 104 
+TABLE IV 
+REACHING TIMES TO NEW FUNDAMENTAL VALUE DIVIDED BY 1000 FOR VARIOUS 6.Pp/, tp/. THE REACHING TIMES ARE MEASURED FROM A TIME 
+WHEN FUNDAMENTAL VALUE IS INCREASED, t = 100000. "- " SHOWS THE CASE IN WHICH MARKET PRICE COULD NOT REACH THE NEW 
+FUNDAMENTAL PRICE UNTIL t = 600000. A SHADOW AREA SATISFIES AN INEQUALITY CONSTRAINT, 6.Ppt!tp/ < V c:: 0.128, WHERE V IS A 
+CONVERGING SPEED TO THE FUNDAMENTAL VALUE WITHOUT THE PRICE VARIATION LIMIT. 
+reach time to new 
+tpi fundamental value 
+ex 1000) 1000 2000 3000 4000 7000 10000 15000 20000 25000 30000 40000 50000 
+100 55 104 157 216 382 555 
+200 40 55 79 103 181 261 385 509 
+300 39 41 55 70 120 171 257 342 425 506 
+400 39 39 44 55 91 128 195 259 324 385 505 
+700 40 39 40 39 55 75 113 148 185 229 302 371 
+.L:iPpl 1000 39 39 39 39 41 54 78 104 127 150 193 234 
+1500 39 39 39 39 39 40 54 72 93 113 146 175 
+2000 39 39 40 40 39 39 43 56 71 85 106 126 
+2500 39 39 39 39 39 39 39 46 53 60 74 86 
+3000 39 39 39 39 40 39 39 40 48 56 70 79 
+4000 39 39 39 39 39 39 40 39 39 44 63 76 
+5000 39 39 39 39 39 40 39 39 40 40 40 47 
+IV satisfY an inequality constraint, 
+6.Ppl 
+-- < v c:::: 0.128. tpl (6) 
+mental price and the smaller overshoot are not compatible. To 
+make amplitude of a bubble smaller, market prices converge 
+to fundamental prices more slowly. On the other hand, if you 
+speed up converging speed of market prices to fundamental 
+value, occurrence of a bubble is unavoidable. In an area of 
+the lower left of Table IV, values are very similar, about 
+39000. This value is almost the same as the converging 
+speed to the fundamental value without the price variation 
+limit, v. In the case without the price variation limit, it took 
+about 39000 for a price to rise to 15000 from 10000, so 
+v = 5000/39000 c:::: 0.128. Shadow areas in Tables III and 
+Table III shows that bubbles did not occur in this shadow area. 
+Therefore, Eq. (6) is a condition for the price variation limit 
+to prevent bubbles. In the left term ofEq. (6) (further to upper 
+right in these tables) bubbles are smaller but the converging 
+speed slower. In this sense, the market is less efficient. When 
+we design the price variation limit, it is important that the 
+parameters satisfY Eq. (6) and the left term is not much smaller 
+than the right term. 
+6 2013 IEEE Conference on Computational Intelligence for Financial Engineering & Economics (CIFEr) 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:05:41 UTC from IEEE Xplore.  Restrictions apply.
+
+V. CONCLUSION AND FUTURE STUDY 
+We built an artificial market model implementing a learning 
+process to replicate bubbles on the basis of the model of 
+[10] and investigated a price variation limit. We surveyed an 
+adequate limitation price range and an adequate limitation time 
+span for the price variation limit and found a parameters' 
+condition of the price variation limits to prevent bubbles. 
+The price variation limits are expected to be an especially 
+effective way to prevent bubbles, so the model should be able 
+to replicate bubbles. When we gave a bubble-inducing trigger, 
+which is a rapid increment of the fundamental value, a bubble 
+occurred in the case with the model implementing the learning 
+process but did not occur in the case without the process. We 
+also derived a condition of parameters for the price variation 
+limit to prevent bubbles. We emphasize that we found not 
+only the price variation limits to prevent bubbles but also how 
+parameters of the price variation limits to prevent bubbles. We 
+also showed that a hazard rate enables verification of whether 
+the models can replicate a bubble process or not. 
+One future study is investigating cases of changing impor­
+tant parameters, a leaning strength k, a learning term tl, and 
+fundamental values. These parameters were fixed in this study, 
+however we think it is important to analyze how these param­
+eters affect price evolutions quantitatively. As an early study 
+we confirmed that max prices from the new fundamental value 
+is almost not changed for various tl, but we should analyze 
+details of those effects. Another future study is to a find way 
+to recommend actually good parameters of the price variation 
+limit to real stock exchanges. We cannot observe actual v 
+shown in section IV. Tokyo Stock Exchange employs two 
+kinds of price variation limits that adopt different time spans: 
+one is "daily price limit", which restricts price fluctuations 
+within a single trading day, and the other is "special quote", 
+which restricts within three minutes [1]. We can interpret that 
+the special quote that has a shorter time span determines v 
+and the daily price limit that has a longer time span prevents 
+bubbles. Thus, where parameters of the daily price limit are 
+6..Ppl,l, tpl,l and those of the special quote are 6..Ppl,2, tpl,2, 
+when these parameters satisfied 
+6..Ppl,l < 6..Ppl,2 (7) tpl,l tpl,2 ' 
+these price variation limits can prevent bubbles. However, 
+the left term of Eq. (7) should be not so smaller than the 
+right term as we suggested in section IV. For example, 
+tpl,l = 300 minutes, 6..Ppl,l = 300 yen, tpl,2 = 3 minutes, 
+and 6..Ppl,2 = 30 yen for stocks that have prices from 1000 
+yen to 1500 yen in Tokyo Stock Exchange. Therefore, Eq.(7) 
+is strongly satisfied but the left term of Eq.(7) is much smaller 
+than the right term. It is possible that the daily price limit is too 
+tight (tpl ,l = 300 minutes is too large or 6..Ppl,l = 300 yen is 
+too small) or the special quote is too loose (tpl,2 = 3 minutes 
+is too small or 6..Ppl,2 = 30 yen is too large). However, this 
+study could not discuss such actual parameters. This is a future 
+work. Other future works are investigating actual and practical 
+regulations of financial exchanges such as an up-tick rule, 
+which a kind of short-sell regulation. Such regulations have 
+not been investigated by simulations very thoroughly yet. 
+DISCLAIMER 
+It should be noted that the opinions contained herein are solely those of 
+the authors and do not necessarily reflect those of SPARX Asset Management 
+Co., Ltd. 
+REFERENCES 
+[I] Tokyo Stock Exchange, "Guide to tse trading methodology," http://www. 
+tse.or.jp/about/booksIb7gje60000004q31-attltradin/Lmethodology.pdf, 
+2012. 
+[2] C. Yeh and C. Yang, "Examining the effectiveness of price limits in 
+an artificial stock market," Journal of Economic Dynamics and Conlrol, 
+vol. 34, no. 10, pp. 2089-2108, 20 I O. 
+[3] B. LeBaron, "Agent-based computational finance," Handbook of com­
+pulalional economics, vol. 2, pp. 11 87- 1233, 2006. 
+[4] S. Chen, C. Chang, and Y. Du, "Agent-based economic models and 
+econometrics," Knowledge Engineering Review, 2009. 
+[5] B. Mandelbrot, "The variation of certain speculative prices," The journal 
+of business, vol. 36, no. 4, pp. 394--4 19, 1963. 
+[6] R. Cont, "Empirical properties of asset returns: stylized facts and 
+statistical issues," Quanlitalive Finance, vol. I, pp. 223-236, 200 I. 
+[7] B. Mandelbrot, Slalislical Melhodology for Nonperiodic Cycles: From 
+Ihe Covariance 10 R/S Analysis, Annals of Economic and Social Mea­
+suremenl. National Bureau of Economic Research, Inc, 1972, vol. I, 
+no. 3, pp. 259-290. 
+[8] M. Sewell, "Characterization of financial time series," http://finance. 
+martinsewell.com/styl ized-facts/, 2006. 
+[9] C. Chiarella and G. lori, "A simulation analysis of the microstructure of 
+double auction markets," Quanlitalive Finance, vol. 2, no. 5, pp. 346-
+353, 2002. 
+[10] C. Chiarella, G. lori, and J. Perell6, "The impact of heterogeneous 
+trading rules on the limit order book and order flows," Journal of 
+Economic Dynamics and Conlrol, vol. 33, no. 3, pp. 525-537, 2009. 
+[II] K. Izumi and T. Okatsu, "An artificial market analysis of exchange rate 
+dynamics," Evolulionary Programming V, pp. 27-36, 1996. 
+[1 2] W. Arthur, S. Durlauf, D. Lane, and S. E. Program, Assel pricing under 
+endogenous expeclalions in an arlicial slock markel, The economy as 
+an evolving complex syslem 11. Addison-Wesley Reading, MA, 1997, 
+pp. 15-44. 
+[1 3] T. Lux and M. Marchesi, "Scaling and criticality in a stochastic multi­
+agent model of a financial market," Nalure, vol. 397, no. February, pp. 
+498-500, 1999. 
+[1 4] I. Yagi, T. Mizuta, and K. Izumi, "A study on the effectiveness of short­
+selling regulation using artificial markets," Evolulionary and Inslitutional 
+Economics ReView, vol. 7, no. I, pp. 11 3- 132,2010. 
+[1 5] J. Bradford, A. Shleifer, L. Summers, and R. Waldmann, "P ositive 
+feedback investment strategies and destabilizing rational speculation," 
+The Journal of Finance, vol. 45, no. 2, pp. 379-395, 1990. 
+[1 6] G. Soros, The alchemy offinance. Wiley, 2003. 
+[1 7] F. Allen, S. Morris, and H. Shin, "Beauty contests and iterated expecta­
+tions in asset markets," Review of Financial Sludies, vol. 19, no. 3, pp. 
+71 9-752,2006. 
+[1 8] J. Frankel and K. Froot, "Chartists, fundamentalists, and trading in the 
+foreign exchange market," The American Economic Review, vol. 80, 
+no. 2, pp. 18 1- 185, 1990. 
+[1 9] R. Yamamoto and H. Hirata, "Strategy switching in the japanese stock 
+market," Japan Center for Economic Research discussion paper, 2012. 
+[20] G. McQueen and S. Thorley, "Bubbles, stock returns, and duration 
+dependence," Journal of Financial and Quantitative Analysis, vol. 29, 
+no. 3, 1994. 
+[2 I] K. Chan, G. McQueen, and S. Thorley, "Are there rational speculative 
+bubbles in asian stock markets?" Pacific-Basin Finance Journal, vol. 6, 
+no. 1-2, pp. 125- 15 1, 1998. 
+[22] D. Friedman, "The double auction market institution: A survey," The 
+Double Auction Markel: Inslilulions, Theories, and Evidence, pp. 3-25, 
+1993. 
+[23] R. Schiller, Irrational exuberance. Wiley Online Library, 2000. 
+[24] R. Shiller, "Bubbles, human judgment, and expert opinion," Financial 
+AnalysIs Journal, pp. 18-26, 2002. 
+2013 IEEE Conference on Computational Intelligence for Financial Engineering & Economics (CIFEr) 7 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:05:41 UTC from IEEE Xplore.  Restrictions apply.

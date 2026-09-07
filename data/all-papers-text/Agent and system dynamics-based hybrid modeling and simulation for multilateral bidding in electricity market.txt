@@ -1,0 +1,1131 @@
+Agent and system dynamics-based hybrid modeling and simulation
+for multilateral bidding in electricity market
+Jidong Wang, Jiahui Wu, Yanbo Che *
+Key Laboratory of Smart Grid of Ministry of Education, Tianjin University, Tianjin, 300072, China
+article info
+Article history:
+Received 22 December 2018
+Received in revised form
+23 March 2019
+Accepted 25 April 2019
+Available online 2 May 2019
+Keywords:
+Electricity market
+Hybrid simulation
+Reinforcement learning
+abstract
+The electricity industry consists of multiple parties on generation, transmission, distribution, trading and
+market supervision of electricity. Models for a single electricity ﬁrm are only suitable for studying the
+operational decisions of the particular ﬁrm. In order to study the bidding behavior of all the players in the
+electricity market, this paper proposes a hybrid simulation model (HSM) that combines agent-based
+simulation (ABS) and system dynamics simulation (SDS). With the proposed hybrid model, some input
+variables required for one simulation model can be obtained by the output of another simulation model.
+In order to improve the competitiveness of agents that participate in bidding, this paper incorporates the
+Reinforce Learning (RL) algorithm into the agents. Each agent can obtain information and adapt to the
+environment through the continuous interaction with the environment. With the hybrid simulation
+model, the dynamics of the entire market remain stable, the market clearing prices converge, and the
+market share is relatively uniform.
+© 2019 Elsevier Ltd. All rights reserved.
+1. Introduction
+The 21st century is an era of energy, which is intimately related
+to people's lives. Some technical problems and policy issues in the
+power industry, such as macro-control measures, ef ﬁciency, and
+resource optimization allotment of electronic market, need to be
+resolved [1,2].
+Many scholars use optimization methods to solve realistic and
+optimization scheduling problems for hybrid power system. S.
+Surender Reddy, A. R. Abhyankar and P. R. Bijwe [ 3] proposed
+market clearing model for wind-thermal power system, including
+uncertainties in wind power generation and load demand and
+provides a compromise solution by optimizing the objectives using
+multi-objective Strength Pareto Evolutionary Algorithm. S. Sure-
+nder Reddy and James A [ 4] proposed the optimal scheduling
+strategy, taking into account the impact of uncertainties in wind,
+solar photovoltaic and load forecasting, and this strategy consists of
+a genetic algorithm (GA)-based scheduling and a two-point esti-
+mate-based probabilistic real-time optimal power ﬂow. S. Surender
+Reddy [ 5] proposed a new strategy for the optimal scheduling
+problem taking into account the impact of uncertainties in wind,
+solar photovoltaic and load forecasting. The simulation results with
+Genetic Algorithm and Two-Point Estimate Method have been
+applied to test the effectiveness of the proposed optimal scheduling
+strategy. A multi-objective optimal power ﬂow (MOPF) model is
+established to minimize three objective functions of bus loading
+voltage deviations, network active power loss, pollution gas emis-
+sions and meanwhile to satisfy the security constraints of power
+transmission limits in lines (Shuwen Tan and Shunjiang Lin et al.
+[6]). The previous Li-Ion battery charger techniques are reviewed
+and compared and the new fuzzy logic battery charging method
+which is proposed to optimize and improve the battery charger
+efﬁciently (Asadi and Houshyar et al. [ 7]).
+In addition, many scholars have studied various optimization
+algorithms. Kaboli, S. Hr Aghay et al. [ 8,9] dealt with estimation of
+electricity demand of Iran on the basis of economic criteria using a
+genetic-based approach called Gene Expression Programming
+(GEP) as an expression-driven approach, and arti ﬁcial cooperative
+search algorithm as evolutionary algorithm. Kaboli and S. Hr Aghay
+et al. [ 10,11] proposed rainfall optimization algorithm (RFO) as a
+new nature-inspired algorithm and the optimized GEP (gene
+expression programming) was applied to precisely formulate the
+relationships between historical data and electricity consumption.
+A GEP-based model for the ﬁrst time was proposed as a safe and
+accurate method to predict the adhesion strength and hardness of
+material (Ra ﬁeerad, A. R., et al., [ 12]). The obtained adhesion* Corresponding author.
+E-mail address: lab538@163.com (Y. Che).
+Contents lists available at ScienceDirect
+Energy
+journal homepage: www.elsevier.com/locate/energy
+https://doi.org/10.1016/j.energy.2019.04.180
+0360-5442/© 2019 Elsevier Ltd. All rights reserved.
+Energy 180 (2019) 444 e456
+
+strength and hardness of material were modeled by particle swarm
+optimization (PSO) to predict the outputs performance. (Ra ﬁeerad
+A. R. et al., [ 13]). Modiri Delshad and Mostafa et al. [ 14] present
+backtracking search algorithm (BSA) as an evolutionary technique
+for solving economic dispatch (ED) problems with considering
+valve-point loading effects, prohibited operating zones, and mul-
+tiple fuel options. A meta-heuristic method is integrated with the
+control system in order to find the optimum coefficients values in a
+single multimodal problem (S.S. Sebtahmadi and H. Borhan Azad
+et al., [ 15]).
+In fact, because most systems are complex nonlinear systems,
+modeling and simulation have become the primary methods for
+studying and solving these nonlinear problems. Compared to the
+optimization method that provides the best solution, simulation is
+a viable solution that can be closer to reality.
+Modeling and simulation, which are effective methods to solve
+complex system problems, include several popular methods like
+cellular automata, agent-based simulation (ABS) and system dy-
+namics simulation (SDS). The three methods are different and the
+solutions are different either. ABS and SDS modeling approaches
+take fundamentally different perspectives to model a system,
+which can be characterized as bottom-up (ABS) versus top-down
+(SDS) [ 16]. SDS abstracts from single events and entities and
+takes an aggregate view concentrating on policies, to describe the
+system behavior as a number of interacting feedback loops,
+balancing or reinforcing. ABS de ﬁnes behavior at individual level
+and global behavior emerges as a result of many individuals, each
+following its own behavior rules, living together in some environ-
+ment and communication with each other and with environment.
+As a complex system, the modeling and simulation methods on
+ABS and SDS are very suitable for the power market. Fang Shen [ 17]
+focused on the future development of computer simulation tech-
+nology. According to different market participants, Jiadao Li et al.
+[18] put forward different market simulation models and corre-
+sponding simulation goals and strategies. The intelligent agent
+technology of simulating the quotation behavior of power market
+was studied. The learning algorithms such as Roth-Erve algorithm
+and Q-learning algorithm were improved in parameter setting,
+strategy space generation and convergence, and the corresponding
+mathematical model is established [ 19]. A complete design method
+of power market simulation experiment and a market evaluation
+index for evaluating simulation results were presented [ 20]. The
+system dynamics method was used to study the power market
+operation system and divide it into four subsystems: production,
+transmission, trading and supervision [ 21]. Dan Liu, Jiantong Cao
+and Jianming Chen [22] summarized the application of agent-based
+modeling method in the study of macroeconomics and microen-
+terprise management, and evaluated its advantages and disad-
+vantages. A simpli ﬁed model of market competition was
+established, corresponding simulation parameters were designed,
+and the dynamic competition behavior and evolution process of
+retailers were simulated by Swarm simulation platform (Qing Zhou,
+Yingying Huang and Chen Jian, [ 23]. Integration of several elec-
+tricity market and power system models was given respecting to
+the reality of different countries. (Gabriel Santos etc., [24]. Francisco
+Silva et al. [ 25] analyse the way players' characteristics are
+modeled, particularly in their representation in a smaller scale,
+simplifying the simulation while maintaining the quality of results,
+and comparing real electricity market values with the market re-
+sults achieved using the generated scenarios.
+A single modeling method cannot completely and accurately
+reveal the behavior of complex systems. Therefore, hybrid
+modeling and simulation methods have become new trend in the
+study of complexity problems. Hybrid simulation method
+combining ABS with SDS models is a useful and promising
+approach to model systems. Many scholars argue that the choice of
+an appropriate modeling approach to adopt in a particular case
+should be depended on the nature of the system at hand and the
+purpose of the model. Gudrun Wallentina and Christian Neuwirth
+[26] proposed a framework for adaptive and reversible switching
+between hybrid AB-SD model designs. To demonstrate the
+approach, they implemented six dynamic hybrid models for a
+predator-prey model of ﬁsh and plankton. Swinerd and McNaught
+[27] suggested that many systems can be modeled in equivalent
+ways by both paradigms. They present three basic types of hybrid
+agent-based system dynamics simulations, referred to here as
+interfaced, integrated and sequential hybrid designs. Vincenot et al.
+[16] studied that ABS is preferred for modeling real-life systems
+consist of subsystems with “ divisible entities' such as population
+made of individuals, whereas SDS modeling is more adequate for
+real-life systems with ‘whole entities ’. J.H. Lewe, L.F. Hivin, D.N.
+Mavris [ 28] studied combination ABS of the intercity travel to
+identify the governing equations with the structure of a top down
+SDS model. Lauri L €attil€a, Per Hilletofth, and Bishan Lin [ 29]h a v e
+found ﬁve different situations where it will be useful to combine
+these methods such as ABS and SD. An integrated approach of
+agent-based modeling, system dynamics and discrete event simu-
+lation was adopted to complement the standard lifecycle assess-
+ment methodology (Bochao Wang, S /C19everin Br^eme, Young B. Moon,
+[30]. Charles M. Macal [ 31] present a formal speci ﬁcation for SDS
+and ABS models, use the speci ﬁcation to derive equivalent ABS
+representations, and present an example of an epidemic model.
+The overall operation of the electricity market includes the
+generation, transmission, distribution, trading process of the po-
+wer, the market supervision and so on. The multilateral bidding of
+the electricity market is an overall bidding process involving a
+number of aspects. The single modeling method is limited to
+explore some of the issues of the multilateral bidding in the elec-
+tricity market, which is impossible to completely reveal the overall
+multilateral bidding in the electricity market. The motivation of this
+paper is as follows: hybrid simulation method (HSM) is proposed
+for multilateral bidding of the electricity market, which is based on
+the agent-based simulation (ABS) and the system dynamics simu-
+lation (SDS) in order to simulation the overall multilateral bidding
+in the electricity market.
+Considering of the multivariable in real situations, this paper
+adopts a hybrid modeling method based on ABS and SDS, by which
+the operation of electricity market is modeled macroscopically to
+observe the overall changes of the system. In order to better
+simulate the trading conditions of the real time electricity market,
+agent-based modeling is applied to the bidding transactions. These
+two modeling processes are related to each other. With the real-
+time feedback changes of relevant variables, the results are pre-
+sented accordingly, thus simulating the multilateral bidding pro-
+cess of the electricity market.
+The contribution of this paper is as follows: 1) This paper studies
+agent-based electricity market bidding simulation method, estab-
+lishes agent-based electricity market bidding simulation model,
+and simulates electricity market bidding process; 2) This paper
+studies the modeling and simulation method of the overall oper-
+ation of the electricity market based on system dynamics, estab-
+lishes a system dynamic simulation model of electricity market
+whole operation system, and realizes the re ﬁned analysis of elec-
+tricity market system; 3) The hybrid modeling and simulation
+method based on agent and system dynamics is studied, and a
+hybrid simulation model based on electricity market operation is
+established. By running the hybrid simulation model, we can ﬁnd
+that the market competition is not fully re ﬂected by the single
+market regulation of the clearance price.
+J. Wang et al. / Energy 180 (2019) 444 e456 445
+
+2. Simulation variables and parameters
+2.1. Variables and parameters of ABS
+This paper proposes an agent-based model to simulate gov-
+ernment regulation in the electricity market, bidding between
+power plants, clearing of trading centers and competition between
+power grid companies and customers and so on. As shown in Fig. 1,
+the whole agents are classi ﬁed into ﬁve major categories, including
+a trading center agent; a government agent; a grid company agent;
+1000 consumer agents; four power plant agents, which include two
+thermal power plant agents, a hydropower plant agent and a wind
+power plant agent. The trading center separately reports the
+amount of clearing to each power plant. To raise clearing quantity
+and make it close to their maximum power supply, the power plant
+agents can adjust the bidding strategy by applying learning algo-
+rithm. Through monitoring the learning effect of power plant
+agents, the government agent will calculate the social welfare,
+which is under different contract power ratios, till the amount of
+clearing tends to remain stable, that is, the supply and demand
+balanced, ﬁnally to seek the proportion of the contracted power
+under the maximized social welfare. The grid company agent will
+formulate a power purchase plan for each round of clearing ac-
+cording to its own demand function after each clearing. Some
+consumer agents can purchase electricity directly from the trading
+center, or purchase electricity from the grid company subsequently.
+Various variables, parameters and events need to be added to
+the model, In order to automate the agent. What Table 1 describes
+is the basic parameters of the power plant agents.
+2.2. Variables and parameters of SDS
+System dynamics method is of great signi ﬁcance in the eco-
+nomic ﬁeld, and can also be applied to the general study of the
+electricity market. The system dynamics method simulates the
+behavior of complex systems qualitatively from a rather macro-
+scopic perspective by establishing several cycles to achieve mutual
+feedback among the various parts of the system.
+In system dynamics model, the complex electricity market
+system is divided into four subsystems: generation subsystem,
+transmission subsystem, transaction subsystem and supervision
+subsystem. Four sub-cycles are established to simulate the four
+linkages of production, transaction, transmission and supervision
+in real electricity market. Specifying the function of each subsys-
+tem, Depicting the causality among them, and furthermore, driving
+the whole system normally, which in the end can be described as
+the electricity market ¼ {subsystems, (subsystem internal re-
+lations), (subsystem external relations)}. By establishing the link-
+ages among the subsystems, the electricity market is simulated,
+thus laying the foundation for the management of the whole
+electricity market (Forrester J W, [ 32]). The principle indexes are
+shown in Table 2.
+3. Trading mechanism and bidding strategy of electricity
+market
+3.1. Trading mechanism of electricity market
+After the trading center announced the demand for electricity,
+the power plants submitted the quotation curve for each time
+period to the trading center (the quotation curve is a segmentation
+curve). The trading center matches the supply curve with the de-
+mand curve to calculate the market clearing price and clearing
+power. As a dynamic system, the power system's load curve is
+constantly changing. To simplify the load model, we discretize the
+time and divide the day into 48 time periods so that the load re-
+mains constant for each time period. Both the cost curve and the
+quotation curve of the power plant are piecewise functions, as
+Fig. 1. Rules for the multilateral bidding model of the electricity market.
+J. Wang et al. / Energy 180 (2019) 444 e456446
+
+shown in Figs. 2 and 3. Thus, the bidding curve for each power plant
+is also segmented.
+3.2. Bidding strategy of power plants
+This paper selects the three-stage linear function as the quota-
+tion curve for all time periods, and uses the discrete quadratic
+polynomial to generate the bidding strategy space of the power
+plants. The cost curve of the power plants can be expressed as
+follows (Formula (1)):
+cðqÞ¼
+8
+<
+:
+c1; Qmin /C20 q < Q1
+c2; Q1 /C20 q < Q2
+c3; Q2 /C20 q < Qmax
+(1)
+Q min, Q max represent the minimum output and maximum output
+of the power plant respectively.
+The quotation curve and the cost curve use the same segmen-
+tation to reduce the number of parameters. The quotation curve is
+shown in Formula (2).
+bðqÞ ¼
+8
+<
+:
+p1; q0 /C20 q < q1
+p2; q1 /C20 q < q2
+p3; q2 /C20 q < q3
+(2)
+We ﬁrst construct a quadratic polynomial to determine the
+formula of the quote. Therefore, we need to generate P1, P2 and P3
+in each quotation strategy, which correspond to Qmin (minimum
+output), Qmid (median output) and (maximum output), respec-
+tively, and Qmid is the arithmetic mean of Qmin and Qmax.
+q
+0
+¼ q /C0 Qmin； qd ¼ Qmax /C0 Qmin (3)
+The functional relationship between p and q' is shown in
+Equation (4),
+p ¼ aq02 þ bq
+0
+þ c (4)
+Then the following formula can be derived,
+8
+<
+:
+p1 ¼ c
+p2 ¼ 0:25aq2
+d þ 0:5bqd þ c
+p3 ¼ aq2
+d þ bqd þ c
+(5)
+Formula (6) can be derived from equation (5),
+8
+<
+: a ¼ 2ðp1 þ p3 /C0 2p2Þ
+.
+q2
+db ¼ð 4p2 /C0 3p1 /C0 p3Þ = qdc ¼ p1 (6)
+From equation (6), the quotation formula is determined as long
+Table 1
+Basic parameters of power plant agents.
+Thermal power
+plant1
+Thermal power
+plant2
+Hydropower
+plant1
+power
+plant1
+Maximum output 80 120 120 132
+Minimum output 40 60 60 66
+Highest price 0.16 0.15 0.14 0.14
+Lowest price 0.11 0.12 0.08 0.09
+Intermediate price 0.14 0.13 0.12 0.11
+Cost [0.04,0.05,0.06] [0.06,0.08,0.1] [0.06,0.08,0.1] [0.07,0.08,0.09]
+Capacity segment [40,55,65,80] [60,80,100,120] [60,80,100,120] [66,88,110,132]
+Table 2
+Main indicators of electricity market.
+Main
+indicators
+Capacity
+retention ratio
+Generation pro ﬁt
+margin
+Power
+generation cost
+clearing
+price
+abbreviation CWR GP GMC CP
+initial value 0.2 0 0.05 0.12
+Main
+indicators
+Electricity
+consumption
+declaration
+Declaration of
+supply and
+demand ratio
+Concentration
+of declared
+electricity
+Power
+generation
+declaration
+abbreviation DRC SDR HHI SRC
+initial value 250 0 0.25 452
+Fig. 2. Power plant cost curve.
+Fig. 3. Power plant quotation curve (three quotations).
+J. Wang et al. / Energy 180 (2019) 444 e456 447
+
+as the lowest price, the highest price and the number of quotes are
+generated. Taking the ﬁrst power plant in the model as an example,
+if the lowest price is 0.1 1, the highest price is 0.16, the number of
+quotes is 3, and the possible prices are 0.1 1, 0.14 and 0.16. As the
+price rises, there are 10 strategies M ¼ 1 þ 3þ6 ¼ 10: [0.1 1,0.1 1,0.1 1],
+[0.1 1,0.1 1,0.14], [0.1 1,0.1 1,0.16], [0.1 1,0.14,0.14], [0.1 1,0.14,0.16],
+[0.1 1,0.16,0.16], [0.14,0.14,0.14], [0.14,0.14, 0.16], [0.14,0.16,0.16],
+[0.16,0.16,0.16].
+3.3. Market clearing strategy of trading center
+The trading center adopts the uni ﬁed price clearing mode
+(MCP). In the MCP mode, all power plants sell electricity at the
+same price, and all power purchasers also buy at the same price.
+The trading center's trading cycle is 15 days, and the lowest price
+that can meet the power demand is the uni ﬁed trading price of the
+market. In this paper, the queuing method with fast speed, simple
+algorithm and high stability is selected for liquidation. Before each
+transaction, the trading center will collect the quotation curve
+submitted by each power plant. The basic process is as follows:
+1) Sort the quotations of each power plant from low to high and
+give the serial number. When the quotations are the same, the
+one with the smaller declared electricity value is given priority.
+2) Accumulate the declared power values of each power plant one
+by one in order, until the value can cover the load.
+3) The quotations corresponding to the current serial number is
+the uniﬁed clearing price, and the current liquidation quantity of
+each power plant can be calculated according to the load de-
+mand. After the clearing price and the liquidation amount are
+obtained, the remaining power is evenly distributed to the
+respective power plants based on the calculated demand sur-
+plus, thereby obtaining the ﬁnal clear amount of each power
+plant.
+In the process of market liquidation, there are some phenomena
+that hinder the normalization of liquidation, and it requires manual
+intervention. Therefore, this paper adds a dynamic queuing method
+based on the common queuing method, and changes the queuing
+mode under the constraint conditions, solves some problems that
+cannot be eliminated, and improves the ef ﬁciency.
+3.4. Purchasing strategy of grid company and users
+If the grid company's demand value exceeds the current total
+electricity value of the transaction, the grid company will purchase
+all the outputs and give the words “ supply less than demand ” .
+The user purchases electricity is divided into two forms: some
+large users purchase electricity directly from the trading center and
+buy electricity from power grid company. The portion that has not
+been purchased by power grid company will be purchased by some
+large users. Users preferred to purchase electricity from the trading
+center, followed by power grid company. In addition, the portion
+purchased directly from the trading center is charged to the power
+grid company for transmission according to the amount of
+electricity.
+4. Simulation of multilateral bidding in electricity market
+4.1. Agent reinforcement learning
+Reinforcement learning is a kind of machine learning. Agents
+can acquire knowledge and adapt to the environment through the
+continuous interaction with the environment. Through agent
+learning, the agent's competitive ability is improved, and it is more
+conducive to realizing multi-party dynamic game bidding. There
+are many choices about agent learning algorithm. This paper
+chooses the Roth-Erev (RE) algorithm based on improved rein-
+forcement learning. In the ﬁnite game with incomplete informa-
+tion, the algorithm seeks equilibrium through the ﬁnite game
+strategy. It is an adaptive learning algorithm. This algorithm is used
+to simulate the bidding strategy selection process of power plants
+in the incomplete information market. In electricity market simu-
+lation, the learning steps of power plant agent are as follows:
+(1) Using random generators (0, 1) to generate random numbers
+as the initial tendency coef ﬁcient of each bidding strategy.
+(2) Use the formula and the propensity coef ﬁcient of each
+strategy to calculate the selection probability.
+(3) Implement liquidation in accordance with the electricity
+market rules.
+(4) Each agent calculates its respective output and pro ﬁts based
+on market clearing results.
+(5) Use the formula to modify the propensity coef ﬁcients in the
+policy space.
+(6) If it is not ﬁnished, return to the second step, or else it will
+end.
+First, we must determine the propensity coef ﬁcient, with the
+following updated formula (Eq. (7)):
+8
+<
+:
+Qt ðiÞ¼ð 1 /C0 rÞ * Qt/C0 1ðiÞþð 1 /C0 eÞ * Rt/C0 1 ðif i ¼ numÞ
+Qt ðiÞ¼ð 1 /C0 rÞ * Qt/C0 1ðiÞþ eQt/C0 1ðiÞ
+M ðif i s numÞ
+(7)
+In Equation (7), t represents the number of market clearings,
+num represents the number of selected strategies, and M repre-
+sents the total number of strategies, taking 10. Both formulas
+indicate the propensity coefﬁcient of i-th strategy being selected at
+time t. The value of the bonus value R is taken from the pro ﬁt that
+the agent obtains from the market in each clearing. r is a forgetting
+factor, so each behavior does not accumulate over time, reducing
+the impact of historical experience on the outcome and making the
+new strategy competitive. e is an empirical parameter that en-
+courages agents to generate different bidding strategies in the early
+stages of learning.
+For the calculation of the probability of strategy, the following
+formula is used:
+pt ðaÞ¼ expðQt ðiÞ=cÞ
+PM
+j¼1expðQt ðiÞ=cÞ
+(8)
+c is the cooling coef ﬁcient, which has a certain in ﬂuence on the
+selection probability of the propensity coefﬁcient. The choice of the
+value of c will affect the convergence of the model. If the value of c
+is ﬁxed, the propensity coef ﬁcient for a strategy will increase with
+the experiment, so it will suddenly converge without regularity.
+Therefore, the dynamic adjustment method can be used to adjust
+the propensity coef ﬁcient for each round.
+ct ¼ k
+M
+X
+i
+Qt ðiÞ (9)
+In the above formula, k is a real number greater than zero, and
+its value will have a certain impact on the model, which will be
+discussed in the simulation results.
+J. Wang et al. / Energy 180 (2019) 444 e456448
+
+4.2. Simulation of multilateral bidding in electricity market based
+on agent
+4.2.1. Power plant agent
+Each power plant agent uses reinforcement learning RE algo-
+rithm to change bidding strategy. There are the following processes
+in a clearing cycle:
+(1) The Trading Center announces demand.
+(2) Each power plant submits its own quotation.
+(3) The Trading Center receives the quotation information and
+calculates the clearing price and the clearing quantity of each
+power plant by the clearing algorithm.
+(4) The Trading Center releases the results and the power plants
+get their own information.
+(5) The power plants calculate the pro ﬁt, change the bidding
+strategy, and prepare the next round of quotations.
+We write code for the power plant agents. The ﬁrst event con-
+taining the initialization algorithm is triggered during the initial
+operation. The initialization process includes initial setting of bid-
+ding strategy, capacity segment setting, cost setting, etc. The initial
+bidding strategy number is generated by random number; the
+second event-driven policy update is triggered for the ﬁrst time on
+the ﬁfth day, and the update period is 15 days. The RE algorithm is
+used to calculate the pro ﬁt of each current strategy as an important
+reference for updating the next strategy.
+4.2.2. Trading center agent
+The Trading Center agent completes market clearing by writing
+code in the event. The ﬁrst event is triggered on the ﬁrst day with
+an update period of 15 days to collect the bid strategy proposed by
+each power plant and record it in three array variables: price, ca-
+pacity segment and queue number. The second event is triggered
+on the second day, with an update period of 15 days, sorting the
+quotations from low to high. The sorting method is bubble sorting.
+After sorting, the quotation value is accumulated one by one until it
+exceeds the load value, and the current offer is selected as the
+uniﬁed clearing price. Finally, a margin is allocated for each power
+plant based on the total load distribution.
+4.2.3. Government agent
+With the use of the learning algorithm, the power plant agent
+adjusts the bidding strategy through continuous learning. After
+about 400 rounds of liquidation, the total power supply of the
+power plant agent and the market demand of the user agent
+eventually tend to a stable value, that is, after the liquidation results
+converge, the government agent will give the word “supply and
+demand balance” and then start to adjust it. The contract electricity
+ratio V calculates the social welfare situation since then. The
+established model is initially a totally free competitive market, with
+a contract power ratio of V of 0. When the model converges, the
+government adjusts the contract electricity ratio by 0.05 step after
+each clearance. At the same time, the government observes the
+social welfare situation under different contract electricity ratio to
+seek the contract electricity situation under the maximum social
+welfare. Social welfare consists of producer surplus and consumer
+surplus (Eq. (10)):
+Welfare ¼ a /C3
+ X3
+i¼0
+clearprice/C3
+X3
+i¼0
+clearence /C0 SRC/C3
+X3
+i¼0
+cost
+!
+þ b/C3ð Pd /C0 clearpriceÞ/C3
+X3
+i¼0
+clearance
+(10)
+The social welfare value here is only used for relative compari-
+son, and has no real meaning. Among them, a and b are the market
+demand function coef ﬁcients, and Pd is derived from the market
+supply and demand function according to the market real time
+demand.
+4.2.4. Power grid company and user agent
+This paper refers to (Liu Zhen et al., [ 33]) and ﬁrst determines
+the power demand function of the grid company. The grid com-
+pany's demand for electricity is inversely related to the liquidation
+price. We use EViews (the econometrics software is a statistical
+package for Windows, mainly for time-series-based econometric
+analysis) to determine the demand function of the grid company
+agent (Eq. (1 1))
+volume ¼ 290:65 /C0 181:8/C3 clearprice (11)
+Whenever a large user purchases electricity directly, the system
+will give the term “large direct purchase of electricity ” to distin-
+guish the power purchased by the user from the grid company and
+the trading center.
+Fig. 4. Electricity market bidding simulation operation of agent.
+Table 3
+Multiple experiments with a load of 250.
+Number of times Number of rounds Period 1 price
+1 52 0.13
+2 61 0.13
+3 112 0.13
+4 74 0.14
+5 80 0.12
+6 194 0.14
+7 101 0.11
+8 58 0.11
+9 82 0.14
+10 137 0.14
+AVE 95.1 0.129
+SD 43.58759 0.01197
+S% 45.8334 9.2791
+J. Wang et al. / Energy 180 (2019) 444 e456 449
+
+4.2.5. Agent based simulation model validation
+Many different developments have been going on under the
+slogan of agent based modeling in very different disciplines like
+artiﬁcial intelligence, complexity science, game theory, etc.(Schiritz
+and Grosler [34]). In this paper, it is assumed that there are 4 power
+plant agents and 1 trading center agent. Market quotation and
+market clearing are conducted every 15 days. Finally, the uni ﬁed
+clearing price is adopted, and the trading center feeds back the
+respective clearing quantity of each power plant. Power plant agent
+can change bidding strategy by learning algorithm. Fig. 4 shows the
+ﬁnal operation of the model. There are four power plants and a
+trading center in the left and two charts in the right. In the chart
+below, the green and brown curves respectively represent the
+highest and lowest prices in each round of bidding. As the bidding
+time increases, the highest price and the lowest price will even-
+tually stabilize at a price and form a stable market situation, which
+is in line with the actual situation.
+In order to validate the effect of the initial random number on
+strategy selection and ﬁnal clearing price, multiple sets of simula-
+tion experiments were performed and the results are listed in
+Tables 3 and 4 .
+In Tables 3 and 4, the number of rounds indicates the number of
+clearing rounds when the clearing price converges, the number of
+times indicates the number of simulated experiments, AVE repre-
+sents the average value, SD represents the standard deviation, and S
+% represents the ratio of AVE to SD. The results of each experiment
+vary greatly, and it can be seen that the initial random number has a
+certain in ﬂuence on the strategy selection. Therefore, after many
+experiments, a valid conclusion can be obtained. As shown in
+Table 5, as the number of times increases to 10, the difference be-
+tween each clearing price has become very small. That is to say,
+with the increase of the number of experiments, the difference
+between each clearing price will also be reduced.
+Through the simulation of the agent-based power market bid-
+ding process, we have reached the conclusion that the initial values
+of important parameters cannot be arbitrarily set and need to be
+corrected by multiple simulations. Therefore, the rationality of the
+agent-based modeling method is validation.
+4.3. Electricity market simulation based on system dynamics
+4.3.1. System dynamics based simulation model
+We choose SRC, DRC and CP as state variables, representing
+three subsystems of production, transmission and transaction
+respectively. The supervision subsystem evaluates the total degree
+of market competition by observing HHI. In the transmission sub-
+system, the demand and competition of the electricity market will
+determine the declared electricity of the purchaser, which is posi-
+tively related; in the production subsystem, the demand for elec-
+tricity will affect the supply situation and react to the demand for
+electricity to a certain extent; in the transaction subsystem, when
+the supply exceeds the demand, the clearing price will be lowered.
+In the regulatory subsystem, HHI as an adjustable variable can
+simulate the process of market competition from complete
+competition to incomplete competition to observe the changes of
+other indicators in the whole electricity market. In addition, each
+subsystem will interact with each other, for example, when the
+clearing price changes, it will affect the proﬁts of power plants, each
+wind power plant will change the declared electricity accordingly,
+further changing the electricity demand of the entire market.
+Fig. 5 qualitatively represents the interaction of the various in-
+dicators. Table 6 represents system ﬂow chart commonly used
+parameter settings, the following equations are used to express the
+quantitative relationships between the various parts.
+dSRC = dt ¼ SRCR (12)
+dDRC = dt ¼ DRCR (13)
+dCP = dt ¼ CPR (14)
+SRCR ¼ a*ð1 /C0 SDRÞ*SRC*HHI þ b*GP þ c (15)
+DRCR ¼ d*ðSDR /C0 1Þ*DRC*HHI þ e*CP þ f (16)
+CPR ¼ g*ð1 /C0 SDRÞ*CP þ h*CWR (17)
+GP ¼ CP=GMC /C0 1 (18)
+SDR ¼ SRC=DRC (19)
+In the above equation, equation (12) ~ (14) is the equation of
+state, equation (15) ~ (17) is the rate equation, and equation
+(18) ~ (19) is the auxiliary equation. The above equations are the
+core of the electricity market operation model, and the basic
+framework of the system is preliminarily determined. Through a
+number of simulation experiments in Anylogic, the unknown pa-
+rameters of each equation are ﬁnally determined, which reﬂects the
+relationship between all links in the electricity market as a whole
+and further improves the model. The operation of the whole model
+can be observed by changing the parameters.
+4.3.2. System dynamics based simulation model validation
+System dynamics (SD) developed by Jay W. Forrester in the
+1950s. System dynamics is “the study of information-feedback
+characteristics of industrial activity to show how organizational
+structural, ampliﬁcation (in policies), and time delays (in decisions
+and actions) interact to in ﬂuence the success of the enterprise ”
+(Forrester [ 35,36]). The range of SD applications includes urban,
+Table 4
+Multiple experiments with a load of 250.
+Number of times Number of rounds Period 1 price
+1 38 0.14
+2 133 0.15
+3 30 0.14
+4 48 0.14
+5 161 0.14
+6 86 0.14
+7 40 0.14
+8 205 0.14
+9 121 0.14
+10 36 0.14
+AVE 89.800 0.141
+SD 61.98172 0.00316
+S% 69.0281 2.2411
+Table 5
+Average clearing results of multiple experiments.
+Number of times 1 5 10
+1 0.12 0.116 0.122
+2 0.12 0.12 0.124
+3 0.14 0.128 0.128
+4 0.11 0.128 0.129
+5 0.14 0.122 0.125
+AVE 0.126 0.1228 0.1256
+SD 0.013416 0.005215 0.002881
+S% 10.6479 4.247 2.2938
+J. Wang et al. / Energy 180 (2019) 444 e456450
+
+social, ecological types of system.
+Fig. 6 is the Anylogic software interface for dynamic operation of
+the electricity market based on system dynamics. The initial
+amounts of SRC and DRC were set to 452 and 250, respectively, and
+CP was 0.12. At this time, the supply is larger than the demand. As
+the clearing price CP continues to decrease, the declared power of
+the power plant will also decrease, and the demand of the power
+purchaser will continue to increase as the price decreases. Fig. 7
+shows the supply and demand curve. The green curve represents
+the supply and the brown curve represents the demand. We can see
+that the curve changes very quickly at the beginning, but after 300
+time units, the speed of change becomes slower and then stabilizes,
+so we suppose that the supply and demand curve is convergent
+under ideal conditions.
+As shown in Figs. 8 and 9 , the red curve represents the market
+clearing price and the blue curve represents the average market
+clearing price. As the CWR value increases, the market price reacts
+responsively, rises rapidly, and then stabilizes. Conversely, when
+market prices fall, it falls rapidly. However, CWR has little impact on
+market supply and demand. Since CWR reﬂects the degree of power
+supply control of the power plant, when the value of CWR becomes
+larger, the power plant will increase the price of electricity.
+Conversely, the price of electricity will be affected by other factors
+in the market, resulting in lower electricity prices. Therefore, the
+impact of CWR on market operations is in line with the actual
+situation.
+As shown in Figs. 10 and 1 1, when HHI increases, the market
+price rises slowly. When HHI drops to 0.25, the market price will fall
+and then remain stable. When the HHI is 0.25, the four power
+plants account for the same market share, indicating that the
+market is fully competitive. When the HHI rises, the market supply
+and demand curve will approach quickly, and the average clearing
+price will rise rapidly. On the contrary, the market supply and de-
+mand curve will rise slowly, and the average clearing price will
+remain stable. It can be seen that when there are four power plants,
+the closer the HHI value is to 0.25, the more intense the market
+competition; when the HHI value is close to 1, the market will
+become a completely monopolistic market. When the market be-
+comes a completely monopolistic market, supply, demand and
+price will be controlled, which is not conducive to the management
+of market regulators.
+As shown in Fig. 12, as the value of GMC increases, the market
+clearing price will increase slowly, the market demand will shrink,
+and then the clearing price will gradually decline and eventually
+remain stable. As shown in Fig. 13 , when the value of GMC in-
+creases, the market supply will decrease, but there is no impact on
+market demand. When the value of GMC decreases, market supply
+will increase slowly, but demand is not affected. It can be seen that
+Fig. 5. Power ﬂow diagram of electricity market.
+Table 6
+Common parameter settings for system ﬂow diagrams.
+Constant Value a b c d e f g h
+Set Value 4 0.001 0 8 /C2 10¡4 0.001 0 0.01 0
+Fig. 6. Interface model of electricity market based on system dynamics.
+Fig. 7. Supply and demand relationship of electricity market model.
+J. Wang et al. / Energy 180 (2019) 444 e456 451
+
+the cost has a great impact on the seller and will also change the
+market clearing price and supply situation. Therefore, this simu-
+lation experiment not only helps the power plant to control its
+marginal cost, but also facilitates the overall operation.
+It is of great guiding signi ﬁcance to observe the behavior of
+electricity market from the perspective of system dynamics and
+macro. The overall operation of the electricity market was simu-
+lated by using system dynamics. However, the overall operation of
+the system dynamics could not highlight the individual role. For the
+trading link in the electricity market operation, the agent-based
+Fig. 8. Inﬂuence of CWR on electricity market price.
+Fig. 9. Inﬂuence of CWR on supply and demand of electricity market.
+Fig. 10. Inﬂuence of HHI on electricity market price.
+Fig. 1 1. Inﬂuence of HHI on supply and demand of electricity market.
+J. Wang et al. / Energy 180 (2019) 444 e456452
+
+modeling and simulation method was used in the next section to
+strengthen the role of the trading link and realize a bidding model.
+5. Mixed simulation process of multilateral bidding in
+electricity market
+In the electricity market model, the agents simulated the bid-
+ding process, which is the interactive process of dynamic infor-
+mation in the system. After correlating with the system dynamics
+model, in each clearing cycle, the system dynamics model contin-
+uously receives real-time information from each agent in the
+electricity market and adjusts the indicators. After the dynamic
+variables are introduced to the agents, the real-time updated
+declared power values are fed back to each power plant and affect
+their bidding strategy. In turn, changes in supply and demand in
+large markets will ultimately have an impact on the outcome of the
+tender.
+When CP and HHI are associated, the ﬁrst event is added to the
+system dynamics model and is triggered for the ﬁrst time on the
+third day with a trigger period of 15 days. The event assigns the
+current clearing price to the CP in real time, calculates the HHI value
+and updates it, and feeds the ﬁnal CP value back to each power
+plant.
+After the power demand and power costs are announced, the
+second event will allocate the SRC changes to each wind farm ac-
+cording to the market share of each power plant. Each wind farm
+adjusts its bidding capacity segment accordingly. The bid price and
+the bidding price have changed. After each market clearing, GMC
+will adjust the maximum cost of each power plant as the ﬁnal cost.
+The load of the trading center will be adjusted according to
+market supply and demand. It will feed back to the agent model
+each time the market clears, which in turn affects the bidding
+Fig. 12. Inﬂuence of GMC on electricity market price.
+Fig. 13. Inﬂuence of GMC on supply and demand of electricity market.
+Fig. 14. The interface and results of the ﬁnal hybrid simulation.
+J. Wang et al. / Energy 180 (2019) 444 e456 453
+
+process and brings the agent bid model closer to the market.
+We set the experimental time parameters to record the current
+market clearances and calculate the current average clearing price.
+The parameters b and ab are set in a power plant agent. When each
+bidding strategy is updated, the value of b is automatically
+increased by one, which can be used to record the number of
+market clearings. The parameter a represents the cumulative
+clearing price, and the parameter ab is the ratio of the parameter a
+to the parameter b, indicating the current average clearing price.
+Equation (20) is an update formula for b, where I is the number of
+selectable strategies for the factory and Pi is the probability when
+strategy I is selected.
+bt ¼ bt/C0 1 þ
+Xi
+i¼0
+Pi (20)
+6. Results and discussion
+The given example model implements a very simple load
+management algorithm to show feasibility of the simulation model
+by Anylogic (Kremers E, Durana J G D, Barambones O, [ 37]. Anylogic
+software is used in this paper to perform hybrid modeling based on
+agent and system dynamics. Modeling connotation of agent part in
+Anylogic is to enable agents to interact with each other through
+information transfer. In system dynamics part, inventory and ﬂow
+macro-control the variables, helping to study the complex adaptive
+system composed of multiple behaviors. Task settings such as
+setting the event and writing simple Java code in Anylogic
+modeling so as to run the model is of great signi ﬁcance essentially.
+The ﬁnal result of the hybrid simulation is shown in Fig. 14.
+The ﬁnal result is presented in three parts: market clearing re-
+sults, social welfare values and HHI values. Fig. 15shows the market
+clearing result. Its abscissa is the number of market clearing, the
+vertical axis is SRC, DRC, the market clearing of four power plants,
+the electricity purchased by the grid company, and the power
+purchased by large users. It can be seen that when the model runs
+for a long time, the clearing price and the clearing power will
+eventually converge, and the market supply and demand will also
+converge. When the initial value of the model is changed, due to the
+inﬂuence of the initial random number, the market clearing price
+will show different changes in multiple simulations, but the results
+are the same as above. Due to the use of the reinforcement learning
+algorithm, random cases different from the results presented in
+Fig. 15 may occur in each simulation experiment.
+The clearing price and the average clearing price are shown in
+Fig. 16. It can be seen that the bidding process of the agent model is
+irregular, but it will converge to some similar values. Through the
+process of agent learning after the market clears out, the market
+clearing electricity price will be closer to the clearing price average.
+As shown in Fig. 17, after more than 300 market clearings, the
+effect of the agent's reinforcement learning is gradually stabilized.
+At this time, the government began to raise the tax rate. Observing
+the value of social welfare, we can ﬁnd that when the market is
+most competitive (ie HHI ¼ 0.25), the value of social welfare is not
+the highest. Thus, proper market competition and an appropriate
+proportion of contract power will maximize the value of social
+welfare (social welfare value is relative value, and its value does not
+have actual reference value).
+In addition, HHI is of great signi ﬁcance in simulation experi-
+ments, and it is an important indicator to re ﬂect whether the
+market is fully competitive. The HHI index of the monopoly market
+is close to 1. When the HHI coef ﬁcient is smaller, it represents a
+more intense market competition. In the case of four power plants,
+Fig. 15. Mixed model of electricity market clearing result I (quantity and purchase
+volume).
+Fig. 16. Mixed model of power market clearing result II (clearing price and average
+clearing price).
+Fig. 17. Mixed model of electricity market and result of social welfare.
+J. Wang et al. / Energy 180 (2019) 444 e456454
+
+the HHI value of 0.25 is the optimum.
+The ﬁnal convergence value in Table 7 is the ﬁnal HHI index of
+the model. The results show that the HHI value of the simulation is
+approaching 0.25, which means that the market competition is
+already full and the market share has reached equilibrium.
+Agent-based simulation can only simulate the trading part of
+the electricity market, and cannot observe the overall operation of
+the electricity market. The system dynamics model can monitor the
+overall power market macroscopically, but it cannot capture the
+dynamic changes in details, such as the adjustment of the clearing
+price in the trading part of the electricity market. This is related to
+other indicators of the mathematical equation and does not re ﬂect
+the process of market competition. Therefore, combining the two
+models for hybrid modeling and simulation can simulate a rela-
+tively complete simulation model of the multilateral bidding for the
+electricity market.
+From the results of the hybrid simulation, we found the entire
+market operating state is stable, the clearance price will converge,
+the market competition is relatively suf ﬁcient. After hybrid
+modeling, the variables that originally needed to be arti ﬁcially
+changed in the two models can be feedback and adjusted to each
+other through hybrid modeling. So the entire model does not need
+to be set manually, showing the advantages of hybrid modeling.
+The hybrid modeling model runs well, and all the indicators are in
+line with the actual situation and have great advantages.
+In this paper, a hybrid simulation model of power market bid-
+ding based on system dynamics and agent simulation is estab-
+lished. It can be used to simulate the real power market multilateral
+bidding process. It can also be applied to the actual problems such
+as price formation mechanism, bidding mode, clearing mode and so
+on in the power market. It can help us to study the internal laws of
+the power market at a deeper level and a wider range. It is also
+helpful for electricity market managers to solve practical problems
+by means of computer simulation, and to plan and formulate pol-
+icies for the future development of the power industry. It lays a
+theoretical foundation for the government to formulate policies.
+7. Conclusion
+Modeling and simulation methods for complex systems have
+their own characteristics. Different methods are often used to solve
+different problems and achieve different simulation goals. This
+paper studies the modeling and simulation of complex systems,
+and focuses on Agent-based simulation and system dynamics
+simulation methods, giving full play to the advantages of these two
+modeling methods, and solving the problem of incomplete simu-
+lation in complex system simulation from a new perspective. Based
+on this, the hybrid simulation method of multilateral bidding in the
+electricity market is studied.
+The main contribution of this paper is as follows:
+1) An agent-based bidding simulation method of electricity market
+is studied, and an agent-based bidding simulation model is
+established to simulate the bidding process. In order to improve
+the agent's ability of bidding simulation, an agent reinforcement
+learning algorithm is proposed. Agent achieves knowledge
+acquisition and adapting environment through continuous
+interaction with environment, which makes the multi-party
+dynamic bidding process closer to reality. By running the
+simulation model, we found the clear price of the model will
+eventually converge to a stable value, and the highest and
+lowest prices of each bid will also be stable, forming a stable
+market pattern. With the experiment, we will ﬁnd that the
+initial random number has a certain in ﬂuence on the bidding
+strategy. Therefore, the trend of each clear price is an uncertain
+situation, but it will eventually converge. The convergence price
+will tend to a certain value only if the average is obtained by
+many simulation experiments.
+2) We studied the modeling and simulation method of electricity
+market operation system based on system dynamics. The dy-
+namic simulation model of electricity market operation system
+is established. The detailed analysis of electricity market system
+is completed through simulation operation. We use system
+dynamics to describe the operation of electricity market from
+macro perspective, and use large indicators to drive its opera-
+tion. By running simulation models, we found that through the
+analysis of the index capacity retention ratio, the capacity con-
+centration and the marginal cost of the electricity market, we
+ﬁnd the law of their in ﬂuence on the power market. Capacity
+retention ratio needs to be reasonably controlled; When the
+declared capacity concentration is close to 1/n (n is the number
+of power plants), the market is fully competitive and is condu-
+cive to market operations; Marginal costs need to be controlled
+reasonably by power plants, which is bene ﬁcial to both revenue
+and market supply and demand balance.
+3) A hybrid simulation method based on agent simulation and
+system dynamics simulation is studied. And the hybrid simu-
+lation model based on electricity market is established. The
+operation state in whole market is stable, which including the
+convergent clearing prices, the adequate competition and the
+collected clearing volume. To solve the problem that a single
+market regulation cannot fully re ﬂect the clearing price in the
+market competition, a mixed modeling which operate by
+changing variables arti ﬁcially through the original two models,
+can feedback and mutual adjustment each part of the whole
+model, so that the whole model does not need manual inter-
+vention, but presents advantages of combining modeling. By
+running the simulation model, we found that the entire market
+operating state is stable, the clearance price will converge, the
+market competition is relatively suf ﬁcient. After hybrid
+modeling, the variables that originally needed to be arti ﬁcially
+changed in the two models can be feedback and adjusted to each
+other through hybrid modeling. So that the entire model does
+not need human intervention, it also shows the advantages of
+hybrid modeling.
+There are fewer factors involved in the analysis of the hybrid
+model, resulting in an inaccurate grasp of the actual situation of the
+electricity market. In view of this shortcoming, further research is
+expected. Add more metrics and considerations to bring the model
+closer to reality. In addition, it is expected to add new modeling
+methods for hybrid modeling, such as discrete event-based
+modeling methods, which will make the whole model more
+comprehensive and make the problem representation closer to the
+Table 7
+HHI index for multiple simulation of power market mixed model.
+Number of simulation 1234567891 0
+HHI 0.266 0.261 0.263 0.256 0.267 0.263 0.252 0.273 0.268 0.279
+J. Wang et al. / Energy 180 (2019) 444 e456 455
+
+real situation.
+Acknowledgments
+The authors greatly acknowledge the support from National Key
+Research and Development Program of China (2016YFB0901 102).
+References
+[1] China Energy Research Association. China energy development report 2016.
+Electr. Energy 2016;37(05):640 .
+[2] Xiaoping Liu, Tang Yiming, Zheng Liping. Summary of simulation research on
+complex systems and complex systems. J Syst Simul 2008;20(23):6303 e15.
+[3] Surender Reddy S, Abhyankar AR, Bijwe PR. Market clearing for a wind-
+thermal power system incorporating wind generation and load forecast un-
+certainties. In: IEEE power and energy society general meeting, san diego, CA,
+USA, 22-26 July 2012; 2012. p. 1 e8.
+[4] Surender Reddy S, Momoh James A. Realistic and transparent optimum
+scheduling strategy for hybrid power system. IEEE Trans. Smart Grid
+2015;6(6):3114e24.
+[5] Surender Reddy S. Optimal scheduling of thermal-wind-solar power system
+with storage. Renew Energy 2017;101:1357 e68.
+[6] Tan Shuwen, Lin Shunjiang, Yang Liuqing, Zhang Anqi, Shi Weiwei,
+Feng Hanzhong. Multi-objective optimal power ﬂow for a thermal-wind-solar
+power system. In: IEEE PES Asia-Paci ﬁc power and energy engineering con-
+ference (APPEEC), Kowloon, China, 8-11 dec. 2013; 2013. p. 1 e6.
+[7] Asadi Houshyar, et al. Fuzzy-control-based ﬁve-step Li-ion battery charger by
+using AC impedance technique. In: Fourth international conference on ma-
+chine vision (ICMV 2011): machine vision, image processing, and pattern
+analysis, 8349 834939. International Society for Optics and Photonics; 2012.
+p. 1 e6.
+[8] Kaboli S Hr Aghay, Selvaraj J, Rahim NA. Long-term electric energy con-
+sumption forecasting via arti ﬁcial cooperative search algorithm. Energy
+2016a;115:857e71.
+[9] Kaboli S Hr Aghay, et al. An expression-driven approach for long-term electric
+power consumption forecasting. Am. J. Data Min. Knowl. Discov. 2016b;1(1):
+16e28.
+[10] Kaboli S Hr Aghay, Selvaraj J, Rahim NA. Rain-fall optimization algorithm: a
+population based algorithm for solving constrained optimization problems.
+J. Comput. Sci. 2017a;19(3):31 e42.
+[11] Kaboli S Hr Aghay, et al. Long-term electrical energy consumption formulating
+and forecasting via optimized gene expression programming. Energy
+2017b;126:144e64.
+[12] Raﬁeerad AR, et al. GEP-based method to formulate adhesion strength and
+hardness of Nb PVD coated on Ti-6Al-7Nb aimed at developing mixed oxide
+nanotubular arrays. J Mech Behav Biomed Mater 2016;61:182 e96.
+[13] Raﬁeerad AR, et al. Toward improved mechanical, tribological, corrosion and
+in-vitro bioactivity properties of mixed oxide nanotubes on Ti-6Al-7Nb
+implant using multi-objective PSO. J Mech Behav Biomed Mater 2017;69:
+1e18.
+[14] Delshad Modiri, Mostafa, et al. Backtracking search algorithm for solving
+economic dispatch problems with valve-point effects and multiple fuel op-
+tions. Energy 2016;116:637 e49.
+[15] Sebtahmadi SS, Borhan Azad H, Aghay Kaboli SH, Islam MD, Mekhilef S. A PSO-
+DQ current control scheme for performance enhancement of Z-source matrix
+converter to drive IM fed by abnormal voltage. In: IEEE transactions on power
+electronics, IEEE transactions on power electronics, vol. 33; 2018. p. 1666 e81
+(2).
+[16] Vincenot CE, Giannino F, et al. Theoretical considerations on the combined use
+of System Dynamics and individual-based modeling in ecology. Ecol. Model.
+2011;222(1):210e8.
+[17] Shen Fang. Development of computer simulation technology and its appli-
+cation. Technol. Commun. 2014;6(13). 232 þ 170.
+[18] Li Jiadao. etc. The system design of power market simulation is realized. J. Air
+Force Eng. Univ. (Nat. Sci. Ed.) 2003;4(2):87 e90.
+[19] Wang Haining. Research on power market simulation technology based on
+complex system multi-agent modeling. China Electric Power Research Insti-
+tute; 2013 .
+[20] Dong Hua. Experimental study on the trading mechanism of the power
+market. South China University of Technology; 2012 .
+[21] Yan Li, Li Chunjie. Preliminary study on system dynamics model of power
+market operation. East China Power 2011;39(06):859 e61.
+[22] Liu Dan, Cao Jiantong, Chen Jianming. Application of agent-based modeling: a
+review of research. Technol. Econ. 2014;33(11):96 e102.
+[23] Zhou Qing, Huang Yingying, Chen Jian. Design and simulation of dynamic
+competition model based on agent. J Syst Simul 2005;(08):1977 e81.
+[24] Santos Gabriel, Pinto Tiago, Morais Hugo, Sousa Tiago M, Pereira Ivo F,
+Fernandes Ricardo, Praca Isabel, Vale Zita. Multi-agent simulation of
+competitive electricity markets: autonomous systems cooperation for Euro-
+pean market modeling. Energy Convers Manag 2015;99:387 e99.
+[25] Francisco Silva, Teixeira Brígida, Pinto Tiago, Santos Gabriel, Vale Zita,
+Praça Isabel. Generation of realistic scenarios for multi-agent simulation of
+electricity markets. Energy 2016;116:128 e39.
+[26] Wallentina Gudrun, Neuwirth Christian. Dynamic hybrid modelling: switch-
+ing between AB and SD designs of a predator-prey model. Ecol Model
+2017;345:165e75.
+[27] Swinerd C, McNaught KR. Design classes for hybrid simulations involving
+agent-based and system dynamics models. Simulat Model Pract Theor
+2012;25:118e33.
+[28] Lewe J-H, Hivin LF, Mavris DN. A multi-paradigm approach to system dy-
+namics modeling of intercity transportation. Transport Res E Logist Transport
+Rev 2014;71:188 e202.
+[29] L€attil€a Lauri, Hilletofth Per, Lin Bishan. Hybrid simulation models e when,
+why, how? Expert Syst Appl 2010;37(12):7969 e75.
+[30] Wang Bochao, Br ^eme S /C19everin, Moon Young B. Hybrid modeling and simula-
+tion for complementing Lifecycle Assessment. Comput Ind Eng 2014;69:
+77e88.
+[31] Charles M. Macal. To agent-based simulation from system dynamics. Proc
+Winter Simul Conf 2010:371 e82.
+[32] Forrester JW. System dynamics dthe next ﬁfty years, vol. 23. John Wiley &
+Sons, Ltd.; 2007. p. 359 e70.
+[33] Liu Zhen, et al. Simulation Research on multi-agent dynamic game in power
+generation side market. J Syst Eng 2008;23(5):563 e7.
+[34] Nadine Schieritz, Andreas Grosler. Emergent structure in supply chain -a
+study Integrating agent based simulation and system dynamics modeling. In:
+The 36 st annual Hawaii international conference of the system science,
+Washington, USA; 2003 .
+[35] Forrester Jay. Industrial dynamics: a major breakthrough for decision makers.
+Harv Bus Rev 1958;36(4):37 e46.
+[36] Forrester Jay. Industrial dynamics. Cambridge, MA: MIT Press; 1961 .
+[37] Kremers E, Durana JGD, Barambones O. Multi-agent modeling for the simu-
+lation of a simple smart microgrid. Energy Convers Manag 2013;75:643 e50.
+J. Wang et al. / Energy 180 (2019) 444 e456456

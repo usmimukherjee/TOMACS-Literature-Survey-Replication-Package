@@ -1,0 +1,1162 @@
+Changing Neighborhoods–
+Neighborhoods Changing
+A Framework for Spatially Explicit
+Agent-Based Models of Social Systems
+David O’Sullivan
+University of Auckland, New Zealand
+The nature of urban neighborhoods, neighborhood effects, and the dynamics
+of residential segregation are important themes in contemporary sociological
+inquiry. Agent-based models of social systems have been widely applied in
+this context. However, both applied and model-based research in these areas
+suffer from weaknesses in underlying conceptualizations and representations
+of spatial context. Drawing on human geography and the sociospatial per-
+spective in urban sociology, a framework that enables richer and more realis-
+tic representation of urban neighborhoods in agent-based simulation models
+is proposed and outlined. The framework relies on a graph representation of
+the spatial relations among spatial locations and can accommodate well-
+deﬁned administrative zones, vague or ill-deﬁned neighborhoods, hierarchi-
+cally nested spatial zoning systems, overlapping neighborhoods, and changing
+relations among neighborhoods. Results from a preliminary application of the
+framework demonstrate its utility and possibilities for research into the effects
+of neighborhood structure on social processes.
+Keywords: neighbourhoods; segregation; agent-based models; residential
+location
+R
+ecent review articles attest to the importance for sociological inquiry of
+three themes that are central to this article: the nature of urban neighbor-
+hoods (Lamont and Molna´ r 2002), the impact of neighborhoods on social pro-
+cesses (Sampson, Morenoff, and Gannon-Rowley 2002), and the dynamics of
+residential segregation (Charles 2003). A fourth theme of this article has also
+Sociological Methods
+& Research
+Volume 37 Number 4
+May 2009 498-530
+© 2009 SAGE Publications
+10.1177/0049124109334793
+http://smr.sagepub.com
+hosted at
+http://online.sagepub.com
+Author’s Note:The author wishes to thank Elizabeth Bruch and Nigel Gilbert, who have been
+supportive throughout the long gestation of this article. Please address correspondence to David
+O’Sullivan, School of Geography, Geology, and Environmental Science, University of Auckland,
+Private Bag 92019, Auckland 1142, New Zealand; e-mail: d.osullivan@auckland.ac.nz.
+498
+
+drawn increasing attention: agent-based models of social systems as a distinc-
+tive, new research methodology in the social sciences (Macy and Willer 2002).
+The intention of this article is to develop a framework for agent-based model-
+ing of social systems thatenhances the potential of this new approach applied
+to the study of neighborhoods, to neig hborhood impacts, and particularly to
+residential segregation dynamics.
+Recent work in agent-based modeling of social systems has seen the
+growth and structure of social networks become important concerns (e.g.,
+see Pujol et al. 2005; Robins, Pattison, and Woolcock 2005). This parallels
+work in applied mathematics and physics on the properties of variously
+structured graphs (Baraba´ si and Albert 1999; Watts and Strogatz 1998),
+particularly those with the ‘‘small world’’ properties identiﬁed by earlier
+work in the social sciences (Granovetter 1973; Milgram 1967). Work on
+the evolution of social networks is tacit recognition in agent-based model-
+ing of the impact of social structures on the behavior of social actors both
+individually and collectively and represents something of a shift for an
+approach otherwise dominated by methodological individualism (Conte
+et al. 2001; O’Sullivan and Haklay 2000; Sawyer 2001, 2003).
+While such changes are to be applauded, agent-based simulation work
+on social networks generally continues to ignore another important aspect
+of how social action is structured by its context—namely, geography. Net-
+works and other social structures are embedded in geographical space in
+ways that may strengthen some links and interactions while weakening
+others. The potential importance of such effects has long been recognized
+(again largely implicitly) in attempts to measure the social segregation
+between groups based on income, class, ethnicity, or race (Duncan and
+Duncan 1955; Jargowsky 1996; Massey and Denton 1988; Massey and
+Eggers 1990; Quillian 1999; Reardon and Firebaugh 2002; St. John
+and Clymer 2000). Segregation between groups is seen as potentially
+problematic to the extent that it hinders the development of social connec-
+tions between group members. However, measures of segregation often
+ignore the geographic distributions of the population groups. This is dis-
+guised by the reliance of most measures of segregation on population
+count data aggregated to census units. While census units are spatially
+deﬁned, so measures based on them appear inherently spatial, the relative
+location of census units is not used in traditional measures of segregation.
+Recently, this issue has begun to receive more attention. For example,
+Grannis (1998) suggests that local street networks may be a more appro-
+priate way to conceptualize neighborhoods and communities than census
+units for many purposes, including the measurement of segregation.
+O’Sullivan / Agent-Based Models of Social Systems 499
+
+Reardon and O’Sullivan (2004) propose an approach to measuring segre-
+gation that relies on a user-speciﬁed proximity measurement across a
+study area. Proximity between locations might be expressed in terms of
+contiguity relations between census units, along street networks, or by
+some other more or less complex composite measurement system. This
+approach is a generalization of both traditional aspatial measures (Reardon
+and Firebaugh 2002) and a variety of measures of spatial segregation sug-
+gested over many years in geography (e.g., see Morrill 1991; White 1983;
+Wong 1993, 2002)
+The measurement of segregation reveals how space and geography are
+often not thoroughly conceptualized in sociological studies and reﬂects a
+tendency to see space as merely a container (or, with census units, a set of
+containers) within which social processes play out. This might be charac-
+terized as an ‘‘all the world’s a stage’’ view of social life—space is simply
+a backdrop, or at most a frame of reference. The idea of space as a neutral
+container is roundly rejected in contemporary human geography and,
+increasingly, in social science more widely. In human geography, this ten-
+dency emerged ﬁrst in the interrelated notions of cognitive maps and
+behavioral geography (Golledge and Stimson 1997). The commonsense
+view that people have internal representations of their environment and
+that these affect their behavior was convincingly argued by urban planner
+Kevin Lynch (1960) in his groundbreaking study of the ‘‘intelligibility’’
+of urban places. Extensive work on cognitive mapping in planning and
+psychology builds on these ideas (for a review, see Kitchin 1996). In this
+article, the important point is that perceptions or representations of spatial
+structure affect the behavior of agents acting in the spaces so perceived or
+represented.
+Of broader theoretical signiﬁcance for human geography was the
+encounter in the mid-1980s between Anthony Giddens’s (1985) structura-
+tion theory and Torsten Ha ¨ gerstrand’s (1970, 1982) time geography. In
+time geography, the interaction of time and space in the daily routines of
+individuals is recognized. A person cannot be in two places at once but
+may have interrelated social rights, responsibilities, and obligations that
+require presence in a number of places over the course of a day (or week,
+month, year, or lifetime). Furthermore, details of the interaction between a
+person’s daily routines in time and space—his or her life path—and the
+life paths of others are important. Giddens explicitly relates structuration
+theory to time geography, arguing that the spatial locations (locales)
+where social activities occur are at once the outcome of social activities
+and also inﬂuence those activities. In human geography, the idea of the
+500 Sociological Methods & Research
+
+locale as an emergent phenomenon has been applied at scales from the
+personal to the regional (Thrift 1983). In parallel with these developments,
+Marxist urban geography (Harvey 1982) and a ‘‘new’’ urban sociology
+(Gottdiener 1994), drawing heavily on the work of Henri Lefebvre (1991),
+developed similar conceptualizations of the active role of space in social
+processes. These lines of thought in human geography highlight the fact
+that human activities not only occur in space but are inﬂuenced by space
+and at the same time produce and reconﬁgure space .
+Recent work in sociology concerned with neighborhood effects (see the
+review by Sampson et al. 2002; see also Dorling et al. 2001; McCulloch
+2001) has some difﬁculty encompassing these perspectives on the role of
+space. The phrase neighborhood effects betrays a tendency, methodologi-
+cally at least, to treat neighborhood as just another variable. This assertion
+may hold, even where the conceptualization of how neighborhoods have
+effects is explicit and sophisticated about the multiple factors involved,
+such as neighborhood ties, social control, access to institutional resources,
+disorder, and so on. As Sampson et al. comment, ‘‘static models that esti-
+mate the direct effect of current neighborhood context on a particular out-
+come ... may be partitioning out relevant variance in a host of mediating
+and developmental pathways of inﬂuence’’ (2002:469). Treating current
+residential location as a proxy for neighborhood effects is tempting pre-
+cisely because untangling causal connections between neighborhood and
+individual-level outcomes is so difﬁcult. Sampson et al. again get to the
+heart of the matter when they remark that
+selection bias is probably the biggest challenge facing neighborhood-level
+research. How do we know that the area differences in any outcome of inter-
+est, such as adolescent delinquency, are the result of neighborhood factors
+rather than the differential selection of adolescents or their families into cer-
+tain neighborhoods? (2002:466)
+Seen in this context, improved ways to dynamically represent neigh-
+borhoods in models are a potentially important advance. Furthermore,
+more sophisticated models of the residential sorting of households are an
+important early application for such models. In this article I describe a fra-
+mework that enables the inclusion of some of the foregoing complexities
+into agent-based models of social systems. This framework takes its
+inspiration from Schelling’s (1969, 1971, 1978) models of residential seg-
+regation dynamics. While Schelling suggested two distinct approaches to
+representing neighborhoods in models, only one of these has been widely
+O’Sullivan / Agent-Based Models of Social Systems 501
+
+adopted in agent-based modeling work. Based on these discussions, I
+brieﬂy outline some desirable characteristics for more general models of
+urban neighborhood dynamics and propose a framework that can accom-
+modate many of these characteristics and allows richer representations of
+urban neighborhoods changed. I then present preliminary ﬁndings from a
+simple, abstract residential segregation model, focusing on the effect of
+progressively more complex types of neighborhood representation on
+model outcomes. The results point to the importance of carefully consider-
+ing the representation of neighborhoods during the development of any
+agent-based model of urban neighborhood change. The article concludes
+with a brief consideration of the prospects for further development of this
+framework.
+The Dual Nature of Neighborhoods
+Neighborhoods have occupied a central place in urban sociology, from
+Burgess (1925) and the Chicago School’s concentric rings and natural
+areas, through Hoyt’s (1939) sectors, to the elaborations on these themes
+that have followed (Harris and Ullman 1945; Mann 1965; White 1987).
+Neighborhoods are also signiﬁcant to urban planners, particularly in the
+work of Jane Jacobs (1961), whose paean to the joys of well-functioning
+neighborhoods has been variously credited and blamed for the revitalized
+neighborhoods produced by gentriﬁcation and the ‘‘new urbanism.’’ How-
+ever, the vitality of the concept of the neighborhood is almost independent
+of the difﬁculty of deﬁning the concept. Beyond a general notion that
+neighborhoods are somewhat self-contained areas within a wider urban
+environment, there is little agreement on a deﬁnition.
+Paralleling the difﬁculties in deﬁning neighborhoods at any given time
+is the challenge of understanding how neighborhoods change, especially
+when more or less ﬁxed geographical neighborhoods undergo change over
+time. As an example, the former working-class, inner-London neighbor-
+hood of Islington was among the ﬁrst to undergo gentriﬁcation in the 1960s
+(Glass 1964) and is now among the most celebrated (or decried, according
+to taste) of upper-middle-class London neighborhoods. Is Islington now the
+same place that it was then? In what sense has the identity of Islington been
+preserved across 40 years of socioeconomic change? Even without delving
+deeply into metaphysics, difﬁculties are apparent. These difﬁculties are a
+product of the dual nature of neighborhoods, which are at once both more
+or less well-deﬁned areas on the ground and rather ill-deﬁned regions
+502 Sociological Methods & Research
+
+characterized by their shared socioeconomic status or other characteristics.
+It is an important premise of the framework proposed in this article that
+both aspects of neighborhoods may change; that is, the deﬁnition of neigh-
+borhoods on the ground may change at the same time as socioeconomic
+attributes of neighborhoods are changing. Furthermore, the two processes
+may be interrelated.
+In spite of their resistance to clear deﬁnition, neighborhoods have unde-
+niable impacts on the development of a city. Two spatial aspects can be
+identiﬁed. First—and in most urban contexts the more important—is the
+operation of residential and commercial property markets. The location of
+a property is its most important attribute in a real estate market (‘‘Loca-
+tion, location, location!‘‘). The most convenient shorthand for a property’s
+location is its neighborhood, and it is clear that the neighborhood is used
+to communicate much more than the location of the property. Everything
+from the quality of schools to the quality of the coffee may be conveyed
+to a prospective buyer by naming a neighborhood. Here, the uncertain
+geography of neighborhoods—the fact that the location of a neighborhood
+is largely perceptual—works to the beneﬁt of real estate agents, who may
+push the boundaries of neighborhoods they are selling. We need not con-
+sider neighborhoods as merely social constructs to agree that the role of
+neighborhoods in deﬁning perceptions of land values is critical.
+A second reason for the importance of neighborhoods is that they are fre-
+quently a key scale at which government intervenes to effect urban change.
+Prominent among recent examples are ‘‘area-based initiatives’’ in the Uni-
+ted Kingdom (Painter and Clarence 2001) including Health Action Zones
+(Bauld et al. 2005), Education Action Zones (Riley and Watling 1999), and
+Employment Zones (Haughton et al. 2000). These examples attempt to pro-
+mote larger scale change through local policy initiatives. An example
+focused on effecting change at the neighborhood scale through policy at the
+neighborhood scale is seen in a study of the effect of promoting homeow-
+nership in poor urban neighborhoods (Cummings, DiPasquale, and Kahn
+2001). Examples of such ‘‘policy neighborhoods’ ’ include electoral wards,
+police precincts and districts, health districts, school zones, council areas,
+and so on, with electoral redistricting as perhaps the clearest example of the
+mechanisms by which such neighborhoods change.
+The perceived neighborhoods of the real estate market and the sharply deli-
+neated neighborhoods of policy makers are rarely the same, and further, these
+two categories of neighborhood have rather different spatiotemporal proper-
+ties. Real estate neighborhoods are ill deﬁned, may overlap, and may be subject
+to relatively rapid change, especially intimes of intense development activity.
+O’Sullivan / Agent-Based Models of Social Systems 503
+
+Policy neighborhoods, on the other hand,tend to be well deﬁned, are often non-
+overlapping, and change less frequently. When policy neighborhoods do
+change, they change instantaneously (at least conceptually) from one well-
+deﬁned set of boundaries to another.
+To make these ideas more concrete, these different types of neighbor-
+hood are illustrated in the map in Figure 1, where the points are the address
+locations from a university enrollment database with different symbols
+showing the different suburbs identiﬁed by individual students. Four sub-
+urbs, which we treat here as a proxy for neighborhoods, are present in this
+map: one in the west (Suburb A, the open circles), one in the east (Suburb
+B, the ﬁlled triangles), and two in the southwest and south central parts of
+the map (Suburb C, ﬁlled circles, and Suburb D, open stars). The salient
+detail about the distribution of the points is that suburbs are perceived as
+overlapping to varying degrees. While Suburbs A and B are relatively dis-
+tinct, with the open area (actually school grounds) to the west of center of
+the mapped area serving to separate them, Suburbs C and D overlap signiﬁ-
+cantly with one another as well as with Suburb A, which appears to be con-
+sidered a larger and more generalized area than either C or D. By contrast,
+an elementary school zone is shown shaded in grey. The boundaries of this
+Figure 1
+Perceptions of Neighborhood
+Note: Four suburbs (neighborhoods) dominate this map of part of a city in New Zealand. Dif-
+ferent point symbols codify suburb names as identiﬁed by a sample of households in record-
+ing their home address. A single school zone is superimposed on the map shaded in grey.
+504 Sociological Methods & Research
+
+area are well deﬁned, following road centerlines. Notably, this zone encom-
+passes places on the map that are considered by residents to belong to all
+four of the named suburbs. Even this simple example strongly suggests the
+complexity of perceptions of neighborhood.
+Schelling’s Two Models of Neighborhood
+Schelling’s (1969, 1971, 1978) models of residential segregation
+dynamics are seminal examples of agent-based models in social science
+(Macy and Willer 2002) and are a useful starting point both for exploring
+the representation of neighborhoods in models and for developing models
+of neighborhood dynamics. In Schelling’s models, two types of household
+decide to relocate (or not) based on whether they are satisﬁed (or not) with
+their current location. Dissatisfaction is a function of the numbers of neigh-
+boring households of same and opposite types. This approach assigns a cen-
+tral role to the neighborhood since decisions to leave one location and move
+to another are based on the neighborhood characteristics of both locations.
+From the current perspective, the most interesting aspect of Schelling’s
+work is that he proposes two quite different models of the neighborhood
+concept. In the continuous neighborhood , household decisions are made
+with regard to adjacent locations on a lattice (a ‘‘checkerboard’’; see
+Sakoda 1971). When households demand that some minimum fraction of
+their neighbors be similar to themselves, with dissatisﬁed households relo-
+cating, then segregation of the lattice into regions occupied exclusively by
+only one household type occurs. The type of neighborhood embodied in
+this model is a subjective or localized one, where each location is consid-
+ered by households as belonging to its own particular neighborhood. Each
+local neighborhood is similar (but not identical) to nearby local neighbor-
+hoods since they overlap to the extent that immediately adjacent squares
+in a grid share neighbors. For example, where local neighborhoods consist
+of nine locations (the location itself, and four orthogonally and four diag-
+onally adjacent locations), then orthogonally adjacent locations A and B
+share six neighboring locations, while diagonally adjacent locations C and
+D share four, as shown in Figure 2(i).
+It is noteworthy that Schelling also refers to the continuous neighbor-
+hood model as the ‘‘self-forming neighborhood’’ model (1978:147). This
+usage refers to the major ﬁnding of his work with this model: that
+extended regions occupied exclusively by one group form from the local-
+ized behaviors of households. The ‘‘self-forming’’ coinage is interesting
+because it relates indirectly to the way in which neighborhoods not only
+O’Sullivan / Agent-Based Models of Social Systems 505
+
+affect human behavior but also to how changing perceptions of neighbor-
+hoods may depend on the outcome of human behavior (in this case, their
+sorting in space by race or class).
+Schelling also explored the effect of different household tolerances in
+two populations with respect to bounded neighborhoods. In this neighbor-
+hood model (illustrated in Figure 2(ii)), each location belongs to one and
+only one neighborhood so that a neighborhood is a ﬁxed container, or col-
+lection of locations, with a given racial or ethnic mix at any point in time.
+This is a direct counterpart to the census tract view of the neighborhood
+implicit in traditional approaches to the measurement of segregation.
+Using this model, Schelling examined the dynamics of neighborhood
+change in terms of the entry and exit of households of different types and
+Figure 2
+Schelling’s (i) Continuous and (ii) Bounded Neighborhoods
+Note: (i) Overlap of neighborhoods in the Schelling continuous neighborhood case. This type
+of neighborhood is commonplace in contemporary agent-based and cellular modeling meth-
+ods. (ii) Bounded neighborhoods imply that two locations in one neighborhood (X and Y)
+share common neighbors, whereas a location in a different neighborhood (Z) has a comple-
+tely different set of neighbors. Locations are indirectly neighbors to one another via their
+common location inside a bounded neighborhood.
+506 Sociological Methods & Research
+
+showed that for many tolerance ratios between two groups, the only stable
+neighborhoods are those with all the residents from only one group. Note
+that Schelling considered a single bounded neighborhood in isolation, with
+incoming and outgoing streams of households. In principle, it is straight-
+forward to model several such neighborhoods with transfers among them,
+which is presumably what Schelling envisaged as a more complete model
+of urban residential dynamics.
+How Neighborhoods Make a Difference to Models
+Schelling’s work is compelling because it tells a believable story of
+White ﬂight from the American inner city. In the bounded model, the
+departure of a few less tolerant (or better resourced) households and their
+replacement by different incomers leads to a tipping point beyond which
+the neighborhood inexorably switches to one composed exclusively of the
+incomers. This story coheres not only with oral histories of neighborhood
+change in the United States (Suarez 1999) and casual observation but, on
+a (perhaps) more hopeful note, with the dynamics of gentriﬁcation, when
+wealthier incomers may presage inexorable revival, not decline. At the
+same time, the continuous model places this explanation in a wider con-
+text that accounts for the emergence of larger scale segregation across an
+urban region.
+However, Schelling’s models are so simple as to raise questions about
+how well they portray the neighborhood dynamics of real cities. Recent
+variations on the basic theme of the models raise interesting questions.
+For example, extensions of the continuous space model have been devel-
+oped involving extended household ‘‘vision’’ so that neighborhoods
+become larger than the immediate four or eight neighbors of each checker-
+board square. Laurie and Jaggi (2003) suggest that longer-range agent
+vision leads not to more intense segregation (as suggested by Epstein and
+Axtell 1996; Wassermann and Yohe 2001) but to stable mixed neighbor-
+hoods. However, this is partly because with increasing household vision,
+local neighborhoods represent larger samples of the whole urban area. For
+initially random conﬁgurations, this means that neighborhoods become
+more similar to one another so that unhappy households cannot ﬁnd any-
+where ‘‘better’’ to live. Since everywhere is mixed, nowhere is better than
+anywhere else for an intolerant household, and mixed neighborhoods (pre-
+sumably of many unhappy households!) remain stable.
+In a thorough exploration of the interaction of neighborhood size and house-
+hold preference effects, Fossett and Waren (2005) show that Laurie and Jaggi’s
+O’Sullivan / Agent-Based Models of Social Systems 507
+
+(2003) ﬁndings are of questionable relevance to real residential segregation
+problems for two reasons. First, using a 50:50 split of households favors the
+occurrence of stable mixed neighborhoods, beyond what is likely in real-world
+contexts where small minority groups are more common. Second, and of more
+relevance to this article, Fossett and Waren suggest that it is important that
+‘‘speciﬁcations of [residential] search move away from idiosyncratic imple-
+mentations used in the literature on agent-based modelling and towards forms
+consonant with substantive theory and research on residential segregation’’
+(2005:1899). Their research strongly suggests that if this is done then ‘‘the
+impact of preferences on segregation becomes stronger and more robust and
+interactions involving vision take on much less importance’’ (2005:1900). In
+brief, the outcomes of residential segregation models may strongly depend on
+the way that neighborhoods are conceptualized and represented.
+It should be stated that empirical validation of Schelling’s models
+remains elusive and a challenge for recent work in this vein. Clark (1991)
+has shown that although Schelling’s hypothetical schedules of residential
+preference for different neighborhood mixes do not accurately reﬂect sur-
+vey response data from four U.S. cities, the implication of Schelling’s work
+that stable mixed neighborhoods are unlikely in the U.S. context is consis-
+tent with such data. It is also consistent with ﬁndings from more recent
+work on individually expressed residential preferences (see Charles 2000).
+More generally, opinions remain divided in the U.S. context as to which
+of the residential preferences of Whites (for not ‘‘too many’’ Blacks) or of
+Blacks (for more mixed neighborhoods) is the more important driver of
+residential patterns that remain strongly segregated (Ihlanfeldt and Scaﬁdi
+2004). It is clear, however, that incompatible neighborhood preferences of
+different groups, given their relative numbers in the population, are an
+important factor (Vigdor 2003). It is evident from Fossett and Waren’s
+(2005) work in particular that how neighborhoods are perceived is of criti-
+cal importance here because this is the context both for household evalua-
+tions of their current and potential residential settings and for the
+measurement of the segregation that may result.
+Desiderata for Generalized Neighborhood Models
+This article aims to present a framework for agent-based modeling of
+social systems that allows richer, more satisfactory representations of the
+complexity of neighborhoods and neighborhood relations. In this section,
+desirable characteristics for such a framework are discussed, while keeping
+in mind the foregoing discussion. This is not a complete list but focuses on
+508 Sociological Methods & Research
+
+geographical aspects of neighborhoods. Some signiﬁcant aspects of neigh-
+borhoods not included in this list are brieﬂy discussed in the conclusion.
+Neighborhoods at multiple scales. Neighborhoods exist at multiple
+scales, from that of the immediate surroundings of a location—in an urban
+context, the street—to larger formally and informally named areas in a city,
+such as neighborhoods, precincts, school zones, local authorities, health
+boards, and so on. In an urban context, at the largest scale we might con-
+sider boroughs or cities within a metropolis, such as the ﬁve boroughs of
+New York or the many cities of the Los Angeles region. In the urban resi-
+dential case, it is clear that when considering a location, households attend
+to both immediate (street-level) characteristics of a location as well as
+neighborhood aspects (workplaces, schools, and services), regional scales
+(local taxes), and ultimately national and global comparisons among differ-
+ent cities. While it is tempting to see different scaled neighborhoods as
+forming a nested hierarchy of one type of neighborhood within another, it is
+important to realize that this will not be a good representation in all cases,
+so any framework must be able to accommodate both hierarchical and non-
+hierarchical cases.
+Changing neighborhoods. Endowing neighborhoods with the ability to
+change their constituent locations over time is desirable. As has been
+noted, neighborhoods simultaneously are products of social processes and
+inﬂuence the patterns of interaction of social processes. A modeling fra-
+mework that allows for the emergence of neighborhoods in terms of which
+locations belong to which neighborhoods—their ‘‘self-formation,’’ as
+Schelling (1978:147) would have it—enhances considerably the potential
+of agent-based models to represent real urban environments. Such a fra-
+mework would see neighborhood structures and social processes coevol-
+ving over time. Perhaps the best example to date of work in this style is
+Axelrod’s (1997) model of cultural emergence, in which cultural groups
+and the structure of relations among individuals interact.
+Realistic geography. While the checkerboards of traditional agent-
+based models have nice computational properties, it is likely that by gloss-
+ing over aspects of the variation between real locations (e.g., relative
+isolation) they inhibit understanding of urban neighborhood dynamics in
+real cities. Urban models that develop these aspects of cellular models
+have been presented (Benenson, Omer, and Portugali 2002; Flache and
+Hegselmann 2001; O’Sullivan 2002; Semboloni 2000; Shi and Pang
+2000). While it remains poorly understood how the geographical structure
+of urban environments can affect the dynamics of social processes, it is
+O’Sullivan / Agent-Based Models of Social Systems 509
+
+desirable that modeling frameworks enable exploration of these aspects.
+The contemporary, widespread availability of geographically explicit data
+in various geographic information system (GIS) formats makes this desi-
+deratum of potentially even greater value since it would enable an easier
+transition from abstract theoretical models used for exploration and theory
+building across to applied real-world models used to inform policy choices
+and planning.
+Distinct and vague neighborhoods. As noted above, some neighbor-
+hoods are vaguely deﬁned, while others are unambiguous. A model frame-
+work encompassing well-deﬁned administrative neighborhoods (similar to
+the bounded neighborhood model) and ill-deﬁned neighborhoods (similar
+to the continuous or other models) across a range of scales is desirable. A
+framework capable of representing both types of neighborhood could
+enable exploration of the interactions between these two types of geo-
+graphic entity.
+Feedback from neighborhoods to household characteristics. Finally,
+the possibility that residence in a neighborhood or location might affect
+the behavior of households, or at least some characteristics of households,
+would be welcome. Work on the interactions of Israelis and Arabs in Tel-
+Aviv (Benenson 1999; Portugali, Benenson, and Omer 1994, 1997) has
+developed this idea in the context of residential segregation by allowing
+the out-of-group tolerance of households to change in response to shared
+residence over time with households not of their own group or who are
+more (or less) tolerant. Such effects are relatively easy to incorporate into
+agent-based models by having the behavioral attributes of agents (e.g.,
+their tolerance of difference) change over time dependent on their neigh-
+bors. Development of this aspect of simulation models will be critical to
+their usefulness for exploring neighborhood effects since it is precisely the
+way that local behavioral norms may diverge from global norms that is
+central to many posited effects.
+Proposed Model Framework
+I now outline a framework that accommodates the ﬁrst four of the
+above characteristics, while leaving open the ability to incorporate the
+ﬁfth over time. This model builds on an earlier model (O’Sullivan,
+Macgill, and Yu 2003), which I brieﬂy outline ﬁrst. That model was a
+hierarchical version of the Schelling model, combining his two
+510 Sociological Methods & Research
+
+neighborhood types. Household agents examine both immediately neigh-
+boring households in a lattice of residential locations (the continuous
+neighborhood) but also consider the aggregate nature of the bounded
+neighborhood (or district) containing their residential location. The model
+thus consists of a number of bounded neighborhoods, each containing a
+number of residential locations at points on a lattice, as illustrated in Fig-
+ure 3. Note that the grid structure is for convenience of illustration only,
+and arbitrary geographies might be used for both locations and districts, as
+in Figure 4.
+Formally, this model consists of two graphs, with GL containing loca-
+tions where household agents may reside and GD containing districts.
+Each graph consists of two sets, one of vertices representing the entities it
+contains (i.e., locations or districts) and one of edges representing the rela-
+tions between those objects. Thus, we have
+Figure 3
+Model of Hierarchical Bounded Neighborhoods
+Structure of the simple hierarchical Schelling model. Small grid cells are residential locations
+with a continuous neighborhood structure. Large cells are bounded neighborhoods, whose
+aggregate state is also considered by agents in residential decision-making behavior. Arrows
+show relations inﬂuencing decision-making. Household A, at the centre of a bounded neigh-
+borhood is affected by immediately neighboring agents, and by the aggregate state of the
+containing bounded neighborhood. Household B, at the edge of its containing bounded neigh-
+borhood, is affected by neighbors both inside and outside the bounded neighborhood, but
+only by the containing bounded neighborhood.
+O’Sullivan / Agent-Based Models of Social Systems 511
+
+GL = ðVL, ELÞ and GD = ðVD, EDÞ, ð1Þ
+with the vertex sets deﬁned as
+VL = f11 ... lng and VD = fd1 ... dng, ð2Þ
+where li and di denote locations and districts, respectively. The edge sets
+are then
+EL = fhlilj i : li, lj ∈ VLg and ED = fhdidj i : di; dj ∈ VDg: ð3Þ
+Figure 4
+Example of an Alternative Model of Neighborhood Boundaries
+Note: The hierarchical Schelling model in a real setting. Census tracts (hollow black outlines)
+contain block groups (grey ﬁlled white outlines). Focusing on interrelationships in the south-
+east corner of the map, tract A may be affected by events in neighboring tracts B through D,
+or by block groups 1 through 4, which it contains. Block group 1 (shaded darker grey) is
+directly affected by neighboring block groups 2 through 4 (in the same tract), and by block
+groups 5 and 6 in adjacent tract D. It is also affected by the overall state of its tract A, and,
+less directly, by block groups in tracts B through D.
+512 Sociological Methods & Research
+
+In addition to these two graphs, the containment relationships between
+districts and locations may be considered a subset of the cross product of
+the two vertex sets. That is,
+EDL ⊂ VD × VL: ð4Þ
+All relations in the graph are binary; that is, they exist or they do not.
+Furthermore, while the formalism is presented here as a graph partitioned
+into two vertex sets, the formalization generalizes to a partitioning of the
+graph into any arbitrary (integer) number of vertex sets, and these need
+not necessarily be hierarchically nested. Details of this formalism are set
+out in the context of cellular models by O’Sullivan (2001) and are closely
+related to geo-algebra (Takeyama 1997; Takeyama and Couclelis 1997).
+Extending this hierarchical spatial model to allow for bounded neigh-
+borhoods whose constituent locations change over time is simple. Instead
+of binary edges relating locations and districts, the formal model remains
+as above, with the addition that a weight or value is associated with each
+graph edge. This minor change to the model structure has far-reaching
+implications. Varying strengths of relationships between locations,
+between districts, and between districts and locations can be represented.
+For example, marginal locations on the edge of a district can be repre-
+sented as members of a district with only a weak membership relationship.
+Furthermore, if agent actions are allowed to affect edge weights, then
+weights can change to represent changing neighborhood relationships. For
+example, based on continuous similarity in their social mix over a period
+of time, two locations initially considered to be in different neighborhoods
+may come to be considered in the same neighborhood. This possibility is
+explored in the model presented in the remainder of this article. Note also
+that in well-deﬁned neighborhoods, location-to-district membership edge
+weights can remain binary with values limited to either 0.0 (not a mem-
+ber) or 1.0 (a member) only.
+An Example Implementation
+In this section, I present results based on the above framework that
+demonstrate the effect of successively incorporating more complex neigh-
+borhoods into a simple model implemented in NetLogo (Wilensky 1999).
+I note from the outset that these results are preliminary in nature and are
+intended only to show how the ways in which neighborhood concepts are
+represented in models may affect the outcomes. More complete results
+O’Sullivan / Agent-Based Models of Social Systems 513
+
+from this model will be presented elsewhere. In this article, the intention
+is merely to demonstrate that exploration of the impacts on model out-
+comes of how neighborhoods are perceived and represented is a fruitful
+avenue for further research.
+The elements of the model are as follows:
+A. Spatial structure consists of a 36 × 36 lattice of locations with a Moore
+neighborhood topology, so that each location is linked to its 8 closest
+other locations as neighbors, with an initial link weight of 1. The lattice
+is nontoroidal, so edge and corner locations have only 5 and 3 neighbor-
+ing locations, respectively.
+B. Temporal update occurs in ‘‘rounds’’ whereby each household taken in
+random order is given an opportunity to exit the model (see F below)
+and be replaced by a new entrant household. New entrant households
+choose a location as outlined in G below. At the end of a full round of
+exits and entries to the model, link weights between locations may be
+adjusted (see H), and the assignment of locations to districts may change
+(see I).
+C. Agents in the model each represent a single household. Households are
+of two types, red and blue, and each exclusively occupies a location.
+Households exit the model and new households enter as described in F
+and G below.
+D. Locations are vacant or contain a household agent. Location-to-location
+neighborhood relations (‘‘links’’) in the lattice are initially full strength,
+with a weight of 1. In some model runs, a minimum link weight para-
+meter, wmin (0 ≤ wmin ≤ 1), allows the weight associated with a link to
+vary in the range wmin to 1. This occurs based on the history of occupation
+of neighboring locations by households (see H below). For each location,
+a continuously updated record is maintained of a total weighted count of
+households of each type (red and blue) that occupy neighboring locations.
+Where link weights are 1, this is equivalent to a simple count of reds and
+blues. When link weights vary, households of each type on neighboring
+locations are summed according to the associated link weights.
+E. Districts are composed of nonoverlapping subsets of all the locations in
+the model. In a model run, an initial assignment of locations to districts is
+made whereby a larger scale grid of districts is superimposed on the loca-
+tions. Districts may consist of 4 × 4, 6 × 6, or 9 × 9 square blocks of loca-
+tions (other assignments are possible but not considered here). All
+location-to-district assignments are binary, as discussed in the previous
+section. Over time, locations may switch from one district to another
+514 Sociological Methods & Research
+
+based on the relative total weights of their links to locations that are mem-
+bers of their own and neighboring districts. The mechanism by which this
+occurs is discussed in I below. Districts maintain a count of the total num-
+ber of households of each type occupying their constituent locations.
+F. Household exit from the model occurs randomly but is biased by the
+household composition of the continuous and bounded neighbourhoods
+of the household. Households are considered for exit from the model in
+random order, and they exit with probability p, determined according to
+a logistic function,
+pðCÞ = 1
+1 + ek − rC , ð5Þ
+where
+k is a chosen to set a baseline probability p0 of exit when C = 0: In the runs
+considered here, for a baseline probability of exit of .05, k = 2:944439.
+r is a ‘‘movement-bias’’ parameter that controls the sensitivity of the
+response of p to changing neighbourhood composition, C.A t r = 0,
+neighborhood composition has no effect on p, and all households may
+exit the model with equal probability. In the model runs considered here,
+r is set greater than 0 so that p is a nondecreasing function of C.
+C is a value between 0 and 1, representing the composite, continuous, and
+bounded neighbourhood composition. C for a household is calculated by
+determining CD, the fraction of occupants of the containing district that
+are of opposite type to the household, and CL, the fraction of the
+weighted sum of occupants of neighboring linked locations that are of
+opposite type to the household. These fractions are combined to into a
+composite composition C according to
+C = ð1 − bLDÞCL + bLDCD, ð6Þ
+where bLD is a location-district balance factor between 0 and 1, which
+controls the relative importance of immediate continuous neighborhoods
+relative to bounded neighborhoods. With bLD = 0 only the continuous
+neighborhood composition affects household decisions to exit the model,
+while with bLD = 1 only the district composition affects decisions to
+exit.
+The overall effect of these mechanisms is that households choose to
+leave the model with a probability that is greater (for r> 0) when there
+O’Sullivan / Agent-Based Models of Social Systems 515
+
+are more households of opposite type in their continuous and bounded
+neighborhood. This is ana logous to typical Schelling model formulations
+but is preferred here because it allows an underlying base rate of exit to
+be combined with exit conditional on neighborhood composition. In the
+example runs reported here, the movement-bias parameter, r,w a ss e tt o
+2.5 or 5 in most cases so that households with C = 1 have a probability
+of exit of approximately .39 or .89, respectively.
+G. New household entry occurs when an existing household exits the
+model. A new entrant household is assigned a color at random depend-
+ing on a model parameter controlling the composition (in terms of the
+mix of reds and blues) of new entrants to the model. Combined with
+the exit process, this allows exploration of scenarios such as a starting
+composition with a 10/90 mix of reds and blues transitioning to a 25/75
+mix. This is more satisfactory than the rather constrained setting in
+many segregation models in which a ﬁxed composition mix is shufﬂed
+until it settles. New entrants locate at an available vacant location by
+selecting a random set of vacant locations of a speciﬁed size A (in
+model runs A = 5, typically) and locating in the location with the low-
+est composition C, calculated as described in F above. Where two or
+more locations have identical C, the preferred location is selected at
+random.
+With appropriate parameter settings, the model as described so far
+behaves similarly to many abstract re sidential segregation models, as is
+shown in Experiments 1 and 2 in the Experiments and Results section.
+Two further processes in the model begin to implement the more com-
+plex representation of neighborhood s discussed in the ﬁrst half of this
+article:
+H. Continuous neighborhood update is represented by allowing the weights
+of neighborhood links between locations to vary between some deﬁned
+lower limit wmin and 1. Changes to link weights are calculated after each
+round of household relocations by examining the recent history of loca-
+tion occupancy over the previous Th rounds of the model. Location occu-
+pancy is recorded as a list of values from the set f−:5, 0, :5g, which
+represent respectively red, vacant, and blue occupancy. The difference
+between linked locations is then calculated as the average of the absolute
+difference between the locations over the previous Th rounds. Subtract-
+ing this value from 1 yields a new current relative link weight, which is
+516 Sociological Methods & Research
+
+then rescaled to a value between wmin and 1 to arrive at a new value for
+the weight of the link. Thus,
+wij ðt0Þ = wmin + ½1 − wmin/C138 · 1 − 1
+Th
+Xt0 − 1
+t = t0 − Th
+jviðtÞ − vj ðtÞj
+"#
+, ð7Þ
+where vi(t) and vj(t) are the occupant values at linked locations i and j at
+time t, and Th is the time period over which a history of occupancy is
+retained. For low values of Th, the link between locations with different
+types of occupant will weaken rapidly or, conversely, strengthen rapidly
+with similar occupants. For high values of Th, such changes will occur
+more slowly.
+I. Bounded neighborhood update is associated with changes in continuous
+neighborhoods. At the end of each round of relocations, and following
+any changes to link weights, membership of locations in districts may
+change. This occurs where the total weight of links a location has to loca-
+tions in any other district is greater than the total weight of links to loca-
+tions inside its current district. In such a case, a location switches to the
+district with which it is most strongly linked. Where a location is equally
+strongly linked to two or more districts, it switches districts to one of
+those districts selected at random.
+Experiments and Results
+In this section, preliminary results from some simple experiments are
+reported. It must again be emphasized that the purpose of these experi-
+ments is to demonstrate basic features of the model, focusing in particular
+on the effects of features introduced in E, H, and I. A summary of the
+parameter settings for the experiments is shown in Table 1.
+Experiment 1: Simple Segregation Behavior
+First, we establish that the behavior of the model is similar to other
+residential segregation models. Results from multiple runs ( n = 50) of the
+model for a range of values of the movement-bias parameter r with ﬁxed
+new entry attempts ( A = 5), and for a range of values of the new entry
+attempts parameter A for ﬁxed movement bias ( r = 2:5), are shown in
+Figure 5. These graphs show increases over 100 rounds of household exit
+and entry for a standardized measure of the fraction of like neighboring
+O’Sullivan / Agent-Based Models of Social Systems 517
+
+Table 1
+Summary of Model Parameter Settings in Experiments
+Experiment
+Parameter 1 2 3 4 Notes
+Location-district balance, bLD N/A N/A .5 .5 Varies local versus district-level behavior
+Bounded neighborhood sizes N/A 4 × 4, 6 × 6, 9 × 9 6 × 66 × 6 Initial district sizes only
+Baseline probability of exit .05 .05 .05 .05 Set by adjusting the k parameter in equation (8)
+Movement bias, r 0, 0.5, 1, 1.5, 2.5, 5, 10, 20 2.5 2.5 5 Affects probability of exiting the model as in equation (8)
+Move attempts, A 1, 2, 3, 5, 10, 20 5 5 5 High values make new entrant households more selective
+Location history, Th N/A N/A 2, 5, 10, 20 5 Time period over which location occupancy is compared
+to adjust link weights
+Minimum link weight, wmin N/A N/A 0, .1, .25 .1 Lower values increase the effect of changing link weights
+over time
+District update N/A N/A Off Off, On
+Vacancy rate .1 .1 .1 .1
+Fraction red, pR(0) .5 .5 .5 .1
+Entrant fraction red, pR .5 .5 .5 .25
+Note: Settings that vary are indicated in bold.
+518
+
+households in each household’s continuous neighborhood. If nR and nB
+are the numbers of red and blue households in the model, then the
+expected value of the average fraction of like neighbors, E(plike), is
+EðplikeÞ = nR
+nR + nB
+· nR − 1
+nR + nB − 1 + nB
+nR + nB
+· nB − 1
+nR + nB − 1 : ð8Þ
+If the simple average fraction of like neighbors of households is plike, then
+a simple standardized measure of segregation in the model is given by
+s = Plike − EðplikeÞ
+1 − EðplikeÞ : ð9Þ
+Clearly, the model produces rapid segregation of households. One dif-
+ference from more standard segregation models is notable. Segregation
+proceeds to very high values since there is a continuing segregation pres-
+sure, even when the model is already strongly segregated. This differs
+from models in which households stop relocating once satisﬁed, resulting
+in a relationship between the intolerance of households and ﬁnal patterns
+of segregation. Lower levels of segregation in the long run for this model
+occur only when new entrant households are not selective about their
+Figure 5
+(i) Movement-Bias Parameter r With Fixed New Entry Attempts and
+(ii) New Entry Attempts Parameter A for Fixed Movement Bias
+Note: The effects of changing movement-bias and the number of attempts to locate on time
+series evolution of standardized segregation averaged over 50 runs of the model. In (i)
+attempts was held ﬁxed at 5, and values of 0, 0.5, 1, 1.5, 2.5, 5, 10 and 20 were applied. In
+(ii) movement-bias was held ﬁxed at 2.5, and values of 1, 2, 3, 5, 10 and 20 were applied.
+O’Sullivan / Agent-Based Models of Social Systems 519
+
+location, as occurs when the number of new locations considered is set to
+1. In this case, new entrants effectively locate at random, and segregation
+is due solely to the movement-bias parameter, making it more likely that
+households will exit from locations where there are many households of
+different types.
+Experiment 2: Varying District Size
+Next, we vary the size of districts in the model and the location-district bal-
+ance factor, bLD, to see how these affect outcomes measured in terms of the
+segregation measure, s. Results are shown in Figure 6. The effects here are
+more complex. Figure 6(i) shows, for a ﬁxed district size of 6 × 6 locations,
+changes in a standardized segregation time series asbLD is varied from purely
+local behavior (bLD = 0) to strongly district-level behavior (b LD = :9). This
+changes both the shape of the time series and its ﬁnal value. Initial segregation
+occurs more rapidly as the district-scale behavior becomes stronger because
+many households in mixed districts choose to exit the model. Also with stron-
+ger district-level behavior, segregation tends to settle on a ﬁnal lower value
+before 100 time steps have elapsed. Withpurely local behavior, there is still a
+clear upward trend in segregation even after 100 time steps. This difference is
+Figure 6
+Changes in (i) District-Level Behavior and (ii) District Size Over Time
+Note: Effects of introducing districts (bounded neighborhoods) on time series evolution of
+segregation (averaged over 30 runs of the model). (i) as the district-level behavior of house-
+holds increases ( bLD = 0, 0.25, 0.5, 0.75, 0.9), segregation occurs more rapidly, but stabilizes
+sooner and at a lower level. (ii) smaller district sizes result in lower segregation as measured
+by s (see text).
+520 Sociological Methods & Research
+
+because districts tend to ‘‘ﬁx’’ the two different types of households in different
+regions of the model, leading to reduced rates of exit and entry, whereas with
+low attention to the districts there is a continuous pressure to segregate further.
+In Figure 6(ii), the effect of different sizes of districts is shown whenbLD = :5.
+Smaller districts allow different typeso fh o u s e h o l d st or e m a i na sn e i g h b o r s
+across district boundaries over time and thus produce lower levels of the local
+segregation measure,s. As districts become larger, the number of local neigh-
+bors affected by district boundaries falls and higher measured levels of segre-
+gation occur.
+Experiment 3: Changing Local (Continuous) Neighborhoods
+Next, we introduce varying link weights (see H above). Two para-
+meters govern the operation of this effect: the minimum possible link
+weight between locations, wmin, and the location history, Th, which con-
+trols the speed at which link weights adjust to persistent similarity or dif-
+ference in the household types that occupy linked locations. The
+important point here is that the underlying segregation behavior of the
+model is robust to these parameters, although introducing varying model
+structures affects measurement of segregation, necessitating the use of dif-
+ferent measures in the next experiment. Results in Figure 7, averaged over
+30 runs of the model based on both the standardized local segregation
+measure s and the dissimilarity index D of segregation (see Reardon and
+Firebaugh 2002), are shown for 60 time steps of the model. The s measure
+shows distinct kinks in its initial evolution, which result from a burn-in
+period in which link weights adjust from their initial value of 1 to a range
+of values between wmin and 1. The location history length Th (set to 5, 10,
+20) is clearly visible in these time series. The D measure shows no such
+effect since it does not depend on the link weights. Signiﬁcantly, both
+measures clearly indicate that segregation, however it is measured, is
+robust to the introduction of adjustable link weights, as we might expect,
+although it is apparent that in a model with a changing spatial structure
+the measurement of segregation over time is problematic.
+Experiment 4: Neighborhoods as Emergent and Changing Entities
+Finally, we enable updating of the constituent locations of each district
+(see I above) and observe the effects of this on a transition from an initially
+random system composition with 10 percent red households to one in which
+the incoming stream of households is composed of 25 percent red
+O’Sullivan / Agent-Based Models of Social Systems 521
+
+households. We expect, in time, to see a relatively stable system composi-
+tion with 25 percent red households and, based on the previous experi-
+ments, strong segregation between red and blue areas in the model. The
+point of interest here is how the model’s path toward this state differs when
+districts can change their constituent locations compared to when they can-
+not. Two single-model runs with the same initial conﬁguration of locations
+were carried out, with district updating turned off and then turned on, and
+other parameters set as detailed in Table 1. As is clear from Experiment 3,
+measures of segregation are not necessarily useful to track these scenarios
+because segregation is a robust effect and because the changing spatial
+structure of the model makes measurement of segregation over time proble-
+matic. Instead, we track the proportion of red households in the model over-
+all and in each district and also a count of the number of districts in which
+the proportion of red households is 95 percent or greater.
+Figure 8 shows results for a single pair of model runs. In Figure 8(i), with-
+out district updating, progress toward an overall 25 percent red composition
+occurs by a series of initially rapid invasions of districts that switch to 100
+percent red. By Time Step 20, 4 districts are completely red in composition.
+Figure 7
+Changes in Segregation Over Time
+Note: Effects of introducing location history and variable link weights on measurement of
+segregation by s and D. Location history and min link weights were varied over the ranges of
+values shown in table 1.
+522 Sociological Methods & Research
+
+Two more districts switch in the next 40 time steps, and 2 more districts
+switch by 100 rounds of exit and entry, making 8 in total. The overall pro-
+portion of red households in the model does not reach 25 percent during this
+time frame (recall that there are 36 districts in the model, so 9 red districts
+would be required). This pattern of initial rapid invasions at progressively
+greater time intervals is typical. As the model segregates into solidly red
+Figure 8
+Segregation Over Time (i) Without and (ii) With District Updating,
+(iii) Final Distribution of Households and District Boundaries, and
+(iv) Neighborhood Link Weights
+Note: (i) and (ii) show time series evolution of the proportion of red households for 36 dis-
+tricts and overall, along with a count of the number of districts with > 95% red households.
+(i) is with no update of constituent locations in districts, and (ii) is with update. (iii) shows
+the ﬁnal map of the distribution of red (shown in black) and blue (shown in grey) households,
+and the boundaries of the six districts with large proportions of red households. (iv) shows
+the ﬁnal conﬁguration of the neighborhood links with link strength from white (minimum) to
+black (strongest).
+O’Sullivan / Agent-Based Models of Social Systems 523
+
+and blue districts, the probability of sufﬁcient vacancies occurring in a blue
+district for an inﬂux of red households to switch it falls, and growth in the
+overall proportion of red households slows.
+In Figure 8(ii), results are shown for the same starting conﬁguration
+with district updating enabled. Here, something different happens. Again,
+initially several rapid invasions occur, with ﬁve districts switching to red
+during the ﬁrst 20 rounds of exits and entries. After 60 rounds, another dis-
+trict has switched; however, by this time, some districts are shrinking
+rapidly (see Figure 9), and this district reverts to zero presence of red
+households soon after. Even so, the proportion of red households overall
+continues to increase because some of the high-proportion red districts are
+growing. This run of the model makes greater progress toward a 25 percent
+overall proportion of red households (albeit by a small margin), even
+though after 100 rounds of exits and entries there are only six districts with
+a high proportion of red households. Thus, the inﬂux of reds is accommo-
+dated not by successive switching of a ﬁxed set of neighborhoods but by
+growth in districts themselves. Figures 8(iii) and 8(iv) show the ﬁnal distri-
+bution of households, district boundaries, and neighborhood link weights
+Figure 9
+Change in District Size and Composition Over Time
+Note: Evolution of district sizes for the same model run as in 8(ii). The heavy lines are the
+districts with a high proportion of red households.
+524 Sociological Methods & Research
+
+in the model and together with Figure 9 demonstrate how changing district
+shapes become an important factor in the model.
+Discussion and Conclusion
+As has been noted, Fossett and Waren (2005) offer a more substantive
+investigation of the behavioral characteristics of Schelling-type models.
+The work reported here is concerned primarily with the methodological
+issue of how neighborhoods are represented in simulation models of social
+systems. Nevertheless, even the preliminary results presented here conﬁrm
+that how neighborhoods are represented in models, how they are perceived
+or acted on by agents, and how and whether the spatial structure of neigh-
+borhoods changes over time may all affect the dynamics and ﬁnal outcomes
+of a model. This reinforces the point made by Fossett and Waren that the
+bounded neighborhood concept is extremely important to the development
+of more convincing models of residential segregation and relocation beha-
+vior than has been typical in the agent simulation literature. While Fossett
+and Waren conform to previous usage in referring to bounded vision, these
+results suggest that it may be more useful to think in terms of household
+perceptions of neighborhood. In particular, a richer range of representations
+of neighborhood is necessary than the by now classic checkerboard view
+with continuously varying neighborhoods locally perceived by agents.
+In this article, I presented a framework for richer representation of
+neighborhoods in agent-based models. The framework can accommodate
+neighborhoods at multiple scales, neighborhoods that are both well and ill
+deﬁned, neighborhoods that are either hierarchically nested or that over-
+lap, and neighborhoods embedded in the real geography of streets, land
+parcels, and so on, as required. These capabilities still leave out much of
+the complexity of real neighborhoods. In the example model presented, all
+households perceive the neighborhood structure to be the same. While it is
+easy to imagine incorporating misperception by agents of a notional
+‘‘real’’ neighborhood structure into a model, and somewhat more difﬁcult
+but still possible to envisage each agent with its own version of the neigh-
+borhood structure, this would be computationally challenging for the
+model in its current form. This framework could also accommodate a
+number of different topologies of relation between both spatial locations
+or between agents (such as a social network). It also remains an open
+question whether the net effect of incorporating all these aspects would be
+to average things out to a situation akin to much simpler models.
+O’Sullivan / Agent-Based Models of Social Systems 525
+
+Notwithstanding these omissions, a simple model adopting the proposed
+framework has been developed that introduces high-level districts (bounded
+neighborhoods) that change in the simulated space in response to changes in
+the locations of households. While thisis a simpler change conceptually than
+either individualized perceptions or multiple topologies, even this change turns
+a relatively simple model into a formidably complex entity whose analysis pre-
+sents signiﬁcant methodological challenges—as is clear from Experiment 4 in
+the previous section. When both the locations of households and the structure
+of the neighborhoods in which households reside are subject to change over
+time, measures and statistics that separate the two are difﬁcult to devise. Of
+course, this is precisely the methodological challenge faced in the context of
+investigations of neighborhood effects in empirically based studies of real
+cities. As such, while the proposed framework presents signiﬁcant challenges
+to sociologists and others working withagent-based models of social systems,
+it may also enhance prospects for pr oductive exchange between research
+founded on abstract simulation models and more grounded and concrete inves-
+tigations of real sociospatial change.
+References
+Axelrod, Robert M. 1997. ‘‘The Dissemination of Culture: A Model With Local Convergence
+and Global Polarization.’’Journal of Conﬂict Resolution 41:203-26.
+Baraba´ si, Albert-La´ szlo´ and Re´ ka Albert. 1999. ‘‘Emergence of Scaling in Random Net-
+works.’’Science 286:509-12.
+Bauld, Linda, Ken Judge, Marian Barnes, Micahela Benzeval, Mhairi MacKenzie, and Helen
+Sullivan. 2005. ‘‘Promoting Social Change: The Experience of Health Action Zones in
+England.’’Journal of Social Policy 34:427-55.
+Benenson, Itzhak. 1999. ‘‘Modeling Population Dynamics in the City: From a Regional to a
+Multi-Agent Approach.’’Discrete Dynamics in Nature and Society 3:149-70.
+Benenson, Itzhak, Itzhak Omer, and Juval Portugali. 2002. ‘‘Entity-Based Modeling of Urban
+Residential Dynamics: The Case of Yaffo, Tel Aviv.’’ Environment and Planning B:
+Planning & Design 29:491-512.
+Burgess, Ernest W. 1925. ‘‘The Growth of the City.’’ Pp. 47-62 inThe City, edited by Robert
+E. Park, Ernest W. Burgess, and Roderick D. McKenzie. Chicago: University of Chicago
+Press.
+Charles, Camille Zubrinsky. 2000. ‘‘Residential Segregation in Los Angeles.’’ Pp. 167-219 in
+Prismatic Metropolis: Inequality in Los Angeles , edited by Lawrence D. Bobo, Melvin L.
+Oliver, James H. Johnson, and Abel Valanzuela Jr. New York: Russell Sage.
+———. 2003. ‘‘The Dynamics of Racial Residential Segregation.’’ Annual Review of Sociol-
+ogy 29:167-207.
+Clark, William A. V. 1991. ‘‘Residential Preferences and Neighborhood Racial Segregation:
+A Test of the Schelling Segregation Model.’’Demography 28:1-19.
+526 Sociological Methods & Research
+
+Conte, Rosaria, Bruce Edmonds, Scott Moss, and R. Keith Sawyer. 2001. ‘‘Sociology and
+Social Theory in Agent Based Social Simulation: A Symposium.’’ Computational and
+Mathematical Organization Theory 7:183-205.
+Cummings, Jean L., Denise DiPasquale, and Matthew E. Kahn. 2001. Measuring the Conse-
+quences of Promoting Inner City Homeownership . Medford, MA: Fletcher School, Tufts
+University. http://papers.ssrn.com/s013/papers.cfm?abstract_id = 310220
+Dorling, Danny, George Smith, Michael Noble, Gemma Wright, Roger Burrows, Jonathan M.
+Bradshaw, Heather Joshi, Charles Pattie, Richard Mitchell, Anne E. Green, and Andrew
+McCulloch. 2001. ‘‘How Much Does Place Matter?’’ Environment and Planning A
+33:1335-69.
+Duncan, Otis D. and Beverly Duncan. 1955. ‘‘A Methodological Analysis of Segregation
+Indexes.’’American Sociological Review 20:210-17.
+Epstein, Joshua M. and Robert Axtell. 1996. Growing Artiﬁcial Societies: Social Science
+From the Bottom Up . Washington, DC: Brookings Institution & MIT Press.
+Flache, Andreas and Rainer Hegselmann. 2001. ‘‘Do Irregular Grids Make a Difference?
+Relaxing the Spatial Regularity Assumption in Cellular Models of Social Dynamics.’’
+Journal of Artiﬁcial Societies and Social Simulation 4 (4). http://www.soc.surrey.ac.uk/
+JASSS/4/4/6.html
+Fossett, Mark A. and Warren Waren. 2005. ‘‘Overlooked Implications of Ethnic Preferences
+for Residential Segregation in Agent-Based Models.’’Urban Studies 42:1893-917.
+Giddens, Anthony. 1985. ‘‘Time, Space and Regionalisation.’’ Pp. 265-95 inSocial Relations
+and Spatial Structures (Critical Human Geography Series), edited by Derek Gregory and
+John Urry. Basingstoke, UK: Macmillan.
+Glass, Ruth. 1964. ‘‘Introduction: Aspects of Change.’’ Pp. xiii-xlii in London: Aspects of
+Change, edited by Centre for Urban Studies. London: MacGibbon & Kee.
+Golledge, Reginald G. and Robert J. Stimson. 1997. Spatial Behavior, a Geographic Per-
+spective. New York: Guilford.
+Gottdiener, Mark. 1994. The Social Production of Urban Space . Austin: University of Texas
+Press.
+Grannis, Rick. 1998. ‘‘The Importance of Trivial Streets: Residential Streets and Residential
+Segregation.’’American Journal of Sociology 103:1530-64.
+Granovetter, Mark S. 1973. ‘‘The Strength of Weak Ties.’’ American Journal of Sociology
+78:1360-80.
+Ha¨ gerstrand, Torsten. 1970. ‘‘What About People in Regional Science?’’ Papers of the
+Regional Science Association 24:7-21.
+———. 1982. ‘‘Diorama, Path and Project.’ ’ Tijdschrift voor Economische en Sociale Geo-
+graﬁe 73:323-39.
+Harris, Chauncy D. and Edward L. Ullman. 1945. ‘‘The Nature of Cities.’’ Annals of the
+American Academy of Political Science 242:7-17.
+Harvey, David. 1982. The Limits to Capital . Oxford, UK: Basil Blackwell.
+Haughton, Graham, Martin Jones, Jamie Peck, Adam Tickell, and Aidan While. 2000.
+‘‘Labour Market Policy as Flexible Welfare: Prototype Employment Zones and the New
+Workfarism.’’Regional Studies 34:669-80.
+Hoyt, Homer. 1939. The Structure and Growth of Residential Neighborhoods in American
+Cities. Washington, DC: Federal Housing Administration.
+Ihlanfeldt, Keith and Benjamin Scaﬁdi. 2004. ‘‘Whites’ Neighbourhood Racial Preferences
+and Neighbourhood Racial Composition in the United States: Evidence From the Multi-
+City Study of Urban Inequality.’’Housing Studies 19:325-59.
+O’Sullivan / Agent-Based Models of Social Systems 527
+
+Jacobs, Jane. 1961. The Death and Life of Great American Cities . New York: Random
+House.
+Jargowsky, Paul A. 1996. ‘‘Take the Money and Run: Economic Segregation in U.S. Metro-
+politan Areas.’’American Sociological Review 61:984-98.
+Kitchin, Robert M. 1996. ‘‘Increasing the Integrity of Cognitive Mapping Research: Apprais-
+ing Conceptual Schemata of Environment Behaviour Interaction.’’ Progress in Human
+Geography 20:56-84.
+Lamont, Miche`le and Vira ´ g Molna´ r. 2002. ‘‘The Study of Boundaries in the Social
+Sciences.’’Annual Review of Sociology 28:167-95.
+Laurie, Alexander J. and Narendra K. Jaggi. 2003. ‘‘Role of ‘Vision’ in Neighborhood Racial
+Segregation.’’Urban Studies 40:2687-704.
+Lefebvre, Henri. 1991. The Production of Space . Oxford, UK: Blackwell.
+Lynch, Kevin. 1960. The Image of the City . Cambridge, MA: MIT Press.
+Macy, Michael W. and Robert Willer. 2002. ‘‘From Factors to Actors: Computational Sociol-
+ogy and Agent-Based Modeling.’ ’Annual Review of Sociology 28:143-66.
+Mann, Peter H. 1965. An Approach to Urban Sociology . London: Routledge.
+Massey, Douglas S. and Nancy A. Denton. 1988. ‘‘The Dimensions of Residential Segrega-
+tion.’’Social Forces 67:281-315.
+Massey, Douglas S. and Mitchell L. Eggers. 1990. ‘‘The Ecology of Inequality: Minorities and
+the Concentration of Poverty, 1970-1980.’’American Journal of Sociology 95:1153-89.
+McCulloch, Andrew. 2001. ‘‘Ward-Level Deprivation and Individual Social and Economic Out-
+comes in the British Household Panel Survey.’’Environment and Planning A33:667-84.
+Milgram, Stanley. 1967. ‘‘The Small World Problem.’’Psychology Today 2:60-67.
+Morrill, Richard L. 1991. ‘‘On the Measure of Geographical Segregation.’’ Geography
+Research Forum 11:25-36.
+O’Sullivan, David. 2001. ‘‘Graph Cellular Automata: A Generalised Discrete Urban and
+Regional Model.’’Environment and Planning B: Planning & Design 28:687-705.
+———. 2002. ‘‘Toward Micro-Scale Modeling of Gentriﬁcation.’’ Journal of Geographical
+Systems 4:251-74.
+O’Sullivan, David and Mordechai Haklay. 2000. ‘‘Agent-Based Models and Individualism:
+Is the World Agent-Based?’’Environment and Planning A 32:1409-25.
+O’Sullivan, David, James R. Macgill, and Chaoqing Yu. 2003. ‘‘Agent-Based Residential
+Segregation: A Hierarchically Structured Spatial Model.’ ’ Pp. 493-507 in Agent 2003:
+Challenges in Social Simulation , edited by Charles M. Macal, Michael North, and David
+Sallach. Chicago: University of Chicago and Argonne National Laboratory.
+Painter, Chris and Emma Clarence. 2001. ‘‘UK Local Action Zones and Changing Urban
+Governance.’’Urban Studies 38:1215-32.
+Portugali, Juval, Itzhak Benenson, and Itzhak Omer. 1994. ‘‘Sociospatial Residential
+Dynamics: Stability and Instability Within a Self-Organizing City.’’ Geographical Analy-
+sis 26:321-40.
+———. 1997. ‘‘Spatial Cognitive Dissonance and Sociospatial Emergence in a Self-Organiz-
+ing City.’’Environment and Planning B: Planning & Design 24:263-85.
+Pujol, Josep M., Andreas Flache, Jordi Delgado, and Ramon Sangu ¨ esa. 2005. ‘‘How Can
+Social Networks Ever Become Complex? Modelling the Emergence of Complex Net-
+works From Local Social Exchanges.’’ Journal of Artiﬁcial Societies and Social Simula-
+tion 8 (4). http://jasss.soc.surrey.ac.uk/8/4/12.html
+Quillian, Lincoln. 1999. ‘‘Migration Patterns and the Growth of High-Poverty Neighbor-
+hoods, 1970-1990.’’American Journal of Sociology 105:1-37 .
+528 Sociological Methods & Research
+
+Reardon, Sean F. and Glenn Firebaugh. 2002. ‘‘Measures of Multi-Group Segregation.’’
+Sociological Methodology 32:33-67.
+Reardon, Sean F. and David O’Sullivan. 2004. ‘‘Measures of Spatial Segregation.’’ Sociolo-
+gical Methodology 34:121-62.
+Riley, Kathryn and Rob Watling. 1999. ‘‘Education Action Zones: An Initiative in the Mak-
+ing.’’Public Money and Management 19:51-58.
+Robins, Garry, Philippa Pattison, and Jodie Woolcock. 2005. ‘‘Small and Other Worlds: Glo-
+bal Network Structures From Local Processes.’’ American Journal of Sociology 110:
+894-936.
+Sakoda, James M. 1971. ‘‘The Checkerboard Model of Social Interaction.’’Journal of Math-
+ematical Sociology 1:119-32.
+Sampson, Robert J., Jeffrey D. Morenoff, and Thomas Gannon-Rowley. 2002. ‘‘Assessing
+’Neighborhood Effects’: Social Processes and New Directions in Research.’’ Annual
+Review of Sociology 28:443-78.
+Sawyer, R. Keith. 2001. ‘‘Emergence in Sociology: Contemporary Philosophy of Mind and
+Some Implications for Sociological Theory.’’American Journal of Sociology 107:551-85.
+———. 2003. ‘‘Artiﬁcial Societies: Multiagent Systems and the Micro-Macro Link in Socio-
+logical Theory.’’Sociological Methods & Research 31:325-63.
+Schelling, Thomas C. 1969. ‘‘Models of Segregation.’’ American Economic Association
+Papers and Proceedings 59:488-93.
+———. 1971. ‘‘Dynamic Models of Segregation.’’ Journal of Mathematical Sociology
+1:143-86.
+———. 1978. Micromotives and Macrobehavior. New York: Norton.
+Semboloni, Ferdinando. 2000. ‘‘The Growth of an Urban Cluster Into a Dynamic Self-Modifying
+Spatial Pattern.’’Environment and Planning B: Planning & Design27:549-64.
+Shi, Wenzhong and Matthew Yick Cheung Pang. 2000. ‘‘Development of Voronoi-Based
+Cellular Automata: An Integrated Dynamic Model for Geographical Information Sys-
+tems.’’International Journal of Geographical Information Science 14:455-74.
+St. John, Craig and Robert Clymer. 2000. ‘‘Racial Residential Segregation by Level of Socio-
+economic Status.’’Social Science Quarterly 81:701-15.
+Suarez, Ray. 1999. The Old Neighborhood: What We Lost in the Great Suburban Migration:
+1966-1999. New York: Free Press.
+Takeyama, Masanao. 1997. ‘‘Building Spatial Models Within GIS Through Geo-Algebra.’’
+Transactions in GIS 2:245-56.
+Takeyama, Masanao and Helen Couclelis. 1997. ‘‘Map Dynamics: Integrating Cellular Auto-
+mata and GIS Through Geo-Algebra.’’ International Journal of Geographical Informa-
+tion Science 11:73-91.
+Thrift, Nigel J. 1983. ‘‘On the Determination of Social Action in Space and Time.’’ Environ-
+ment and Planning D: Society and Space 1:23-57.
+Vigdor, Jacob L. 2003. ‘‘Residential Segregation and Preference Misalignment.’’ Journal of
+Urban Economics 54:587-609.
+Wassermann, Henry and Gary Yohe. 2001. ‘‘Segregation and the Provision of Spatially
+Deﬁned Local Public Goods.’’American Economist 45:13-24.
+Watts, Duncan J. and Steven H. Strogatz. 1998. ‘‘Collective Dynamics of ‘Small-World’ Net-
+works.’’Nature 393:440-42.
+White, Michael J. 1983. ‘‘The Measurement of Spatial Segregation.’’ American Journal of
+Sociology 88:1008-18.
+O’Sullivan / Agent-Based Models of Social Systems 529
+
+White, M. 1987. American Neighborhoods and Residential Differentiation. New York: Rus-
+sell Sage Foundation.
+Wilensky, Uri. 1999. ‘‘NetLogo’’ [Computer software]. Evanston, IL: Center for Connected Lea-
+rning and Computer-Based Modeling, Northwestern University. http://ccl.northwestern
+.edu/netlogo
+Wong, David W. S. 1993. ‘‘Spatial Indices of Segregation.’’Urban Studies 30:559-72.
+———. 2002. ‘‘Modeling Local Segregation: A Spatial Interaction Approach.’’ Geographi-
+cal and Environmental Modelling 6:81-97.
+David O’Sullivan is an associate professor of geography at the University of Auckland, New
+Zealand. His research interests are in geographical simulation modeling, spatial analysis, and
+complexity. In recent work, he has focused on simulation and measurement of urban neigh-
+borhood change, particularly residential segregation. He is the author, with David Unwin, of
+Geographic Information Analysis (New York: John Wiley, 2003).
+530 Sociological Methods & Research

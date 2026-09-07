@@ -1,0 +1,131 @@
+,auction,consumer,electricity,finance,housing,retail,Total
+CDA,1,2,10,12,3,1,29
+Adaptive Expectations / Adaptive Behavior,0,2,6,5,3,0,16
+Order Book / LOB,0,2,1,8,1,0,12
+Strategy Switching,0,0,2,5,3,0,10
+Discrete Choice / Utility Maximization,0,3,0,0,3,0,6
+Reinforcement Learning,0,0,2,2,1,0,5
+WOM / Social Influence,0,2,0,1,1,0,4
+Genetic Algorithm (GA),0,0,0,1,1,2,4
+Q-Learning,0,0,3,1,0,0,4
+Multi-agent RL (MARL),0,0,1,1,1,0,3
+Rule-based Trading,0,1,0,2,0,0,3
+Continuous Action Space,0,0,2,0,0,0,2
+Multi-criteria Decision,0,1,0,0,1,0,2
+Trend-following,0,0,0,1,1,0,2
+Limit/Market Order,0,1,0,1,0,0,2
+Actor-Critic,0,0,1,0,1,0,2
+Hybrid ABM + SD,0,0,1,0,0,1,2
+PPO,0,0,1,0,1,0,2
+Fundamentalist / Chartist,0,1,0,1,0,0,2
+Credit Constraints,0,0,0,0,2,0,2
+Utility-based,0,1,1,0,0,0,2
+A3C / A2C / IAsync,0,0,0,1,1,0,2
+Bounded Rationality,0,0,1,0,1,0,2
+Behavioral Heuristics,0,1,0,0,1,0,2
+Business Rules,0,1,0,0,0,1,2
+Policy-Iteration,0,0,1,0,0,0,1
+Profit Maximization,0,0,1,0,0,0,1
+Probabilistic Inference,0,0,1,0,0,0,1
+Probabilistic Cost,1,0,0,0,0,0,1
+Probabilistic Choice,0,0,0,0,1,0,1
+Price-Density Optimization,0,0,0,0,1,0,1
+Price Stabilization,1,0,0,0,0,0,1
+Price Projection,0,0,0,1,0,0,1
+Portfolio Optimization,0,1,0,0,0,0,1
+Policy-responsive,0,0,0,0,1,0,1
+Policy Network,0,0,0,1,0,0,1
+Peer Influence,0,0,0,0,1,0,1
+Policy Gradient,0,0,1,0,0,0,1
+Bid-Ask Formation,0,0,0,0,1,0,1
+Parameter Learning,0,0,0,1,0,0,1
+Order Splitting,0,0,0,1,0,0,1
+Best Response,0,0,1,0,0,0,1
+Optimal Execution,0,0,0,1,0,0,1
+OCBA,1,0,0,0,0,0,1
+Nash Q-Learning,0,0,1,0,0,0,1
+Nash Equilibrium,0,0,1,0,0,0,1
+NPV/IRR,0,0,0,1,0,0,1
+Multi-scale Optimization,0,1,0,0,0,0,1
+Protocol-based,0,0,0,1,0,0,1
+Bayesian Updating,0,0,0,0,1,0,1
+Bayesian / DBN,0,0,1,0,0,0,1
+Replicator Dynamics,0,0,1,0,0,0,1
+Volatility-adjusted Quoting,0,0,0,1,0,0,1
+Adaptive Decision,0,0,0,0,1,0,1
+Alternating Offers,0,0,1,0,0,0,1
+Trade Acceptance,0,0,0,0,1,0,1
+Threshold Adoption,0,1,0,0,0,0,1
+Technical Trading,0,0,0,1,0,0,1
+TCO,0,1,0,0,0,0,1
+Synthetic Order Flow,0,0,0,1,0,0,1
+Supervised Learning,0,0,0,0,1,0,1
+Attitude Infection,0,0,0,1,0,0,1
+Stabilization,0,0,0,0,1,0,1
+Speculative Forecasting,0,0,0,0,1,0,1
+Spatial Regression,0,0,0,0,1,0,1
+Spatial Optimization,0,0,0,0,0,1,1
+Spatial Decision-Rule,0,0,0,0,1,0,1
+Sparse Bayesian,0,0,1,0,0,0,1
+Social Network,0,1,0,0,0,0,1
+Simulated Annealing,0,0,0,1,0,0,1
+Scenario-responsive,0,1,0,0,0,0,1
+Satisfaction Threshold,0,0,0,0,1,0,1
+Bargaining Protocols,0,0,0,0,1,0,1
+Risk-based Decision,1,0,0,0,0,0,1
+Risk Propagation,0,0,0,0,1,0,1
+Multi-objective Decision,1,0,0,0,0,0,1
+Conjoint / Part-worth Utility,0,1,0,0,0,0,1
+Contagion Dynamics,0,0,0,1,0,0,1
+Fundamental Analysis,0,0,0,1,0,0,1
+Factor Scoring,1,0,0,0,0,0,1
+FOMO,0,0,0,0,1,0,1
+FCN,0,0,0,1,0,0,1
+Experience-based Learning,0,0,0,1,0,0,1
+Expectation Formation,0,0,0,0,1,0,1
+Evolutionary Game Theory,0,0,1,0,0,0,1
+Equilibrium-seeking,0,0,0,1,0,0,1
+Empirical Decision,0,0,0,0,1,0,1
+Emission Trading,0,0,0,1,0,0,1
+Distributed Optimization,0,0,1,0,0,0,1
+Collaborative Filtering,0,1,0,0,0,0,1
+Deep RL,0,0,0,1,0,0,1
+Data-driven,0,0,0,0,1,0,1
+DQN/DDQN,0,0,0,0,1,0,1
+DDPG,0,0,1,0,0,0,1
+Cycle-phase,0,0,0,0,1,0,1
+Credit-responsive,0,0,0,0,1,0,1
+Collateral Valuation,0,0,0,0,1,0,1
+Credit Condition,0,0,0,0,1,0,1
+Cosine Similarity,0,1,0,0,0,0,1
+Concession Strategies,0,0,1,0,0,0,1
+Continuous Concession,0,0,0,0,1,0,1
+Conditional GAN,0,0,0,1,0,0,1
+Feedback Mechanisms,0,0,0,1,0,0,1
+Cognitive / BDI,0,0,0,1,0,0,1
+Monte Carlo,1,0,0,0,0,0,1
+Future-adaptive,0,1,0,0,0,0,1
+Microeconomic Rules,0,0,0,0,1,0,1
+Micro-level Opt.,0,0,0,0,1,0,1
+Market Making,0,0,0,1,0,0,1
+Market Clearing,0,0,0,0,1,0,1
+Machine Learning,0,0,0,1,0,0,1
+Loss Memory,0,0,0,1,0,0,1
+Local Neighborhood,0,0,0,1,0,0,1
+Bubble-responsive,0,0,0,1,0,0,1
+Leverage-based Rules,0,0,0,0,1,0,1
+LTV/LTI Compliance,0,0,0,0,1,0,1
+Investment Optimization,0,0,0,1,0,0,1
+Intervention Selection,0,0,0,0,1,0,1
+Indicator-based,0,0,0,1,0,0,1
+Imitation,0,0,0,1,0,0,1
+Calibration-based,0,0,0,0,1,0,1
+Hill Climbing,0,0,1,0,0,0,1
+Heuristic Trading,0,0,0,1,0,0,1
+Heuristic Pricing,0,0,0,0,1,0,1
+Hedonic Regression,0,0,0,0,1,0,1
+Hedonic Pricing,0,0,0,0,1,0,1
+Choice Model,0,1,0,0,0,0,1
+Game-theoretic,0,0,0,1,0,0,1
+GAN / Generative Models,0,0,0,1,0,0,1
+Latency Optimization,0,0,0,1,0,0,1

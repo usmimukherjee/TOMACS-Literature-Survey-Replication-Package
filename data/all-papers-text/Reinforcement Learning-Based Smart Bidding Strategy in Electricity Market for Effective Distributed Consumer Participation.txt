@@ -1,0 +1,549 @@
+2024 Second International Conference on Emerging Trends in Information Technology and Engineering (ICETITE)  
+1 
+ 979-8-3503-2820-2/$31.00 ©2024 IEEE 
+ 
+Reinforcement Learning-Based Smart Bidding 
+Strategy in Electricity Market for Effective 
+Distributed Consumer Participation  
+Vrindha Venugopal K V 
+Department of Electrical and 
+Electronics Engineering, 
+Amrita School of Engineering, 
+Coimbatore, Amrita Vishwa 
+Vidyapeetham, India. 
+kv_vrindha@cb.students.amrita.edu 
+ 
+K.R.M. Vijaya Chandrakala 
+Department of Electrical and Electronics 
+Engineering, Amrita School of 
+Engineering,  
+Coimbatore, Amrita Vishwa 
+Vidyapeetham, India. 
+krm_vijaya@cb.amrita.edu 
+S. Nithin  
+Power System Engineer 
+NationalGrid ESO 
+Warwick, UK. 
+nithin.somasundaran@nationalgrideso.com 
+Abstract— Distribution operators can change consumer usage 
+patterns through a variety of demand-side managemen t 
+strategies, thanks to smart grid technology.  This entails the utility 
+and the customers working together to modify customer loads in a 
+way that benefits the stakeholders in various secto rs. The main 
+challenge posed by system operators nowadays is cre ating 
+simulations of the system market systems that effec tively choose 
+generation resources under changing load patterns. An agent-
+based bidding technique for markets is presented in  this article 
+and implemented for a five-bus grid. The real power load model is 
+created to enable connections to load buses from va rious load 
+profile types, including commercial, industrial, and residential. A 
+comprehensive DC OPF model serves as the basis for the 
+Locational Marginal Prices (LMPs) and using Reinfor cement 
+Learning, GenCos proactively modify their supply of fers over 
+time. Two scenarios are compared relating the features of the day-
+ahead market: one in which the load is connected as  a single, 
+homogenous entity, and the other in which it is seg mented into 
+various client kinds. 
+Keywords— Agent-based modeling, Electricity market, Day-
+ahead market, Sectored load, Independent System Operator, GenCo, 
+Load Serving Entity, DC Optimal Power Flow, Locational Marginal 
+Pricing, Reinforcement learning . 
+I.  INTRODUCTION  
+The operational aspects of the power system have se en 
+tremendous change with the introduction of the elec tricity 
+market. In conventional power networks, any variati on in 
+demand is scheduled to be followed by the supply fr om 
+committed generation units. Peak load periods might  have 
+extremely high demand, necessitating the commitment  of 
+additional generators. Due to this, the operators w ill need to 
+spend more on procuring additional capacity, even though they 
+may only use it occasionally during the year.  The recent rises 
+in electricity prices serve as a harsh reminder of the potential 
+benefits of major demand-side responses for the ref orm of the 
+electricity system.  
+Examining the combined offers from providers 
+demonstrates that these price volatility extremes m ight be 
+significantly reduced with even a small improvement  in 
+demand elasticity [1]. In these markets, there is a n urgent need 
+for significantly higher consumer engagement to imp rove 
+system stability and lower price volatility. Planni ng, running, 
+and controlling the power system will alter signifi cantly as a 
+result of researching and simulating the diverse en ergy 
+demands in the residential, commercial, and industrial sectors.  
+The statistics show that the industry sector accounts for the 
+largest part of load demand, with the residential sector claiming 
+the second position and finally the commercial sect or. 
+Analyzing electricity consumption sector-wise rathe r than as a 
+single homogeneous entity, provides a comprehensive  
+understanding of the diverse needs and behaviours o f 
+consumers, enabling more effective policymaking, 
+infrastructure planning, and resource allocation wi thin the 
+energy system [1].  
+Participants in the reorganized wholesale electricity markets 
+frequently voice concerns about the opaqueness of p ricing and 
+settlement procedures. In large part because of the  intricate 
+nature of the market architecture in its numerous a ctual 
+executions, market administrators’ operation manual s, and 
+other public papers can be intimidating to read and  hard to 
+understand. Furthermore, data is only posted partia lly and in a 
+disguised form with a large time delay in several e nergy zones 
+(like MISO). As a result, many players have doubts about the 
+effectiveness, dependability, and equity of the fin al market 
+results [2]. Agent-based modeling offers a viable way to model 
+the electrical market with segmented customers. It is an 
+appealing approach for researching how suppliers, c onsumers, 
+and prosumers might behave and respond to the intri cate 
+monetary, regulatory, and environmental conditions present in 
+the electricity industry, as opposed to more conventional system 
+modeling approaches. The efficacy of agent-based si mulation 
+(ABS) techniques has been praised in the study of e lectrical 
+systems and markets. When agents in an agent-based simulation 
+model are allowed to interact with each other on oc casion, the 
+simulation model can adapt and exhibit novel patterns [3].  
+Consequently, one may be able to comprehend the 
+dynamics of the bottom system. Entities favor machine learning 
+because of its ability to handle large amounts of d ata and 
+achieve convergence. It is highly recommended to use an agent-
+based modeling technique to satisfy the needs of various market 
+2024 Second International Conference on Emerging Trends in Information Technology and Engineering (ICETITE) | 979-8-3503-2820-2/24/$31.00 ©2024 IEEE | DOI: 10.1109/IC-ETITE58242.2024.10493669
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:08:46 UTC from IEEE Xplore.  Restrictions apply.
+
+2024 Second International Conference on Emerging Trends in Information Technology and Engineering (ICETITE)  
+2 
+ 
+participants. Numerous algorithms based on agents and desired 
+rewards exist. Such a constantly changing environme nt is not 
+suitable for the supervised learning approach, whic h can be 
+tackled by semi-supervised learning methods. Agent- based 
+Modeling of Electricity System (AMES) models a cent rally 
+managed wholesale power market that runs across an AC 
+transmission grid through time, based on business 
+practice guides for the MISO and ISO-NE. DC optimum power 
+flow is used to calculate the hourly locational mar ginal prices 
+(LMP) for the day-ahead market based on supply and demand 
+offers from traders who possess learning skills.  
+JReLM is capable of implementing a wide range of different 
+reinforcement learning techniques, allowing for fle xible trader 
+learning representation within this family of techn iques. The 
+purpose of AMES is to enable objective comprehensio n of the 
+reorganization process and to promote dialogue betw een 
+academic researchers and market stakeholders. It is  being 
+created and made available as open-source software [3]. The 
+work is structured in the following sections. Section II describes 
+the system model for the AMES approach.  Section II I 
+introduces the training schema of GenCo agents. Sec tion IV 
+portrays the simulation framework and explanatory f indings 
+and concludes with Section V. 
+II.  AGENT -BASED MODELLING OF DYNAMIC 5-BUS SYSTEM  
+AMES V2.06, an open-source agent-based test bed, is  
+utilized in this paper to simulate a wholesale power market. Li, 
+Tesfatsion, and Mooney of Iowa State University pro posed an 
+agent-based conceptual model, namely Agent-based Mo deling 
+of Electricity Systems (AMES) [3]. AMES has four ma in 
+components: ISO, markets, transmission grids, and t raders. 
+Both buyers (load-serving entities) and sellers (ge nerators) are 
+included in the trader agent.  
+A day-ahead auction and a real-time market serve as  two 
+settlements of market components. Specifically, for  the day-
+ahead market, the AMES Independent System Operator 
+(ISO) receives daily supply offers and demand bids from the 
+generators (GenCos) and load-serving entities (LSEs ) of 
+AMES, respectively. These daily reported bids and o ffers are 
+used by the ISO to solve hourly DC optimum power fl ow 
+problems by determining per-hour LMPs and commitmen t 
+levels for the following day.  
+Through reinforcement learning, the AMES generators  
+modify their everyday reported supply offers based on their 
+daily clearing amounts for the day-ahead market. Co ngestion 
+cost components are incorporated into LMPs to contr ol 
+transmission grid congestion. The foundation of the  study is a 
+5-bus grid system, which is extensively used in ISO  NE/PJM 
+training manuals [4]. Load profile is taken from [5].   
+Fig.1 shows the system layout which is a dynamic 5- bus 
+case with five buses, six branches, five GenCos, and three LSEs 
+[6-7]. Fig.1 represents the dynamic 5-Bus grid system with load 
+being the single entity and distributed entity. 
+ 
+Fig.1. Dynamic 5-bus grid system with load as a single entity [13] 
+GenCo i hourly real power production level p has both 
+minimum and maximum capacity[8]. Furthermore, for e very 
+hourly production level p, GenCo i has an overall cost function 
+that shows its hourly net production costs  [9-10]. The form that 
+this total cost function takes is given in (1). 
+                        Ci = a ip + b ip2 + Fcost i                                               (1) 
+Where a i($/MWh) and b i($/MW 2h )) are coefficients of the cost 
+function and Fcost i($/MWh) is the fixed cost. 
+Marginal cost of the GenCo, 
+                               MC i = a i + 2b ip                                         (2) 
+Under a set of linearized constraints, the classic DC OPF issue 
+calls for the minimization of total variable costs. 
+                        Min ∑i (a ip + b ip2), Ɐ i                                   (3) 
+subjected to  
+                       p(min) ≤ p ≤ p(max)                                           (4) 
+III.  TRAINING SCHEMA OF GEN CO AGENTS  
+Each GenCo  i upgrades the probabilities of action choice 
+presently allocated to the sphere of supply proposa ls in action 
+domain Ad i at the close of each day D by using stochastic 
+reinforcement learning, accounting for its day-D se ttlement 
+payout [11-13]. Stochastic reinforcement learning's  core tenet 
+is that the likelihood of selecting a certain actio n should rise 
+when the associated payback is reasonably good and fall when 
+the associated payback is reasonably bad [14-16].  
+For instance, GenCoi  increases the likelihood of selecting 
+this supply offer on day D+1 if the supply offers i t reports on 
+day D yield a reasonably fair reward, and vice vers a. Each 
+GenCo uses Variant Roth-Erev (VRE) reinforcement le arning, 
+a variation of the stochastic reinforcement learnin g algorithm, 
+to calculate its supply offers, as described in [17 -20]. Fig. 2. 
+shows the basic flow diagram of the process employe d, which 
+is mathematically expressed below.  
+Let ô represent the action that GenCoi chose and published into 
+the day-ahead market on day D. The current propensi ty  qi(D)  
+that GenCoi identifies with every action o in Ad i is updated at 
+the end of day D. The propensity for D+1 is calcula ted using 
+equations (5) and (6). 
+qi(D+1) = (1-r)×q i(D)+ R(D)×(1-e);    if  o=ô          (5) 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:08:46 UTC from IEEE Xplore.  Restrictions apply.
+
+2024 Second International Conference on Emerging Trends in Information Technology and Engineering (ICETITE)  
+3 
+ 
+    q i(D+1) = (1-r)×q i(D)+ R(D)×(e/(M-1)),if o≠ô         (6) 
+Probability update for the next day, 
+P(D+1) = e (qi(D)/(K-D)) /∑o e(qi(D)/(K-D)); o = 1, 2,…M       (7) 
+Here, R represents the reward, r is the recency parameter which 
+serves as a limit on the gradual increase of propensity, K is the 
+total experiment days and  e is the experimentation parameter 
+which allows reinforcement to partially spill over from an 
+action selected to other actions.  
+Fig. 2 highlights the flow diagram of the Variant Roth-Erev 
+(VRE) learning technique adapted under agent-based modeling. 
+  
+Fig.2. Sequential flow diagram for VRE learning approach [13]. 
+VRE technique helps the agents to interact as marke t entities 
+independently being trained to adapt with market op eration 
+enhancing the profit maximization of the GenCos.  
+IV.  REINFORCEMENT AGENT -BASED LEARNING FOR EFFECTIVE 
+ELECTRICITY MARKET OPERATION  
+A. Load as a Single Entity 
+The simulation is performed on the system shown in Fig.1. 
+Here load is taken as a single homogeneous entity. The GenCo 
+input parameters are shown in Table I. Table II and  Table III 
+show the input branch parameters [7] and GenCo lear ning 
+parameters, respectively. The agent-based approach of the 
+wholesale market with a single load has been detailed [13]. 
+TABLE I.   GEN COS DATA  
+ a 
+($/MWh) 
+b 
+($/MW 2h) 
+Min. 
+Capacity 
+(MW) 
+Max. 
+Capacity 
+(MW) 
+GenCo1 14 0.005 0 110 
+GenCo2 15 0.006 0 100 
+GenCo3 25 0.01 0 520 
+GenCo4 30 0.012 0 200 
+GenCo5 10 0.007 0 600 
+TABLE II.  LINE DATA  
+ From To Capacity 
+(MW) 
+Reactance 
+(Ω) 
+Line 1 1 2 250 0.0281 
+Line 2 1 4 150 0.0304 
+Line 3 1 5 400 0.0064 
+Line 4 2 3 350 0.0108 
+Line 5 3 4 240 0.0297 
+Line 6 4 5 240 0.0297 
+TABLE III.  GEN CO LEARNING PARAMETERS  
+Initial Propensity 6000.00 
+Cooling 1000.00 
+Recency 0.04 
+Experimentation 0.96 
+The experimental findings of the simulation are des cribed 
+below. Fig.3. and Fig.4. show the GenCo commitments without 
+a learning approach and with a reinforcement learning approach 
+respectively. 
+ 
+Fig.3. GenCos Commitment without learning  
+ From the LSE load profile, the off-peak hour is 4. 00, and the 
+peak hour is 17.00. The operational capacities of t he two 
+GenCos 1 and 2 are quite modest. As GenCo 3 is a cr itical 
+supplier for most of the day, a sizable amount of p otential is 
+required to supply fixed demand. To fulfil the demand at bus 3 
+during the 17 th  hour, the ISO must utilize the expensive GenCo4 
+unit.  
+ 
+   Fig.4. Commitment curve with GenCo learning  
+ Large in capacity and low in marginal cost, GenCo 5 is a 
+generator with a baseline load that is never used t o its full 
+potential. Buses 2, 3, and 4 have the fixed load fr om Load 
+Entities 1, 2, and 3, and GenCo 3 at bus 3 is medially positioned 
+about this load. This load is semi-islanded from th e cheaper 
+power of GenCos 1, 2, and 5, which are placed at buses 1 and 5, 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:08:46 UTC from IEEE Xplore.  Restrictions apply.
+
+2024 Second International Conference on Emerging Trends in Information Technology and Engineering (ICETITE)  
+4 
+ 
+as a result of the clogging on branches 1-2.  With a reinforcement 
+learning approach, ISO has pulled down the supply of GenCo 5 
+and GenCo 4 has started to supply its full capacity.  
+ Fig.5 shows the LMP curves without GenCo learning and 
+with learning cases. During no learning case, LMPs of buses 2 
+and 3 show a significant surge at hour 17, rising by around 100% 
+between hours 16 and 17, and then declining back to  more 
+typical levels in hours 18 and later. due to the co ngestion on 
+branches 1-2, at hour 17, GenCo 5 is partially isolated from bus 
+3 and GenCo 3 is deployed at full capacity.  
+ 
+Fig.5. Locational Marginal Pricing (LMP) curve without GenCo learning  
+  This causes the locational price of 3 rd  bus to jump 
+significantly in the 17 th  hour. The results of GenCo learning 
+from Fig.6. are instantly noticeable when compared to the no-
+learning case: during off-peak hours, the LMP value s at each 
+bus are higher and show greater variability during peak-demand 
+hour 17. 
+ 
+Fig.6. Locational Marginal Pricing (LMP) curve with GenCo learning  
+ Over time, these associated LMP effects are only c aused by 
+the distinct profit-seeking behaviors of the learni ng GenCos. 
+The net earnings of GenCos per day are compared in Table IV 
+and mentioned in Fig. 7 for the learning case and w ithout the 
+learning case the net GenCo earnings per day. 
+TABLE IV.  NET GEN CO PER DAY EARNINGS WITH AND WITHOUT 
+REINFORCEMENT LEARNING  
+ Earnings($/D) without 
+learning 
+Earnings($/D) with 
+learning 
+GenCo1 1,556.47 0 
+GenCo2 26.59 0 
+GenCo3 56,022.74 4,34,434.56 
+GenCo4 142.27 24,714.25 
+GenCo5 34,267.60 56,542.31 
+ 
+ 
+Fig.7. GenCo earnings comparison with load as a single entity [13]. 
+ For the no-learning case, GenCo 1 and GenCo 2 have  
+comparatively small total earnings during all hours, as Table IV 
+illustrates. Firstly, the above-mentioned two GenCo s are 
+situated at bus 1, as shown in Fig. 1, and because of the ongoing 
+congestion on branches 1-2, they are partially isol ated away 
+from the load nooks at buses 2 to 4. Second, both o f these 
+GenCos have very modest operating capacities, as seen in Table 
+I. On the other hand, GenCo 3, which is situated at  bus 3, has 
+comparatively high net earnings per hour. This happens because 
+GenCo 3 needs its relatively big capacity to satisf y fixed 
+demand. Furthermore, because of the congestion on b ranches 
+1-2 during the 17 th  hour, GenCo 3 is deployed at full potential 
+and GenCo 5 is partially isolated off bus 3. As a r esult, to 
+service bus 3 during hour 17, the ISO must use GenC o 4, the 
+highest cost generator. This significantly increase s the 
+Locational Marginal Price at bus 3 in the 17 th  hour, and thus, 
+GenCo 3's net earnings. The learning GenCos will al ways be 
+revising the options for their supply offers. Fig.7  shows the 
+GenCo comparison at no learning and with learning c ases. 
+While the total earnings of the remaining three Gen Cos 
+climbed, the daily net earnings of GenCos 1 and 2 significantly 
+decreased with learning. This shows that the five G enCos are 
+dealing with an incredibly complex multi-agent lear ning 
+problem; generally speaking, the net earnings that a GenCo 
+achieves on a given day D rely on the supply offer of day D and 
+decisions made by every other GenCo as well. 
+B. Load as a Sectored Entity 
+The simulation is carried out on a modified version of the 5-
+bus as shown in Fig.8., where each load of the 5-bus grid system 
+is sectored as industrial, residential, and commerc ial 
+consumers. From the 2022 statistics obtained from the literature 
+[23], out of the total consumption, the industry sector consumes 
+39%, the residential sector consumes 35% and the co mmercial 
+sector consumes 26%. The data for single entity load is divided 
+based on the above ratio and used as a load profile  for the 
+below-mentioned system. Fig. 8 depicts the modified 5-bus grid 
+with a total of nine LSEs from L1 to L9. 
+ 
+Fig.8. Modified 5-bus grid system with sectored loads 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:08:46 UTC from IEEE Xplore.  Restrictions apply.
+
+2024 Second International Conference on Emerging Trends in Information Technology and Engineering (ICETITE)  
+5 
+ 
+Fig. 9 shows the GenCo commitment curve with no lea rning 
+case. 
+ 
+Fig.9. Commitment curve without GenCo learning 
+ It can be seen that all GenCos started participating when the 
+load was changed from a single homogeneous entity t o 
+segmented loads. Even with no learning, GenCo 4 has  started 
+supplying during all hours, irrespective of the cas e of a single 
+entity load.  
+ 
+Fig.10. Commitment curve with GenCo learning  
+ Fig.10 shows the the GenCo commitment curve with t he 
+learning case. Even though GenCo 2 is pulled down b y ISO, it 
+has pushed the high-cost GenCo 4 to deliver full capacity all the 
+time. 
+ 
+Fig.11. LMP curve without GenCo learning  
+ Fig.11 shows the LMP curve in no learning case wit h 
+sectored consumers. LMP values are high as compared  to a 
+system with load as a single entity. There is a dip  in the price 
+during off-peak hours from 2.00 to 4.00, which mean s 
+consumers need to pay the lesser price during less demand 
+hours. The constant LMP at bus 5 concludes that the re is no 
+branch congestion occurring there. 
+ 
+ Fig.12. LMP curve with GenCo learning  
+ Fig.12 shows the LMP curve in the learning case wit h 
+sectored consumers. LMPs of buses 1 and 4 show a si gnificant 
+surge at hour 17, rising by around 100% between hours 16 and 
+17, and then declining back to more typical levels in hour 18, in 
+contrast with that seen during the learning case of a single load 
+system. Table V shows the net earnings of GenCo. 
+TABLE V.  NET GEN CO PER DAY EARNINGS WITH AND WITHOUT 
+REINFORCEMENT LEARNING  
+ Earnings($/D) without 
+Learning 
+Earnings($/D) with 
+Learning 
+GenCo1 20,270.53 37,902.55 
+GenCo2 15,909.72 32,094.52 
+GenCo3 23,394.55 3,40,910.60 
+GenCo4 3,831.70 13,856.53 
+GenCo5 19,133.44 30,116.43 
+ The difference between the earnings growth with no  learning 
+case and with a learning case is twice as significa nt. Fig.13 
+shows the GenCo comparison at no learning and with learning 
+cases. There is a huge increase in the earnings of GenCo 3. 
+ 
+Fig.13. GenCo earnings comparison with sectored load 
+ Compared to the single entity case, GenCos 1 and 2  also 
+produce a good amount when made to learn. Agent-bas ed 
+reinforcement learning among the GenCos helped prof it 
+maximization with improvised earnings when the cons umers 
+are treated as sectored rather than a single entity [13]. The Roth-
+Erev RL algorithm's drawback is that it is unable to learn certain 
+actions when the reward is negative or zero. As a r esult, it is 
+considerably modified, and the action propensity in  the 
+Modified Roth-Erev RL algorithm is adjusted within the limits 
+[11]. A solution to this can be found by applying t he Variant 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:08:46 UTC from IEEE Xplore.  Restrictions apply.
+
+2024 Second International Conference on Emerging Trends in Information Technology and Engineering (ICETITE)  
+6 
+ 
+Roth-Erev (VRE) RL algorithm if the reward is negative in the 
+bidding strategy where the commitment by GenCo will surpass 
+the true cost during the market scenario when the M RE 
+algorithm is unable to compute the probability. 
+V.  CONCLUSION  
+ This article describes network modeling with a cha ngeable 
+load profile using AMES software. A dynamic five-bus system 
+is employed as a test bed. The simulation's ability to account for 
+various generation resource types can be readily mo dified by 
+incorporating a time-varying load profile. The 5-bu s network 
+simulation was performed using three distinct types  of load 
+profiles: residential, commercial, and industrial. The created 
+model took into account the location and timing of power 
+injection to relieve congestion on a test bed, and an LMP-based 
+pricing scheme was established. Using a powerful 
+Reinforcement learning method, GenCo's agents were trained 
+to bid strategically to sustain competitive market conditions. 
+The outcomes show that the simulation is capable of accurately 
+determining the actual power flow and losses into transmission 
+lines. The findings of the simulation show that cha nging 
+demand can alter the system's dynamic performance b y a 
+considerably good percentage and profit improvisati on by the 
+GenCos meeting the sectored loads when the learning  concept 
+is introduced. Future work includes integrating an aggregator to 
+make it easier for Distribution System Operators to comprehend 
+what steps they must take to offer solutions for ne twork 
+reliability. 
+ACKNOWLEDGMENT  
+Dr. K.R.M. Vijaya Chandrakala would like to acknowledge 
+Amrita Vishwa Vidyapeetham, Coimbatore, Tamil Nadu for the 
+work which was supported by the Amrita  Seed grant 
+[ASG2022107]. 
+REFERENCES  
+[1]  Al-Ameri, Ahmed, and C.Nichita, ”Performance of Ele ctrical Power 
+Network with Variable Load Simulation”, Conference on Modelling and 
+Simulation - 9th EUROSIM, 2016. 
+[2]  A. Sridhar, K. Ravindra, and S. Affijulla, "A Revie w on Architecture of 
+Electricity Markets," 2022 4th International Confer ence on Energy, 
+Power and Environment (ICEPE) , Shillong, India, pp. 1-6, 2022. 
+[3]  J. Sun and L. Tesfatsion, “Dynamic testing of whole sale power market 
+designs: An open-source agent-based framework,” Com putational 
+Economics, vol. 30, pp. 291–327, 2007. 
+[4]  J. Lally, “Financial transmission rights: Auction e xample,” in Financial 
+Transmission Rights Draft 01-10-02, m-06 ed. ISO Ne w England, Inc., 
+section 6, January 2002. 
+[5]  M. Shahidehpour, H. Yamin, and Z. Li, Market Operat ions in Electric 
+Power Systems. New York, NY: IEEE/Wiley-Interscience, John Wiley& 
+Sons, Inc., 2002. 
+[6]  M. K. Hasan and N. Mohammad, "Different Scenario Analysis of PJM 5-
+Bus Test System by Changing Load Demand," 2022 Inte rnational 
+Conference on Innovations in Science, Engineering a nd Technology 
+(ICISET), Chittagong, Bangladesh, pp. 163-168, 2022. 
+[7]  D. Krishnamurthy, W. Li and L. Tesfatsion, "An 8-Zo ne Test System 
+Based on ISO New England Data: Development and Appl ication," in 
+IEEE Transactions on Power Systems, vol. 31, no. 1, pp. 234-246, 2016. 
+[8]  J. Sun and L. Tesfatsion, “DC optimal power flow fo rmulation and 
+solution using QuadProgJ,” Proceedings, IEEE Power Engineering 
+Society General Meeting, Tampa, Florida, June 2007. 
+[9]  Fangxing, Li, and Rui, Bo, “DCOPF-Based LMP Simulation: Algorithm, 
+Comparison with ACOPF and Sensitivity,” IEEE Transactions on Power 
+Systems, Vol. 22, No. 4, 2007. 
+[10]  Hongyan Li, Junjie Sun and L. Tesfatsion, "Dynamic LMP response 
+under alternative price-cap and price-sensitive dem and scenarios," 2008 
+IEEE Power and Energy Society General Meeting - Con version and 
+Delivery of Electrical Energy in the 21st Century, Pittsburgh, PA, pp. 1-
+8, 2008. 
+[11]  H. Li., J.Sun, and L.Tesfatsion, “Separation and Volatility of Locational 
+Marginal Prices in Restructured Wholesale Power Markets”, Economics 
+Department, Iowa State University, 2008. 
+[12]  P. Kiran and K.R.M. Vijaya Chandrakala, ” New interactive agent based 
+reinforcement learning approach towards smart gener ator bidding in 
+electricity market with microgrid integration”, Applied Soft Computing, 
+vol. 97, Part A, 2020. 
+[13]  K.R.M. Vijaya Chandrakala and P. Kiran, “Multi-agen t based modeling 
+and learning approach for intelligent day-ahead bid ding strategy in 
+wholesale electricity market, Expert Systems with Applications, vol. 233, 
+2023. 
+[14]  M. J. Ghorbani, M. A. Choudhry and A. Feliachi, "A Multiagent Design 
+for Power Distribution Systems Automation," in IEEE  Transactions on 
+Smart Grid, vol. 7, no. 1, pp. 329-339, 2016. 
+[15]  S. Bandyopadhyay, V. Valsan and P. Kanakasabapathy,  "Operation 
+Analysis of Grid Integrated Solar Micro Hydro Hybrid System for Rural 
+community," 2021 IEEE 2nd International Conference On Electrical 
+Power and Energy Systems (ICEPES),  pp. 1-6, 2021. 
+[16]  Xiang Xia, Nan Shang, Jianliang Fang et al.,“Manage ment of Bilateral 
+Contracts for Gencos Considering the Risk in Spot M arket”, Energy 
+Procedia, vol. 159, pp.298-303, 2019. 
+[17]  P. Kanakasabapathy and K. Shanti Swarup, "Optimal bidding strategy for 
+multi-unit pumped storage plant in pool-based elect ricity market using 
+evolutionary tristate PSO," 2008 IEEE International  Conference on 
+Sustainable Energy Technologies, Singapore, pp. 95-100, 2008. 
+[18]  F. A. Wolak, “An empirical analysis of the impact of hedge contracts on 
+bidding behavior in a competitive electricity marke t,” Int. Econ. J., vol. 
+14, pp. 1–39, 2000. 
+[19]  Janarthanan N., Dr. Balamurugan S., and Dr. Sasi K. K., “Optimal Control 
+Strategy to Alleviate Line Congestion in Power System using Bus Power 
+Rescheduling”, Journal of Electrical Systems, vol. 16, no. 2, pp. 201-217, 
+2020. 
+[20]  Lekshmi R. R. and Dr. Balamurugan S., “Control Stra tegy for Load 
+Frequency Control to Manage TRANSCO Reserve in Restructured Power 
+System”, International Journal of Innovative Techno logy and Exploring 
+Engineering (IJITEE), vol. 9, no. 2, pp. 1-8, 2019. 
+[21]  Distribution of electricity consumption across Indi a in financial year 
+2022, by sector, Statista.com.[Online]. 
+https://www.statista.com/statistics/1130112/india-electricity-
+consumption-share-by-
+sector/#:~:text=The%20industry%20sector%20accounted%20for%20the
+%20highest%20share,percent%20of%20the%20total%20electricity%20 
+consumption%20in%20India.  
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:08:46 UTC from IEEE Xplore.  Restrictions apply.

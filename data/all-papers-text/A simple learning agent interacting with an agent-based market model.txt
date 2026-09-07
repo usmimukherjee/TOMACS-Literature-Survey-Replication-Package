@@ -1,0 +1,996 @@
+Physica A 633 (2024) 129363
+Available online 10 November 2023
+0378-4371/© 2023 The Author(s). Published by Elsevier B.V. This is an open access article under the CC BY license
+(http://creativecommons.org/licenses/by/4.0/).
+Contents lists available at ScienceDirect
+Physica A
+journal homepage: www.elsevier.com/locate/physa
+A simple learning agent interacting with an agent-based market
+model
+Matthew Dicks, Andrew Paskaramoorthy, Tim Gebbie ∗
+Department of Statistical Sciences, University of Cape Town, Rondebosch 7700, South Africa
+A R T I C L E I N F O
+Dataset link: 10.25375/uct.13187591.v1, 10.25
+375/uct.21163723.v1, 1 0.25375/uct.2116399
+3.v1, https://doi.org/10.1016/j.softx.2022.101
+136
+Keywords:
+Strategic order-splitting
+Reinforcement learning
+Market simulation
+Agent-based model
+A B S T R A C T
+We consider the learning dynamics of a single reinforcement learning optimal execution
+trading agent when it interacts with an event-driven agent-based financial market model.
+Trading takes place asynchronously through a matching engine in event time. The optimal
+execution agent is considered at different levels of initial order sizes and differently sized
+state spaces. The resulting impact on the agent-based model and market is considered using
+a calibration approach that explores changes in the empirical stylised facts and price impact
+curves. Convergence, volume trajectory and action trace plots are used to visualise the learning
+dynamics. The smaller state space agents had the number of states they visited converge much
+faster than the larger state space agents, and they were able to start learning to trade intuitively
+using the spread and volume states. We find that the moments of the model are robust to
+the impact of the learning agents, except for the Hurst exponent, which was lowered by the
+introduction of strategic order-splitting. The introduction of the learning agent preserves the
+shape of the price impact curves but can reduce the trade-sign auto-correlations and increase
+the micro-price volatility when the trading volumes increase.
+1. Introduction
+Much of the empirical economic and finance literature suffers from a multiple assumption problem with data sets that are often
+static samples of the system that do not include the impact of system feedback. Often, the key assumptions used to specify agents,
+and hence models, are that they are rational and fully informed [ 1]. This introduced two key scaling challenges: the size of the
+state space, and nonlinear state space dynamics. The state space can become so large that the agents cannot reasonably behave
+as neither fully informed nor rational decision-makers. Artificially forcing bounded rationality onto the agents [ 2] can become an
+ad hoc assumption aimed at retaining some form of rationality in decision-making to accommodate feasible interactions with a
+static environment. In financial markets and many social systems, the state space can change due to adaption, interaction, and
+feedback between the agents and the changing environment they create and compete within. This implies that even with bounded
+rationality, the data sets extracted or bootstrapped from historical data are unlikely to be representative of either the current system
+configuration or future outcomes.
+Adopting a bottom-up rule-based approach using simple online updating representations of reasonable trading constraints can be
+an effective alternative [3]. Although these types of Agent-Based Models (ABMs) explicitly exclude top-down causation from higher
+complexity structures, they can still include the impact of a changing environment. Such ABMs provide a bottom-up approach to
+modelling a complex system where there can be multiple online heterogeneous interacting agents in a single level of the hierarchy
+∗ Corresponding author.
+E-mail addresses: matthew.dicks@alumni.uct.ac.za (M. Dicks), andrew.paskaramoorthy@uct.ac.za (A. Paskaramoorthy), tim.gebbie@uct.ac.za (T. Gebbie).
+https://doi.org/10.1016/j.physa.2023.129363
+Received 26 June 2023; Received in revised form 27 September 2023
+
+Physica A: Statistical Mechanics and its Applications 633 (2024) 129363
+2
+M. Dicks et al.
+but within a changing environment. Minimally intelligent agents with simple trading rules can be used to generate reasonably
+realistic dynamics [4], which can be calibrated to the system’s observations [5]. Financial ABMs that model the Limit Order Book
+(LOB) attribute LOB dynamics to the emergent phenomena caused by the interactions of trading agents programmed by these simple
+rules.
+1.1. Agent-based models
+When building ABMs, a good place to start is to understand the dynamics that can be realised from the interactions of minimally
+intelligent agents before adding on more complex forms of decision-making. Farmer et al. [3] used minimally intelligent agents
+within a continuous double auction and were able to explain 96% of the variance of the spread and 76% of the variance of the price
+diffusion rate. They also recovered the price impact function and thus demonstrated the simple laws relating price to order flows.
+The work by Farmer et al. also suggests institutions strongly shape agent behaviours so that some of the properties of markets may
+result from the constraints imposed by these institutions rather than the rationality of the individuals [3].
+This is an attractive method for modelling the dynamics of the LOB because there has been an increase in the amount of high-
+frequency observational data available to the researcher, and this data is a direct measurement of how markets unfold through time.
+This level of detail can provide a picture of the behaviour of individual agents, which can then guide the development of new ABMs
+while providing methods for validating the models [2,6,7]. ABMs are computationally expensive. This introduces a fundamental
+trade-off: balancing the computational cost of generating more sample paths against the additional statistical accuracy [7]. The most
+common method for validating an ABM is the empirical vs. simulation comparison of stylised facts that are present in the generated
+time series, e.g. fat-tails in the return distributions, the presence of volatility clustering, the leverage effect, and an appropriate decay
+in the autocorrelations of price changes.
+This approach is computationally convenient and is essentially a form of exploratory data analysis. However, this approach has
+been criticised in the literature in the context of intraday ABMs because many parameters in ABMs are related to each other and
+share coupled impacts in the observed stylised facts. A given model’s generated time series should reproduce the statistical properties
+of empirically measured transaction and order-book data through a pragmatic combination of sensitivity analysis, calibration, and
+stylised fact verification while accepting some level of parameter degeneracy. Given this, the empirical vs. simulation stylised fact
+comparison remains a good way to test the validity of the class of ABM of the limit-order book considered in this work [7–9].
+When market clearing takes place in event time rather than at preset times, the model needs to be able to update based on each
+individual event, and to be able to react to each individual event in a manner that is asynchronous for all the other agent realisations.
+In general, an open event-driven system model is incompatible with preset event times, whether randomly or uniformly sampled.
+However, if a particular agent-based model is the only model framework interacting via a given matching engine, then all the
+possible events will be generated by that given agent-based model. The model is then a closed system.
+This is the hybrid framework [10] where preset times can be used to streamline the computations even if the implementation
+is reactive. In such a closed system, new agents cannot be introduced as they may trigger events not accounted for by the preset
+event times. This means that when new agents are introduced in an open system without a method for agent synchronisation, e.g
+using batched market clearing, the system does not know a-priori when events will occur as they arise from interactions. In an open
+event-driven system, the model requires agents to be implemented in a reactive framework to make order matching realistic and
+event-driven.
+1.2. Reactive agent-based models
+Reactive programming is a method of solving problems by manipulating or reacting to events in data streams generated
+by asynchronous observers using functional programming. Observables are the emitters of events in a data stream and can
+asynchronously emit events. There are a variety of reactive software implementations; we use Rocket.jl [11,12] where actors [13]
+subscribe to an observable, and when a new event occurs in the data stream, the observable emits this event, and the actors consume
+this data and can act based on that event. In an event-driven ABM, the observable emits the current state of the LOB; the data stream
+consists of the states of the LOB through time. When the LOB is updated, the observable emits this as an event, and the actors – in
+this work, the minimal intelligence agents – can reactively trade based on the agent specification rules.
+A reactive ABM lends itself to extending current ABM models in two novel ways: a fundamentally different model of time, and
+a fully decentralised control logic [14]. In most of the current research, the ABMs that are used to model financial markets use a
+synchronous model of time where the model progresses through a sequence of global iterations where the agents are modelled as
+functions that are called in each of these iterations [14]. This is not conducive to modelling financial agents as agents may respond
+to the same event at different times in reality. For example, one trader may be able to respond quickly to a large increase in the
+price of a particular stock price while another may have to unwind other positions to participate in the sudden increase [14].
+Giles [15] demonstrated that the dynamics of the ABM can change depending on whether the agents trade synchronously or
+asynchronously. When agents trade synchronously, at each time point, all the agents are polled and then send in their orders and
+update their state. However, when agents trade asynchronously, they may place an order, hold, or be inactive. Aloud et al. [16]
+built an ABM of the foreign exchange (FX) market using agents that trade asynchronously and was able to closely approximate
+the stylised facts of the market. Asynchronous trading adds an important additional level of realism. However, the market clearing
+mechanism still operated synchronously since at each time step, all the agents’ market orders were executed sequentially, and all
+the limit orders were cleared.
+
+Physica A: Statistical Mechanics and its Applications 633 (2024) 129363
+3
+M. Dicks et al.
+We decouple the matching engine and the model management system to ensure the agents are simulated in a continuous double
+auction with no synchronous market clearing. The system is now open. This has the benefit of allowing us to add additional agent
+classes that can interact with existing agents based on the state of the system. This can include agents learning to take actions based
+on system states.
+1.3. Reinforcement learning
+In a simple case of Reinforcement Learning (RL), an agent interacts with an environment at discrete time steps. At each time
+step, the agent observes the system’s current state and chooses an action out of a set of finite actions. One time step later, the
+agent receives the reward for taking that particular action in that state and observes the new state of the environment. The goal
+of reinforcement learning is to find the mapping between states and actions to maximise the long-term reward of the agent. This
+framing of the reinforcement learning problem considers RL to solve a Markov Decision Problem (MDP) [17]. RL problems are
+not restricted to solving discrete-time finite state–action space MDPs. However, this is an ideal framework [17] for the simulation
+of simple RL algorithms and provides a simple baseline foundation for comparison with future extensions that is computationally
+inexpensive.
+The advantages of using RL as compared to dynamic programming [18] (for example) are twofold [19]. Firstly, the RL agents
+do not need full knowledge of the environment and learn an optimal policy. They can learn the optimal policy by interacting with
+the environment and recording the rewards for taking actions in certain states. Secondly, to increase the scalability of the learning
+process, the agent can use function approximations to represent their knowledge [20]. The RL algorithm that will be implemented
+in this paper is the Q-learning algorithm [21]. These simple RL agents are used to solve the optimal execution problem to represent
+a single learning agent with bounded rationality.
+1.4. Optimal execution
+The optimal execution problem is defined as the problem of finding a way to trade a block of shares through time at the lowest
+possible cost [20,22–24]. Much of the existing research solves this problem using the tools of stochastic dynamic programming,
+which assumes that the prices will follow some combination of random walks in discrete time, or Brownian motions in continuous
+time, to approximate the data-generating processes. Data-driven representations of the data-generating processes have become
+popular due to the availability of market micro-structure data and improved computational resources. This has in turn made it
+possible to consider learning algorithms.
+1.5. Problem statement
+Our overarching aim is to investigate how learning affects, and is affected by, adaptation in markets. An additional objective is
+to set the scene for the calibration and simulation environment testing for a more sophisticated and detailed market microstructure
+analysis. In particular, to provide a market simulation framework that contains both bottom-up and top-down causation [25]. We
+take initial steps towards this end, giving rise to the following research questions we consider in this work. Firstly, we ask‘‘Is learning
+feasible?’’. Secondly, we ask ‘‘How do learning agent interactions change a minimally intelligent financial agent-based model?’’ .
+Many agent-based models have some form of batch clearing [9], where either batches of market orders are executed against the
+limit-order book at preset calendar times, or rolling auctions are used. Batch clearing can introduce spurious correlations between
+parameters and elements of the model as the system is synchronised by an external feature that is not present in real financial
+markets. Consequently, realistic models should clear markets in event time so that the sampling time of events is emergent from
+agent interactions and not externally imposed. From a modelling perspective, one approach is to directly use a matching engine to
+avoid batch market clearing.
+A key technical issue then arises, the requirement that a reactive model is necessary to simulate the learning environment so
+that any number of additional agents can be included via direct interactions through the matching engine [26] without the need to
+specify the model update times.
+1.6. Our approach
+We extend the ABM framework of Jericevich et al. [10] as the learning environment. Their model recovered several conventional
+stylised facts, including persistent auto-correlation in the trade signs, fat-tail return distributions, and volatility clustering, and
+recovered a realistic price impact function. In particular, recovers the expected power-law relationship between the log difference
+in the price changes and the size of the normalised volumes. Finally, and most importantly, the trades were simulated in event time,
+rather than the usual calendar time.
+The RL algorithm that will be implemented in this paper is the Q-learning algorithm [21]. Our implementation is inspired by the
+simple RL agent implemented by Hendricks and Wilcox [27]. Their RL agent was trained on market data offline, with the assumption
+that the order book is resilient. This means that the trading of the RL agent does not affect future prices, and other agents in the
+market cannot react to its trading. This was a necessary constraint, but not allowing other agents to react to the RL agent’s trading
+may increase the observed profits above what will be realised in the real market. We aim to give some insight into the effects of
+training a similar RL agent in an online manner in an environment provided by a simple ABM.
+
+Physica A: Statistical Mechanics and its Applications 633 (2024) 129363
+4
+M. Dicks et al.
+The choice of performance benchmark for the learning algorithm is important. This work uses a Time-Weighted-Average-Price
+(TWAP) benchmark because it is the optimal execution strategy in an efficient market. We measure performance by the Profit-and-
+Loss (PL) relative to immediate execution. This is discussed further in the Results section (See Fig. 3). It should be noted that in the
+real world setting, the Almgren-Chriss (AC) benchmark can be a more appropriate and pragmatic choice [27].
+1.7. Contributions
+Our primary contribution is the presentation of a novel ABM framework to facilitate the investigation of learning agents within
+a LOB. Our framework is novel for three reasons: (i.) the change from modelling in calendar or stochastic time to event time
+is unusual in the current literature, (ii.) the training of a learning trading agent within an environment with feedbacks is again
+unusual, with much of the machine learning literature moving towards surrogate data sets to capture the environment, and (iii.)
+the investigation of the impact of a learning agent on a reasonably realistic minimally intelligent ABM to demonstrate the impact
+of strategic order-splitting on the price impact curves (See Fig. 7) and on the trade-sign auto-correlations and log-micro-price
+fluctuations (See Figs. 6).
+Our secondary contributions are our findings related to our research questions and objectives: First, it shows that learning is
+feasible within an event-based ABM simulation of the market environment, even with a very simplistic reward function. Second, this
+environment is relatively realistic but can be further enhanced with the inclusion of learning. Thirdly, the inclusion of learning agents
+can be constructed within agent-based market models to include additional sources of top-down causation through adaption [28].
+Lastly, a reactive framework is advisable if one aims to explore more realistic trading algorithm simulation when the order matching
+is event-based. The inclusion of many learning agents, agents with more complex cost functions, and alternative performance
+benchmarks has been explored in a preliminary manner elsewhere [29].
+2. The model
+A key feature of the combined model design is that we do not expect the underlying ABM model for the training environment
+to fully capture the required trade-sign Auto-Correlation Function (ACF). This is because the ABM model describing the trading
+environment has not been explicitly calibrated to describe the trade-sign ACF features, and the ABM model does not have agents
+explicitly engaging in strategic order-splitting. This is the same design choice made in prior calibration work [9]. Only the learning
+agent is engaging in strategic order-splitting. This is important because both herding and order-splitting have been used to explain the
+order-flow auto-correlation, with order-splitting being given as the main reason [30]. So, in our foundational (minimally intelligent)
+ABM, the auto-correlations can only be explained by the herding of the chartists, and we show that this produces an effect, but one
+that is too weak to fully account for what is observed in the real market.
+The model calibration task is to both provide a method to estimate model parameters relative to the measured real-world data in
+a framework amenable to interactions with a learning agent and to also provide a method, with summary statistics, that can be used
+to measure the extent to which the learning agent, once introduced to the environment provided by the minimally intelligent ABM,
+is found to distort this environment. The method of simulated moments is convenient in this regard as it provides: (i.) moments, (ii.)
+an approach to managing the expected co-dependencies and correlations between these moments, and (iii.) a method to bootstrap
+a reasonable spread of moments and their impact on parameters to coarsely measure model stability via indicative confidence
+intervals. However, the calibration is unsuitable for inference because of its weak link to the distributional properties of the moments
+themselves. Their purpose in this paper is not to statistically motivate the meaningfulness of particular parameter values relative to
+the real-world data, but to summarise various stylised facts for comparison once we introduce the learning agents into the market
+environment.
+Our model design has two key components. First, the underlying minimally intelligent ABM that will be used to model the
+learning environment. Second, the learning agent that interacts with and modifies the overall model behaviour, where the overall
+model is the minimally intelligent ABM combined with an agent using RL. We now consider the learning agent specification, then
+the minimally intelligent foundation model of the environment that it will interact with. After this, we will discuss how the learning
+agent has changed the overall model.
+2.1. The learning agent
+The learning agent will learn how best to execute market orders using RL as part of an optimal liquidation problem. The optimal
+execution RL agent implemented here uses a simple tabular Q-learning approach with simple state attributes, actions, and reward
+functions [19]. The state space used and the agent’s actions are based on the RL agent proposed by Hendricks and Wilcox [27].
+The state space parameters are given in Table 1. To specify the optimal execution agent, we need to specify the initial volume to be
+liquidated, the volume trajectory, the actions the agent can take, and the rewards the agent will attain after these actions. Let 𝑋0
+be the total initial volume to be liquidated, and is chosen so that the RL agents trade initial volumes of 21,500, 43,000, and 86,000
+shares, and these are selected to be approximately 3%, 6%, and 12% of the ABM’s Average Daily Volume (ADV) traded.
+
+Physica A: Statistical Mechanics and its Applications 633 (2024) 129363
+5
+M. Dicks et al.
+2.1.1. Agent volume trajectory
+The agent is a selling agent and aims to maximise the profit received from liquidating shares [27] where the agent aims to
+modify a given volume trajectory using only market orders. We do not use the AC volume trajectory [27]. The volume trajectory to be
+modified is the event time analogue of the Time-Weighted-Average-Price (TWAP) volume trajectory. Since our model is implemented
+in event time, setting aside specific calendar times in the simulation for the agent to trade is inconvenient.
+Therefore, we have modified the TWAP strategy to work in the reactive event time approach without imposing update times on
+the learning agent. This volume trajectory will be referred to as the event-based TWAP volume trajectory to remind the reader that
+the formulation of time has changed. This is necessary because there is no external clock providing uniform, or event stochastic, time
+steps for a calendar time TWAP implementation e.g. at every 5 minutes in the market’s calendar time. This is because no top-down
+causation process imposes an external calendar time in our implementation. However, in our model, it does not matter whether the
+TWAP schedule is implemented at random times or uniformly sampled times; at each event update, it triggers the update of the
+sequence of same-sized trading lots that make the trading schedule. This is computationally convenient as we could have triggered
+learning agent updates in machine time, and this has no impact on the results.
+The number of decision points is 𝑁𝑑𝑝, which is the number of times an order of size 𝑋0∕𝑁𝑑𝑝 needs to be executed to fully
+liquidate. A decision point count is the number of times the LOB is updated, and the RL agent is asked to make a trading decision.
+𝑁𝑑𝑝 governs how long an RL agent will trade in the simulation if it follows the TWAP strategy. If 𝑁𝑑𝑝 is small then the agent will
+trade for a short amount of time if it follows the TWAP volume trajectory and there is enough liquidity, and vice versa for large𝑁𝑑𝑝.
+In this implementation, we have set 𝑁𝑑𝑝 so that if the typical agent trades exactly 𝑥𝑖 at each decision point and there is enough
+liquidity, the agent will trade on average for the whole simulation and fully liquidate. We have chosen𝑁𝑑𝑝 this way because it most
+closely resembles a TWAP strategy implemented over an entire 8-hour calendar time trading day.
+2.1.2. Agent actions
+The RL agent is constrained to submitting only market orders [27]. The volume of the market order is found from a given parent
+order 𝑋0 and a volume trajectory {𝑥𝑖}
+𝑁𝑑𝑝
+𝑖=1 such that the parent order is fully executed by the volume trajectory: 𝑋0 = ∑{𝑥𝑖}
+𝑁𝑑𝑝
+𝑖=1 .
+Then at the 𝑖th decision point the agent can increase, decrease, or trade 𝑥𝑖. At the 𝑖th decision point the agent chooses an action
+𝑎𝑖 ∈ {0, 0.25, 0.5, …, 2} such that the modified volume is given by ̃ 𝑥𝑖 =𝑎𝑖𝑥𝑖. The goal is to have the agent learn in which states it is
+better to increase or decrease the volume traded to maximise the reward. If, at the end of the trading period, the agent has not fully
+liquidated their position, the agent will submit a maximum order of ̃ 𝑥𝑖 = 2𝑥𝑖 to try to trade as much of the remaining inventory
+allowed by the actions. This does not guarantee that all the inventory will be traded. This ensures that there is a penalty for having
+inventory left over, as the trader will then not receive the additional profit.
+2.1.3. Agent rewards
+The goal for this agent is to maximise the total profit from selling the large initial parent order. Given this goal, the reward signal
+must be defined such that the return corresponds to the goal. Let there be 𝑁 market orders submitted by the RL agent. For the 𝑛th
+order, in an episode, let the total profit received be the reward for that trade: 𝑅𝑛 = ∑𝐽
+𝑗=1𝑝𝑗𝑥𝑗, for an order that has walked 𝐽 levels
+down the order book. Given that each simulation is used as an episode, we then have that an episode’s return is: 𝐺 = ∑𝑁
+𝑛=1𝑅𝑛,
+where 𝑅𝑛 is the 𝑛th order in an episode. This corresponds to the total profit from selling inventory in that episode. Therefore, the
+agent will maximise the total profit, which is its goal.
+For the Q-learning algorithm, the convergence guarantees are based on the fact that the underlying model generating the state,
+action, and reward samples evolve according to a Markov process, where the next state and the reward depend only on the previous
+state and the action taken in that state. Given the simplicity of the state space, it is unlikely that it encodes enough information about
+the LOB to ensure that the process is Markov. This means that the convergence guarantees for the Q-learning algorithm are most
+likely violated [31]. However, we show that this is sufficient to encode enough information for the agent to learn simple, intuitive
+rules for liquidating a position in this model and implementation. We use standard updating equations in an episodic setting because
+we do not use a finite horizon formulation [27,32].
+2.1.4. Agent state space
+The state space consists of four variables: two variables that summarise the state of the individual agent’s current execution and
+two variables that summarise the state of the LOB. Remaining time, t, and Remaining inventory, i, are used to summarise the state of
+execution. The Spread, s, and Best bid volume, v, are used as the variables to summarise the state of the LOB, with the idea being that
+the agent will learn to increase (resp. decrease) volume traded when the spreads are narrow (resp. wide), and the best bid volume
+is high (resp. low). To be compatible with tabular Q-learning, these variables must be discretised, and course-grained to ensure that
+the state space does not grow too large. The state space parameters are shown in Table 1.
+For the time and inventory variables, the total trading time is divided into 𝑛𝑇 intervals, and the total inventory to be traded is
+divided into 𝑛𝐼 blocks. As the time and inventory decrease through the simulation, the time interval and the inventory blocks that
+the state belongs to determine its state value. The state values are given by indices 𝑖 and𝑡 as shown in Table 1. For the spread and
+volume states, we would like to know whether the spread and the best bid volume are ‘‘high’’ or ‘‘low’’. This is done by comparing
+the current values to historical distributions of the spread and volume [27]. To generate the historical distributions, we ran the
+calibrated simulation model 365 times and recorded the spreads and the best bid volumes. The state value is determined by which
+quantiles the spread falls in between. The details are provided in Supplementary Table S6. For the volume distribution, we use the
+method of Hendricks and Wilcox [27], with the details provided in Supplementary Table S5.
+
+Physica A: Statistical Mechanics and its Applications 633 (2024) 129363
+6
+M. Dicks et al.
+Table 1
+The learning agent parameters: The RL agent training parameters are the session length in machine time 𝑇0, the different values
+for the initial inventories for the parent order 𝑋0, and state space variables representing the different parameter combinations. The
+volume trajectory lot sizes are given in the brackets. The number of decision points, the number of episodes, and the discounting
+and learning rates are fixed. The parameters used to create the state space are: the remaining time index is 𝑡 = 1, 2, …,𝑛
+𝑇
+, the
+remaining inventory index is 𝑖 = 1, 2, …,𝑛
+𝐼
+, the spread state index 𝑠 = 1, 2, …,𝑛
+𝑆
+, and the volume state index 𝑣 = 1, 2, …,𝑛
+𝑉
+. The
+spread and volume state indices map into values based on measured historic feature distributions.
+Parameters Description Values Interpretation
+Trajectories
+𝑇0 Trading episode length 24.5 s 8 h of trading
+𝑋0 Parent order and lot size 21,500 (50) 3% of model ADV
+43,000 (100) 6% of model ADV
+86,000 (200) 12% of model ADV
+𝑁𝑑𝑝 Counts 430 Decisions per episode
+States
+𝑛
+𝑇
+Number of time states 5, 10 ‘‘small‘‘, ‘‘large’’
+𝑛
+𝐼
+Number of inventory states 5, 10 ‘‘small‘‘, ‘‘large’’
+𝑛
+𝑆
+Number of spread states 5, 10 ‘‘small‘‘, ‘‘large’’
+𝑛
+𝑉
+Number of volume states 5, 10 ‘‘small‘‘, ‘‘large’’
+Training
+𝑁𝐸 Number of training episodes 1000
+𝛾 Discounting rate 1
+𝛼 Learning rate 0.1
+2.1.5. Training parameters and implementation
+The number of training episodes, the discounting factor and the learning rate used are given in Table 1. In Q-learning, there are
+two policies: the target policy that we aim to optimise, and the behaviour policy, which generates the agent’s behaviour used to
+optimise the target policy. In our implementation of Q-learning, the target policy is the greedy policy, and the behaviour policy is
+the 𝜖-greedy policy, where 𝜖 controls the amount of exploration versus exploitation in the optimisation. For a given state and 𝑁𝐴
+actions, the 𝜖-greedy policy chooses the action with the highest value with probability 1 −𝜖 + (𝜖∕𝑁𝐴) and the rest with probability
+𝜖∕𝑁𝐴. Setting𝜖 = 1 will mean an agent selects each action with equal probability regardless of its value, and setting𝜖 = 0 will ensure
+the agent always selects the action with the highest value — the greedy policy. To ensure a good balance between exploration and
+exploitation, the 𝜖 parameter was S-curve decayed throughout the simulation.
+To update the value of the current state–action pair, the Q-learning update equation needs to observe the next state that the
+agent transitioned to. In a live implementation, this state is not observed until the message from the matching engine has been
+received, indicating if and then how the order was matched. To remedy this, the update to the state–action pair’s value is done one
+step later when the next state is observed. This is shown in Supplementary Algorithm 4.
+2.2. The environment
+The ABM represents the environment in which a learning agent will be trained and then simulated. It is populated with minimally
+intelligent liquidity takers and liquidity providers interacting in a continuous-double auction market. The liquidity takers (LTs)
+submit only Market Orders (MOs), and the liquidity providers (LPs) submit only Limit Orders (LOs). Market orders are submitted
+for immediate execution, while limited orders have a reservation price. We do not know when agents will be activated because the
+model has no global time. To solve this activation problem, we add a spread correction of ± 1
+2𝑠𝑡 to the liquidity takers rules [10].
+The liquidity takers would then act asynchronously in event time because they can now trade, hold, or do nothing as activated by
+the spread correction. In the case of High-Frequency (HF) agents, the environment’s liquidity providers, a simplifying assumption
+allows them to trade in each event loop iteration. Concretely, this is because the LPs are modelling HF market makers, and we can
+assume that as the LOB is updated, there will be an HF trader attempting to use their latency advantage to exploit these updates
+to profit from the spread via round-trip trades — either taking advantage of the strategic or competition effect. The volume of the
+orders is sampled from a power-law distribution density function [10], where the distribution parameters for the cut-off 𝑥𝑚 and the
+shape𝛼 are determined based on the state of the historical order book for both the liquidity takers and the liquidity providers. The
+environment is schematically represented in Fig. 1.
+2.2.1. Liquidity takers
+There are two types of liquidity takers: First, there are the fundamentalists who trade based on a perceived fundamental value
+of the asset. Second, there are the chartists, or trend followers, who trade based on the current asset price trend. There are 𝑁𝑓
+LT
+fundamentalists and𝑁𝑐
+LT
+chartists that make up the population of liquidity takers. The direction and volumes of their market orders
+are determined by simple mechanistic decision rules. For the fundamentalists:
+𝐷𝑓
+𝑖,𝑘 =
+⎧
+⎪
+⎨
+⎪⎩
+sell if 𝑓𝑖 <𝑚 𝑘 − 1
+2𝑠𝑘
+buy if 𝑓𝑖 >𝑚 𝑘 + 1
+2𝑠𝑘,
+(1)
+where 𝑚𝑘 and 𝑠𝑘 are the mid-price and spread at event k, and 𝑓𝑖 is the fundamental price for the 𝑖th fundamental agent. Here the
+fundamental price is𝑓𝑖 =𝑚0𝑒𝑥𝑖 where𝑥𝑖 ∼  (0,𝜎 2
+𝑓 ) and𝑚0 is the initial mid-price, and𝜎2
+𝑓 is the variance of the normal distribution
+
+Physica A: Statistical Mechanics and its Applications 633 (2024) 129363
+7
+M. Dicks et al.
+Fig. 1. Learning environment state flow schematic as adapted from Jericevich et al. [10]. Starting with the state of the order book, three different classes
+of minimally intelligent agents can be activated by events: fundamentalists, chartists, and liquidity providers. The agents are index by 𝑖 and the events by
+𝑘. Liquidity takers use Market Orders (MOs). The liquidity providers use only Limit Orders (LOs). Parameters are defined in the text following the equation
+numbers. Any resulting orders are submitted into the Matching Engine (ME) (CoinTossX [26]). In a reactive formulation, any number of additional agents can
+inject orders into the matching engine (CointossX) when triggered by appropriate events from the Market Data Listener (MDL). See algorithms 1, 2 and 3 in the
+supplementary materials.
+that generates the log-normal distribution. Each fundamentalist’s fundamental price is determined at the start of the simulation and
+is kept constant throughout. The spread correction, − 1
+2𝑠𝑘 for sells and + 1
+2𝑠𝑘 for buys, modifies the fundamentalists’ trading rule [10]
+to ensure that the fundamentalists never buy (sell) a stock for more (less) than their fundamental value. It also ensures that the
+fundamentalists are trading asynchronously. For the chartist:
+𝐷𝑐
+𝑖,𝑘 =
+⎧
+⎪
+⎨
+⎪⎩
+sell if ̄ 𝑚𝑖,𝑘 >𝑚 𝑘 + 1
+2𝑠𝑘
+buy if ̄ 𝑚𝑖,𝑘 <𝑚 𝑘 − 1
+2𝑠𝑘,
+(2)
+where ̄ 𝑚𝑖 is the exponentially weighted moving average (EWMA) of the mid-price computed by the 𝑖th chartist agent. A similar
+spread correction was implemented for the chartists, as was implemented for the fundamentalist agents above. The moving average
+is computed using: ̄ 𝑚𝑖,𝑘+1 = ̄ 𝑚𝑖,𝑘 +𝜆𝑖(̄ 𝑚𝑖,𝑘 −𝑚𝑘). The forgetting factor, 𝜆𝑖, is not updated using the same method used in the hybrid
+ABM [10]. This is because, in event time, the chartists can converge and herd if they use the same moving average. The forgetting
+factor may not update fast enough and can become consistently close to one. This will cause the chartist agents to track the mid-price
+
+Physica A: Statistical Mechanics and its Applications 633 (2024) 129363
+8
+M. Dicks et al.
+too closely, which may not generate trades. The forgetting factor is sampled for each agent at the beginning of the simulation from
+the uniform distribution, 𝜆𝑖 ∼ 𝑈 (𝜆𝑚𝑖𝑛,𝜆𝑚𝑎𝑥). Sampling the uniform distribution gives each agent an equal probability of having a
+long or short trading horizon. As with the hybrid ABM’s fundamentalists, the rule has been modified to include a spread correction.
+This ensures that the chartists’ rules are not always activated and allows greater heterogeneity in the chartist agent behaviour.
+Once the liquidity takers have determined the direction of the market order, the next step is to determine the volume of the
+order. The volume distribution’s minimum volume𝑥𝑚 is determined based on how far the fundamental value, or the moving average,
+is from the mid-price relative to a threshold 𝛿, which is given as a percentage of the current mid-price. The agent parameters are
+given in Table 2. For fundamentalists, the minimum volume is:
+𝑥𝑚 =
+⎧
+⎪
+⎨
+⎪⎩
+20 if |𝑓𝑖 −𝑚𝑘| ≤𝛿𝑚𝑘
+50 if |𝑓𝑖 −𝑚𝑘|>𝛿𝑚 𝑘.
+(3)
+For chartists, this is:
+𝑥𝑚 =
+⎧
+⎪
+⎨
+⎪⎩
+20 if |̄ 𝑚𝑖,𝑘 −𝑚𝑘| ≤𝛿𝑚𝑘
+50 if |̄ 𝑚𝑖,𝑘 −𝑚𝑘|>𝛿𝑚 𝑘.
+(4)
+This increases the aggression of the agents when the state of the system presents a favourable trading opportunity relative to their
+fundamental value or trading strategy.
+The volume of each agent’s order is sampled from a power law distribution function if 𝑥 ≥𝑥m [10]:
+𝑓 (𝑥) =
+𝛼𝑥𝛼
+m
+𝑥𝛼+1, (5)
+and is otherwise zero. The parameters 𝑥m and 𝛼 will depend on the state of the LOB and activation rules. The shape parameter of
+the volume distribution, 𝛼, is determined with respect to the order imbalance 𝜌𝑘 and an additional model parameter 𝜈:𝛼 = 1 ±𝜌𝑘∕𝜈
+with + (−) for buy (sell) MOs [10]. The order-imbalance is: 𝜌𝑘 = 𝑣𝑎
+𝑘−𝑣𝑏
+𝑘∕𝑣𝑎
+𝑘+𝑣𝑏
+𝑘, where𝑣𝑎
+𝑘 and𝑣𝑏
+𝑘 is the volume of the asks and the bids
+respectively. The parameter 𝜈 >1 ensures that 𝛼 never equals 0. Specifying 𝛼 in this way achieves two effects. First, if the contra
+side of the order book is thicker, the agent will submit larger orders to take advantage of the extra liquidity because it will likely
+reduce the price impact of a large order. Second, if the same side is thicker, the orders will be smaller to reduce the price impact.
+2.2.2. Liquidity providers
+Each LP agent acts on every LOB modification in every event loop. Thus, an event loop can naively be thought to batch sets of
+limit order events for each agent. However, the orders are independently submitted to and matched by the matching engine. This
+approach is used for three reasons. First, it ensures that the simulation does not result in a state where no trade occurs because
+of the lack of liquidity provision. This would cause the simulation to halt prematurely and would, in turn, be problematic when
+calibrating the model. Second, the LP agents, in collective, are simulating high-frequency market-makers or electronic liquidity
+suppliers that are profiting from the spread. So it is natural that they want to submit as many orders as quickly as possible in the
+hope of generating lots of small profits. Moreover, given enough high-frequency agents in the market, it is reasonable to assume
+that at any moment LOs are being placed based on the state of the LOB. Third, they ensure that the order book is reasonably stable
+throughout the simulation and reduce the chances of liquidity crashes.
+During each event loop, the LPs place an ask with a probability of 𝜃, and a bid with a probability of 1 −𝜃, where
+𝜃 = 1
+2 (𝜌𝑘 + 1). (6)
+This setup has LPs provide liquidity, on average, to the side that has the least liquidity. After determining the direction of the order,
+the price placement and the volume have to be determined.
+The price placement of the limit order is given by:
+𝑝𝑘 =
+{
+𝑏𝑘 + 1 + ⌊𝜂⌋ for asks
+𝑎𝑘 − 1 − ⌊𝜂⌋ for bids,
+(7)
+where𝑎𝑘 and𝑏𝑘 are the best offer and best bid prices at event k respectively. The threshold parameter 𝜂 is sampled from a Gamma
+distribution:
+𝑓 (𝑥) = 𝛽𝑠𝑘𝛤 −1(𝑠𝑘)𝑥𝑠𝑘−1𝑒−𝛽𝑥 (8)
+found using the current spread𝑠𝑘. Here𝛽 is set using the order imbalance𝜌𝑘:𝛽 =𝑒±𝜌𝑘∕𝜅 with + (−) for bids (offers) where𝜅 >0 is a
+model parameter. The mean value for 𝜂 at event k is ̄ 𝜂=𝑠𝑘𝑒±𝜌𝑘∕𝜅 with + (−) for bids (offers). This price placement achieves several
+effects. First, when the order book is relatively balanced, the orders are placed close to the best bid and offer prices. Second, when
+the order book is thicker on the contra side, the orders are placed further away from the best bid and offer prices, capturing the
+strategic effect [33]. Third, when the same side of the order book is thicker, the orders are placed closer to the best bid and offer
+prices, capturing the competition effect [33]. The larger (resp. smaller) the value of the model parameter 𝜅, the lower (resp. higher)
+the intensity of the strategic and competition effects.
+
+Physica A: Statistical Mechanics and its Applications 633 (2024) 129363
+9
+M. Dicks et al.
+Table 2
+The environment parameters: The foundational ABM describing the environment that the learning agent is introduced into. Some parameters were kept fixed,
+while others were allowed to vary in the calibration. These choices were informed by a sensitivity analysis and prior work [10]. Additional detail is provided
+in the supporting materials. Time is measured in machine time, where 1 s of machine time is approximately equivalent to 20 min of calendar time trading. The
+calibrated parameters are shown in the last three columns. The moments generated by the calibrated model are provided in Table 3.
+Parameters Description Type Range Calibrated values
+̂𝜃0.025 ̂𝜃 ̂𝜃0.975
+𝑇 LOB simulation (machine) time. Fixed 25 s –
+𝜙 Time to cancellation of an order. Fixed 1 s –
+𝑁
+LP
+The number of liquidity providers Fixed 30 –
+𝑁𝑐
+LT
+The number of chartist liquidity takers Free [1, 20] 7.256 8.000 8.744
+𝑁𝑓
+LT
+The number of fundamentalist liquidity takers Free [1, 20] 4.302 6.000 7.698
+𝛿 Minimum volume mid-price cut-off % Free [0, 10] 0.12 0.125 0.13
+𝜅 Liquidity provider limit order placement intensity Free [0, ∞) 3.254 3.289 3.524
+𝜈 Order-imbalance shape parameter. Free [1.5, ∞) 6.267 7.221 8.175
+𝜎𝑓 Fundamental value variance Free [0, 0.05] 0.0402 0.041 0.0418
+𝜆𝑚𝑖𝑛 Minimum chartist forgetting factor Fixed 0.0005 –
+𝜆𝑚𝑎𝑥 Maximum chartist forgetting factor Fixed 0.05 –
+The volume of the limit orders is sampled from the same power-law distribution as the market orders given in Eq. (5) but with
+different parameter values [10]. To ensure enough liquidity, an increase in the ratio of the number of LPs to LTs is needed, but this
+ensures that there are more small orders rather than more big orders that can saturate the best bid/offer. The minimum volume
+distribution cut-off parameter is 5; where it was 10 in the hybrid model [10]. The shape parameter for the volume distribution for
+the liquidity providers is: 𝛼 = 1 ±𝜌𝑘∕𝜈 with + (−) for bids (asks). This achieves two effects. First, when the order book is thicker on
+the contra side, the volume will be larger. Second, when the order book is thicker on the same side, the volume will be smaller. The
+rationale behind these effects is that they will stabilise the order book. Frequently cancelled orders are a feature of high-frequency
+traders, and this ABM will model this behaviour using prior work [10] where orders are cancelled if they are not completely filled
+within a certain amount of time 𝜙.
+2.2.3. Agent-based model calibration
+The calibrated parameters ̂𝜃 are shown in Table 2. A single day of Naspers trade-and-quote (TAQ) from the Johannesburg Stock
+Exchange (JSE) was used as the empirical data to calibrate the model and compare the stylised facts. The day of data that was used
+was 08-07-2019, and it was extracted from a larger static trading research dataset [10,34,35]. The data set used is 8 hours of trading
+in calendar time. For this day of trading, we found that the number of limit orders and trade events on the JSE was 15,104 and
+2,510, respectively. The average number of limit order events in 100 simulations was 12,071 with a 95% CI (10,988, 12,953), and
+similarly, the average number of trade events is 5,467 with a 95% CI (4,566, 5, 798). The model’s Average Daily Volume (ADV)
+is 745,362 with a 95% CI of (593,536, 1,008,027) estimated over 100 simulations. This is comparable to the ADV of 498, 981 for
+the trading week from which the calibration data was taken. A typical day of simulated trading using the calibrated parameters is
+shown in Fig. 2.
+The data was first cleaned into a ‘‘top-of-book’’ format for the calibrated price paths, simulated price paths, and measured real-
+world data. The mid/micro-prices obtained from this data are then used to estimate the moments and compare the stylised facts.
+This ensures a like-for-like data comparison between the simulated and measured data. It also means that the data is compared
+in event time on both markets, where an event is classified as an order (limit order or trade) that modifies the top of book and
+trade data. During calibration, we use the micro-prices from all updates to the LOB. This enables a like-for-like comparison between
+the hybrid ABM [10] and our reactive extension, and also reduces the large computational overhead of cleaning the data in each
+calibration iteration.
+We calibrated the ABM representing the environment to data using the method-of-moments with simulated minimum distance
+(MM-SMD) [36]. This method was chosen because it is more computationally tractable than Bayesian inference, does not require
+a closed-form solution like the maximum-likelihood method, and provides a simple link between model parameters and moments
+to summarise important properties of the data. To optimise the MM-SMD objective function, we used the Nelder–Mead algorithm
+with Threshold Accepting (NMTA) using adaptive parameters [37]. A description of MM-SMD and a more detailed discussion can
+be found in the supplementary materials. Briefly, the method of simulated moments starts with a moving block bootstrap of the
+measured data to generate a covariance between the estimated moments: 𝛴𝑒 = Cov[𝑚𝑒]. This is then used to form a weighted
+distance function between the simulated moments 𝑚𝑠(𝜃) and the estimated moments𝑚𝑒:𝑓 (𝜃) = E[𝑚𝑠(𝜃) −𝑚𝑒]𝑇𝛴−1
+𝑒 E[𝑚𝑠(𝜃) −𝑚𝑒]. The
+expectation represents a Monte Carlo step using five random seeds. This distance is used as the objective function that is minimised
+to estimate the parameters: ̂𝜃 = argmin𝜃𝑓 (𝜃).
+The trade and limit order volumes are highly dependent on the model’s parameters. We chose to let the calibration procedure
+determine the parameters, which will produce the volume distributions. Even though there are some discrepancies between the
+counts, i.e. fewer limit orders and more trades in the ABM, when compared to the JSE, increasing or decreasing the length of time
+the simulation was run for will only increase the differences. Based on this, we are confident that the machine time period of
+25 seconds generates event counts that are comparable to that found in a day of real-world trading, as observed in the calibration
+data.
+
+Physica A: Statistical Mechanics and its Applications 633 (2024) 129363
+10
+M. Dicks et al.
+Table 3
+The simulated, calibrated and empirical moments describing the learning environment and their respective variability. The simulated moments 𝒎𝒔∗ were obtained
+from the log-micro-price paths generated by the model parameters found in Table 2 and are found from 100 replications using different seeds for each path. The
+calibrated moments 𝒎𝒔 represent the combination of the same model parameters and the five random number seed vectors used to calibrate the environment. The
+same seeds and the calibrated parameters are used to simulate the training environment. The empirical moments 𝒎𝒆 were estimated on a single day of transaction
+data using a moving window block bootstrap. These moments act as reference moments that summarise what is expected from the simulated environment. This
+is described in detail in the supporting materials.
+Moment Simulated moments Calibrated moments Empirical moments
+𝑚𝑠∗
+0.025 𝑚𝑠∗ 𝑚𝑠∗
+0.975 𝑚𝑠
+0.025 𝑚𝑠 𝑚𝑠
+0.975 𝑚𝑒
+0.025 𝑚𝑒 𝑚𝑒
+0.975
+Mean 0 0 0 0 0 0 0 0 0
+Std ( ×10−4) 0 4.479 10.79 1.638 2.342 3.046 1.190 1.389 1.588
+KS 0.103 0.217 0.332 0.117 0.175 0.234 −0.013 0 0.013
+Hurst 0.244 0.316 0.387 0.329 0.395 0.462 0.411 0.468 0.524
+GPH 0.407 0.591 0.775 0.382 0.506 0.629 0.299 0.443 0.587
+ADF −165.6 −151.7 −138.0 −152.2 −148.9 −145.6 −139.8 −136.2 −132.6
+GARCH 0.733 1.058 1.382 0.876 0.948 1.02 0.958 0.995 1.032
+Hill 0.383 0.894 1.406 0.807 1.227 1.647 1.722 1.993 2.263
+As part of the calibration methodology, parameter convergence plots were investigated, and it was found that there was sufficient
+evidence that the NMTA algorithm was able to converge to a local optimum during calibration. It was found that the values of the
+objective function for the best vertex did not significantly improve in the last 32 iterations, and the variance in the objective function
+values across the simplex showed convergence. The calibrated parameters and associated indicative confidence intervals are shown
+in Table 2. We could have estimated confidence intervals using a computationally expensive multi-day bootstrap that re-samples
+and then re-estimates over multiple trading days — this was computationally infeasible, particularly when a similar method would
+be required for each learning agent experiment. However, from the sensitivity analysis, we can get insight into the relative stability
+of the parameters and the moments from the model perspective.
+The sensitivity analysis was used to find a feasible range of initial parameters and to check the objective function surface structure
+related to these to inform the choices summarised in Table 2. This is described in the supporting materials. The resulting parameter
+chains also provide combinations of parameters and moments that we can use to approximate the model-generated dependencies
+between the parameters, the parameters and the moments, and the moments. We can estimate𝛴𝑠 = Cov[𝑚𝑠|𝜃] to inform the expected
+model generated variability near the estimated moments, as well as the exposures between the six parameters and eight moments:
+𝐵 = Cov[𝜃|𝑚𝑠]∕Var[𝑚𝑠]. These can be used to approximate the model-generated parameter dependencies 𝛴𝜃 =𝐵𝑇𝛴𝑒𝐵. These allow
+us to provide indicative model-generated confidence intervals for the parameters to provide guidance to the relative stability and
+influences across various parameters when the random number seeds are fixed.
+The associated moments are presented in Table 3. The table also provides the simulated moments that capture the sample
+variations from random paths arising from many different random seeds in the simulation using the fixed calibrated parameters
+from Table 2. The calibrated moments represent the model moments from the calibration, but with a reduced fixed set of only five
+seed vectors for the random numbers used to simulate the environment. The same five seeds are reused for all training episodes.
+This ensures that comparable paths are recovered for each episode if no training agent is present. The training agent changes the
+overall model, and hence will change these paths, which changes the moments. These changes are not due to the variation in
+the random number sequences used nor parameters in the underlying ABM representing the training environment. Model training
+environment-specific variations can arise from model degeneracy and not the learning agent interactions. These are represented
+by the indicative confidence intervals for the calibration moments in Table 3. The table demonstrates that there is no significant
+difference between the simulated paths and the paths and resulting moments used in the calibration. The high computational costs
+of training and simulating learning agents motivate this approach to the simulation of paths.
+To better understand how varying the parameters causes changes to the simulated price paths, we first perform a sensitivity
+analysis on the parameters of the ABM. To detect the changes in the price paths nine moments have been chosen to characterise the
+behaviour of a single price path: the means and standard deviations of the price paths, the Kolmogorov–Smirnov (KS) statistic [38],
+the Hurst (H) exponent [39,40], the Geweke and Porter-Hudak (GPH) integration parameter [41], the Augmented Dickey–Fuller
+(ADF) statistic [42], the sum of the parameters of a GARCH(1,1) model [43], and the ‘‘improved’’ Hill Estimator (HE) [44]. These
+moments were chosen because they were found to be robust enough to characterise a price path but flexible enough to discriminate
+between parameter settings [10,43]. For most of the parameters, the distribution of moments across their values does not change
+considerably, and there is a large overlap of the distributions, indicating that changing a single parameter does not cause a large
+change to the overall model price paths. An important exception is that if we increase the number of fundamentalist agents ceteris
+paribus, the distribution of the Hurst exponent shifts to smaller values, showing that fundamentalists are engaging in mean-reverting
+trading strategies. This can also be seen in the correlation matrix between the parameters, the moments, and the objective function,
+which can be found in Supplementary Fig. S9.
+There are only two large correlations: the standard deviation of the price paths with the objective function (0.918), and the Hurst
+exponent with the number of fundamentalists ( −0.699). Specific parameter values may tend to produce large outliers, e.g. smaller
+values of the limit order placement intensity 𝜅 increased the number of outliers. From surface plots of the objective functions, we
+find a decrease from areas of higher values to lower values, giving heuristic evidence that optimisation is feasible. However, the
+optimisation of the objective function is non-trivial because there is also evidence of local minima and parameter degeneracy.
+
+Physica A: Statistical Mechanics and its Applications 633 (2024) 129363
+11
+M. Dicks et al.
+The Hurst exponent partially captures the mean reversion observed in the empirical data and is replicated by the model. However,
+despite an overlap in distributions, the ABM has overestimated the amount of mean reversion. The overlap in the GARCH estimates
+can be explained by the high variance in the simulated moment’s distribution. Even with the high variance, the model was still
+able to recover the fact that the sum of the GARCH(1,1) parameters should be close to one. This indicates an integrated time series.
+Of the four moments that did not have enough overlap in confidence intervals, the ADF statistic is the least concerning because
+both time series exhibit little evidence of a unit root. The KS statistic is the moment with the largest difference in the confidence
+intervals, which gives evidence for the log-return distributions being different.
+The ‘‘improved’’ Hill estimator measures the power-law behaviour in the right tail of the log-return distribution. The simulated
+returns have a lower estimate across the entire confidence interval, giving us that the distribution has fatter tails. This is confirmed
+by estimating the power law exponent for the probability of finding an increment larger than a given threshold [45]. There is an
+asymptotic equivalence between the Hill estimator and such a tail exponent for the probabilities of exceedances. The exceedance
+probability is visualised in Fig. 5(b) for the learning agent configurations. These were estimated in event time, and no binning was
+used. This confirms the results from our preferred moment, the Hill estimator, that the learning agent introduces more extreme
+events but that this can be tuned to better conform with the observed real-world data.
+The simulated returns also have a higher variance when compared with the empirical returns distribution. For each moment, the
+simulated moments have a higher variance. This can result from fewer orders and higher variability in the liquidity in the simulation.
+It must be noted that these estimates are for a single day of JSE tick-by-tick data, and it is possible for moments to change across
+days. Overall, the calibration can be considered a partial success as the simulated moments were not considerably different from
+the empirical data while being reasonably stable. We are thus confident that this is a reasonably realistic market simulator in which
+to train a learning agent.
+3. Results
+Fig. 2 plots a simulated price path of the combined model using the calibrated ABM model parameters and the small state-space
+learning agent liquidating a medium-sized parent order that is 6% of the Average Daily Volume (ADV). Table 1 gives the remaining
+learning agent configurations. The fluctuations in the log-returns, as well as the spread and order imbalance, are shown. This is a
+single price path that is subject to variations due to changes in the fundamental prices, the forgetting factors, the randomness of
+the samplings, as well as the interactions with the learning agent.
+3.1. Learning agents
+The learning agent explicitly changes the environment, necessitating a heuristic approach to demonstrate policy convergence.
+We visually show that we have reasonable policy convergence in the presence of Q-matrix difference stability and, furthermore, that
+the actions learnt are explicable, scaling as expected with the size of the parent order over multiple training episodes. This is visually
+shown in the supporting materials and reported in this paper. Fig. 3 demonstrates that all the agents showed an improvement and
+convergence in profit over the episodes. From episodes 0 to approximately 250, there is an increase in the average profit and a
+decrease in the variance of the profit. After this period, the agents receive roughly the same profit when we ignore liquidity shocks
+of the agents with larger initial parent orders: 𝑋0.
+As𝑋0 increases, the frequency of large price decreases and liquidity crashes increase — this is shown in Fig. 5(b). Larger orders
+have a larger price impact and push the price further down. The impact of larger initial parent orders on the overall price impact
+is shown in Fig. 7. Increasing the inventory traded will increase the chance of a large order being submitted, which can remove all
+the liquidity on the contra side of the order book before liquidity providers can replenish it, causing liquidity crashes.
+There is no significant difference between the profit obtained by the smaller state space agents and the larger state space agents
+when they are trading the same amount of initial inventory. The difference between the number of states visited by the smaller and
+the larger state space agents is shown in Fig. 4. Agents cannot significantly improve the profit received compared to if they could
+trade all inventory at the initial mid-price. The agents have learned to only reduce the implementation shortfall. Unsurprisingly, the
+smaller state space converges faster than the larger state space. The smaller state space also exhibits more jumps, likely due to the
+clustering of states. In particular, the more coarse-grained space would cause the agent to sample from one cluster and then jump
+to another, while the larger state space would have fewer distinct clusters, and the jumps between states would be less significant,
+giving a smoother convergence. Having far more states means that there will be fewer returns to individual states over the same
+number of episodes, which means the agents with the larger state space will likely have greater difficulty in learning a good policy
+over the same number of episodes.
+The order volume trajectories learnt by the different agent configurations in the training environment are shown in Fig. 5(a).
+The six different configurations are from Table 1. All the agents learned to execute more volume early in the trading session. There
+is more erratic trading for larger parent orders 𝑋0 as the trading algorithm responds to larger volatility in the market states that
+actions respond to. The trading agent liquidating the larger parent order generates relatively more extreme events, as shown in
+Fig. 5(b).
+
+Physica A: Statistical Mechanics and its Applications 633 (2024) 129363
+12
+M. Dicks et al.
+Fig. 2. At the top of the figure is a 25 s (in machine time) simulated price path for the combined model configuration using a 6% ADV learning agent with a
+small state space (see Table 1 ). The environment is simulated using the calibrated parameters from Table 2 . This is equivalent to a single trading day, i.e. 8 h of
+typical trading in calendar time. The different markers and colours correspond to the different types of orders and the different sides of the LOB, respectively.
+The fluctuations in the log-micro-price returns, as well as the spread and order imbalance, are plotted in the middle and the bottom, respectively. These results
+visually demonstrate how the ABM and learning agent have produced well-known stylised facts. This is captured in more detail in Table 3 with further details
+in Supplementary Figures S1–8.
+3.2. Model stylised facts
+It is difficult to assess the ‘‘goodness’’ of one ABM relative to another as most assessments are qualitative comparisons of stylised
+facts, and often, a variety of quite different ABMs can produce similar stylised facts. However, demonstrating the extent to which
+a calibrated model can reproduce the stylised facts of a market, and then that this is with relative stability, is a good starting point
+in validating an ABM, and it is a necessary step if one is to demonstrate the impact of model changes. We use the calibrated model
+and the associated moments estimated from the simulated samples to compare the different model configurations as the moments
+are changed in the presence of the learning agent.
+The first stylised fact that will be considered is the fat-tails of the micro-price log-returns in event time. The ABM and the empirical
+returns were found to have fatter tails than that of the normal distribution, and the ABM was able to reproduce the stylised fact.
+Table 3 shows that the variance for the ABM is higher than what is observed in the market. The tails of the return distributions
+exhibited power-law or Pareto-like distributions with a tail-index that is finite [ 45,46]. The ABM also has return distributions with
+near power-law behaviour in their tails. We found that the tail-index estimate for the simulated returns was less than the tail-index
+of the empirical returns, meaning there are fatter tails in the simulated return distribution; this is visualised across learning agent
+configurations in Fig. 5(b) and was also observed in the moments in Table 3 . Given that the distributions do not exactly follow a
+power-law, no conclusion about the existence of moments can be drawn from the tail-index parameter.
+At high-frequency times scales, we have significant negative autocorrelations for the first lags, and the autocorrelations for
+the remaining lags are insignificant. This has been cited as evidence of a mean-reverting component of the time series that could
+potentially be attributed to market making [ 47]. We found significant negative autocorrelations for the first few lags where the
+autocorrelation in the simulated returns is far higher than the empirical returns, which may result from the frequency of limit
+orders placed by the high-frequency agents in the ABM. This is consistent with the estimated moments as the Hurst exponent in
+Table 3 suggests more mean-reversion in the simulated returns. Volatility clustering is the feature where large (resp. small) price
+variations are followed by further large (resp. small) price variations. This feature was calibrated using the GPH statistic, which
+measures the long-range dependence in the absolute log-returns. However, we found that the decay in the autocorrelations is far
+quicker for the simulated returns. Trade-signs have been shown to have persistence in their autocorrelations [ 30,48,49], meaning
+
+Physica A: Statistical Mechanics and its Applications 633 (2024) 129363
+13
+M. Dicks et al.
+Fig. 3. Plots the convergence in the profit of the RL agents. The amount of inventory the agent needed to trade increased from the bottom plot to the top plot.
+In each plot, we compare the profit convergence of the agents with smaller state space sizes to agents with larger state space sizes. 𝑚0 is the initial mid-price,
+and if all agents were able to trade all shares at 𝑚0 then the Inventory Normalised Total Profit (INTP) would be 10 000, and the implementation shortfall would
+be 0. For the agents with the size of the parent order being 86 000, the INTP was winsorised at the 1% and 99% levels to allow for easier comparisons. All
+agents demonstrate improvement and convergence in the profit. As the inventory increases, we start to see liquidity effects, as there are more frequent liquidity
+crashes. The size of the state space does not seem to cause significant differences in the profit, and all the agents were unable to significantly improve the profit
+received over the implementation shortfall amount.
+Fig. 4. The total number of states found in the Q-matrix of each RL agent in each episode is shown on the left ( Fig. 4(a) ). The smaller state space agents
+converge faster than the larger state space agents and have more jumps, whereas the larger state space agents exhibit a smoother convergence. The number of
+trade events an agent submits in each episode is plotted in Fig. 4(b) and shows the decrease in the number of trades over the episodes and the convergence of
+this decrease.
+
+Physica A: Statistical Mechanics and its Applications 633 (2024) 129363
+14
+M. Dicks et al.
+Fig. 5. The order volume trading trajectories for the six different learning agent configurations are in Fig. 5(a) (left). 𝑋0 is the initial parent order. The TWAP
+for each of the three different initial order volumes is shown. V is the lot size. The trading agents have learnt to trade more early in the session and less later.
+The larger state spaces (10) are more erratic than the smaller ones (5). Agents with larger initial parent orders have more erratic trajectories. The associated
+changes in the exceedance probabilities are in Fig. 5(b) (right), where 𝛼 is the slope in the tail [ 45]. The exceedance probabilities for the ABM environment
+(red) are shown with a best-fit line in the linear region; similar plots are shown for the JSE (blue). The ABM has a higher number of extreme events due to
+liquidity shocks.
+that buy (resp. sell) orders are followed by more buy (resp. sell) orders. To estimate the autocorrelation of the trade-signs each trade
+needs to be classified as a buy (+1) or a sell (−1). We use the Lee and Ready classification rules [50]. We then find that the model’s
+autocorrelation function (ACF) does not exhibit the same behaviour found in the empirical data. The ABM has captured the decay
+of the ACF for increasing lags. However, this decay is slower than the decay of the ACF for the empirical data. The model does
+reproduce the decay of the order-flow autocorrelation for increasing lags, but the volatility clustering effect is too strong, and it
+does not correctly describe the power-law decay seen in real markets. This only partially matches what is observed in the empirical
+data used to calibrate the ABM. This is not unexpected and was by design as made clear in the model discussion.
+The impact of the different approach to time can be seen by comparing the stylised facts generated by the event-based reactive
+model, where there is no globally imposed model time, with those of the hybrid model, where there is a global time; these are
+otherwise the same models. Both models were able to reproduce the fat-tailed return distributions. However, one limitation of the
+hybrid model that has been resolved in our model is that the simulated returns have data more evenly distributed from the mean
+and less concentrated near zero. This also means that there is a smaller discrepancy between the tail-index estimates for the extreme-
+value distributions of the log-returns. The event-based ABM also captures that only the first few lags should be significantly negative,
+whereas significant lags (both positive and negative) up to lags of fifty were reported [ 10] in the hybrid model. The hybrid model’s
+decay in the absolute log-returns is faster than what is observed in our model. This means there is a weaker volatility clustering
+effect in the hybrid model.
+However, the hybrid model can more accurately depict the decay in the trade-sign autocorrelation. In both these models, the
+order-flow autocorrelation is due to the herding effect caused by the chartists. We have changed the chartist rule to better suit
+event-driven activations without knowledge of a global calendar time. In contrast, in the hybrid model, the agent specification rule
+may better capture this feature because it is defined in the stochastic time setting. The selection of a global time is a potential source
+of top-down causation in the hybrid model that is not present in the reactive model. The chartists are more likely to be trading
+in events that are very close together, while in the hybrid model, stochastic time provides an external feature that spreads events
+away from event clusters. This can increase the herding effect seen in the event-based model. It must be noted that, for the hybrid
+model, the trade-sign autocorrelation was not tested for the long-memory property. This means that even if the hybrid models better
+capture the decay, it is unclear if it indicates a long-memory process. Both models could accurately recover the depth profiles and
+price impact curves.
+4. Conclusions
+A reactive event-based ABM representing a trading environment was built using two classes of agents: liquidity takers who only
+submit market orders, and liquidity suppliers who only submit limit orders. The liquidity takers were split in turn into two sub-classes:
+fundamentalists and chartists. The fundamentalist started each trading session, such as a trading day, with different notions of fair
+or fundamental value, and traded accordingly. At the same time, the chartists considered a moving average of past price changes
+to trigger trading decisions. The ABM was implemented in event time using a reactive framework, so we did not need to specify at
+what calendar times agent activations could occur. Agents responded to events, not times. This simulated model for the environment
+recovers an asymmetry between the bid and ask depth profile curves, and both curves exhibit a rapid decrease in liquidity as the
+price moves away from the best bid/ask, remaining consistent with empirical observation [ 51–53]. The maximum volume at the
+best bid/ask is also consistent with previous research [ 53]. The simulated trading environment was calibrated to real-world data.
+
+Physica A: Statistical Mechanics and its Applications 633 (2024) 129363
+15
+M. Dicks et al.
+Fig. 6. The trade-sign autocorrelation plots for the ABM with the different RL agents are shown in Fig. 6(a) and the autocorrelations in the absolute log-returns
+are in Fig. 6(b). The state space sizes and initial inventories are given in the legend. Adding a learning agent using order-splitting does not guarantee the correct
+decay in the trade-sign autocorrelation. Agents plotted in green, blue and pink in Fig. 6(a) show that these agents can reduce the trade-sign autocorrelations.
+These same agents can boost the autocorrelation in the absolute returns as seen for the agents plotted in green, blue and pink in Fig. 6(b) .
+The real market observations were based on trade and order-book data extracted from the Johannesburg Stock Exchange
+(JSE) [10,34] for a day of trading. The ABM representing the learning environment was calibrated using a simulated method of
+moments and calibrated parameters are provided in Table 2. This method of calibration was chosen to balance computational speed
+with stability. We found that the most significant parameters are the variance in the fundamental value 𝜎𝑓 , the intensity of the HFT
+order placement 𝜅 and the number of chartist liquidity takers 𝑁𝑐
+LT
+. Of lesser importance is the shape of the order-imbalance 𝜈, the
+number of fundamental liquidity takers 𝑁𝑓
+LT
+and the mid-price cut-off that sets the minimum volume lot sizes 𝛿. The model can
+recover the log-returns that exhibit fat-tails with extreme value distributions similar to those observed in the market, with volatility
+clustering, and replicating the log-returns’ ACF. The ABM also captured the decay in the auto-correlation of the trade-signs, but
+with a slower decay rate when compared with the JSE. The JSE exhibited the expected long-memory property [ 48]. However, this
+was not fully replicated by the ABM. The decay of the auto-correlation in the absolute values of the log-returns was slower in the
+real market than in the ABM.
+After the calibration of the training environment, a single learning agent with bounded rationality was added to the market
+to interact with this ABM. The learning agent was represented by a simple tabular Q-learning RL algorithm that was learning to
+solve an optimal execution selling problem using only market orders. This RL agent learns how to modify an existing TWAP trading
+schedule to optimally execute its sell order. The algorithm considered two market states based on features representing the limit-
+order book: the spread and the best bid volume, and then two states representing the current execution agents states: the remaining
+time available in the trading session, and the agents remaining inventory. The agent was tested with different parent order sizes and
+different state space sizes to observe whether any agents’ profits could be found to increase and converge and improve a random
+initial agent configuration. Our work shows that it can.
+The impact of the different learning agent configurations on the environment is visually demonstrated in Figs. 6 and 5. In Fig. 6,
+we see that the learning agents can suppress the trade-sign autocorrelations but boost the autocorrelations in the absolute micro-price
+value. This depends on the state space used in the learning algorithm, but learning agents with larger parent orders suppress the
+trade-sign autocorrelations and introduce more price volatility. Fig. 7 shows that the larger parent orders induce a larger overall
+price impact even when the learning agent only engages in selling. The learnt volume trajectories for the different agents are shown
+in Fig. 5(a) and their associated exceedance probabilities in Fig. 5(b) .
+We compared the ABM representing the environment using its calibrated moments against the combination of the same ABM
+with a single strategic learning agent. We found that, except for the Hurst exponent, the moments were robust to adding a single
+simple learning agent, even with increasing initial order sizes. The combined market stylised facts conform to those observed in
+the measured market data. In particular, the combined model is found to better replicate the trade-sign and return absolute value
+autocorrelations, and these are shown in Fig. 6 . The model can replicate price impact functions with the correct shape, and an
+intuitive relationship with initial order sizes, as evidenced in Fig. 7 . When we include learning agents in the market environment,
+we can replicate the observed stylised facts better.
+It was found that all agents could increase the profits over their initial random agent, demonstrating that each agent has learned.
+This is shown in Fig. 3. However, an upper bound on the profits was observed. No agent could learn how to improve upon the profit
+of immediate execution (assuming that the execution volume was available). This shows that although the agents could reduce the
+implementation shortfall, they could not increase profits enough to observe a consistent and significant negative implementation
+shortfall. This is considered to be the result of the very simple reward function used. It was found that adding RL agents with
+increasing order sizes caused the ABM to have significant liquidity effects, as expected.
+
+Physica A: Statistical Mechanics and its Applications 633 (2024) 129363
+16
+M. Dicks et al.
+Fig. 7. Plots the price impact curves for the ABMs that include the RL agents, for buyer initiated ( Fig. 7(a)) and seller initiated ( Fig. 7(b)) trades. The linear
+upward trend in the price impact on the log–log scale indicates a power-law price impact function, where the price impact increases with the trade volume.
+Adding in the RL agents does not change the slope of the impact function. The observed price impact increases as the inventory traded increases and these price
+impact curves remain consistent with previous research [ 10,35,54,55].
+There were clear differences in the dynamics for agents with different state space sizes. The smaller state space agents had
+the number of states it visited converge much faster than the larger ones. They quickly finished the state discovery process while
+the larger state space agents were still rapidly discovering new states, limiting their learning ability. The larger state space agents
+showed less switching of actions in each state when compared with the small state space agents due to the agents not returning to
+individual states as often to update their state–action values.
+This showed that the larger state space agents had difficulty learning in such few episodes. This was also evident in the behaviour
+learned. If a large state space agent had a large amount of inventory at the beginning of the simulation versus a smaller amount at
+the end, the agent did not learn to change behaviour while the smaller state space agent learned to trade more initially and then
+reduce the rate of trading at the end. There was also evidence that the smaller state space agent could learn to trade intuitively using
+the spread and volume states. Fig. 4(b) shows that all agents learned to reduce the number of trades and guarantee the execution of
+the entire inventory. They also learned some structure during the training process, as evidenced by observed changes in the action
+volume trajectories over the training period.
+This work promotes the idea there is value in combining minimally intelligent ABMs of the environment with the training of
+learning agents. We demonstrate that learning is feasible with trading agents comparable to those seen in real markets and that the
+combined model can generate relatively realistic market dynamics. From a market modelling perspective, we show that with strategic
+order-splitting, when combined with learning, we can more easily recover the observed auto-correlations of trade-signs and the
+auto-correlations of the absolute of the micro-prices while retaining realistic volume profiles, price impact profiles, and exceedance
+probabilities. Learning agents engaging in strategic order-splitting can suppress trade-sign auto-correlations, boost volatility, and
+increase mean-reversion effects.
+Reproducibility of the research
+The Julia code can be found in our GitHub site [ 56].
+CRediT authorship contribution statement
+Matthew Dicks: Methodology, Software, Validation, Formal analysis, Investigation, Writing – original draft, Visualization.
+Andrew Paskaramoorthy: Validation, Formal analysis, Writing – review & editing. Tim Gebbie: Conceptualization, Methodology,
+Validation, Formal analysis, Data curation, Writing – original draft, Writings – review & editing, Supervision.
+Declaration of competing interest
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared
+to influence the work reported in this paper.
+
+Physica A: Statistical Mechanics and its Applications 633 (2024) 129363
+17
+M. Dicks et al.
+Code and data availability
+The JSE data used in this study is available at 10.25375/uct.13187591.v1 [34]. The code used to implement the model
+management system is available at 10.25375/uct.21163723.v1 [56], and the matching engine with the UDP socket is available
+at 10.25375/uct.21163993.v1 [57]. CoinTossX provides the matching engine for the project: https://doi.org/10.1016/j.softx.2022.
+101136.
+Acknowledgements
+We thank Ivan Jericevich for support and advice with respect to the matching engine and hybrid agent-based model implemen-
+tation. We thank the journal reviewers for their thoughtful feedback and critique. We acknowledge funding from the University of
+Cape Town STA549 URC459282.
+Appendix A. Supplementary material
+Supplementary material related to this article can be found online at https://doi.org/10.1016/j.physa.2023.129363.
+References
+[1] R. Dieci, X.-Z. He, Heterogeneous agent models in finance, in: C. Hommes, B. LeBaron (Eds.), Handb. Comput. Econom. 4 (2018) 257–328, http:
+//dx.doi.org/10.1016/bs.hescom.2018.03.002, URL: https://www.sciencedirect.com/science/article/pii/S157400211830008X.
+[2] B. LeBaron, Agent-based computational finance: Suggested readings and early research, J. Econom. Dynam. Control 24 (5) (2000) 679–702, http:
+//dx.doi.org/10.1016/S0165-1889(99)00022-6, URL: https://www.sciencedirect.com/science/article/pii/S0165188999000226.
+[3] J.D. Farmer, P. Patelli, I.I. Zovko, The predictive power of zero intelligence in financial markets, Proc. Natl. Acad. Sci. 102 (6) (2005) 2254–2259,
+http://dx.doi.org/10.1073/pnas.0409157102, URL: https://www.pnas.org/content/102/6/2254.
+[4] S.J. Leal, M. Napoletano, A. Roventini, G. Fagiolo, Rock around the clock: An agent-based model of low-and high-frequency trading, J. Evol. Econom. 26
+(1) (2016) 49–76.
+[5] D. Platt, T. Gebbie, The problem of calibrating an agent-based model of high-frequency trading, 2016, arXiv:1606.01495.
+[6] A. Mandeş, P. Winker, Complexity and model comparison in agent based modeling of financial markets, J. Econ. Interact. Coord. 12 (3) (2017) 469–506,
+http://dx.doi.org/10.1007/s11403-016-0173-0.
+[7] D. Platt, A comparison of economic agent-based model calibration methods, J. Econom. Dynam. Control 113 (2020) 103859, http://dx.doi.org/10.1016/
+j.jedc.2020.103859, URL: https://www.sciencedirect.com/science/article/pii/S0165188920300294.
+[8] A. Fabretti, On the problem of calibrating an agent based model for financial markets, J. Econ. Interact. Coord. 8 (2) (2013) 277–293, http://dx.doi.org/
+10.1007/s11403-012-0096-3.
+[9] D. Platt, T. Gebbie, Can agent-based models probe market microstructure? Physica A 503 (2018) 1092–1106, http://dx.doi.org/10.1016/j.physa.2018.08.
+055, URL: https://www.sciencedirect.com/science/article/pii/S0378437118309956.
+[10] I. Jericevich, P. Chang, T. Gebbie, Simulation and estimation of an agent-based market-model with a matching engine, 2021, arXiv:2108.07806.
+[11] J. Bezanson, A. Edelman, S. Karpinski, V.B. Shah, The Julia programming language, 2021, URL: https://julialang.org/. Accessed: 2021-07-27.
+[12] biasLab, Rocket.jl documentation, 2022, URL: https://biaslab.github.io/Rocket.jl/stable/. biasLab/Rocket.jl v1.4.0. Accessed: 2022-09-09.
+[13] C. Hewitt, Actor model of computation: Scalable robust information systems, in: Proceedings of Inconsistency Robustness, Stanford, 2011.
+[14] S. Crafa, From agent-based modeling to actor-based reactive systems in the analysis of financial networks, J. Econ. Interact. Coord. 16 (3) (2021) 649–673,
+http://dx.doi.org/10.1007/s11403-021-00323-8.
+[15] D. Gilles, Asynchronous Simulations of a Limit Order Book (Master’s thesis), University of Manchester, 2006.
+[16] M. Aloud, M. Fasli, E. Tsang, A. Dupuis, R. Olsen, Modeling the high-frequency FX market: An agent-based approach, Comput. Intell. 33 (4) (2017)
+771–825, http://dx.doi.org/10.1111/coin.12114.
+[17] A.G. Barto, S. Mahadevan, Recent advances in hierarchical reinforcement learning, Discrete Event Dyn. Syst. 13 (1) (2003) 41–77, http://dx.doi.org/10.
+1023/A:1022140919877.
+[18] R. Bellman, The theory of dynamic programming, Bull. Amer. Math. Soc. 60 (6) (1954) 503–515, http://dx.doi.org/10.1090/S0002-9904-1954-09848-8.
+[19] R.S. Sutton, A.G. Barto, Reinforcement Learning: An Introduction, MIT Press, 2018.
+[20] R. Almgren, N. Chriss, Optimal execution of portfolio transactions, J. Risk 3 (2001) 5–40, http://dx.doi.org/10.21314/JOR.2001.041.
+[21] C.J.C.H. Watkins, Learning from Delayed Rewards (Ph.D. thesis), King’s College, Cambridge United Kingdom, 1989.
+[22] D. Bertsimas, A.W. Lo, Optimal control of execution costs, J. Financial Mark. 1 (1) (1998) 1–50, http://dx.doi.org/10.1016/S1386-4181(97)00012-8.
+[23] A.A. Obizhaeva, J. Wang, Optimal trading strategy and supply/demand dynamics, J. Financial Mark. 16 (1) (2013) 1–32, http://dx.doi.org/10.1016/j.
+finmar.2012.09.001.
+[24] Á. Cartea, S. Jaimungal, J. Penalva, Algorithmic and High-Frequency Trading, Cambridge University Press, 2015.
+[25] D. Wilcox, T. Gebbie, Hierarchical causality in financial economics, 2014, http://dx.doi.org/10.2139/ssrn.2544327, Available at SSRN: URL: https:
+//ssrn.com/abstract=2544327.
+[26] I. Jericevich, D. Sing, T. Gebbie, CoinTossX: An open-source low-latency high-throughput matching engine, SoftwareX 19 (2022) 101136, http://dx.doi.
+org/10.1016/j.softx.2022.101136, URL: https://www.softxjournal.com/article/S2352-7110(22)00087-5/pdf.
+[27] D. Hendricks, D. Wilcox, A reinforcement learning extension to the almgren-chriss framework for optimal trade execution, in: 2014 IEEE Conference on
+Computational Intelligence for Financial Engineering & Economics (CIFEr), IEEE, 2014, pp. 457–464, http://dx.doi.org/10.1109/CIFEr.2014.6924109.
+[28] G. Auletta, G.F.R. Ellis, L. Jaeger, Top-down causation by information control: from a philosophical problem to a scientific research program, J. R. Soc.
+Interface (5) (2008) 1159–1172, http://dx.doi.org/10.1098/rsif.2008.0018, URL: https://royalsocietypublishing.org/doi/10.1098/rsif.2008.0018.
+[29] M. Dicks, A. Paskaramoothy, T. Gebbie, Many learning agents interacting with an agent-based market model, 2023, arXiv:2303.07393.
+[30] B. Toth, I. Palit, F. Lillo, J.D. Farmer, Why is equity order flow so persistent? J. Econom. Dynam. Control 51 (2015) 218–239, http://dx.doi.org/10.1016/
+j.jedc.2014.10.007.
+[31] C.J. Watkins, P. Dayan, Q-learning, Mach. Learn. 8 (3) (1992) 279–292, http://dx.doi.org/10.1007/BF00992698.
+[32] F. Garcia, S.M. Ndiaye, A learning rate analysis of reinforcement learning algorithms in finite-horizon, in: ICML ’98: Proceedings of the Fifteenth International
+Conference on Machine Learning, Morgan Kaufmann Publishers Inc., San Francisco, CA, USA, 1998, pp. 215–223.
+[33] A. Mandeş, Microstructure-based order placement in a continuous double auction agent based model, Algorithmic Finance 4 (3–4) (2015) 105–125,
+http://dx.doi.org/10.3233/AF-150049.
+
+Physica A: Statistical Mechanics and its Applications 633 (2024) 129363
+18
+M. Dicks et al.
+[34] I. Jericevich, P. Chang, A. Pillay, T. Gebbie, Supporting test data: Comparing the market microstructure between two South African exchanges,
+2020, http://dx.doi.org/10.25375/uct.13187591.v1, figshare. URL: https://zivahub.uct.ac.za/articles/dataset/Supporting_Test_Data_Comparing_the_Market_
+Microstructure_Between_two_South_African_Exchanges/13187591.
+[35] I. Jericevich, P. Chang, T. Gebbie, Comparing the market microstructure between two South African exchanges, 2020, arXiv:2011.04367.
+[36] M. Gilli, P. Winker, A global optimization heuristic for estimating agent based models, Comput. Statist. Data Anal. 42 (3) (2003) 299–312, http:
+//dx.doi.org/10.1016/S0167-9473(02)00214-1.
+[37] F. Gao, L. Han, Implementing the Nelder-Mead simplex algorithm with adaptive parameters, Comput. Optim. Appl. 51 (1) (2012) 259–277, http:
+//dx.doi.org/10.1007/s10589-010-9329-3.
+[38] F.J. Massey Jr., The Kolmogorov–Smirnov test for goodness of fit, J. Amer. Statist. Assoc. 46 (253) (1951) 68–78, http://dx.doi.org/10.1080/01621459.
+1951.10500769.
+[39] H.E. Hurst, Long-term storage capacity of reservoirs, Trans. Am. Soc. Civ. Eng. 116 (1) (1951) 770–799, http://dx.doi.org/10.1061/TACEAT.0006518.
+[40] B.B. Mandelbrot, J.R. Wallis, Robustness of the rescaled range R/S in the measurement of noncyclic long run statistical dependence, Water Resour. Res.
+5 (5) (1969) 967–988, http://dx.doi.org/10.1029/WR005i005p00967.
+[41] J. Geweke, S. Porter-Hudak, The estimation and application of long memory time series models, J. Time Ser. Anal. 4 (4) (1983) 221–238, http:
+//dx.doi.org/10.1111/j.1467-9892.1983.tb00371.x.
+[42] D.A. Dickey, W.A. Fuller, Distribution of the estimators for autoregressive time series with a unit root, J. Amer. Statist. Assoc. 74 (366a) (1979) 427–431,
+http://dx.doi.org/10.1080/01621459.1979.10482531.
+[43] P. Winker, M. Gilli, V. Jeleskovic, An objective function for simulation based inference on exchange rate data, J. Econ. Interact. Coord. 2 (2) (2007)
+125–145, http://dx.doi.org/10.1007/s11403-007-0020-4.
+[44] J. Nuyts, Inference about the tail of a distribution: Improvement on the hill estimator, Int. J. Math. Math. Sci. 2010 (2010) http://dx.doi.org/10.1155/
+2010/924013.
+[45] P. Gopikrishnan, M. Meyer, L.A.N. Amaral, H. Stanley, Inverse cubic law for the distribution of stock price variations, Eur. Phys. J. B 3 (1998) 139–140,
+http://dx.doi.org/10.1007/s100510050292.
+[46] B.B. Mandelbrot, The variation of certain speculative prices, J. Bus. 36 (4) (1963) 394–419, URL: http://www.jstor.org/stable/2350970.
+[47] R. Cont, Empirical properties of asset returns: stylized facts and statistical issues, Quant. Finance 1 (2001) 223–236, http://dx.doi.org/10.1080/713665670.
+[48] F. Lillo, J.D. Farmer, The long memory of the efficient market, Stud. Nonlinear Dyn. Econometr. 8 (2007) 1, http://dx.doi.org/10.2202/1558-3708.1226.
+[49] J.-P. Bouchaud, Y. Gefen, M. Potters, M. Wyart, Fluctuations and response in financial markets: the subtle nature ofrandom’price changes, Quant. Finance
+4 (2) (2003) 176, http://dx.doi.org/10.1080/14697680400000022.
+[50] C.M.C. Lee, M.J. Ready, Inferring trade direction from intraday data, J. Finance 46 (2) (1991) 733–746, http://dx.doi.org/10.1111/j.1540-6261.1991.
+tb02683.x.
+[51] J.-P. Bouchaud, M. Mézard, M. Potters, Statistical properties of stock order books: empirical results and models, Quant. Finance 2 (2002) 251–256,
+http://dx.doi.org/10.1088/1469-7688/2/4/301.
+[52] M.D. Gould, M.A. Porter, S. Williams, M. McDonald, D.J. Fenn, S.D. Howison, Limit order books, Quant. Finance 13 (11) (2013) 1709–1742, http:
+//dx.doi.org/10.1080/14697688.2013.803148.
+[53] M. Potters, J.-P. Bouchaud, More statistical properties of order books and price impact, Physica A 324 (1–2) (2003) 133–140, http://dx.doi.org/10.1016/
+S0378-4371(02)01896-4.
+[54] M. Harvey, D. Hendricks, T. Gebbie, D. Wilcox, Deviations in expected price impact for small transaction volumes under fee restructuring, Physica A 471
+(2016) 416–426, http://dx.doi.org/10.1016/j.physa.2016.11.042.
+[55] F. Lillo, J.D. Farmer, R. Mantegna, Master curve for price-impact function, Nature 421 (2003) 129–130, http://dx.doi.org/10.1038/421129a.
+[56] M. Dicks, T. Gebbie, A simple learning agent interacting with an agent-based market model: Julia code, 2022, http://dx.doi.org/10.25375/uct.21163723.v1,
+figshare. URL: https://zivahub.uct.ac.za/articles/software/A_simple_learning_agent_interacting_with_an_agent-based_market_model_Julia_code/21163723.
+[57] I. Jericevich, D. Sing, T. Gebbie, M. Dicks, CoinTossX with market data feed, 2022, http://dx.doi.org/10.25375/uct.21163993.v1, figshare. URL:
+https://zivahub.uct.ac.za/articles/software/CoinTossX_with_market_data_feed/21163993.

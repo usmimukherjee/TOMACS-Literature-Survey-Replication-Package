@@ -1,0 +1,521 @@
+Proceedings of the 2009 Winter Simulation Conference
+M. D. Rossetti, R. R. Hill, B. Johansson, A. Dunkin, and R. G. Ingalls, eds.
+Duopoly Electricity Markets with A ccurate and Inaccurate Market Goals
+Zhi Zhou
+Wai Kin Victor Chan
+Department of Decision Sciences & Engineering Systems
+Rensselaer Polytechnic Institute
+Troy, NY 12180, USA
+Joe H. Chow
+Department of Electrical, Computer & Systems Engineering
+Rensselaer Polytechnic Institute
+Troy, NY 12180, U.S.A.
+Serhiy Kotsan
+New Y ork Independent System Operator
+Rensselaer, NY 12144
+ABSTRACT
+Electricity markets are complex systems due to their deregulation and restructuring. We develop an agent-based simulation
+model for a stylized electricity pool market and simulate the market as a repeated game. An online hill climbing with
+adjustment algorithm is applied to generat or agents to guide them to bid strategica lly to reach their expected market share. It
+is observed that accurate (or genial) expected market goals lead to collusive behavior of generator agents with an equilibrium
+where their total pro ﬁt is maximized. On the other hand, it is also found th at inaccurate (or malicious) market goals could
+result in price war with an equilibrium where their pro ﬁts are minimized.
+1 INTRODUCTION
+An electricity market is a complex system because of the natur e of the traded goods (electricity) and the complexity of the
+market structure and composition. It is not economic to store electricity, and hence, supply and demand must be balanced
+in real time subject to transmission and cap acity constraints. Moreover, an electri city market itself is a combination of
+many submarkets, such as the day-ahead market, real-time marke t, bilateral market, installed capacity market, and emission
+market. In addition, an electricity market might also connect to other markets, such as the natural gas and petroleum market.
+Due to high capital investments, participants (companies) in an e lectricity market are relatively concentrated, resulting in the
+following consequences: (1) some companies may be organized vertically and participate in more than one of the submarkets
+simultaneously, and (2) some of the companies may be big enough to apply their market power to manipulate market prices.
+Auction is a widely used mechanism to create competitive markets in homogeneous commodity exchanges such as
+agricultural products, mineral resources, and ﬁnancial market exchange such as stocks, bonds, and treasury bills. Auction
+can produce ef ﬁcient allocations and prices even with a rather small number of players who have incomplete or imperfect
+information on supply and demand ( Friedman and Rust 1993 ). In electricity markets, auction is one of the most important
+mechanisms to allocate electricity, installed capacity, and transmission rights. Bidders in these markets are asymmetric and
+do not know the information of their opponents. However, they participate regularly to bid on the same commodity with
+varying quantities. Bidders with generation capacity or cost advantages may try to exercise their market power to maximize
+their pro ﬁts. As a result, auctions in electricity markets are a repeated and asymmetric game with imperfect competition.
+Most existing research focuses on theore tical modeling and analysis with assumptions such as symmetric bidders, single
+commodity, or competitive bidding ( Bower and Bunn 2001 ).
+This paper employs an agent-based simulation (ABS) and optimization approach to analyze bidding behavior in electricity
+markets. We create an agent-based simulation model that mimics the evolutionary dynamics of bidding behavior in a repeated
+and multi-unit auction under the settings of an electricity market. The market particip ants are modeled as intelligent agents
+with non-homogenous optimization objectiv es and learning abilities. Ou r goal is to understand how market participants
+behave in this repeated game and what the consequences are.
+1569
+978-1-4244-5771-7/09/$26.00 ©2009 IEEE
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:57 UTC from IEEE Xplore.  Restrictions apply.
+
+Zhou, Chan, Chow and Kotsan
+The rest of the paper is organized as follows. Section 2 reviews the background and related work of electricity markets
+and agent-based simulations. Section 3 presents an agent-based simulation model and states the assumptions and settings of
+the experiments. Section 4 discusses the experimental results and Section 5 offers some conclusions.
+2 BACKGROUND
+During the last twenty years, a process has been undergone worldw ide to restructure electrical power facilities and liberalize
+the markets for the services based on these facilities. This pro cess moves the electricity industry from vertically integrated
+monopolies to more ef ﬁcient, separated companies, and replaces the re gulated, cost-based market to a supply and demand
+based competitive one. The major goal of this reform is to promo te energy conservation and alternative energy technologies,
+and to reduce oil and gas consumption through technology improvement and regulations ( FERC 2006 ).
+Typically, two types of instruments for trading electricity are used: pool and bilateral contracts. In a pool contract market,
+generation and customer companies submit their bids and the m arket is cleared by a market operator (e.g., the Independent
+System Operator (ISO)). The operator also announces the clearing prices for the next day based on the amount of the supply
+and demand bids submitted by the producers and buyers. Becau se of its main usage in day-ahead and real time bidding,
+the pool market is considered as a short-term trading market. On the other hand, in a bilateral contract market, bilateral
+contracts are used by companies to hedge against the risk of daily price volatility. Bilateral markets are forward markets.
+The contract periods can cover six months or more.
+The complexity of electricity markets has attracted attentions from many research groups since 1990. Most of the
+research focuses on market ef ﬁciency and generation competition. The research problems can be studied by analyzing market
+equilibria under different market scenarios or structures. E quilibrium theory and game theory are therefore good candidate
+tools for studying these types of problems.
+Green and Newbery (1992) introduce a supply-function equilibrium model ( Klemperer and Meyer 1989 ) and formulate
+the England and Wales electricity market as a single- shot game consisting of two symmetrical players. By ﬁnding the Nash
+equilibrium for the supply schedule, the a uthors show that a high premium on margi nal costs is possible despite having a
+competitive market. Similarly, Rudkevich et al. (1998) estimate the price of an electricity pool market by using a closed-form
+mathematical formula based on the suppl y function equilibrium (SFE). Models ba sed on the equilibrium theory usually
+assume either perfect and complete information about opponents or no strategic bidding behavior.
+Another line of studies is based on game theory. von der Fehr and Harbord (1993) model the England and Wales
+electricity market as a ﬁrst-price, sealed-bid, multi-unit, and private-valued auction market. Their results show that the
+bidding behavior tend to support the theore tical model. The authors claim that pure-st rategy equilibria do not exist for a wide
+range of demand distributions. Borenstein and Bushnell (1999) consider the California electricity market after deregulation
+as a static Cournot market and simulate the market using historical cost data. They show that potential market power during
+high demand hours is possible. Game theory is a good altern ative to analytically study of the market when the number
+of participants is small. However, with the deregulation of electricity markets, electric power systems have become more
+complex and involved a large number of competing participants.
+Agent-based simulation (ABS) is a relatively new technique that may overcome the shortcomings of traditional method-
+ologies. The participants are modeled as agents. Unlike tra ditional methodologies, ABS does not require the knowledge of
+perfect or complete information of participant agents. Agents are equipped with learning algorithms that could guide them
+to achieve their goals. ABS is a powerful t ool for simulating dynamics of multi-partic ipant systems and analyzing emerging
+behavior.
+Bunn and Oliveira (2001) model the England and Wales electricity market under the New Electricity Trading Arrangements
+(NET A) using ABS. They show that electricity prices are high when the demand is in the highest range. They also observe
+that power plants with ﬂexible technologies are relatively more valuable under the NET A. Nicolaisen et al. (2001) use ABS
+to examine market power and ef ﬁciency as functions of market concentration and capacity. The market is modeled as
+a double-auction market, which is cleared by a discriminatory midpoint pricing mechanism. Wu and Guo (2004) apply
+a reinforcement learning method-the learning automata-to the Western Systems Coordinating Council (WSCC) 9-bus test
+system. Micola et al. (2008) study whether a vertically integrated ﬁrm can increase its pro ﬁts in oligopolistic energy markets
+by using interdependent rewards obtained from strategic business units. Tellidou and Bakirtzis (2007) examine the effect of
+participants’ behavior such as capacity withholding and tacit collusion to market performance. They model the electricity
+market as an hourly repeated game on a two-node power system, which is cleared by using uniform pricing settlements.
+Nanduri and Das (2007) assess the market power of generation companies under auction-based pricing for a day-ahead
+energy market.
+1570
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:57 UTC from IEEE Xplore.  Restrictions apply.
+
+Zhou, Chan, Chow and Kotsan
+Although potential collusive behavior has been reported in wholesale electricity pool markets in, for example, Spain
+(Fabra and Toro 2005 ), California ( Puller 2007 ), and England and Wales ( Bunn and Martoccia 2005 ), related studies fo-
+cusing on collusive behavior of generators in repeated games are limited. Two of such studies are by Cau (2003) and
+Cau and Anderson (2003) .I n Cau (2003) , two identical generators supply electricity at the same node, hence no network
+congestion is modeled. The author applies a co-evolutionary genetic algorithm to the generator agents to allow them to bid
+strategy over time. It is shown that collusive behavior resulting from learning may occur in a stylized electricity market even
+the system does not converge to a stable equilibrium outcome. This model assumes that the number of players and their
+strategy spaces are public information. With similar market settings, Cau and Anderson (2003) study the tacit collusion of
+generators in oligopolistic electricity markets in which generators’ bidding structure is piecewise linear.
+In this paper, we set up an ABS simulation model for a ﬁve-node electric power system with customized transmission
+congestion constraints and real time elastic demand. We apply an online-hill climbing learning algorithm to generator agents
+who have market power to bid strategically but with limited information about the market, including information of the
+opponents. The generator agents, however, can set their goals of market share and bid strategically to reach their goals.
+The objectives of this study are to examine what bidding behavior (collusive or co mpetitive) will result under these market
+settings with accurate or inaccurate market goals and under the online-hill climbing learning algorithm.
+3 AN ABS MODEL OF AN ELECTRICITY MARKET
+In this section, we present an agent-based simulation model for a ﬁve-node electricity market including generation companies,
+load serving entities (LSEs), transmission companies, and ISO.
+3.1 Objective
+During the course of a repeated bidding game, what a generation company knows are its own historical bids, winning
+quantities, and clearing prices (if the market is cleared by the discriminatory pricing mechanism, generation companies only
+know their own winning prices). The generation company do not know their opponents bidding strategies and winning
+quantities. Nevertheless, this limited information is critical for the generation companies to make decisions on the next bid.
+Therefore, to make rational decisions, generation companies must have the ability to learn to estimate the bidding strategies
+of their opponents. The objective of our study is to understand the bidding behavior of generation companies under the
+assumption that the generation companies can accurately estimate their market share.
+3.2 Physical Model
+To make the simulation close to real world model and reveal nontrivial result, we set up a stylized electricity market with
+comprehensive characteristics of both physical transmission network and market con ﬁguration.
+3.2.1 Transmission network
+The ABS model considered in this paper is based on a ﬁve-zone transmission network. The topology of the power system
+is illustrated in Figure 1. Each zone consists of one LSE and up to ten generators. These zones are inter-connected through
+six transmission lines with capacity limit. While the simulation model is designed to allow active power ﬂow constraints on
+any of the lines, in this paper we only consider the constraint that the total amount of active power transmitted from Zones
+3a n d2t oZ o n e4i sr e s t r i c t e dt oT4, an adjustable parameter.
+3.2.2 Participants
+In the restructuring process, a power system is separated into generation, transmission, distribution, and system operator,
+which are the major participants in an electricity market. In our simulation model, they are called generation companies,
+transmission companies, LSEs, and ISO, respectively. The LSE s are the customers in a wholesale market. They contract with
+other market participants to purchase electricity to satisfy the demand in their corresponding service areas. The generation
+companies are the suppliers in the electricity market. They com pete with each other to sell their electricity through an auction
+market or bilateral contracts. The transmission companies are organizations that own, maintain, and operate transmission
+assets for pro ﬁt subject to regulation. The ISO is an organization that c oordinates, controls, and monitors the operations of
+the electric power system. Some ISOs also act as the regulators i n their electricity markets, in cluding the wholesale markets.
+1571
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:57 UTC from IEEE Xplore.  Restrictions apply.
+
+Zhou, Chan, Chow and Kotsan
+Figure 1: A Five-Zone Power System
+3.2.3 Auction Procedure
+In the day-ahead auction marke t of our simulation model at day t, the LSEs estimate the load demand in their service areas
+for each hour of the next day (day t + 1) and submit that information to the ISO as load bid. The generation companies decide
+their bids by using their knowledge about the env ironment and competitors. Before the end of day t, the ISO closes the
+market for day t + 1 and clears the market. By selecting the cheapest electricity with a set of constraints including physical
+limits, the ISO calculates the market clearing price using a uniform pricing mechanism. Meanwhile, the ISO decides the
+generation and distribution scheduling information and return them to the generation companies and LSE. On day t + 1, the
+generation companies schedule their operations and generate the amount of el ectricity they were committed to on day t.T h e
+LSEs receive the amount of electricity based on their bids and distribute it to their end customers.
+3.3 Agents
+Our model implements the three types of agents correspond to the thr ee basic participants in the electricity market: generation
+company agents, LSE agents, and ISO agent.
+3.3.1 Generator agents
+Each generation company, without loss of ge nerator, is assumed to own only one genera tor, represented as a generator agent.
+Generator agents are differentiated by their maximum generation capacities and real cost functions.
+1. Generator capacity, cost function
+Generation capacity here means the maximum output of a generator. A cost function describes the relationship
+between the output quantity and production cost. Basically, it includes the ﬁxed cost, variable cost, and cost for
+starting up and shutting down the machines if they are used. For simplicity, only the variable cost is considered in
+the following. The cost function used in this model is a polynomial cost function, which is de ﬁned in the following
+equation
+Cj(q j)= c j0q2
+j + b j0q j + a j0, q j ∈ [0, MO j], (1)
+where MO j is the maximum capacity, q j is the amount of electricity supplied by generator G j, Cj(q j) is the cost
+for G j to supply q j units of electricity, and c j0, b j0,a n d a j0 are the coef ﬁcients of the cost function.
+2. Bidding strategies
+When a generator agent submits its bid to the ISO, it is required to report its supply function. If the agent reports
+its real cost function as supply function, it is called a marginal cost bidder (MCB). Another situation is that it can
+report an adjusted cost function as its supply function. In this case, the agent tries to be pro ﬁt. There are two ways
+to adjust a bid: capacity withholding and price adjustment. Figure 2 gives an example for price adjustment. In the
+ﬁgure, the agent can report a cost function (dotted line) higher than its real cost function (solid line). If the agent
+has market power, its objective could be maximizing its pro ﬁt from this adjustment.
+Because the price is decided by the supply function, price a djustment is implemented by raising or lowering the
+coefﬁcients of the supply function. The adjustment is represented by the markup rate compared to the coef ﬁcients
+1572
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:57 UTC from IEEE Xplore.  Restrictions apply.
+
+Zhou, Chan, Chow and Kotsan
+Figure 2: Supplier bids above its marginal cost function
+of the marginal cost function. For example, if a genera tion company bids at a price 150% higher than its marginal
+cost, its markup rate is 2 .5. If it bids at its marginal cost, its markup rate is 1.
+Because bidding in an electricity pool ma rket is a repeated game, generators can learn from their bidding history
+and market environment to improve their pro ﬁt. In our model, the agents can learn by using an online hill climbing
+algorithm with adjustment (OHCA), which is introduced in Section 3.4.
+3.3.2 LSE
+There is one LSE agent in each zone. In our simulation model, its only task is to forecast the load demand for the next day
+and report it to the ISO agent. The demand reported by the LSE agents can be elastic both time and price (see in Section 3.4
+for details). The LSE agents do not take strategic actions. Their costs, however, are minimized with the help of the ISO by
+selecting the cheapest generators. It should be noted that the parameters of the demand responsive curve are constant during
+the simulation.
+3.3.3 ISO
+The objective of the ISO is to regulate the market by maximizing the social welfare or minimizing the total cost to meet the
+load demand. The ISO agent selects the lowest cost generators with a higher priority. The constraints that prevent the ISO
+agent from selecting all lowest cost generators include the g enerators’ capacity, transmission capacity, and power system
+reliability.
+The ISO agent collects bids from the generator and LSE agents before the market is closed. Then, it clears the market
+by solving an optimal power ﬂow problem. After the market is cleared, the ISO agent informs the generator and LSE agents
+their scheduling information. If the market is cleared with a uniform price, then this price is open to the public. Otherwise,
+it is private, i.e., only sent to the related agents.
+3.4 Experiment Settings
+The following are the settings and assumptions on the market structure and physical transmission system of our model.
+1. Generation capacity an d demand distribution
+There is one generator agent in each zone except in Zone 4 (see Figure 1). In Zone 4, there are six generators,
+denoted by G j( j = 1,..., 6). Compared to the generators in Zone 4, other generators have cheaper production
+costs and can supply the demand in Zone 4 after satisfying their own demand. However, the amount of electricity
+exported to Zone 4 is limited by the transmission line capacity, which is denoted by T4. Among the six generators
+in Zone 4, two of them (i.e., G1 and G2) are identical companies with generation capacity larger than the sum of
+the other four small generators, who are also identical. These four smaller gen erators are price-takers; they do not
+bid strategically. The two large generators can use different pricing strategies to be more pro ﬁt. To facilitate our
+study, the total amount of generation supply in the market is assumed to be greater than the total demand even
+under transmission congestion.
+1573
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:57 UTC from IEEE Xplore.  Restrictions apply.
+
+Zhou, Chan, Chow and Kotsan
+Figure 3: The Characteristics of the Demand
+The demand has the two char acteristics: First, it varies during a 24-hour period as illustrated in the left part of
+Figure 3 with peak hours and off-peak hours in the middle of the day and early morning, respectively. Figure 3
+shows the demand curve for one day. Second, the demand i s a price-responsive curve (the right part of Figure 3)
+for each hour of next day to the ISO.
+The submitted load demand is divided into two parts: inelastic demand ( DI ) and elastic demand ( DS). The elastic
+part drops when the price increases and reaches zero if the pr ice is too high. This elasticity is negatively proportional
+to the price, as shown in the right part of Figure 3. In this part, the y-axis is the demand during the peak time. The
+x-axis is the price. When the price is less than P1 (the lowest price at which the elastic part of the load demands
+begins to drop), there is no decrease in the elastic load demand. When the price is greater than P1 but less than P2,
+the elastic part begins to decrease proportional to the price. When the price is greater than P2 (the lowest price at
+which the elastic load demand drops to zero), the demand remains at DI because only the inelastic load demand is
+left.
+2. Market settings
+The market is cleared by the ISO using locational-based marginal price (LBMP), which means that the price is
+uniform within each zone and different among zones due to the transmission congestion.
+3. Market share
+In this experiment, generator agents are assumed to be able t o estimate their market share. Because the two generators
+are identical, they could share equally the market. They take this information into consideration when they bid.
+4. Learning algorithm for generation company agents
+The online hill climbing with adjustment (OHCA) algorithm is similar to those used in optimal search procedures.
+The intuition of the OHCA algorithm is that an agent increases its bidding price if it becomes more pro ﬁtable and
+decreases otherwise. In this paper, we set the amount of adjustment based on the agent’s targeted market share.
+The detailed description of the OHCA used by generation company agents is provided in the following subsection:
+(a) Notation
+The notation used in this section are listed in Table 1.
+Table 1: Notation for OHCA algorithm
+Symbol
+ Meaning
+tij
+ Adjustment rate decided by the difference between targeted market share and current market share
+b j0
+ First order coef ﬁcient of the marginal cost function for the jth generator
+c j0
+ Second order coef ﬁcient of the marginal cost function for the jth generator
+ctij
+ Coefﬁcient of the cost function in round t for the ith hour reported to the ISO by the jth generator
+dtij
+ Adjustment rate decided by the change of market share
+G j
+ The jth generator agent
+Ptij
+ Proﬁt in round t for the ith hour for the jth generator
+rt+1,i, j
+ Change rate on the coef ﬁcients of cost function in round t + 1f o rt h e ith hour for the jth generator
+S j0
+ Targeted market share for the jth generator
+stij
+ Market share in round t for the ith hour for the jth generator
+0
+ A constant multiplier to adjust the step size of markup rate
+1574
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:57 UTC from IEEE Xplore.  Restrictions apply.
+
+Zhou, Chan, Chow and Kotsan
+(b) Action and Adjustment
+We are mainly interested in the biddi ng behavior of the two large gener ators at Zone 4 because all the other
+generators are marginal bidders and do not employ bidding strategies. As introduced earlier, these two generators
+bid strategically by updating their bids. They change the bids by adjusting the mark-up rate of the ﬁrst two
+coefﬁcients of the cost functions. In particular, the ﬁrst and second coef ﬁcients (i.e., ct+1,i, j and bt+1,i, j)o ft h e
+reported cost function of Generator j (i.e., G j)a tt h e (t + 1)th round are adjusted by the following equations:
+ct+1,i, j = ctij + c j0rt+1,i, j/0, (2)
+and
+bt+1,i, j = btij + b j0rt+1,i, j/0, (3)
+where rt+1,i, j is the bidding markup rate, which controls the amount of adjustment on both coef ﬁcients of the
+reported cost function in a bid. The constant multiplier, 0, is used here to manage the magnitude of the step
+size. Its value might affect the convergence time or stability of the equilibrium. In all the experiments in the
+following, a value of 8 is used and a reasonable convergence time and stability is obtained. In this paper, we
+consider three factors that could in ﬂuence this adjustment: (a) the change in the pro ﬁt, (b) the change in the
+market share, and (c) the distance to the targeted market share. The ﬁrst two factors together result in four
+possible cases: (1) pro ﬁt increases and market share increases, (2) pro ﬁt increases but market share decreases,
+(3) pro ﬁt decreases but market share increases, and (4) pro ﬁt decreases and market share decreases. Gaining
+more pro ﬁt is a high priority; therefore, the amount of adjustment should be positive in both Cases (1) and (2)
+(i.e., increase the bid to gain more pro ﬁt) and negative in both Cases (3) and (4) (i.e., decrease the bid to retain
+the pro ﬁt). The magnitude of the adjustment in these four cases is determined by the amount of changes in the
+market share in the unit of the targeted market share. In summary, the ﬁrst two factors (i.e., Cases (1) - (4))
+contribute to the adjustment of markup rate in the format of the following equations:
+dt+1,i, j =
+⎧
+⎪⎪⎪⎨
+⎪⎪⎪⎩
+st−1,i, j −stij
+S j0
+if P tij ≥ Pt−1,i, j and s t−1,i, j > stij ;
+1 if P tij ≥ Pt−1,i, j and s t−1,i, j ≤ stij ;
+−1 − st−1,i, j −stij
+S j0
+if P tij < Pt−1,i, j and s t−1,i, j > stij ;
+−1 if P tij < Pt−1,i, j and s t−1,i, j ≤ stij ;
+(4)
+The last factor contributing to the adjustment is the dista nce between the current market share and the targeted
+market share. Speci ﬁcally, if the current market share is less than the targeted market share, G j takes a
+conservative action by multiplying the adjustment with a factor equal to the difference between the targeted
+market share and the current market share in the unit of the targeted market share. If G j gets more market
+share than it expects, it has no incentive to make adjustment and therefore, this factor is one.
+t+1,i, j =
+{ S j0 −stij
+S j0
+if s tij < S j0
+1 otherwise
+(5)
+Eq. 4 and Eq. 5 together determine the exact amount of adjustment in the markup rate, rt+1,i, j , based on the
+following equation:
+rt+1,i, j = dt+1,i, jbt+1,i, j (6)
+(c) T ermination criteria
+The simulation is terminated when e ither the maximum number of iterati ons (simulation days) is reached or
+t h e r ei sn om o r ep r oﬁt gain in all the generator agents. The sec ond stopping condition means that an equilibrium
+is obtained given the set of strategies used by the generator agents.
+1575
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:57 UTC from IEEE Xplore.  Restrictions apply.
+
+Zhou, Chan, Chow and Kotsan
+Figure 4: G1 and G2 Bidding Rates VS Time
+Figure 5: G1 and G2 Pro ﬁts VS Time
+4 SIMULATION RESUL TS
+Before discussing the simulation results, it should be pointed out that the other four smaller generators and the generators
+outside Zone 4 are cheaper generators than G1 and G2. As a result, G1 and G2 are only competing for the total demand less
+those satis ﬁed by all the other generators, which will always be picked by the ISO.
+We study two types of market scenarios: accurate market goals and inaccurate market goals. In the accurate case,
+because the two generators are identi cal, their expected market shares are each set to 50%. In the inaccurate case, both
+generators overestimate their market power and set each of th eir market shares to 60%. In all the simulations below, the
+maximum number of iterations is set to 2500 (days or rounds). All simulations are run on a 2 .5GHZ dual-core PC with 3
+GB of RAM.
+4.1 Accurate T argeted Market Share
+Figures 4, 5, and the left part of Figure 6 show the dynamics of the supply bids, pro ﬁts, and clearing prices, respectively,
+under the scenario of accurate market goals. The initial markup ra tes on the marginal cost of the two generators are 1 and
+3, respectively. This means that G1 bids at its marginal cost while G2 bids 2 times higher than its marginal cost.
+1576
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:57 UTC from IEEE Xplore.  Restrictions apply.
+
+Zhou, Chan, Chow and Kotsan
+Figure 6: Market Clearing Price VS Time with Different Initial Markup Rates
+Figure 7: Surface Plots of the G1 and G2 Pro ﬁts
+Figure 5 shows three important points, which are encircled. The ﬁrst one is the initial point where the pro ﬁto f G1 is
+greater than that of G2 because G2’s supply is lower. Correspondingly, G1’s market share is higher than that of G2.A st h e
+two generators start to learn and adjust their strategies, their pro ﬁts evolve to equality (because they are identical). This
+ﬁrst occurs at the second encircled point in Figure 5. After the equality point (i.e., equal market share) is reached, the two
+generators behave like a coalition but they in fact bid individually, independently, and identically to maximize their pro ﬁts
+individually because they do not communi cate with each other. The maximum point happens at the maximum price just
+before the demand starts to drop (at the third circle in Figure 5).
+Two transition periods are worthy of discussion here: The ﬁrst one is the period during which the two generators learn
+to reach equality (from point 1 to point 2) and the second one is the period during which the two generators learn to reach
+maximum (from point 2 to point 3). We ﬁrst enumerate G1’s proﬁt based on its bidding price and G2’s bidding price (see the
+left part of Figure 7). One can see from the left part of Figure 7 that for a ﬁxed bidding price of G1, G1’s proﬁt increases
+in G2’s bidding price. On the contrary, for a ﬁxed bidding price of G2, G1’s proﬁt decreases in its bidding price.
+The right part of Figure 7 shows the sum of the pro ﬁts of the two generators with respect to their supply bids. The
+arrow in the center of the ﬁgure illustrates the collection of points where the two generators equally share the market.
+Because the demand is responsive to the market clear ing price as illustrated in the right part of Figure 3, there is a point
+where the LSE payment is maximized. Moreover, b ecause the payment of the LSEs is related to the pro ﬁt of generators,
+there should be a point where the total pro ﬁt of all generators is maximized. This can be considered as a multi-player Nash
+equilibrium. If the generators in the market have the inte nsion to collude implicitly or explicitly even though they do not
+communicate with each other, they might tr y to explore this maximum point and sta y there given that they are identical
+1577
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:57 UTC from IEEE Xplore.  Restrictions apply.
+
+Zhou, Chan, Chow and Kotsan
+and understand that they cannot beat each other by deviating fro m the collusion. Moreover, because the two generators are
+identical, they share the market equally in steady state. Otherwise, the market is not in steady state and one of generators
+can change its bidding strategy to gain more market share and pro ﬁt.
+Therefore, regardless of what thei r initial supply bids are, they learn to ﬁnd the point where they share the market equally
+(the ﬁrst transition period), which occurs at some point on the line indicated by the arrow in the right part of Figure 7.
+Because there is a maximum on that line, the two genera tors will bid strategically to reach that maximum.
+We test different combinations of initial bidding prices as shown in Table 2. Because G1 and G2 are identical, we only
+use the bidding rate of G1 of 1 and 2 (the 1 st column) and the bidding rate of G2 from 1 to 9 with unity increment (the 1 st
+row). Each entry in Table 2 gives the clearing price under the corresponding combination of the bidding rates of G1 and
+G2. All experiments result in a similar clearing price (equilibrium). Only the transition periods are different. Therefore, the
+experimental results show that the OHCA learning algorithm under the market settings in this paper can lead to a collusive
+behavior of the two generators and that the two generators can always reach the market equilibrium at which their total
+proﬁt is maximized regardless of what the initial bidding rates are.
+Table 2: Market Clearing Price unde r Different Initial Bidding Price
+Bidding Rate of G2
+Bidding Rate of G1
+123456789
+1
+ 429.66 435 .85 438 .24 438 .54 440 .16 439 .91 436 .72 436 .59 439 .28
+2
+ 435.85 435 .93 436 .5 440 .24 439 .28 436 .96 437 .36 440 .02 439 .94
+The initial bidding rates, however, do affect the time to reach the equilibrium. The right part of Figure 6 shows the
+dynamics of the changes in the clearing price when the initial markup rates are 2 and 8 for G1 and G2, respectively. The
+time for the two generators to reach the equality point is much longer than the case we showed in the left part of Figure 6
+because the difference between the initial bidding rates of G1 and G2 in this case is larger than that in the former case,
+which makes these two generators spent more time to learn to evolve to equality.
+4.2 Biased T argeted Market Share
+Equally sharing a market is an ideal result. In practice, however, generators are usually competing for the market share based
+on their estimated market power. The problem is that they might not have an accurate estimate of their market power. As a
+result, they might set a wrong targeted market share. The consequence could be a price war, which is the case observed in
+the experiments below.
+This section tries to answer the question ”what would ha ppen if both generators expect more than 50% of the market
+share?” In particular, we experiment with the scenario where both G1 and G2 expect 60% of the market share with everything
+else being equal. The initial bidding rates for G1 and G2 are 1 and 3, respectively.
+Figure 8 illustrates the dynamics of the bidding rates and pro ﬁts of the two generators. It can be seen that the bidding
+rates of both generators converge to the marginal rate (the left part of Figure 8)a n dt h ep r oﬁts reduce to the one obtained
+at the marginal cost for both generators (the right part of Figure 8). This result implies that under the OHCA algorithm,
+if both generators erroneously or maliciously set a targeted market share larger than what their market power can achieve,
+they will end up in a price war.
+5 CONCLUSION
+In this paper, we present an agent-based simulation model on a stylized electricity pool market. We apply the online hill
+climbing with adjustment (OHCA) algorithm to generator agents to guide them to maximize their pro ﬁts. When the agents
+accurately (or genially) set their targeted market shares equal t o their market power, collusive bidding behavior is observed
+and equilibrium is obtained when the total pro ﬁts of the agents are maximized. However, when the agents erroneously (or
+maliciously) set their targeted market shares greater than th eir market power, the consequence will be a price war and their
+proﬁts will be minimized (rather than maximized) to be equal to the marginal-cost pro ﬁt.
+The main contributions of this paper are the following.
+1578
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:57 UTC from IEEE Xplore.  Restrictions apply.
+
+Zhou, Chan, Chow and Kotsan
+Figure 8: The Dynamics of the Bidding Rates and Pro ﬁts with Biased Targeted Market Share
+1. This paper presents an agent-based simulation model with several characteristics, including active power ﬂows limits
+and real-time elastic demand.
+2. It is shown that under the OHCA algorithm, collusive behavior (resulting from non- communicated cooperation
+through learning) can maximize pro ﬁts while competing behavior (resulting from inaccurate market goals) will
+minimize pro ﬁts.
+3. The experimental results show that with an accurate targeted market share, the agents’ pro ﬁts increase simultaneously
+after they reach the equality point and that the ﬁrst maximum point after equality is always the global pro ﬁtm a x i m u m
+point. This ﬁnding not only gives insights about the effect of bidding behavior of two identical generators when
+they try to reach their targeted market share, but also provides an indication of how two independent (with no
+communication) generators maximize their total pro ﬁt using a relatively simple OHCA algorithm.
+4. The experimental results also imply that with an in accurate targeted market share, the agents’ proﬁts will be equal to the
+marginal-cost proﬁt, that is, a price war. This result is consistent with the Bertrand games (Kreps and Scheinkman 1983 ).
+Real-world generators are much more complex. Therefore , future work includes testing asymmetric generators and
+simulating different learning algorithms w ith inaccurate estimation of the market share.
+ACKNOWLEDGMENTS
+The authors wish to thank the NYISO for supporting the research reported here.
+REFERENCES
+Borenstein, S., and J. Bushnell. 1999. An empirical analysis of the potential for market power in california’s electricity
+industry. The Journal of Industrial Economics 47.
+Bower, J., and D. Bunn. 2001. Experimental analysis of the ef ﬁciency of uniform-price versus discriminatory auctions in
+the england and wales electricity market. Journal of Economic Dynamics and Control 25:561–592.
+Bunn, D., and M. Martoccia. 2005. Unilateral and collusive market power in the electricity pool of england and wales.
+Energy Economics 27:305–315.
+Bunn, D., and F. Oliveira. 2001. Agent-based simulation-an app lication to the new electricity trading arrangements of england
+and wales. IEEE Transactions on Evolutionary Computation 5.
+Cau, T. 2003. Analyzing tacit collusion in oligopolistic electricity markets using a co-evolutionary approach . Ph.D. thesis,
+Australian Graduate School of Management, University of New South Wales and University of Sydney.
+Cau, T., and E. Anderson. 2003. A co-evolutionary approach to the tacit collusion of generators in oligopolistic electricity
+markets: piecewise linear bidding structure case. The 2003 Congress on Evolutionary computation 4:2306–2313.
+Fabra, N., and J. Toro. 2005. Price wars and collusion in the spanish electricity market. International Journal of Industrial
+Organization 23:155–181.
+1579
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:57 UTC from IEEE Xplore.  Restrictions apply.
+
+Zhou, Chan, Chow and Kotsan
+FERC 2006. United states of america electricity energy market competition task force and the federal energy regulatory
+commission, government report . FERC.
+Friedman, D., and J. Rust. 1993. The double auction market: Institutions, theories, and evidence . Westview Press.
+Green, R., and D. Newbery. 1992. Competition in the british electricity spot market. Journal of Po litical Economy 100.
+Klemperer, P ., and M. Meyer. 1989. Supply functio n equilibria in oligopoly under uncertainty. Econometria 57:1243–1277.
+Kreps, D., and J. Scheinkman. 1983. Quantity precommitment and bertrand competition yield cournot outcomes. The Bell
+Journal of Economics 14:326–337.
+Micola, A., A. Banal-Estanol, and D. Bunn. 2008. Incentives and coordination in vertically related energy markets. Journal
+of Economic Behavior & Organization 67:381–393.
+Nanduri, V ., and T. Das. 2007. A reinforcement learning model to assess market power under auction-based energy pricing.
+IEEE Transactions on Power Systems 22:85–95.
+Nicolaisen, J., V . Petrov, and L. Tesfatsion. 2001. Market power and ef ﬁciency in a computational electricity market with
+discriminatory double-auction pricing. IEEE Transactions on Evolutionary Computation 5.
+Puller, S. 2007. Pricing and ﬁrm conduct in california’s deregulated electricity market. The Review of Economics and
+Statistics 89:75–87.
+Rudkevich, A., M. Duckworth, and R. Rosen. 1998. Modeling el ectricity pricing in a deregulated generation industry: The
+potential for oligopoly pricing in a poolco. Energy Journal 19:19–48.
+Tellidou, A., and A. Bakirtzis. 2007. Agent-based analysis of capacity withholding and tacit collusion in electricity markets.
+IEEE Transactions on Power Systems 22.
+von der Fehr, N., and D. Harbord. 1993. Spot mark et competition in the uk electricity industry. The Economic Journal 103:531–
+546.
+Wu, Q., and J. Guo. 2004. Optimal bidding strategies in electricity markets using reinforcement learning. Electric Power
+Components and Systems 32:175–192.
+AUTHOR BIOGRAPHIES
+ZHI ZHOU is a PhD student in the department of Decision Science and Engineering System at Rensselaer Polytechnic
+Institute. He received his bachelor’s degree and master’s deg ree in computer science from Wuhan University, China, in 2001
+and 2004, respectively. His research interests are simulation, mu lti-agent systems, and electricity markets. His email address
+is <zhouz@rpi.edu>.
+W AI KIN VICTOR CHAN is an Assistant Professor of the Department of Decision Sciences and Engineering Systems
+at Rensselaer Polytechnic Institute. He received his bachelor’s degree and a master’s degree in electrical engineering
+from, respectively, Shanghai Jiao Tong University, China in 1997, and Tsinghua University, China in 2000, and M.S. and
+Ph.D. degrees in industrial engineering and operations research from University of California, Berkeley in 2001 and 2005,
+respectively. His research interests include discrete-event simulation, agent-based simulation, mathematical programming,
+and their applications in energy markets, social networks, ser vice systems, transportation net works, and manufacturing. His
+e-mail address is <chanw@rpi.edu>.
+JOE H. CHOW is a Professor of Electrical, Computer, and System s Engineering and Associate Dean of Engineering
+for Research and Graduate Programs at Rensselaer Polytechnic Institute, Troy, New Y ork. He received his BS degrees in
+Electrical Engineering and Mathematics from the University of Minnesota, and the MS and PhD degrees from the University
+of Illinois, Urbana-Champaign. He worked at General Elect ric Company before joining RPI in 1987. His current research
+includes V oltage-Sourced Converter based Flexible AC Transmission Systems, and the analysis, modeling, and control of
+large power systems using synchronized phasor measurements. He has received several awards in control and power systems,
+and is a fellow of IEEE.
+SERHIY KOTSAN is an Economist of the Market Monitoring Unit at the New Y ork Independent System Operator. He
+received his bachelor’s degree in Fina ncial Management from Hogeschool van Utrecht in 1998, and M.A. and Ph.D. degrees
+in economics from West Virginia University in 2003 and 2005, respectively. His research interests include game theory,
+industrial organization and their application in electricity markets. His e-mail address is <skotsan@nyiso.com>.
+1580
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:01:57 UTC from IEEE Xplore.  Restrictions apply.

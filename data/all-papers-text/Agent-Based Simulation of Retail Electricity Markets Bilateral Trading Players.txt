@@ -1,0 +1,496 @@
+Agent-based Simulation of Retail
+Electricity Markets: Bilateral Trading Players
+Fernando Lopes, Hugo Algarvio
+LNEG−National Research Institute
+Estrada do Pac ¸o do Lumiar, 22
+1649-038 Lisbon, Portugal
+{fernando.lopes, hugo.algarvio }@lneg.pt
+Helder Coelho
+University of Lisbon
+Bloco C6, Piso 3, Campo Grande
+1749-016 Lisbon, Portugal
+hcoelho@di.fc.ul.pt
+Abstract—The electricity industry throughout the world,
+which has long been dominated by vertically integrated utilities,
+has experienced major changes. Deregulation, unbundling,
+wholesale and retail wheeling, and real-time pricing were
+abstract concepts a few years ago. Today market forces drive
+the price of electricity and reduce the net cost through
+increased competition. As power markets continue to evolve,
+there is a growing need for advanced modeling approaches.
+Accordingly, this article looks at using software agents to
+help manage the complexity of electricity markets, particularly
+retail markets. The article focuses on bilateral trading and
+describes some important features of an agent-based system
+for bilateral contracting. Special attention is devoted to the
+characteristics and negotiation behaviour of Buyer and Seller
+agents.
+Keywords-Bilateral contracting; deregulated electricity mar-
+kets; software agents; two-party negotiation; trading strategies.
+I. I NTRODUCTION
+Traditional vertically integrated power utilities around the
+world have evolved from monopoly structures to open mar-
+kets. Electric utility systems were unbundled and replaced
+with a number of separate business entities dealing with the
+generation, transmission, and distribution of electric power.
+The deregulation process has led to the establishment of
+a wholesale market for electricity generation, where com-
+peting generators offer their electricity output to retailers,
+and a retail market for electricity retailing, where end-use
+customers choose their supplier from competing electricity
+retailers.
+Two major market models have been considered [2]:
+electricity pools and bilateral transactions. A pool, or market
+exchange, involves basically a speciﬁc form of auction,
+where participants send bids to sell and buy electricity, for
+a certain period of time, to a market operator, who in turn
+analyzes the bids and calculates a market price.
+This work was performed under the project MAN-REM: Multi-agent
+Negotiation and Risk Management in Electricity Markets (FCOMP-01-
+0124-FEDER-020397), and supported by both FEDER and National funds
+through the program “COMPETE −Programa Operacional Tem ´atico Fac-
+tores de Competividade”.
+Bilateral contracts are negotiable agreements on delivery
+and receipt of power between two traders. These contracts
+usually involve the sale of large amounts of power (hundreds
+or thousands of megawatts) over long periods of time
+(several months to years). Their terms and conditions are
+set independent of a market operator—although this operator
+should verify that sufﬁcient transmission capacity exists to
+complete the transactions and maintain transmission secu-
+rity. Market participants often enter into bilateral contracts
+to hedge against pool price volatility.
+As power markets continue to evolve, there is a growing
+need for advanced modeling approaches that simulate how
+market participants may act and react to the changing
+ﬁnancial and regulatory environments in which they operate.
+An agent-based modeling and simulation approach presents
+itself as a promising approach to model deregulated electric-
+ity markets (EMs). Software agents can be designed to act in
+open and distributed environments, with incomplete and un-
+certain information, and may efﬁciently manage cooperative
+and competitive interactions with other agents.
+This work looks at using software agents to help manage
+the complexity of EMs, notably retail markets. This paper
+focuses on bilateral trading and describes some important
+features of an agent-based system for bilateral contracting. In
+particular, special attention is devoted to the characteristics
+and negotiation behaviour of Buyer and Seller agents. They
+are equipped with a generic model of individual behavior
+and a negotiation framework that handles two-party and
+multi-issue negotiation. Also, they interact according to
+the rules of an alternating offers protocol and can pursue
+strategies motivated by rules-of-thumb distilled from good
+behavioral practice in real-life negotiations.
+The remainder of the paper is structured as follows.
+Section II describes two prominent agent-based tools for
+electricity markets: SEPIA [1] and EMCAS [3]. Section III
+presents some key features of an agent-based system for
+bilateral contracting in retail electricity markets, focusing
+on Buyer and Seller agents. Finally, section IV presents
+concluding remarks and indicates future avenues of research.
+2013 24th International Workshop on Database and Expert Systems Applications
+1529-4188/13 $26.00 © 2013 IEEE
+DOI 10.1109/DEXA.2013.50
+189
+2013 24th International Workshop on Database and Expert Systems Applications
+1529-4188/13 $26.00 © 2013 IEEE
+DOI 10.1109/DEXA.2013.50
+189
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:07:24 UTC from IEEE Xplore.  Restrictions apply.
+
+II. S IMULA TORS FOR ELECTRICITY MARKETS
+Agent-based simulation has been a popular technique to
+model and analyze deregulated electricity markets over the
+past decade. This section describes the key features of two
+prominent agent-based tools for electricity markets.
+SEPIA: The Simulator for the Electric Power Industry
+Agents was developed by the Honeywell Technology Center
+and the University of Minnesota [1]. SEPIA models a power
+system as a set of zones—that is, electrical models made
+up of single electrical nodes—interconnected by tie-lines.
+Generators within a zone are owned by generator operating
+companies (GenCos). A speciﬁc generator, the “generator of
+last resort” (GLR), is automatically assigned to each zone.
+The generating capacity of GLR is inﬁnite, but its selling
+price is much higher than that of the other generators. Loads
+are owned by consumer operating companies (ConCos),
+which negotiate prices and purchase energy for the loads
+from the GenCos. The transmission system consists of tie-
+lines between zones.
+The major components of SEPIA include a number of
+domain-speciﬁc agents, a generic simulation engine, and a
+graphical user interface. The agents represent generators,
+loads, GenCos, ConCos, and the transmission system opera-
+tor. They are constructed as layered components, with each
+layer adding a speciﬁc functionality. Worthy of mention is
+a learning module incorporating two algorithms: a variation
+of Q-learning and genetic classiﬁer systems. The general
+discrete-event simulation engine controls SEPIA simulations
+and mediates all inter-agent communication. The graphical
+user interface handles all interactions between the user
+and the simulations and incorporates four sub-functions:
+scenario editing, simulation control, property editing, and
+report management.
+SEPIA implements a bilateral contracts market for elec-
+tricity. Generation company agents control one or more
+generators—they attempt to maximize proﬁt by establishing
+attractive bilateral contracts. Consumer company agents are
+responsible for purchasing energy for each of their indi-
+vidual loads—they try to purchase power for the lowest
+possible price. Periodically, each consumer company agent
+determines its hourly power need proﬁle (by aggregating
+the needs of each of its loads) and broadcasts a “request for
+quotes” (RFQ) to all generation company agents, regardless
+of zone. The RFQ contains the power needs for every hour
+for the next week and will be valid for a short time period.
+Next, generation companies determine whether to submit
+a quote for some or all of the power requested by the
+RFQ. The decision to respond to the RFQ and to determine
+the price to charge for the energy involves the generation
+cost function and the megawatt capacities for each speciﬁc
+generator. Once the validity of the RFQ has expired, the
+consumer company agent evaluates all the quotes it has
+received and accepts one, many, or none of them.
+All contracts that require power to be transmitted across
+zone boundaries are checked against an available trans-
+mission capability (A TC), which is maintained by the
+transmission network operator agent. Transactions violating
+transmission limits are not allowed. Generation company
+agents take on the risk and responsibility of delivering all
+energy they quoted to consumer agents, meaning that before
+submitting a quote they need to check the public A TC
+table and reserve transmission rights as soon as a quote is
+accepted. The GLR for each zone provides slack, though
+high-priced, energy so that no load will ever go with any
+energy requirement left unmet.
+SEPIA is intended to allow users to conduct computa-
+tional experiments regarding the behavior of power systems
+under a variety of physical and market conditions. The
+target platform is a microcomputer running a Microsoft
+Windows operating system. The speciﬁc CPU and memory
+requirements depend on the size and complexity of the
+computational experiment being conducted. The develop-
+ment and update of agents require the use of a high-level
+programming language such as C++, Java, or VisualBasic.
+EMCAS: The Electricity Market Complex Adaptive Sys-
+tem, developed by the Argonne National Laboratory, is one
+of the most popular electricity market simulators [3]. Gener-
+ation companies (GenCos) represent the business units that
+own generators—they may own a single plant (and operate
+like an independent power producer) or multiple plants (and
+be part of a larger corporate parent that provides other prod-
+ucts in the electricity market). Demand company (DemCos)
+represent the business units that sell electricity to consumers,
+which include residential, commercial, industrial, and other
+electricity consumers. The physical transmission system is
+represented by a set of nodes and links that represent buses
+and lines, respectively. Its operation is governed by decisions
+made by both the transmission company (TransCo) that owns
+the facilities and an independent system operator (ISO).
+Distribution companies (DistCos) own and operate the lower
+voltage distribution system. They provide distribution ser-
+vices to GenCos and DemCos but do not engage in strategic
+business practices.
+The modeling framework can be described in terms of
+three main components: agents, interaction layers, and plan-
+ning periods. The agents are used to capture the heterogene-
+ity of deregulated electricity markets and include (GenCos),
+(DemCos), (TransCos), (DistCos), (ISOs), consumers, and
+regulators. They can establish their own objectives, apply
+their own decision rules, and learn and adapt based on past
+performance and changing conditions. In particular, they
+can learn about the market and the actions of other agents
+using two forms of learning: observation-based learning
+and exploration-based learning. Their risk preference can
+be broadly classiﬁed into risk-averse, risk-neutral, and risk-
+seeking.
+190
+190
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:07:24 UTC from IEEE Xplore.  Restrictions apply.
+
+The interaction layers provide the environment in which
+the agents reside and interact with each other. These layers
+include a physical layer (representing the system elements
+that are involved in the physical generation, transmission,
+distribution, and consumption of electricity), several busi-
+ness layers (accounting for pool markets, bilateral contracts
+markets, ancillary services markets, and the ownership of
+the transmission and distribution systems as well as the fees
+charged by these companies for the use of their facilities),
+and a regulatory layer (representing the regulatory side of the
+electricity market that establishes market rules and monitors
+market performance). The planning periods correspond to
+the different time horizons for which the agents make
+decisions regarding their participation in the market. Six
+distinct time scales or decision levels are considered, namely
+hourly dispatch, and day-ahead, week-ahead, month-ahead,
+year-ahead, and multi-year planning.
+As mentioned above, EMCAS simulates three types of
+markets: pools, bilateral contracts, and ancillary services.
+In particular, bilateral contracts are agreements between
+GenCos and DemCos for the purchase and sale of electricity.
+The negotiation process is similar to the process outlined
+above for SEPIA, though there are important differences. A
+description of this process follows.
+DemCos formulate requests for proposals (RFPs) for
+capacity and energy on the basis of the anticipated needs
+of their customers and their risk tolerance for exposure to
+pool market price volatility. RFPs can be of two distinct
+types: energy deliveries that are constant over all hours
+of the contract term and energy deliveries that vary over
+time. Each DemCo’s request is based on projections of
+its customers’ future energy requirements and is subject
+to uncertainty—this uncertainty stems from such factors as
+weather forecast errors, inaccurate projections of the type
+and number of future customers, unpredictable variability in
+customers’ electricity consumption patterns, and anticipated
+future prices of short-term markets.
+GenCos analyze RFPs, formulate bid responses, and send
+them to DemCos. The responses include prices for all or
+some portions of the requested capacities and energies. They
+are based largely on projected market prices—projections
+are a function of historical information that acts as a
+collection of past experiences. Each GenCo weighs the
+costs and beneﬁts (i.e., net proﬁts) of entering into bilateral
+contracts versus selling its energy production on the pool
+and ancillary services markets. Anticipated net proﬁts are
+based on projected prices in each of the markets and the
+costs associated with power production. Production costs are
+a function of fuel costs, variable operating and maintenance
+costs, heat rate curves (represented as fuel consumption for
+blocks of production), and unit start-up and shutdown costs.
+In addition to net proﬁts, each GenCo also considers other
+factors into its ﬁnal pricing response to an RFP , such as risk
+of rejection.
+DemCos evaluate the responses that they receive and
+either accept or reject the offers. They accept offers (if any)
+that maximize corporate utility. The decision is based on the
+offers received and projected market prices. At this stage
+of the negotiation process, both DemCos and GenCos can
+revise their marketing strategies and initiate a new round
+of RFPs—dynamic strategy revision is based on lessons
+learned from previous bid rounds and newly forged bilateral
+agreements among market players. The user can control the
+number of bidding rounds.
+Agents’ behavior is largely a function of their risk pref-
+erence, modeled by using a von Neumann-Morgenstern
+expected multi-objective utility function. For instance, a
+GenCo that is risk-averse may choose to forgo some po-
+tential proﬁts on the pool market and sell its capability and
+production via bilateral agreements with a guaranteed stream
+of income. Also, a DemCo that has a low tolerance for price
+variability may decide to serve most or all of its projected
+loads via long-term ﬁrm contracts. On the other hand, a
+purely proﬁt-maximizing GenCo may choose to enter solely
+into pool and ancillary services markets despite high market
+price volatility if it foresees that it can potentially make more
+money.
+EMCAS is written in Java and uses extensible markup
+language (XML) for data storage. Java directly supports
+object-oriented implementation and complex multithreading.
+XML is an open, highly portable, and worldwide standard,
+allowing EMCAS to be easily interconnected with external
+data sources, models, and tools.
+III. B ILA TERAL CONTRACTING IN A MULTI -AGENT
+RETAIL MARKET
+An ongoing study is looking at using software agents with
+negotiation competence to help manage the complexity of
+electricity markets, particularly retail markets, towards en-
+suring long-term capacity sustainability. This paper focuses
+on bilateral contracts, either physical or ﬁnancial, between
+a buyer and a seller pair. Speciﬁcally, this section describes
+some key features of an agent-based system for bilateral
+contracting in a retail electricity market.
+The major components of the system include a graphical
+user interface, a simulation engine, and a number of domain-
+speciﬁc agents. The graphical user interface allows users to
+set agent-speciﬁc parameters, specify and monitor negotia-
+tion simulations, gather simulation reports, and perform a
+variety of administrative tasks such as saving simulations
+(see Figure 1). The simulation engine does not rely on
+any domain-speciﬁc knowledge and controls all negotiation
+simulations. The agents are computer systems capable of
+ﬂexible, autonomous action and able to communicate, when
+appropriate, with other agents to meet their design objec-
+tives. They are currently being developed using the JA V A
+programming language and the JADE platform.
+191
+191
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:07:24 UTC from IEEE Xplore.  Restrictions apply.
+
+Figure 1. Bilateral contracting of electricity: offer formulation and graph of negotiation dynamics.
+In particular, we are working on the following types of
+agents:
+• Retailer or Supplier agents : represent the business units
+that sell electricity to consumers; they buy energy from
+a wholesale market and sell energy to a retail market;
+• Customer or Consumer agents : include residential,
+commercial, industrial, and other electricity consumers;
+• Trader agents: promote liberalization and competition,
+and simplify dealings between sellers and buyers;
+• Market agents : analyze the technical feasibility of all
+negotiated contracts; also, they maintain system se-
+curity, administer transmission tariffs, and coordinate
+maintenance scheduling.
+The agents are equipped with a generic model of individ-
+ual behavior (see also [4], [5] and [8]). The model accounts
+for the following key features:
+• A set of beliefs representing information about the
+agent itself, other existing agents, and the market;
+• A set of goals representing world states to be achieved;
+• A library of plan templates representing simple proce-
+dures for achieving goals;
+• A set of plans for execution, either immediately or
+in the near future; each plan is a collection of plan
+templates structured into a hierarchical and temporally
+constrained And-tree; the header of each instantiated
+plan template is referred to as intention.
+Buyer and Seller agents are also equipped with a ne-
+gotiation framework that handles two-party and multi-issue
+negotiation (see also [7], [8], [9], [10] and [6]). Negotiation
+proceeds through several distinct stages or phases, namely
+a pre-negotiation phase, an actual negotiation phase, and
+a post-negotiation phase. Pre-negotiation is the process of
+preparing and planning for negotiation and involves mainly
+the prioritization of the issues at stake, the deﬁnition of limits
+and targets, and the speciﬁcation of preferences to rate and
+compare incoming offers and counter-offers.
+Actual negotiation is the process of moving toward agree-
+ment and typically involves an iterative exchange of offers
+and counter-offers. Two agents interact and trade with one
+another according to the rules of an alternating offers
+protocol [11]. The negotiation process starts with an agent
+ai submitting a proposal p1
+i→j to aj in period t =1 . The
+other agent aj receives p1
+i→j and can either accept the offer,
+reject it and opt out of the negotiation, or reject it and
+continue bargaining. In the ﬁrst two cases the negotiation
+ends. Speciﬁcally, if p1
+i→j is accepted, negotiation ends
+successfully and the agreement is implemented. Conversely,
+if p1
+i→j is rejected and aj decides to opt out, negotiation
+terminates with no agreement. In the last case, negotiation
+proceeds to the next time period t =2 , in which aj makes
+a counter-proposal p2
+j→i (see Figure 1). The tasks just
+described are then repeated.
+192
+192
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:07:24 UTC from IEEE Xplore.  Restrictions apply.
+
+During actual negotiation, the agents make decisions
+according to their strategies. Typical strategies include:
+• concession making or yielding : agents reduce their
+demands or aspirations to accommodate the opponent;
+• problem solving or integrating : agents maintain their
+aspirations and try to ﬁnd ways of reconciling them
+with the aspirations of their opponent.
+Concession making can take several different forms. For
+instance, agents can demonstrate good will and make one
+or more substantial concessions that seek reciprocal con-
+cessions. Such overt concessions aim at eliciting counter
+concessions and are risky. Hence, they are more likely to be
+made when the opponent is trusted. When trust is low, agents
+may turn to one of a host of less risky moves. These include
+fractionation of concessions —agents start with a relatively
+riskless action and move on toward increasing levels of
+risk. They make a small concession and wait to see if the
+opponent reciprocates. If so, they then may feel sufﬁciently
+conﬁdent to venture a larger concession (see, e.g., [12]).
+Problem solving aims at ﬁnding agreements that appeal
+to all sides, both individually and collectively. The host of
+existing problem solving strategies includes:
+1) logrolling: the parties agree to exchange concessions
+on different issues, with each party yielding on issues
+that are of low priority to itself and high priority to
+the other party;
+2) nonspeciﬁc compensation: one party achieves its goals
+and pays off the opponent for accommodating its
+interests.
+Logrolling and compensation are two major routes—though
+not the only routes—to the development of optimal agree-
+ments. Logrolling involves an exchange of concessions on
+issues that are already on the negotiating agenda. In contrast,
+compensation involves an exchange of concessions on issues
+that are not on the agenda—one party gets what it wants and
+the other is repaid on some additional, unrelated issues.
+The post-negotiation process addresses the closing task
+of building commitment and implementing a mutually ac-
+ceptable agreement. Central to this process is the notion
+of “commitment”—it provides the basis of trust on which
+agents perform their part of agreement. The degree of
+commitment to an agreement is established by incurring
+costs if agents fail to comply with its terms. The larger these
+costs, the more the agents will regard the commitment as
+binding.
+Negotiation may end in agreement, wherein the parties
+mutually agree to a proposal, or in no agreement, wherein
+the parties break off negotiation or reach a deadline. Figure 1
+shows a graph of the dynamics of the negotiation process.
+Such graphs can be generated on the ﬂy during the course
+of negotiation, and the one in the ﬁgure was generated at
+the very end of negotiation.
+IV . C ONCLUSION
+This paper has presented some important features of
+an agent-based system for bilateral contracting in retail
+electricity markets. Buyer and Seller agents are equipped
+with a model of individual behavior and a negotiation frame-
+work that handles two-party and multi-issue negotiation.
+They interact according to the rules of an alternating offers
+protocol and can pursue strategies motivated by rules-of-
+thumb distilled from good behavioral practice in real-life
+negotiations.
+As this research progresses, we aim to address coalition
+formation and management, contracts that involve both
+different levels of commitment and different sanctions for
+decommitment, and multiple concurrent bilateral negotia-
+tions.
+REFERENCES
+[1] S. Harp, S. Brignone, F. Wollenberg and T. Samad, SEPIA:
+A Simulator for the Electric Power Industry Agents, IEEE
+Control Systems Magazine , pp 53–69, August 2000.
+[2] D. Kirschen and G. Strbac, Fundamentals of Power System
+Economics, Chichester, England: Wiley, 2004.
+[3] V . Koritarov, Real-World Market Representation with Agents:
+Modeling the Electricity Market as a Complex Adaptive
+System with an Agent-Based Approach, IEEE Power &
+Energy Magazine , pp 39–46, July/August 2004.
+[4] F. Lopes, N. Mamede, A. Q. Novais and H. Coelho, A
+Negotiation Model for Autonomous Computational Agents:
+Formal Description and Empirical Evaluation, Journal of
+Intelligent & Fuzzy Systems , 12, pp. 195–212, 2002.
+[5] F. Lopes, N. Mamede, A. Q. Novais and H. Coelho, Ne-
+gotiation Strategies for Autonomous Computational Agents,
+In: 16th European Conf. on Artiﬁcial Intelligence (ECAI-04),
+IOS Press, pp 38–42, 2004.
+[6] F. Lopes, M. Wooldridge and A. Q. Novais, Negotia-
+tion Among Autonomous Computational Agents: Principles,
+Analysis and Challenges, Artiﬁcial Intelligence Review , 29,
+pp. 1–44, 2008.
+[7] F. Lopes and H. Coelho, Concession Strategies for Negotiat-
+ing Bilateral Contracts in Multi-agent Electricity Markets, In:
+IA TEM-12 Workshop and DEXA-12 Event, IEEE Computer
+Society Press, pp. 321-325, 2012.
+[8] F. Lopes, T. Rodrigues and J. Sousa, Negotiating Bilateral
+Contracts in a Multi-agent Electricity Market: A Case Study,
+In: IA TEM-12 Workshop and DEXA-12 Event, IEEE Com-
+puter Society Press, pp. 326-330, 2012.
+[9] F. Lopes, H. Algarvio and H. Coelho, Bilateral Contracting
+in Multi-agent Electricity Markets: Negotiation Strategies and
+a Case Study, In: International Conference on the European
+Energy Market (EEM-13), IEEE Computer Society Press,
+2013.
+[10] F. Lopes, C. Ilco and J. Sousa, Bilateral Negotiation in
+Energy Markets: Strategies for Promoting Demand Response,
+In: International Conference on the European Energy Market
+(EEM-13), IEEE Computer Society Press, 2013.
+[11] M. Osborne and A. Rubinstein, Bargaining and Markets , San
+Diego: Academic Press, 1990.
+[12] D. Pruitt, Negotiation Behavior , New Y ork, USA: Academic
+Press, 1981.
+193
+193
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:07:24 UTC from IEEE Xplore.  Restrictions apply.

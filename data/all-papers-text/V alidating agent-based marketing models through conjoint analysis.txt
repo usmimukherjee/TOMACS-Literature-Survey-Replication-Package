@@ -1,0 +1,910 @@
+V alidating agent-based marketing models through conjoint analysis ☆
+Rosanna Garcia a,⁎, Paul Rummel b, John Hauser c
+a Northeastern University, United States
+b Comdel, Inc., United States
+c Massachusetts Institute of Technology, United States
+Received 1 March 2006; received in revised form 1 December 2006; accepted 1 February 2007
+Abstract
+Agent-based modelers in the field of marketing research have paid little attention to validation issues. This paper provides a definition of
+validation relevant for this community of modelers. On the basis of a history-friendly model for simulation calibration [Malerba, F., Nelson, R.,
+Orsenigo, L., and Winter, S. (1999). ‘History-friendly’ models of industry evolution: the computer industry. Industrial and corporate change, 8(1),
+3–40.], the authors demonstrate how conjoint analyses can be used to instantiate and calibrate an agent-based marketing model. Methods for
+model instantiation using conjoint partworths and model calibration using the conjoint first-choice rule are demonstrated. When the model
+matches the results of the first-choice rules for consumer preferences, the modeler can feel more confident that calibration has been achieved.
+When verification replicates stylized facts on a macro-level, the model is one step closer to validation. Because conjoint data results are
+meaningful on an individual level as well as on an aggregate level, this type of empirical data collection is ideal for agent-based marketing models.
+© 2007 Elsevier Inc. All rights reserved.
+Keywords: Conjoint analyses; Agent-based modeling; V alidation; Calibration; History-friendly model
+1. Introduction
+V alidation of computational models is an area of concern to
+simulation modelers ( Conway, 1963; Knepell and Arangno,
+1993; LeBaron, in press ). Different types of validation ( Knepell
+and Arangno, 1993 ), different levels of validation ( Carley,
+1996) as well as different methodologies for conducting
+validation ( Carley, 1996; Fagiolo et al., 2005 ) have resulted.
+These differing studies, along with feedback loops, path
+dependencies, sensitivities to internal conditions, and the
+unpredictability of agent adaptation ( Fagiolo et al., 2005 )
+associated with empirically based agent-based models (ABMs),
+easily confound the task of validation. Important questions
+asked by agent-based modelers, especially those investigating
+real-world systems, are: which methods of validation are best?
+Which levels should be considered? How does one know a
+model is correct?
+Agent-based modelers in the field of marketing research
+have paid little attention to these validation issues. The goal of
+this paper is therefore two-fold: to provide a definition of
+validation relevant for agent-based modelers in marketing
+research and to introduce a calibration method based on
+conjoint analysis that incorporates real-world data into a
+marketing-oriented agent-based simulation. The paper first
+provides a definition for validation and for validation levels that
+are important to this community of agent-based modelers.
+Drawing upon reviews grounded in agent-based computational
+economics (ACE) by Carley (1996) and Fagiolo et al. (2005) ,
+the authors then briefly present three methodologies used to
+seek validity in ABM simulations. This foundation serves to
+demonstrate how conjoint analysis can be used to calibrate an
+agent-based marketing model.
+Journal of Business Research 60 (2007) 848 – 857
+☆ The authors acknowledge the support of Northeastern University's Institute
+for Global Innovation Management for this research. They also wish to thank the
+participants of the Agent-based Models of Market Dynamics and Consumer
+Behavior Symposium 2006 at the University of Surrey, Guilford, as well as
+Walter McManus and Colette Friedrich for their comments on earlier versions of
+this paper. Finally, the authors offer their sincere thanks to Olivier Toubia, who
+was a critical contributor to the conjoint analyses. Send correspondence to
+Rosanna Garcia, Assistant Professor of Marketing, Northeastern University,
+Boston, MA USA 02115 ( r.garcia@neu.edu).
+⁎ Corresponding author.
+E-mail address: r.garcia@neu.edu (R. Garcia).
+0148-2963/$ - see front matter © 2007 Elsevier Inc. All rights reserved.
+doi:10.1016/j.jbusres.2007.02.007
+
+The next section establishes definitions for validation and
+introduces three calibration methodologies; indirect calibration,
+the Werker–Brenner calibration approach ( Werker and Brenner,
+2004), and the history-friendly calibration approach ( Malerba et
+al., 1999 ). Finally, by using an example of a history-friendly
+approach based on the wine industry, the paper demonstrates
+how conjoint analysis is used to calibrate an ABM. Henceforth,
+the authors refer to ABMs that focus on market behavior as
+agent-based marketing models (AMM).
+1.1. Defining validation
+Although numerous definitions for validation exist, this
+study specifically focuses on the empirical validation of a
+computerized marketing model. A validated model will possess
+a satisfactory range of accuracy matching the simulated model
+to the real-world model ( Fagiolo, et al., 2005 ). AMMs usually
+include individuals, either at a consumer level or a firm level,
+who are being observed at the market or industry level. Thus,
+when validating AMMs, matching should occur on both a micro
+and a macro-level. In addition, an empirically validated model is
+grounded on qualitative and quantitative data collected from the
+system being investigated. V alidation determines that the
+conceptual simulation model (as opposed to the computer
+program) is an accurate representation of the real-world system
+under study ( Kennedy et al., 2005 ), as supported by empirical
+data.
+Carley (1996) suggests four validation levels – grounding,
+calibration, verification, and harmonizing – in order to properly
+investigate both micro and macro economic levels. Grounding,
+which includes establishing face validity, parameter validity,
+and process validity, should occur first ( Carley, 1996 ). Face
+validity pertains to whether the output looks valid to vested-
+interest parties. In establishing face validity, the model should
+set forth how the simulation represents the real-world and
+should delineate the model's scope based on qualitative and
+quantitative empirical data. Parameter validity examines if the
+characteristics and initial conditions assigned to an agent of the
+model appear realistic. Process validity ascertains whether the
+overall model simulation makes sense on a macro-level. The
+process should include the appropriate players, and these
+players should interact in a realistic manner. A causal model, as
+demonstrated in Fig. 1 , is often good for establishing process
+validity. During grounding, boundaries should be established on
+both a micro and a macro-level. For example, in a model of
+diffusion, individual consumers will purchase a set limit of
+products monthly, and overall, diffusion will typically follow an
+S-shaped curve. Limiting consumer purchase amounts is an
+example of setting parameter boundaries on a micro-level and
+monitoring the diffusion rate is an example of obtaining face
+validity on a macro-level. The model investigated in this study
+incorporates conjoint data gathered during grounding analyses,
+and is tuned to these data during the calibration process.
+Calibration, the next step, is the process of tuning a model to
+fit detailed empirically supported data ( Levitt et al., 1994;
+Carley, 1990). During calibration, model parameters and initial
+conditions are tested and tweaked so that the behaviors of
+individual agents in the model are consistent with empirical
+micro-level characteristics of the modeled agents ( Carley,
+1996). The model is considered to be calibrated when the
+simulated model matches some particular, unrelated features
+of historical data that are drawn from macro-level data ( Fagiolo
+et al., 2005 ).
+V erification, which occurs after calibration, establishes
+whether the macro-individual simulated model captures the
+intent of the real-world model. During verification, parameters
+are not adjusted to fit the model. The focus is on the validation
+of the model's results, not on its internal workings. To verify a
+model, the model's outcomes are compared graphically or
+statistically with empirical data. With multi-agent marketing
+models, verification should occur at both the individual and the
+industry level. Specifically, if the purpose of the model is to
+explain individual level phenomena based on generic agents,
+the model should also be verified at the industry level. If the
+purpose of the model is to examine industry level (organization-
+level) phenomena based on specific actions of heterogeneous
+Fig. 1. Causal model.
+849R. Garcia et al. / Journal of Business Research 60 (2007) 848 –857
+
+agents, then the model should also be verified at the individual
+level (Carley, 1996). Although calibration and verification often
+become synonymous with validation, they are both separate
+tasks that occur during validation procedures. Calibration can
+be thought of as the validation of a simulated model's inputs and
+verification can be thought of as the validation of a model's
+outputs.
+For the model to be predictive, the validation step of
+harmonization is used to show that theoretical assumptions
+embodied in the simulated model are in harmony with the real-
+world based on quantitative data ( Carley, 1996). One method of
+establishing harmony is by comparing the predictive outputs of
+the computative model with the predictions of a linear model
+(Stone, 1994 ).
+As the modeler moves through each level of validation
+(grounding, calibration, verification and harmonization), the
+model becomes more refined. Grounding sets up the model,
+calibration fine-tunes the model, verification matches the model
+to real-world phenomena, and harmonization tests the model to
+the proposed hypotheses developed. In order to have the model
+validated sufficiently, evaluating all levels of validation should
+be considered. This will increase the modeler's confidence that
+the model is sufficiently suitable for achieving the intended
+goal. The following section will discuss the methodologies to
+accomplish validation.
+1.2. Calibration methodologies seeking validation
+Fagiolo et al. (2005) proposed three different types of
+validation-seeking calibratio n methodologies: the indirect
+calibration approach, the Werker –Brenner empirical calibration
+approach ( Werker and Brenner, 2004 ), and the history-friendly
+approach. The indirect calibration approach uses a combination
+of stylized facts and empirical data to build a model where the
+micro-level description is modeled in a not-too-unrealistic
+fashion ( Fagiolo et al., 2005 , pg. 23). Stylized facts, a term
+commonly used in economic theory, are observations generally
+understood to be empirical truths to which theories must fit. The
+stylized facts are used to restrict the parameter space and initial
+conditions. The goal of the indirect calibration approach is to
+establish a realistic model.
+The Werker–Brenner approach also uses stylized facts and
+empirical data to establish the model. However, this method
+adds an additional step that makes use of Bayesian inference
+procedures to verify that the output of the model matches the
+real-world data ( Werker and Brenner, 2004 ). This approach
+requires two sets of empirical data: one to calibrate the model
+and one to verify the model. This can be accomplished by
+splitting the results of a single empirical study into two sets.
+The history-friendly approach uses a specific case study set
+in a particular industry to guide modeling of parameters, agent
+interactions, and agent decis ion rules. Like the indirect
+calibration approach, the goal of this method is to reduce a
+model's dimensionality on the basis of empirical evidence. This
+approach combines the results of qualitative and quantitative
+data collection. Ethnographic research conducted in a particular
+industry is used to specify the agents ’ behaviors, their decision
+rules, and interactions between agents and the environment in
+which they conduct marketing transactions. This approach uses
+quantitative data to establish initial conditions and initialize
+parameters. Model validation compares the model output with
+the actual history of the case study. Malerba et al. (1999) note,
+“It is worth emphasizing that it is not the purpose of history-
+friendly modeling to produce simulations that closely match the
+quantitative values observed in the historical episode under
+investigation. The goal is to match overall patterns in qualitative
+features, particularly the trend behavior of the key descriptors of
+industry structure and performance ”, (pg. 4). Examples of
+history-friendly models (HFMs) have focused on computer and
+pharmaceutical firms to provide the researcher with knowledge
+of model building, analysis, and validation of the dynamic
+evolution of the entire industry ( Malerba et al., 1999; Malerba
+and Orsenigo, 2002 ).
+This study uses the history-friendly approach to look at a
+specific issue within an industry: the diffusion of screw cap
+closures on bottles of fine wines within the New Zealand wine
+industry. This approach is most appropriate when modeling an
+episodic event (Malerba et al., 1999), such as the diffusion of an
+innovation. Four steps typically occur in developing an HFM
+agent-based model: describing the industry background,
+delineating the main theoretical issues to be explored,
+developing the computational model, and presenting the results
+of the model. The remainder of this paper completes steps 1 –3
+but does not report on step 4, the results of the fully validated
+model. A detailed account of step 4 is reserved for future
+reporting in order to maintain appropriate focus on calibration
+methodologies for agent-based marketing models (AMMs). The
+next section demonstrates the development and calibration of
+the AMM using the history-friendly approach, based upon this
+case study (see Fig. 2 ).
+2. History-friendly mode l of the New Zealand wine
+industry
+History-friendly models (HFMs) attempt to bring together
+empirical analyses, general theories, formal modeling, and
+stylized facts observed within an industry. The HFM of this
+Fig. 2. Framework for empirical calibration of AMMs (based on Madey, et al.
+2002).
+850 R. Garcia et al. / Journal of Business Research 60 (2007) 848 –857
+
+study is based on an episodic event staged within the New
+Zealand wine industry. This is a rapidly expanding industry
+with a growth rate of over 150% from 1995 to 2005; there are
+now more than 500 wineries in New Zealand. Low entry
+barriers and global market acceptance of New Zealand wines
+has allowed even new entrants to be profitable. The New
+Zealand Winegrowers, an organization established in March
+2002 to represent both independent grape growers and wineries,
+suggest that the economic growth of their industry reflects the
+“value of a united approach to industry issues. Innovation,
+learning, cooperation and quality have been at the heart of the
+New Zealand wine industry's rapid development in past years ”,
+(New Zealand Grape and Wine Industry Statistical Annual,
+2005).
+One of the factors driving the growth of this industry is the
+high quality and distinctive Sauvignon Blancs of New Zealand,
+which make up 45% of the total harvest. A major concern of the
+wineries producing white wines is the freshness and fruitiness of
+these delicate wines. A problem that has surfaced in this
+growing industry is the availability of bottle closures that
+preserve the true quality and taste of New Zealand wines.
+Industry analysts report that 2 –15% of all wine bottled with
+natural cork closures are plagued by cork taint, a condition
+where poor quality corks cause the wine to lose flavor ( Sogg,
+2005). Often the consumer does not realize that the poor taste is
+due to cork taint and blames the offending flavor on a poor
+vintage or a cheap brand. Hence, the wine manufacturer
+potentially loses a customer in addition to incurring the cost of
+replacing the bottle. The result is millions of dollars of lost
+revenue as well as brand-name erosion when consumers
+attribute the poor wine quality to the winery rather than to the
+closure.
+One solution to the problem of cork taint is to use screw cap
+closures. The screw cap was tested for feasibility as a wine
+closure device in the late 1950s and early 1960s, after which the
+Yalumba Wine Company introduced the innovation into the
+Australian market in the late 1970s. Screw caps (often called by
+their brand-name, Stelvin) have been found to eliminate cork
+taint and other problems found with cork closures, such as
+crumbling and leakage ( Murray and Lockshin, 1997 ). Stelvins
+are said to allow consistent, reliable, aging characteristics,
+showing the wine's development as the winemaker intended
+(Courtney, 2001 ), which makes them highly suitable closures
+for white wines. Between 1976 and the early 1980s, the screw
+cap closure served to seal approximately 20 million wine bottles
+in Australia and New Zealand ( Courtney, 2001). By 1984, the
+Australasian producers had stopped using the Stelvin because of
+consumer resistance to a screw cap closure. The effect on
+Yalumba's Pewsey V ale Riesling, an early Australian introduc-
+tion, almost killed the brand as a prestige product ( Bourne,
+2000).
+This unsuccessful introduction, however, did not completely
+destroy the innovation. Driven by belief of the superiority of
+screw caps over cork closures, especially for white wines, a
+group of 15 winemakers from the Clare V alley of Australia
+selected the Stelvin for closing their premium Rieslings in 2000.
+Having gained insights from previous introduction failures over
+the previous twenty years, this collaborative of Australian
+wineries launched a marketing campaign, “Riesling with a
+Twist”, which communicated to the media, consumers, and
+retailers the quality aspects of the innovative seal. The success
+of the Australian launch motivated 27 New Zealand wineries to
+form the New Zealand Wine Seal Initiative ( www.screwcap.co.
+nz/), launched in August 2001. Key roles of the Initiative were
+to promote the use of screw caps, to provide technical education
+and support to members regarding the use of screw cap wine
+seals, and to educate the wine trade, wine press, and wine
+consumers about the benefits of using screw caps. In 2005, the
+Initiative consisted of more than 40 members wineries,
+representing the best of New Zealand's premium wine
+producers. The Initiative represented both large and small
+wineries and today, according to estimates, 80% of wines
+bottled in New Zealand use screw cap seals ( Sogg, 2005 ).
+The issue of consumer resistance to this innovative closure
+for the wine industry is interesting in terms of the stark contrast
+between the high performance of the new closure and its lack of
+acceptance by consumers. Although screw caps perform well in
+preserving the quality of wine ( Hart and Kleinig, 2005 ), some
+consumers still prefer the romance of the cork ( Courtney, 2001).
+Accordingly, the screw cap is often referred to as a resistant
+innovation because the consumer resists using or purchasing the
+innovation due to particular perceptions or misperceptions. The
+remainder of this paper discusses model development, starting
+with theory formulation and concluding with simulation results.
+2.1. Theoretical foundation of the New Zealand wine industry
+HFM
+The simulation model of this study addresses a single
+stylized episode that can be summarized as follows. With a
+growing domestic market in an increasingly competitive global
+market, New Zealand wineries shared a concern with respect to
+the ability to deliver a distinctive, quality product to wine
+consumers around the world. This concern mainly focused on
+the diminishing availability of high quality cork closures due to
+limited natural cork resources. Fickle consumers had previously
+rejected the alternative to cork closures, the Stelvin closure.
+Traditional marketing techniques had not been effective in
+diffusing this resistant innovation into the marketplace ( Garcia
+and Atkin, 2005 ). Buoyed by the success of the alliance of
+Australian wineries, a group of New Zealand wineries formed
+their own collaborative with the specific goal of promoting the
+use and benefits of the screw type closure (Stelvin) to
+consumers and the media.
+This paper proposes that the New Zealand collaborative used
+a strategy of coopetition to diffuse the Stelvin among a
+population of resistant customers. Coopetition is a form of a
+strategic alliance in which two or more interorganizational firms
+in the same industry, who normally compete against each other,
+instead cooperate to accomplish a specific goal ( Brandenburger
+and Nalebuff, 1996; Gomes-Casseres, 1996; Harbison and
+Pekar, 1998 ). Firms have embraced coopetitive alliances in
+order (a) to exchange patents and other knowledge, (b) to
+undertake collaborative research and development activities, (c)
+851R. Garcia et al. / Journal of Business Research 60 (2007) 848 –857
+
+to build market alliances for setting new standards, and (d) to
+establish collaborative agreements to integrate existing busi-
+nesses (Garraffo, 2002). By working together cooperating firms
+can maximize their resources, stimulate knowledge develop-
+ment and utilization, and expand market opportunities ( Jorde
+and Teece, 1989 ). By forming the New Zealand Wine Seal
+Initiative, 27 innovative wineries utilized a coopetition strategy
+for diffusing a resistant innovation into the marketplace.
+The above discussion gives a broad outline of what one
+would expect to see in a simulated industry history and points to
+some of the stylized facts that need to be treated in the
+specification of the model's dynamics. In order to capture the
+coopetitive environment, the model typifies the wineries as
+seeking to maximize their market share, MS i.
+MSi ¼ Si
+PK
+k¼1
+Sk
+ð1Þ
+where Si is the number of bottles sold with Stelvin closures by
+firm i and ΣSk is the total number of Stelvins sold in the
+marketplace. The primary goal is to introduce the resistant inno-
+vation into the marketplace and to gain market share in an
+increasingly competitive industry. For the firm, profits are
+calculated each period, t,a s ;
+P ¼ Np−Nk−NsldiA ð2Þ
+where N is the number of total bottles sold, p is the price of the
+wine to the consumer (distribution channels are not modeled in),
+k is the production cost of a single bottle, Ns is the number of
+bottles sold with a Stelvin closure, and δiA is 1 if the firm is in
+the alliance and 0 if otherwise. (As a first-order model, Eq. (2)
+does not model economies or diseconomies of scale.) Each
+winery that joins the alliance is required to pay a per bottle levy,
+l, to the alliance for the cost of the advertising program. Product
+offerings include both cork closures and Stelvin cap closures
+with constant production costs for all types of wines produced.
+Although the screw cap closure itself is less expensive than the
+cork closure, the costs of manufacturing the threaded necks of
+wine bottles necessary for screw caps equal the manufacturing
+costs of the cork.
+Consumer demand drives the manufacturing decisions of
+firms (wineries). When making a purchase decision, the
+consumer chooses product offerings by randomly selecting
+firms; these product offerings become the choice set. Con-
+sumers then refer to their combined partworths to evaluate the
+product offerings within the choice set, and to then select the
+most preferred offering. In other words, they choose the product
+that maximizes their utility, such that:
+Uij ¼ fp j
+/C0/C1
+þ
+XM
+m¼1
+ximdj þ xiS dj ð3Þ
+xiS tðÞ¼ xiSðt/C0 1Þ þ xmax NZ − PxNZ½/C138 q/ðÞ ð 4Þ
+where i represents the individual, m the attribute, j the product
+offering, ωis (t) the Stelvin partworth for the jth product (with a
+Stelvin closure) at time t, pj the price of product j, and δj is 1
+for the product choice being evaluated, and 0 if otherwise.
+[ωmaxNZ − ω¯ NZ] is a constant, which is the difference between
+the highest Stelvin closure partworth for a New Zealand
+respondent and the average partworths for Stelvins by all New
+Zealand respondents. Eq. (4) captures the evolution of the
+partworth for Stelvin closures. The evolution function, ρ(ϕ),
+represents the rapidity with which each consumer's partworth
+evolves from the current NZ average to the NZ maximum.
+Product j also can be a product with a higher utility than the
+options in the choice set, leading to no purchase of wine. Price is
+modeled as a function to capture the scaling issues in the utility
+definition. In the simulation, price points for different types of
+wine fluctuate endogenously based on demand. In other words,
+firms set product (wine) prices to maximize profits: when
+products do not sell, prices decrease, and when the demand for a
+product is high, prices are adjusted upward.
+Because price is endogenous, the simulation begins at
+reasonable starting prices and runs until prices reach equili-
+brium. Price is then set and the simulation continues until the
+diffusion of Stelvins also reaches market equilibrium. When the
+wineries have formed their alliance to spread the gospel of
+screw caps, the consumers’ Stelvin partworths are altered on the
+basis of (1) the number of Stelvin product offerings considered
+in the choice set, (2) positive word of mouth by other
+consumers, and (3) the impact of alliance advertising. These
+components are captured in the rate of change, ρ(ϕ):
+q/ðÞ ¼ ec
+1 þ ec ; where; ð5Þ
+c ¼ C þ vstel/C0 wineriesntðÞ stel/C0 wineries
+þ vconsumer/C0 networkntðÞ consumer/C0 networkþvadvntðÞ alliance/C0 firms
+ð6Þ
+The n(t)s change every iteration as driven by the number of
+wineries using Stelvins and the number of consumers in an
+agent's network that have adopted the Stelvin. The model
+assumes that the constants are non-negative. This assures that
+ρ(ϕ) is bounded at (0, 1) and increases with increasing
+marketing activities. Eq. (6) allows c to increase or decrease;
+c might decrease if consumers again prefer corks to Stelvin
+closures. An alternative model might set the partworths
+constant. A suitable modification of Eq. (6) can accomplish
+this. The next section presents the computational model based
+on the HFM described above and explains how conjoint
+analysis results can be used to validate this model.
+3. Computational model
+The purpose of this agent-based model is to gain insights into
+how coopetition strategies can affect the diffusion of Stelvin
+wine bottle closures (a resistant innovation). The model utilizes
+two different types of interacting agents: wineries and
+consumers. Each period, the wineries determine the price,
+852 R. Garcia et al. / Journal of Business Research 60 (2007) 848 –857
+
+production levels, and product attributes based on customer
+demand. Similarly, each period the consumers purchase the
+products manufactured by the wineries on the basis of their
+individual preferences. A generalized causal model, as shown in
+Fig. 1 , demonstrates the sequence of how the two types of
+agents, wineries and consumers, interact with each other. A
+seven-step process summarizes these interactions:
+Step 1. Agents (wineries and consumers) are initialized with
+heterogeneous characteristics as determined by the conjoint
+results.
+Step 2. Wineries decide whether to join an alliance of
+wineries that exclusively produces wines with Stelvin closures
+and markets these products jointly with their competitors.
+Step 3. Wineries produce wines with attributes based on
+market demand and membership in the alliance.
+Step 4. Consumers randomly choose a set of wineries from
+which to evaluate product offerings. Networking with other
+consumers (word of-mouth) and winery advertisements can also
+increase a consumer's preference for Stelvin closures.
+Step 5. Consumers purchase wine based on individual utility
+maximization of product choices. If no wine is found to provide
+sufficient utility, the consumer does not make a purchase. If the
+purchase choice includes a Stelvin closure, the consumer has
+adopted the innovation.
+Step 6. Market share is calculated. Wineries record sales and
+inventory any unsold wine. Stored wine is available for future
+periods, but wineries incur holding costs. The goal of the
+wineries is to maximize profit through meeting customer
+demand while minimizing inventory. Profit maximization is
+accomplished by first adjusting prices and then by adjusting
+production levels.
+Profit maximizing wineries adjust the price of their offerings
+based on how much unsold stock remained at the end of the
+month. Excess stock results in lowered prices; depleted stock
+results in higher prices. (See Fig. 3 for an illustration of the
+rapidity with which the price equilibrium is obtained.) Under
+fairly general conditions, this iterative procedure finds the price
+equilibrium (fixed point) as a function of model parameters. In
+this paper, the authors provide no formal proof that price
+equilibria exist or that prices are uniquely determined for the
+markets modeled. By using different initial conditions, how-
+ever, the simulations suggest that the prices converge to
+equilibria and appear to be unique. The authors make no claims
+regarding the existence or uniqueness of market simulations
+based on different assumptions or structure. Based on price
+equilibrium, wineries are then permitted to change their
+production levels to maximize profits. After approximately
+24 months (or iterations in this model), the demand for screw
+caps begins to reach an equilibrium.
+To simulate an alliance, 27 randomly selected wineries were
+designated members. Allian ce members use only Stelvin
+closures and jointly conduct an advertising campaign to educate
+the consumer on the benefits of screw cap closures. The
+members of the alliance share the costs of the campaign,
+decreasing their short-term profits. As the marketing campaign
+is initiated, consumers ’ conjoint partworths are adjusted as
+described in Eqs. (5) and (6).
+The authors simulated the model with the aid of Netlogo (v3)
+(1999). Those interested in the structure and simulation results
+of the model can obtain a review from the first author upon
+request. Having described the basic underpinnings of the model,
+the following section will give a description of the steps taken
+towards model validation, including the use of conjoint analysis
+to calibrate the model.
+3.1. Calibration of the New Zealand wine industry AMM
+A wide range of parameter settings can be used to initialize
+an AMM. Knowing which initialization parameters to use is
+often a conundrum for agent-based modelers. Some, but not all,
+parameter settings lead to patterns of industry evolution that, in
+effect, replicate the episode modeled. One method of parameter
+instantiation is to use the empirical results from quantitative
+data collection. Instantiation (a term used by Java programmers)
+is synonymous with the creation or initialization of a model
+used to realize an abstraction (in this case, the real-world). This
+study used conjoint analysis results to instantiate the simulation
+in order to realistically model consumer choice decisions.
+Partworths, as determined from a conjoint study, were used to
+initialize consumers’ preferences, and thus, provided a platform
+for model calibration. An explanation on how this was
+accomplished follows the brief description of the conjoint
+data collection given next.
+The study recruited 2255 leading edge wine consumers from
+the US, Australia, and New Zealand to complete a conjoint
+web-based survey. The 1203 respondents from the US, 667
+from Australia, and 385 from New Zealand were subscribers to
+wine-related e-newsletters and were considered knowledgeable
+about wines. In this study, the focus is only on the New Zealand
+(NZ) data. The conjoint design included five features at four
+levels each (see Fig. 4 ):
+• Closure type: traditional cork, synthetic cork, Metacork ™
+(closure combining a screw cap and a cork), screw cap.
+• Type of wine: dry white, aromatic white, dry red, blush red.
+• Origin of wine: New Zealand/Australia, France, Sonoma/
+Napa, Chile/Argentina.
+Fig. 3. Price adjustments. Netlogo output.
+853R. Garcia et al. / Journal of Business Research 60 (2007) 848 –857
+
+• Vintner type: small boutique, mid-size region winery, large
+nationally recognized winery, international conglomerate
+winery.
+• Price: $7, $12, $20, $25 in the respondents ’ currency (e.g.,
+New Zealand dollars).
+Each respondent completed two separate conjoint tasks by
+indicating their wine purchase preferences for an informal and a
+formal occasion. Accordingly, this resulted in 770 different
+responses. The survey results showed that New Zealand
+consumers have equal preferences for Stelvins and natural
+cork closures. On average, the respondents preferred red wines
+to white wines and preferred wines from regional and boutique
+wineries to international conglomerates. These consumers
+preferred wine from their home country. Questions in addition
+to conjoint queries revealed that the respondents relied on wine-
+related periodicals and wine-related functions to gather knowl-
+edge about wines. The methodology and detailed results of this
+study are reported in Toubia, Hauser, and Garcia (2006) and
+Garcia and Atkin (2005) .
+Consumer agents were assigned partworths only for two of
+the four wine-type attribute levels (red wine/white wine), two
+closure attribute levels (screw cap/cork), two wine origin
+attribute levels (NZ-AUS/US), all four levels of winery-type
+(boutique, regional, national, international) and price ($7, $12,
+$20, $25). These levels were chosen in order to focus on the
+stylized facts of interest and to simplify the model. The conjoint
+study measured conditional choice and therefore did not include
+a none-alternative ( Orme, 2005 ). The AMM, instead, included
+the none-alternative choice of no wine purchase. To set this
+choice of none, the least preferred choice of the agent was
+calculated to find a minimum threshold for which a purchase
+would be made. Consumer agents purchase wine only when this
+threshold utility is exceeded.
+To instantiate the wineries the following parameters were
+assigned: (1) type of wine (red or white), (2) region of winery
+(US or Australia/New Zealand), and (3) type of winery
+(boutique, etc.). To simplify model validation steps, each type
+of winery only produced wines at a single price. Thus, boutiques
+offered products at a starting price of $25; regional wineries
+priced at $20; national wineries priced at $12; international
+wineries priced at $7. During the first few iterations of a model
+run, these initial prices are adjusted to reach price equilibrium, as
+explained above.
+Conjoint analysis results defined the winery parameters. For
+example, the first setting to instantiate was the percentage
+distribution of each type of winery in the marketspace
+(boutique, regional, national, international). The first-choice
+rule based on the conjoint results indicated that 4.4% of the NZ
+respondents preferred boutique wines, 23.9% preferred regional
+wines, 44.7% preferred national wines and 22.8% preferred
+international wines. These percentages do not add up to 100%
+because 4.2% of the respondents were indifferent with respect
+to two different types of wineries. This small difference did not
+influence the model outcomes and therefore is not considered in
+model instantiation. These percentages formed the basis for
+setting the initial distribution of types of wineries.
+The winery-type instantiation, however, is not complete
+until the model is calibrated. Using sensitivity tests, the study
+evaluated how prices would change based on changing the
+ratio of different types of wineries. Starving the market of the
+most commonly preferred wine (national) would drive the
+wine's price up and consequently glut the marketspace with
+less preferred options. The goal of this step in the calibration
+process was to adjust the percentages until the equilibrium
+prices sufficiently matched real-world prices for these types of
+wines. Industry partners provided real-world prices for NZ
+wines. Table 1 shows the starting allocation percentages
+Fig. 4. Conjoint Design (from Toubia, et. al., 2006 ).
+854 R. Garcia et al. / Journal of Business Research 60 (2007) 848 –857
+
+initialized during instantia tion and the final allocation
+percentages as determined during model calibration. The
+table also shows the final price points reached after
+equilibrium.
+The percentage of red wine versus white wine produced by
+the wineries is set in a similar manner. Table 1 shows the initial
+percentages of red and white wine determined through the
+conjoint results and the final calibrated percentage of red-to-
+white wine production obtained through sensitivity testing. For
+example, first-choice rule results showed that 58% of the
+respondents preferred red wine over white wine; sensitivity
+analysis resulted in a model setting of 55% red wine production
+and a 45% white wine production. The percentage of
+Australian/New Zealand wineries versus US-based wineries
+also needed to be set for the model. Although preferences for
+French and South American wines were also collected in the
+conjoint study, they were excluded from the analyses to simplify
+the model because partworth evaluations showed that New
+Zealand respondents had the least preferences for these types of
+wines. First-choice rule results showed that 92% of New
+Zealand respondents preferred Australian/New Zealand wines
+to US wines. Sensitivity analyses confirmed this setting for the
+model.
+To summarize the instantiation and calibration method,
+conjoint partworth results were used to instantiate overall
+consumer preferences and the first-choice rule was used to
+calibrate their initial settings using sensitivity analyses to
+replicate stylized facts. Table 1 shows that after calibrating these
+three parameters (types of winery, region of winery, red –white
+wine), 5% of the wineries were boutique wineries that produced
+55% red wines and 45% white wines. Of these boutique
+wineries, 92% were Australian/New Zealand wineries and 8%
+were US wineries.
+Additional parameters set were the number of wineries in the
+marketspace and the production level of each winery.
+Sensitivity analyses led to a model with 52 wineries in a
+marketspace of 770 consumers. In order to increase the
+probability of including a boutique winery in the selection
+process, which was limited to 3 out of the 52 wineries,
+consumers evaluated 16 different wineries when selecting a
+wine to purchase. Production levels were initially set to be equal
+among the 52 wineries.
+The next step was to verify the model's face validity by
+evaluating a baseline model that excluded alliance member-
+ships, advertising, and word of-mouth impacts. This allowed for
+the examination of model sensitivities by setting the micro
+variables (agent characteristics driven by the empirical data)
+constant and observing how well the macro-environmental
+variables match the true marketplace (for example, the market
+share of Stelvins, red wines, white wines, etc.). When the
+simulations do not replicate the known facts about the macro
+system as revealed in the empirical data, adjustments to the
+model's parameters are required. Macro-level results that do not
+match the known empirical data require a re-calibration of the
+model.
+Initially, the percentage of Stelvin-closed wines was
+arbitrarily set at 10%. After reaching initial price equilibrium,
+wineries were permitted to adjust their production level of
+Stelvins based on their overall market share. Wineries produced
+Stelvin-closed wines to maximize their profits based on market
+demand. The conjoint analysis first-choice rule showed that
+55% of the New Zealand respondents preferred Stelvin closures
+to cork closures. Thus, in model verification, market share of
+Stelvins needed to reach 55% without any exogenous shocks to
+the model in order to achieve the calibration goal. The results
+show ( Fig. 5 ) that the market share of Stelvins reached 53.5%
+(based on 50 runs of 50 iterations each, or 2500 total iterations).
+This simulation output (53.5%) adequately matched the
+Fig. 5. Pre-alliance market penetration. Netlogo ouput: average of 50 runs of 50
+iterations.
+Table 1
+Initial and final model settings
+Type of winery
+Initialization a Model setting b
+Boutique 4% 5%
+Regional 24% 18%
+National 45% 39%
+International 27% 38%
+Type of wine
+Initialization c Model setting d
+Red wine (boutiques) 58% 55%
+Red wine (regional) 59% 60%
+Red wine (national) 59% 60%
+Red wine (international) 59% 60%
+Region of wine
+Initialization e Model setting f
+Australian/New Zealand 92% 92%
+US 8% 8%
+Price of wine
+Initialization g Model setting h
+Boutique (high priced) $25.00 $21.50
+Regional (mid-high priced) $20.00 $17.50
+National (mid priced) $12.00 $11.50
+International (low priced) $7.00 $5.00
+a Based on conjoint first-choice rule when evaluating type of winery at set
+price.
+b After verification.
+c Based on conjoint first-choice rule when evaluating red versus white wine.
+d After verification.
+e Based on conjoint first-choice rule when evaluating AUS/NZ vs. US.
+f After verification.
+g Based on conjoint attribute levels.
+h After price equilibrium achieved (approximately 24 iterations [months]).
+855R. Garcia et al. / Journal of Business Research 60 (2007) 848 –857
+
+conjoint results (55%), which led to the conclusion that this
+important test of model calibration and face validity had been
+successful.
+4. The simulation results
+This study proposes that a strategy of coopetition served as
+an instrument to diffuse the Stelvin amongst resistant
+consumers in the New Zealand wine industry. The authors
+collected the data for this study in 2004, three years after the
+formation of the Wine Seal Initiative in New Zealand. The study
+therefore does not present actual pre-alliance Stelvin market
+share and diffusion results. Instead, for illustration purposes, the
+data gathered in 2004 drove the pre-alliance market equilibrium
+and was used to simulate subsequent market results. Thousands
+of test runs were conducted to establish face, parameter, and
+process validity as dictated by the empirical results of the
+conjoint study.
+By allowing price (as well as advertising and production
+levels) to be set endogenously by rational agents (wineries) in
+response to economic decisions made by consumer agents (buy
+what and from whom), the model begins each run with a burn-in
+period until prices reach a pre-alliance equilibrium. In
+oligopolistic competition, wineries make myopic marketshare-
+maximizing decisions to introduce Stelvins. Only after both
+price and production equilibrium are reached, do alliance effects
+come into play in the model. The results in Fig. 5 show market
+penetration when no alliances are formed and the consumers ’
+partworths are not allowed to change (no effect of word of
+mouth or advertising). The results show that at approximately
+t = 30, the market becomes saturated and the Stelvin market
+share reaches only 53%, as dictated by the consumers ’
+partworths.
+Fig. 6 demonstrates how market penetration changes when
+alliances are formed. This figure shows that the market share for
+Stelvins has increased to 76.5% and the diffusion is 97.6% (all
+consumers have bought at least one Stelvin-closed product).
+This is consistent with actual marketplace response four years
+after the alliance formation; in New Zealand approximately
+80% of wines are bottled with Stelvins ( Sogg, 2005 ). In the
+model, the primary factor that changes consumer awareness and
+preference for Stelvins is advertising by the alliance firms. Word
+of mouth can also positively (or negatively) impact adoption, as
+consumer agents communicate with one another based on a
+small-world structure ( Watts and Strogatz, 1998 ), thereby
+stimulating (or inhibiting) the diffusion of Stelvins.
+Early results of this model indicate that the size of the
+alliance (number of firms committed to screw caps) can
+significantly affect the rate of diffusion of the screw cap.
+These findings support the qualitative data collected from New
+Zealand wineries, indicating that at least a dozen committed
+wineries were necessary to get the ball rolling. A minimum
+number of alliance members seem to be necessary to spread
+advertising and media expenditures across members and obtain
+economies of scale in bottling costs. The model also suggests
+that if an alliance is too large, winery's profits of those in the
+membership will be lower because supply exceeds demand. In
+this case, more sales go to wineries that remained committed to
+cork closures. Later, wineries not in the alliance can free-ride on
+the Stelvin-coalition's initial investments. Continued analyses
+are planned to explore the profit impact of competition versus
+coopetition.
+5. Summary
+This study outlined the levels necessary to validate agent-
+based marketing models (AMMs) and demonstrated a history-
+friendly model (HFM) approach ( Malerba et al., 1999 ) that
+incorporates qualitative and quantitative data to create a real-
+world replication of an episodic event in the New Zealand wine
+industry. Research showed how conjoint data results could be
+used to instantiate, calibrate, and verify an AMM to achieve
+model validation. Conjoint data provides a grounding founda-
+tion for instantiating the model, which naturally lends itself to
+guiding calibration and verification.
+Two important conclusions of this study are that AMM
+instantiation can be set with conjoint partworths and the
+conjoint first-choice rule can be used to calibrate initial model
+settings. When a model's results match the results of the first-
+choice rule for consumer preferences, a modeler can feel more
+confident that model calibration is complete. When verification
+replicates stylized facts on a macro-level, the model is one step
+closer to validation. Because conjoint data results are mean-
+ingful on an individual level as well as on an aggregate level this
+type of empirical data collection lends itself nicely to AMMs.
+Empirical results that are reported on an aggregate level (such as
+regression analyses) are less suitable for grounding an AMM.
+The next step in the model is harmonization. Calibration and
+verification are not substitutes for harmonization, nor do they
+guarantee accurate predictions. For details on how to conduct
+harmonization, refer to Carley (1996) .
+Early model results of the HFM indicate that diffusion can
+stagnate with a resistant innovation, such as screw cap closures
+on high-end wines. Exogenous forces, such as coalitions, are
+required to move the consumers ’ preferences away from the
+status quo. One method of moving consumers ’ preferences is
+through coopetition, where competing wineries cooperated to
+jointly promote the benefits of the screw cap to a resistant
+marketplace. Early results show that an alliance of too few
+wineries will not cause the necessary shock to the marketplace
+Fig. 6. Post-alliance market penetration. Netlogo output: average of 50 runs of
+50 iterations.
+856 R. Garcia et al. / Journal of Business Research 60 (2007) 848 –857
+
+and an alliance of too many wineries dilutes the message,
+resulting in loss of profits and market share for all wineries in
+the alliance.
+References
+Bourne P . Taint necessarily so. Gourmet Traveller (January 2000); 2000.
+p. 30 –1.
+Brandenburger AM, Nalebuff BJ. Coopetition: A Revolution Mindset That
+Combines Competition and Cooperation: The Game Theory Strategy That's
+Changing the Game of Business. New York: Doubleday; 1996.
+Carley KM. Group stability: a socio-cognitive approach. In: Lawler E,
+Markovsky B, Ridgeway C, Walker H, editors. Advances in Group
+Processes: Theory and Research, vol. VII. Greenwhich, CT: JAI Press;
+1990. p. 1 –44.
+Carley KM. V alidating computational models. Working Paper Carnegie Mellon
+University; 1996.
+Conway RW. Some tactical problems in digital simulation. Manage Sci 1963;10
+(1):47–61.
+Courtney S. The history and revival of screw caps. Wine of the Week (August,
+2001); 2001. http://www.wineoftheweek.com/screwcaps/history.html (Last
+viewed May 12, 2006).
+Fagiolo G, Moneta A, Windrum P . Empirical validation of agent-based models:
+A critical survey. International Workshop on Agent-Based Modeling and
+Economic Policy Design. Germany: University of Bielefeld; 2005.
+Garcia R, Atkin T. Coopetition for the Diffusion of Resistant Innovations: A
+Case Study in the Global Wine Industry. Northeastern University Institute
+for Global Innovation Management Working Paper 2005;vol. 05 –002.
+Garraffo F. Types of coopetition to manage emerging technologies. Conference
+Proceedings of the European Academy of Management. Stockholm; 2002.
+Gomes-Casseres B. The Alliance Revolution. Cambridge MA: Harvard
+University Press; 1996.
+Harbison JR, Pekar Jr P . Smart Alliances. San Francisco: Jossey-Bass; 1998.
+Hart A, Kleinig A. The role of oxygen in the aging of bottled wine. The
+Australian and New Zealand Wine Industry Journal 2005;vol. 20(2):46 –50.
+Jorde TM, Teece DJ. Competition and cooperation: striking the right balance.
+Calif Manage Rev 1989;31(3):25 –37.
+Kennedy RC, Xiang X, Madey GR, Cosimano TF. V erification and validation of
+scientific and economic models. Agent2005 Conference Proceedings.
+Chicago, IL, October 2005; 2005.
+Knepell PL, Arangno DC. Simulation validation: A confidence assessment
+methodology. Los Alamitos, CA: IEEE Computer Society Press; 1993.
+LeBaron, B. Agent-based computational finance. In: Tesfatsion L, Judd K,
+editors. Handbook of Computational Economics. New York: North-Holland;
+in press.
+Levitt RE, Cohen GP , Kunz JC, Nass CI, Tore C, Y an J. The virtual design team:
+Simulating how organisation structure and information processing tools
+affect team performance. In: Carley KM, Prietula MJ, editors. Computa-
+tional Organization Theory. Hillsdale, NJ: Lawrence Erlbaum Associates;
+1994. p. 1 –18.
+Madey G, Freeh V , Tynan R. Agent-based modeling of open source using
+swarm. 8th Americas Conference of Information Systems; 2002.
+Malerba F, Orsenigo L. Innovation and market structure in the dynamics of the
+pharmaceutical industry and biotechnology: towards a history-friendly
+model. Ind Corp Change 2002;11(4):667 –703.
+Malerba F, Nelson R, Orsenigo L, Winter S. History-friendly ’ models of
+industry evolution: the computer industry. Ind Corp Change 1999;8
+(1):3–40.
+Murray W, Lockshin L. Consumer acceptance of synthetic corks. Int J Wine
+Mark 1997;9(1):31–52.
+NetLogo. Center for Connected Learning and Computer-Based Modeling.
+Evanston, IL: Northwestern University; 1999. http://ccl.northwestern.
+edu/netlogo.
+New Zealand Grape and Wine Industry Statistical Annual 2005. http://www.
+nzwine.com/ (last viewed March 25, 2006).
+Orme BK. Getting Started with Conjoint Analysis. Madison, WI USA: Research
+Publishers; 2005.
+Sogg D. The science of closures: evaluating corks, twist-offs and other ways of
+preserving the quality of bottled wine. Wine Spect 2005;28(17):55 –8.
+Stone M. Cross-validation and multinomial prediction. Biometrika 1994;61
+(3):509–15.
+Toubia O, Hauser JR, Garcia R. Generalized polyhedral methods for adaptive
+choice-based conjoint analysis: Theory and Application. IGIM Working
+Paper; 2006. March 2006.
+Watts DJ, Strogatz SH. Collective dynamics of ‘small-world’ networks. Nature
+1998;393(6684):440–2.
+Werker C, Brenner T. Empirical calibration of simulation models. Papers on
+Economics and Evolution, vol. 0410. Jena: Max Planck Institute for
+Research into Economic Systems; 2004.
+857R. Garcia et al. / Journal of Business Research 60 (2007) 848 –857

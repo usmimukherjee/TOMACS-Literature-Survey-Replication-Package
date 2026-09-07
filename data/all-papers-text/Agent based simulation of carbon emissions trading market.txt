@@ -1,0 +1,1107 @@
+Agent Based Simulation of Carbon Emissions Trading Market 
+ 
+Fatma Mutlu, Nilgun Fescioglu-Unver 
+TOBB University of Economics and Technology, Industrial Engineering Department, Ankara, Turkey 
+ 
+Abstract--In this research we examine the supply and 
+demand relationship in a carbon emissions trading market by 
+using agent based system simulation.  An agent based system is 
+a computational system that simulates the behaviors of 
+autonomous agents. We model different nations which take 
+place in the carbon trading mark et as autonomous agents, and 
+these agents act as buyers or sellers in the same trading market. 
+A market-director agent directs the trading between the buyer 
+and seller agents and enables a market mechanism with 
+dynamic auction. This study an alyzes the changes in carbon 
+price and the total carbon reduction amount under several 
+different demand scenarios. We used JADE (Java Based Agent 
+Development Environment) as the simulation environment. 
+ 
+I. INTRODUCTION 
+ 
+This paper presents an application of agent based 
+simulation to analyze the carbon trading market. Agent based 
+simulation is a tool to model and analyze the behavior of 
+complex systems composed of autonomous agents. Agents 
+act in an environment, which has policies and interaction 
+protocols that design the communication between agents. 
+Agents may have different behaviors, and strategic goals to 
+achieve. Agents may learn throughout their lifetime, use their 
+knowledge to forecast future ev ents and adapt their behavior 
+accordingly. Energy manageme nt related systems involve 
+different interacting components, which can be modeled 
+using multi agent systems and the behavior of these systems 
+under different scenarios can be analyzed using agent based 
+simulation. 
+Kyoto Protocol aims to reduce the greenhouse gas 
+emissions to prevent the climate change. Kyoto Protocol 
+Annex-1 countries are expected to develop clean 
+manufacturing processes to make this reduction. Kyoto 
+protocol also brings three flexibility mechanisms to help 
+countries meet their reduction commitments. ET (Emission 
+Trading) is one of these mechanisms, and it helps Annex 1 
+regions meet their emission reduction target at a reduced cost 
+[13]. One type of emissions trading is carbon emission 
+trading which is specifically for carbon dioxide. A nation 
+buying carbon in the carbon trading market buys the right to 
+burn it and a nation selling it gives up the right to burn it [14]. 
+Regions such as Former Soviet Union and Eastern Europe 
+have surplus carbon credits called “hot air” because their 
+emissions are already under the amounts of emissions 
+specified in accordance with the Kyoto Protocol.   
+This paper aims to analyze the supply and demand 
+relationship in the carbon trading market, using agent based 
+simulation approach. The paper is organized as follows: 
+Section 2 presents a short review of recent agent based 
+applications and gives background information on carbon 
+trading. Section 3 presents the carbon trading model and 
+agent based simulation model. Section 4 introduces several 
+scenarios and discusses the model results. Finally, Section 5 
+discusses conclusions and future research directions. 
+ 
+II. BACKGROUND 
+ 
+A. Agent Application Examples  
+As analyzing dynamically ch anging situations is a 
+difficult task, many researchers suggest using agent-based 
+simulation approach, which is one of the approaches applied 
+to investigate complex dynamics in the studies on economy 
+[12]. An agent based system is  a computational system that 
+simulates the behaviors of autonomous agents [11]. There are 
+a variety of areas where agent based systems are used. Some 
+of application areas are as follows: manufacturing, 
+scheduling, transportation, supply chain management etc.  
+In a dynamic scheduling system, agents are assigned to 
+work centers and these agents choose the best dispatching 
+rules dynamically [10]. An example is the multi agent 
+scheduling system proposed by Glaschenko et al. as a 
+solution for taxi companies [6].  
+There are also a number of agent based applications about 
+traffic control and management. Chen et al. propose a traffic 
+management system application, which integrates multi-agent 
+systems with mobile agent technology in order to cope with 
+uncertainties of the dynamic environment more effectively 
+[3]. 
+Another area that multi-agent technology is used is 
+education. Turgay [16] proposes agent systems with 
+intelligence and cooperation features for distance learning. 
+Another example is about a distance learning system 
+composing of two multi-agent systems which are the higher 
+level providing the main functions of the system and the 
+lower level being responsible for diagnosing students’ 
+conceptions [17]. 
+Mizuta et al. [12] developed a framework for agent-based 
+simulations and an application simulating a dynamic model 
+of international greenhouse gas emissions trading composed 
+of heterogeneous and dynamic economic entities. The 
+framework proposed is an Artificial Society with Interacting 
+Agents (ASIA) providing only simple and fundamental 
+functionality for the simulation and this framework is used 
+for GHG (Greenhouse Gas) emissions trading.  In their study, 
+countries are represented as agents which makes changing the 
+behavior of countries easy [12]. 
+ 
+B. Carbon Trading 
+In December 1997 at Kyoto an  agreement was reached to 
+limit greenhouse gas emissions. According to this agreement, 
+Annex I countries have to reduce their greenhouse gas 
+978-1-890843-23-6/11/$26.00 ©2011 IEEE
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:04:43 UTC from IEEE Xplore.  Restrictions apply.
+
+emissions by 5.2% below 1990 levels over the commitment 
+period 2008-2012 [8]. Kyoto protocol provides three 
+flexibility mechanisms to help nations earn carbon credits and 
+meet their targets. These mechanisms are JI (Joint 
+Implementation), CDM (Clean  Development Mechanism) 
+and ET. JI is the mechanism in which clean development 
+projects in Annex 1 regions generate the emission reduction 
+credits. CDM is also a project based emission reduction 
+mechanism, and the CDM proj ects are completed in non-
+Annex 1 countries.  
+There are several studies si mulating the carbon trading 
+mechanisms. Grütter et al. [8] developed the CERT (Certified 
+Emissions Reduction Trade) model to analyze the carbon 
+market. CERT model is a partial equilibrium model built to 
+simulate the GHG emissions trade market and in this model 
+all emissions and reductions of greenhouse gas emissions are 
+measured in tons of carbon [8].  
+Klaasen et al. [9] examines how emissions trading might 
+work in practice and how markets for carbon emission 
+reductions would evolve over time. In this study three 
+emission trading experience were run with different types of 
+market design and different groups of participants [9]. 
+Sager [15] examines the issues of hot air and CDM 
+transaction cost using the CERT model. Sager shows that 
+primary emission reduction permit suppliers, typically those 
+with hot air, might control the emissions reduction permit 
+supply market [15]. 
+Ellermann et al. [5] addresses the effect of the carbon 
+emission trading on developing regions using EPPA 
+(Emissions Prediction and Policy Analysis) model. The study 
+compares the outcomes of different trading scenarios and 
+states that the potential largen ess of the gains of emission 
+trading is a reason to support such a trading system for buyer 
+and supplier regions [5].   
+ 
+III. MODEL 
+ 
+A. Marginal Abatement Cost-Based Model 
+There are a number of studies which model GHG 
+emission trading. One of these models is CERT model 
+developed by Grütter, a partial equilibrium model which 
+calculates the equilibrium price with various parameters for 
+MACs (marginal abatement cost ) in order to simulate the 
+emerging market for the trade of GHG emissions reductions 
+[12] [8] [7]. In our study EPPA model generated by MIT's 
+Joint Program on the Science and Policy of Global Change is 
+used. This model is a computable general equilibrium model 
+of global economic activity [4]. 
+The MAC describes the cost of emission reduction. In this 
+model, for region i the marginal  abatement cost function is 
+given below: 
+iiiii QbQaMCA 
+2
+                 (1)  
+where  
+MCA : marginal cost of emissions reduction 
+Q : the amount of greenhouse gas abatement undertaken 
+domestically in million tons of carbon  
+a and b : coefficients 
+ 
+Coefficients of the marginal  abatement cost function, a 
+and b, have been estimated by Ellerman and Decaux and they 
+are given in Table 1 [19].  
+Total cost of domestic abatement, iTCD  , is calculated by 
+an integration of the MCA function for region i: 
+23
+2
+1
+3
+1
+iiiii QbQaTCD    (2) 
+ 
+The value of a permit supply region i’s sales at the market 
+price p, export revenue is found: 
+ 
+Export Revenue = Qi p                   (3)  
+ 
+The net export revenue, in other words profit, of a supply 
+region i is derived as: 
+ 
+NetExport Revenue = ExportRevenue - TCDi     
+ 
+For Annex 1 regions in 2010, emission reductions 
+required [18] and the size of hot air [19] are shown in the 
+following table, Table 2.  
+ 
+ 
+TABLE 1. COEFFICIENTS OF THE MARGINAL ABATEMENT COST FUNCTION [19] 
+Region a b 
+United States 0.0005 0.0398 
+Japan 0.0155 1.8160 
+European Union 0.0024 0.1503 
+Other OCED Countries 0.0085 -0.0986 
+Economies in Transition of Eastern Europe 0.0079 0.0486 
+Former Soviet Union 0.0023 0.0042 
+Energy Exporting Countries 0.0032 0.3029 
+China 0.00007 0.0239 
+India 0.0015 0.0787 
+Dynamic Asian Economies 0.0047 0.3774 
+Brazil 0.5612 8.4974 
+Rest of World 0.0021 0.0805 
+ 
+ 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:04:43 UTC from IEEE Xplore.  Restrictions apply.
+
+TABLE 2. ANNEX 1 REGIONS’ KYOTO TARGETS EMISSIONS REDUCTIONS REQUIRED AND THE SIZE OF HOT 
+AIR IN 2010   [18] [19] 
+Annex 1 Regions Emission Reductions Required in 
+2010 (MtC) 
+The Size of Hot Air in 2010 
+(MtC) 
+United States 423.9 - 
+Japan 71.2 - 
+European Union 40.6 - 
+Other OCED Countries 57.3 - 
+Eastern Europe 27.6 0 
+Former Soviet Union - 111 
+ 
+Eastern Europe (EE) is accepted as a supplier region 
+(supplier of CDM credits), and EE’s emission reductions 
+required in 2010 is not considered in the calculations. 
+ 
+B. Agent-Based Model 
+In this study, JADE (Java Based Agent Development 
+Environment), a middleware facilitating the development of 
+multi-agent systems, is used. JADE agents execute tasks and 
+communicate with each other. [2] 
+In the scope of our study we created agents to represent 
+supplier regions and buyer region s. One agent is created as 
+the director agent and it directs the trading between the 
+supplier and buyer agents.  
+Agent based simulation was previously used in other 
+studies which investigate the carbon trading market. Mizuta 
+et al. [12] developed an agent-based system simulation of 
+GHG emissions trading market.  In this application there is a 
+directing agent (called the COP agent) who manage the trade. 
+COP agent tries to find the equilibrium price where the 
+demand and supply balance in order to minimize the 
+worldwide cost of GHG reduction [12]. Both this application 
+and our application are agent-based. However, we use JADE 
+in our study and we test different scenarios.  
+ 
+IV. RESULTS 
+ 
+Annex 1 regions (regions with reduction requirements) 
+and non-Annex 1regions are shown in Table 3 and Table 4 
+[19]. 
+ 
+TABLE 3. ANNEX 1 REGIONS [19] 
+Annex 1 regions 
+Abbreviation Name 
+USA United States 
+JPN Japan 
+EEC (EU) European Union 
+OOE Other OCED Countries 
+EE (EET) Economies in Transition of Eastern Europe 
+FSU Former Soviet Union 
+ 
+TABLE 4. NON-ANNEX 1 REGIONS [19] 
+Non-Annex 1 regions 
+Abbreviation Name 
+EEX Energy Exporting Countries 
+CHN China 
+IND India 
+DAE Dynamic Asian Economies 
+BRA Brazil 
+ROW Rest of World 
+Using the marginal abatement cost functions, we 
+determine demand and supply of emission permits. If a 
+country’s marginal abatement co st is lower than the market 
+price of permits, this country will domestically reduce 
+emissions. If a country cannot reduce a sufficient amount of 
+carbon at this price level, it will buy emission permits from 
+other Annex-1 countries or generate CDM credits by making 
+clean development projects with non-Annex 1 countries. If an 
+Annex-1 country can reduce its carbon emission more than its 
+target level, or if it already emits less carbon than its target 
+(means that the country has hot air), then it will sell permits 
+[1]. MAC curves of Annex 1 and non-Annex 1 regions are 
+shown in Fig. 1 and Fig. 2. 
+ 
+MACs of Annex I Regions
+0
+20
+40
+60
+80
+100
+120
+0 100 200 300 400 500
+Carbon Abatement (Mton)
+Carbon Price ($/ton C)
+JPN
+OOE
+EEC
+USA
+FSU
+EE
+  
+Figure 1. MAC curves of Annex 1 regions  
+ 
+MACs of Non-Annex I Regions
+0
+20
+40
+60
+80
+100
+120
+0 200 400 600 800 1000 1200
+Carbon Abatement (Mton)
+Carbon Price ($/ton C)
+EEX
+CHN
+IND
+DAE
+BRA
+ROW
+ 
+Figure 2. MAC curves of non-Annex 1 regions  
+ 
+The trading algorithm starts  when the director agent 
+announces the initial market price to suppliers and buyers. 
+These suppliers and buyers info rm the director agent about 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:04:43 UTC from IEEE Xplore.  Restrictions apply.
+
+their supply or demand quantities considering the announced 
+market price. Total supply quantities and total demand 
+quantities are calculated after all the suppliers and buyers 
+inform the director agent. If total supply quantity is less than 
+total demand quantity, director agent announces the new 
+market price by increasing it an d the scenario continues in a 
+similar way. When the total demand is equal to total supply 
+amount, the price settles and trading occurs. 
+The workings of the algorithm can be better explained by 
+an example: Initially all the buyer and supplier agents register 
+with the market. Director agent announces the initial market 
+price as 1 $/ton C. A buyer country computes the amount of 
+Carbon it can reduce by his own means, considering its MAC 
+corresponding to this market price. In other words this 
+emission reduction is calculated using (1). If the target 
+requirement is higher than this reduction, the difference 
+between the reduction requirement and domestic reduction is 
+attained as the demand of this buyer country. Calculating all 
+buyer countries’ demands in a similar way, we determine the 
+total demand called TD. A supplier country also determines 
+the emission quantity it tends to sell that its MAC 
+corresponds to. This quantity is also calculated using (1) 
+similar to the calculation of buyer’s emission reduction 
+quantity. If this buyer has hot air, the amount of hot air is 
+added to its supply quantity. Like calculating the total 
+demand, we determine the total supply quantity called TS. If 
+TS is greater than equal to TD , trading occurs otherwise we 
+increase the market price by 1 $ /ton C. We expect that when 
+the market price increases, tota l supply also increases and 
+conversely, total demand decreases. 
+Equation (2) is used to compute buyer regions’ domestic 
+reduction cost and supplier region’s reduction cost. For a 
+buyer region, the difference between required reduction and 
+domestic reduction (if required reduction is higher than 
+domestic reduction) shows the amount of emission reduction 
+provided with purchasing permits from supplier regions and 
+the total price of this purchase is obtained by multiplying 
+amount of this reduction with the current market price. 
+For the calculation of the reve nue of a supplier, for both 
+the amount of emission it tends to sell and hot air, if it exists, 
+we use (3). The profit of the supplier region is obtained by 
+subtracting cost from revenue. 
+Three different emissions trading scenarios are analyzed. 
+For the first scenario, the re gions which have hot air are 
+selected as supplier regions. In  the second scenario, suppliers 
+are the non-Annex 1 regions. The third scenario which is the 
+last scenario, examines tr ading between all countries 
+specified in Table 3 and Table 4.  As can be seen from above 
+explanations, only difference between the scenarios is regions 
+joining the trading.  For each s cenario the regions which take 
+part in the emission trading are shown in Table 5. As 
+specified before because EE is considered as a supplier 
+region, its amount of emission reduction required is not taken 
+into account in all scenarios.  
+ 
+TABLE 5. BUYER AND SUPPLIER REGIONS IN DIFFERENT 
+SCENARIOS 
+ Scenario 1 Scenario 2 Scenario 3 
+Buyer Regions 
+JPN 
+OOE 
+EEC 
+USA 
+JPN 
+OOE 
+EEC 
+USA 
+JPN 
+OOE 
+EEC 
+USA 
+Supplier Regions FSU 
+EE 
+EEX 
+CHN 
+IND 
+DAE 
+BRA 
+ROW 
+FSU 
+EE 
+EEX 
+CHN 
+IND 
+DAE 
+BRA 
+ROW 
+ 
+A. Scenarios 
+1. Scenario 1 
+In this scenario, as shown in Table 5, the buyer regions 
+are JPN, OOE, EEC, USA and the supplier regions are the 
+regions that have hot air, FSU and EE.  The market price 
+which is 1 $/ton C initially reaches 29 $/ton C that is the first 
+point at which total supply is greater than equal to total 
+demand. Demand and supply curves are shown in Fig. 3. 
+ 
+Demand - Supply Curves (Scenario 1)
+0
+5
+10
+15
+20
+25
+30
+35
+0 200 400 600
+Amount of Carbon (Mton)
+Carbon Price ($/Ton C)
+Total Demand
+Total Supply
+ 
+Figure 3. Demand and supply curves (Scenario 1) 
+ 
+Fig. 4 shows the reductions of the buyer regions, in terms 
+of both domestic reduction and amount purchased, when the 
+market price is 29 $/ton C. While OOE and EEC meet their 
+reduction targets with only domestic reduction, JPN and USA 
+meet their targets by both domestic reduction and purchasing 
+permits. For scenario 1, reduction by purchasing includes 
+purchasing carbon emission rights from countries which 
+already reduced their carbo n emission (hot air), and 
+purchasing credits through JI projects.  The amount of 
+emissions reduced by purchasing permits from supplier 
+regions is more than amount of domestic reduction for JPN 
+and USA. We can sort the buyer regions in descending order 
+in terms of the steepness of their MAC slopes as JPN, OOE, 
+EEC and USA. As EEC’s demand is less than OOE’s 
+demand, EEC’s domestic reduction is less than OOE’s 
+domestic reduction although the slope of OOE is higher than 
+EEC’s.  
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:04:43 UTC from IEEE Xplore.  Restrictions apply.
+
+0
+50
+100
+150
+200
+250
+Amount of Carbon (Mton)
+JPN OOE EEC USA
+Region
+Reduction of Buyer Regions (Scenario 1)
+Domestic Reduction Amount Purchased
+ 
+Figure 4. Reduction of buyer regions (Scenario 1) 
+ 
+Fig. 5 shows the purchase and reduction costs for the 
+buyer regions. For OOE and EEC, because there is no amount 
+purchased, purchase cost for these regions are zero.  The 
+regions in terms of the domestic reduction cost in ascending 
+order are EEC, JPN, OOE and USA and in terms of the total 
+cost EEC, OOE, JPN and USA.  
+ 
+0
+1000
+2000
+3000
+4000
+5000
+6000
+7000
+Cost ($)
+JPN OOE EEC USA
+Region
+Cost of Buyer Regions (Scenario 1)
+Domestic Reduction Cost Purchase Cost
+ 
+Figure 5. Cost for buyer regions (Scenario 1) 
+ 
+Fig. 6 shows the approximate distribution of total supply 
+that can be provided by the supplier regions, when the market 
+price is 29 $/ton C.  As seen from this figure, FSU’s supply is 
+higher than EE’s supply.  
+ 
+Total Supply (Scenario 1)
+FSU
+79%
+EE
+21%
+FSU
+EE
+ 
+Figure 6. Supply of supplier regions as percentage (Scenario 1) 
+The revenue and cost for the supplier regions are shown in 
+Fig. 7. Both the revenue and cost for FSU are higher than 
+those of EE and FSU get more profit than EE as a result of 
+the trade. 
+ 
+0
+1000
+2000
+3000
+4000
+5000
+6000
+7000
+($)
+FSU EE
+Region
+Revenue and Cost of Supplier Regions (Scenario 1)
+Total Revenue Cost of Project Supply
+ 
+Figure 7. Revenue and cost for supplier regions (Scenario 1) 
+ 
+2. Scenario 2 
+For this scenario, the buyer regions are the same with the 
+regions in the first scenario, JPN, OOE, EEC, USA and the 
+supplier regions are EEX, CHN, IND, DAE, BRA and ROW.  
+The market price increases until 10 $/ton C that is the first 
+point at which total supply is greater than equal to total 
+demand. Demand and supply curves are shown in Fig. 8. 
+ 
+Demand - Supply Curves (Scenario 2)
+0
+2
+4
+6
+8
+10
+12
+0 200 400 600
+Amount of Carbon (Mton)
+Carbon Price ($\Ton C)
+Total Demand
+Total Supply
+ 
+Figure 8. Demand and supply curves (Scenario 2) 
+ 
+Fig. 9 shows the reductions, both domestic reduction and 
+amount purchased, for the buyer regions when the market 
+price is 10 $/ton C. In order to meet their reduction target, all 
+buyer regions use domestic carbon reduction technologies 
+and purchasing ways. For scenario 2, reduction by purchasing 
+includes purchasing credits through CDM projects. Although 
+amount purchased by EEC is very low, it exists. 
+ 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:04:43 UTC from IEEE Xplore.  Restrictions apply.
+
+0
+50
+100
+150
+200
+250
+300
+350
+Amount of Carbon 
+(Mton)
+JPN OOE EEC USA
+Region
+Reduction of Buyer Regions (Scenario 2)
+Domestic Reduction Amount Purchased
+ 
+Figure 9. Reduction of buyer regions (Scenario 2) 
+ 
+Total costs for buyer regions ar e depicted in Fig. 10. The 
+buyer regions in terms of domestic reduction costs in 
+ascending order are JPN, OOE, EEC and USA, and in terms 
+of purchase cost EEC, OOE, JPN and USA. USA is the 
+region which has the highest total reduction cost and EEC is 
+the one with the lowest total reduction cost. 
+ 
+0
+500
+1000
+1500
+2000
+2500
+3000
+3500
+Cost ($)
+JPN OOE EEC USA
+Region
+Cost of Buyer Regions (Scenario 2)
+Domestic Reduction Cost Purchase Cost
+ 
+Figure 10. Cost for  buyer regions (Scenario 2) 
+ 
+The following figure, Fig. 11, shows the approximate 
+distribution of total supply that can be provided by the 
+supplier regions when the market price is 10 $/ton C.  The 
+regions which provide supply in ascending order in terms of 
+supply percentages are BRA, DAE, EEX, ROW, IND and 
+CHN. This shows compliance with the MACs of these 
+regions shown in Fig. 2. BRA’ s supply is almost none. 
+ 
+Total Supply (Scenario 2) 
+EEX , 6%
+CHN, 61%
+IND, 15%
+DAE, 5%
+BRA, 0%
+ROW, 13%
+EEX
+CHN
+IND
+DAE
+BRA
+ROW
+ 
+Figure 11. Supply of supplier regions as percentage (Scenario 2) 
+The revenue and cost for the supplier regions are shown in 
+Fig. 12. While CHN has the highest revenue and cost value, 
+the region having the lowest one is BRA.  Regions that get 
+the highest and lowest profit are CHN and BRA.  
+ 
+0
+500
+1000
+1500
+2000
+2500
+($)
+EEX CHN IND DAE BRA ROW
+Region
+Revenue and Cost of Supplier Regions 
+(Scenario 2)
+Total Revenue Cost of Project Supply
+ 
+Figure 12. Revenue and cost for supplier regions (Scenario 2) 
+ 
+3. Scenario 3 
+In this scenario like the first two scenarios, the buyer 
+regions are JPN, OOE, and EEC, USA and the supplier 
+regions are FSU, EE, EEX, CHN, IND, DAE, BRA and 
+ROW. The market price which is the first point at which total 
+supply is greater than equal to total demand is 6 $/ton C. 
+Demand and supply curves are shown in Fig. 13. 
+ 
+Demand - Supply Curves (Scenario 3)
+0
+1
+2
+3
+4
+5
+6
+7
+0 200 400 600
+Amount of Carbon (Mton)
+Carbon Price ($\Ton C)
+Total Demand
+Total Supply
+ 
+Figure 13. Demand and supply curves (Scenario 3) 
+ 
+Fig. 14 depicts domestic reduction and amount purchased 
+by the buyer regions when the market price is 6 $/ton C. All 
+buyer regions use domestic carbon reduction technologies 
+and purchasing ways in order to meet their reduction target. 
+For scenario 3, reduction by purchasing includes purchasing 
+carbon emission rights from coun tries which already reduced 
+their carbon emission and purchasing credits through CDM 
+and JI projects.  
+ 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:04:43 UTC from IEEE Xplore.  Restrictions apply.
+
+0
+50
+100
+150
+200
+250
+300
+350
+Amount of Carbon 
+(Mton)
+JPN OOE EEC USA
+Region
+Reduction of Buyer Regions (Scenario 3)
+Domestic Reduction Amount Purchased
+ 
+Figure 14. Reduction of buyer regions (Scenario 3) 
+ 
+Fig. 15 depicts costs of buyer regions. The buyer regions 
+in terms of domestic reduction cost in  ascending order are 
+JPN, OOE, EEC and USA and in terms of purchase cost 
+EEC, OOE, JPN and USA. While the region with the lowest 
+total cost is EEC, USA is the region which has the highest 
+total cost.  
+ 
+0
+500
+1000
+1500
+2000
+2500
+Cost ($)
+JPN OOE EEC USA
+Region
+Cost of Buyer Regions (Scenario 3)
+Domestic Reduc tion Cost P urchase C ost
+ 
+Figure 15. Cost for  buyer regions (Scenario 3) 
+ 
+While the market price is 6 $/ton C, Fig. 16 shows the 
+approximate distribution of total supply that can be provided 
+by all supplier regions. The first two regions which provide 
+the highest amount of supply are CHN and FSU. Besides, the 
+region with the lowest supply is BRA whose supply is almost 
+none.  
+  
+Total Supply (Scenario 3)
+FSU, 35%
+EE, 5%
+EEX , 4%
+CHN, 36%
+IND, 9%
+DAE, 3%
+BRA, 0%
+ROW, 8%
+FSU
+EE
+EEX
+CHN
+IND
+DAE
+BRA
+ROW
+ 
+Figure 16. Supply of supplier regions as percentage (Scenario 3) 
+ 
+In Fig. 17 the revenue and cost for the supplier regions 
+can be seen. In terms of both cost and revenue CHN has the 
+highest values and BRA has the lowest values. Regions that 
+obtain the highest and lowest profit are FSU and BRA 
+sequentially.  
+ 
+0
+200
+400
+600
+800
+1000
+1200
+($)
+FSU EE EEX CHN IND DAE BRA ROW
+Region
+Revenue and Cost of Supplier Regions 
+(Scenario 3)
+Total Revenue Cost of Project Supply
+ 
+Figure 17. Revenue and cost for supplier regions (Scenario 3) 
+ 
+B. Comparison of Scenarios 
+Fig. 18 shows total reductions of all buyer regions in each 
+scenario. While the scenario w ith the highest total domestic 
+reduction is Scenario 1 and the scenario with the lowest one 
+is Scenario 3, in terms of to tal purchase amount the condition 
+is the reverse.  
+The buyer regions in each scenar io are the same that is to 
+say total emission reduction required in each scenario is fixed 
+and the same. For Scenario 1 the equilibrium price, the first 
+point at which total supply quantity is greater than equal to 
+total demand quantity, is 29 $/ton C, for Scenario 2 it is 10 
+$/ton C and it is 6 $/ton C for Scenario 3. As seen in Fig. 1, 
+when market price is high, regions make more domestic 
+reduction, as expected.  
+ 
+0
+100
+200
+300
+400
+500
+Amount of Carbon 
+(Mton)
+Scenario 1 Scenario 2 Scenario 3
+Scenario
+Total Reductions of Buyer Regions
+Total Domestic Reduction Total Purchase Amount
+ 
+Figure 18. Total reductions of all buyer regions for each scenario 
+ 
+In Fig. 19 total domestic reduction cost and total purchase 
+cost for buyer regions are depi cted for each scenario. In 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:04:43 UTC from IEEE Xplore.  Restrictions apply.
+
+ascending order in terms of total purchase cost, the scenarios 
+are Scenario 3, 2 and 1. However, as we mentioned before, 
+total purchase amount is increasing from Scenario 1 to 
+Scenario 3.  
+ 
+0
+1000
+2000
+3000
+4000
+5000
+6000
+7000
+8000
+9000
+Cost ($)
+Scenario 1 Scenario 2 Scenario 3
+Scenario
+Cost of Buyer Regions
+Total Domestic Reduction Cost Total Purchase Cost
+ 
+Figure 19. Cost for buyer regions for each scenario 
+ 
+In Fig. 20 total cost for buyer regions are shown jointly 
+for each scenario. As can be seen from this figure in 
+ascending order in terms of total cost the scenarios are 
+Scenario 3, 2 and 1.  
+ 
+0
+2000
+4000
+6000
+8000
+10000
+12000
+Cost ($)
+Scenario 1 Scenario 2 Scenario 3
+Scenario
+Total Cost of Buyer Regions 
+ 
+Figure 20. Total cost for buyer regions jointly for each scenario 
+ 
+In Fig. 21 total cost for buyer regions are depicted 
+separately for each buyer in each scenario. The order of the 
+buyer regions in terms of total cost is the same in all 
+scenarios, EEC, OOE, JPN and USA in ascending order.  
+ 
+0
+1000
+2000
+3000
+4000
+5000
+6000
+7000
+8000
+9000
+Cost ($)
+Scenario 1 Scenario 2 Scenario 3
+Scenario
+Total Cost of Each Buyer Region
+JPN
+OOE
+EEC
+USA
+ 
+Figure 21. Total costs of buyer regions separately for each scenario 
+ 
+Fig. 22 shows the total demand and supply in each 
+scenario. As mentioned before because the increment in the 
+market price is fixed and 1 $/ton C, the exact point at which 
+the amount of total supply equals to the amount of total 
+demand could not be obtained. Therefore, for each scenario, 
+it can be seen in Fig. 22, the amount of total supply is greater 
+than the amount of total demand. Although the emission 
+reductions required are the sa me in each scenario because 
+buyer regions are the same in the scenarios, amount 
+purchased are different for the scenarios due to the fact that 
+the amount of domestic reductions are different. 
+ 
+0
+100
+200
+300
+400
+500
+Amount of 
+Carbon (Mton)
+Scenario 1 Scenario 2 Scenario 3
+Scenario
+Demand and Supply for Different 
+Scenarios
+Total Demand Total Supply
+ 
+Figure 22. Total demand and supply for each scenario 
+ 
+Fig. 23 depicts the total supply  of each supplier region in 
+different scenarios. For the S cenario 1, there are only FSU 
+and EE as supplier regions and the region with the greatest 
+supply is FSU. For the second scenario, the supplier regions 
+are EEX, CHN, IND, DAE, BRA, ROW (through CDM 
+credits) and the first two regions  providing with the greatest 
+supplies are CHN and IND while BRA has the lowest supply, 
+its supply is almost none. In the last scenario, Scenario 3, all 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:04:43 UTC from IEEE Xplore.  Restrictions apply.
+
+regions which are mentioned as supplier in the first two 
+scenarios are supplier regions and the first two regions with 
+the greatest supplies are CHN and FSU sequentially and the 
+region with the lowest one is BRA similarly in the Scenario 
+2. CHN and IND are the regions whose slopes of the MAC 
+curves (see Fig. 2), are the rela tively horizontal ones. This is 
+the reason why their amounts of  supplies are high. There are 
+several studies mentioning the size of CDM market. For 
+example, Zhang [19] states that it is expected China and India 
+to become dominant regions due to their size and low-cost 
+abatement opportunities in the energy sectors. This shows 
+compliance with the results obtained. BRA among all regions 
+has the MAC curve with the greatest slope so its supply is 
+very little. The non-Annex 1 supplier regions are actually 
+suppliers of CDM credits in all the scenarios. 
+ 
+0
+50
+100
+150
+200
+250
+Amount of Carbon 
+(mTon)
+Scenario 1 Scenario 2 Scenario 3
+Scenario
+Total Supply of Each Supplier Region
+FSU
+EE
+EEX
+CHN
+IND
+DAE
+BRA
+ROW
+ 
+Figure 23. Total supply of each supplier region for each scenario 
+ 
+Fig. 24 shows the total revenue and total cost for suppliers 
+in each scenario. While the s cenarios with the highest and 
+lowest revenue are Scenario 1 and Scenario 3 respectively, 
+Scenario 2 and Scenario 3 are the scenarios with the highest 
+and lowest cost. 
+ 
+0
+2000
+4000
+6000
+8000
+10000
+($)
+Scenario 1 Scenario 2 Scenario 3
+Scenario
+Total Revenue and Total Cost of 
+Suppliers
+Total Revenue Cost of Project Supply
+ 
+Figure 24. Total revenue and total cost for supplier regions for each scenario 
+ 
+Fig. 25 depicts the total pr ofit of the suppliers in each 
+scenario. The scenario in whic h the suppliers have the most 
+profit in total is Scenario 1 and the lowest profit is Scenario 
+3. 
+ 
+0
+1000
+2000
+3000
+4000
+5000
+6000
+7000
+($)
+Scenario 1 Scenario 2 Scenario 3
+Scenario
+Total Profit of Suppliers
+ 
+Figure 25. Total profit of supplier regions for each scenario 
+ 
+V. CONCLUSION 
+ 
+This study presents a multi-agent based simulation model 
+of carbon trading market. The paper covers problem 
+definition, describes a multi-agent approach to carbon 
+trading, and analyzes several scenarios. With the system 
+established in the scope of this study, we can examine how 
+the demand and supply size changes in accordance with the 
+changes in the market price.  
+This paper presents the first stage of the study. In this 
+stage we developed an agent based simulation model to 
+examine the dynamic interactions in the carbon trading 
+market. The results of this st udy are not compared to what 
+actually happened in the market , and how the price and total 
+supply and demand actually changed. Future studies should 
+examine the real market s ituation and investigate the 
+environmental conditions, which led the market towards the 
+final condition. Future work in this area should also 
+investigate how the simulated market reaction would change 
+if the agents had in telligence, different goals and forecasting 
+abilities. 
+Multi-agent based systems help to model the interaction 
+between distributed independent entities. Technology 
+management systems can make use of multi agent systems to 
+model the interactions between the actors of an energy-smart 
+world. 
+ 
+REFERENCES 
+ 
+[1]  Buonanno, P. and S. Vergalli, “Should Developing Countries Join a 
+Global Market of Emission Permits”, pp. 4, working paper, 2003. 
+[2]  Caire, G.; “Jade Tutorial: Jade Programming for Beginners”, 30 June 
+2009 JADE 3.7. 
+[3]  Chen, B., H. H. Cheng and J. Palen, “Integrating Mobile Agent 
+Technology with Multi-Agent Systems for Distributed Traffic 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:04:43 UTC from IEEE Xplore.  Restrictions apply.
+
+Detection and Management Systems” , Transportation Research Part C 
+17, 2009. 
+[4]  Criqui, P., S. Mima and L. Vi guier, “Marginal Abatement Costs of 
+CO2 Emission Reductions, Geographi cal Flexibility and Concrete 
+Ceilings: An Assessment Using the POLES Model”, Energy Policy 27, 
+pp. 588, 1999. 
+[5]  Ellerman, A. D., H. D. Jacoby and A. Decaux, “The Effects on 
+Developing Countries of the Kyot o Protocol and CO2 Emissions 
+Trading”, MIT Joint Program on the Science and Policy of Global 
+Climate Change Report #41 (MIT, Cambridge, MA), 1998. 
+[6]  Glaschenko, A., A. Ivanschenko, G. Rzevski and P. Skobelev, “Multi-
+Agent Real Time Scheduling System for Taxi Companies”, Proc. of 8th 
+Int. Conf. on Autonomous Agen ts and Multiagent Systems(AAMAS 
+2009), Decker, Sichman, Sierra and Castelfranchi (eds.), pp. 29 – 36, 
+Budapest, Hungary, May 2009. 
+[7]  Grütter, J. M.; “World Market for GHG Emission Reductions”, 
+Prepared for the World Bank’s National AIJ/JI/CDM Strategy Studies 
+Program, 2000, Retrieved 7/2/01 World Wide Web, 
+http://www.admin.ch/swissaij/pdf/CERT_World-GHG-Market.pdf 
+[8]  Grütter, J., R. Kappel and P. Staub, “Simulating the Market for 
+Greenhouse Gas Emission Reductions: The CERT Model”, pp.3-4, 
+ETH, Zurich, April 2002. 
+[9]  Klaassen, G., A. Nentjes and M. Smith, “Testing the Dynamic Theory 
+of Emissions Trading: Experime ntal Evidence for Global Carbon 
+Trading”, Interim Report IR-01-063, IIASA, Laxenburg, Austria, 2001. 
+[10]  Koussis, K., H. Pierreval and N. Mebarki, “Using Multi-Agent 
+Architecture in FMS for Dynamic Scheduling”, Journal of Intelligent 
+Manufacturing, 8/1, 1997. 
+[11]  Macal, C. M. and M. J. North, “Tutorial on agent-based modeling and 
+simulation”, Journal of Simulation (2010) 4, pp. 151–162, 2010. 
+[12]  Mizuta, H. and Y. Yamagata, “Agent-Based Simulation and 
+Greenhouse Gas Emissions Trading”, Proceedings of the 2001 Winter 
+Simulation Conference, 2001. 
+[13]  Retrieved 2/27/11 World Wide Web, 
+http://en.wikipedia.org/wiki/Kyoto_Protocol 
+[14]  Retrieved 2/27/11 Worl d Wide Web, http://www.e-to-
+china.com/2010/1124/88622.html 
+[15]  Sager, J.; “An Analysis with  the CERT Model of the FSU Market 
+Power in the Carbon Emissions Trading Market”, Environmental 
+Modeling and Assessment 8, 2003. 
+[16]  Turgay, S.; “A Multi-Agent Sy stem Approach for Distance Learning 
+Architecture”, The Turkish Online Journal of Educational Technology  
+– TOJET October 2005 ISSN: 1303-6521 volume 4 Issue 4 Article 3, 
+2005. 
+[17]  Webber, C. and S. Pesty, “A Two-Level Multi-Agent Architecture for a 
+Distance Learning Environment”, In E.de Barros Costa(ed.), Workshop 
+on Architectures and Methodologies for BuildingAgent-based Learning 
+Environments (ITS 2002), pp.26-38, Spain, France, 2002. 
+[18]  Zhang, Z.; “An Economic Assessment of the Kyoto Protocol Using a 
+Global Model Based on the Marginal Abatement Costs of 12 Regions”, 
+pp. 8, November 2001. 
+[19]  Zhang, Z.; “Estimating the Size of the Potential Market for All Three 
+Flexibility Mechanisms under the Kyoto Protocol”, Prepared for the 
+Asian Development Bank un der Contract TA-5592-REG , November 
+1999, unpublished. 
+ 
+APPENDIX 
+ 
+Abbreviations  
+CDM Clean development mechanism  
+CERT Certified Emissions Reduction Trade 
+EPPA  Emissions Prediction and Policy Analysis 
+ET Emission Trading 
+GHG  Greenhouse Gas 
+JADE  Java Based Agent Development Environment 
+JI Joint Implementation  
+MAC Marginal Ab atement Cost 
+MtC Million tons of Carbon 
+ 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:04:43 UTC from IEEE Xplore.  Restrictions apply.

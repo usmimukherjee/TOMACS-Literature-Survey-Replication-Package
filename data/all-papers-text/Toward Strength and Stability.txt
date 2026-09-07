@@ -1,0 +1,602 @@
+SOCIAL SCIENCE COMPUTER REVIEW
+North / AGENT-BASED MODELING
+Toward Strength and Stability
+Agent-Based Modeling of Infrastructure Markets
+MICHAEL J. NORTH
+Argonne National Laboratory
+Complex Adaptive Systems (CASs) can be applied to investigate complex infrastructures and infra-
+structure interdependencies. Agent-based modeling (ABM) is a new CAS-based approach to the con-
+struction of models. The CAS agents within the Spot Market Agent Research Tool (SMART) and Flex-
+ible Agent Simulation Toolkit (FAST) ABMs allow investigation of the electric power infrastructure,
+the natural gas infrastructure, and their interdependencies. The Swarm-based SMART models use sets
+of agents and interconnections to represent electric power and natural gas systems. A prototype virtual
+reality (VR) interface has also been constructed for a version of the SMART model. This tool is
+intended to explore the use of advanced interactive three-dimensional visualization in agent-based
+modeling. The Java-based FAST model is currently under construction. FAST is a complete redesign
+of the SMART models that includes improvements in the modeling environment, model detail, and
+representational fidelity. Developing ABMs is difficult but can be rewarding.
+Keywords: complex adaptive systems, CAS, agent-based modeling, ABM, electric
+power system modeling, natural gas system modeling, infrastructure
+interdependency, SW ARM, RePast, CA VE, virtual reality, VR
+M
+any insights can be gained by viewing energy analysis from a complex adaptive sys-
+tems (CASs) agent-based modeling perspective. Argonne has taken such a perspec-
+tive to produce integrated models of the electric power and natural gas markets. The agents
+within the present Spot Market Agent Research Tool (SMART) and the future Flexible
+Agent Simulation Toolkit (FAST) allow investigation of the electric power infrastructure,
+the natural gas infrastructure, and their interdependency.
+BACKGROUND
+Agent-based modeling (ABM) represents a new approach to the construction of models.
+Like all new techniques, ABM builds on existing approaches. Two key issues are identifying
+meaningful insights and managing time.
+Identifying Meaningful Insights
+One of the key issues in most types of modeling is identifying meaningful insights. This is
+particularly true for agent-based modeling. Furthermore, this is one of the areas that most
+clearly differentiate CAS modeling from some more traditional approaches.
+307
+AUTHOR’S NOTE: This work is sponsored by the U.S. Department of Energy under contract number
+W-31-109-ENG-38.
+Social Science Computer Review, V ol. 19 No. 3, Fall 2001 307-323
+© 2001 Sage Publications
+
+Modeling approaches such as linear programming identify final states of computations as
+representing the real world, whereas such things as individual simplex iterations are consid-
+ered artifacts. With these approaches, the numeric path taken by a computation is not consid-
+ered meaningful. Only the final optimized or stable state has meaning.
+An important question to ask when looking at any model is, “Which states represent the
+real world and which are computational artifacts?” With CAS modeling, the answer is that
+individual computational steps are considered meaningful up to some resolution limit.
+Defining the resolution limit is a critical CAS model design issue. For example, the
+SMART electrical and natural gas CAS models include a market for each commodity. These
+markets require competitive bidding. The market outputs represent decision making in the
+real world. However, the internal bidding process implementations do not necessarily reflect
+the real world step-by-step.
+Real-world bidding processes that use telephones to place bids and wall clocks to time
+calls are replaced by polling processes. Thus, the individual market steps represent the real
+world, but the steps by which bids are collected may not. Accurately defining this resolution
+allows model output to be properly understood and applied. It also shows the flexibility of the
+CAS approach because resolution is only limited by the willingness of the designers to
+include more detail.
+The extended electrical and natural gas CAS models that are currently under construction
+not only will include real-world markets but will also include an accurate representation of
+the bidding process.
+Managing Time
+Time management is a critical issue for most types of modeling, including ABM. Over the
+years, many different approaches have been taken from the simplest time step methods to the
+most advanced distributed discrete event systems. Sophisticated modeling systems typically
+focus on discrete event simulation.
+Discrete event simulation is an effective implementation strategy for ABM. Models
+implemented using this approach go beyond the discrete event methodology by giving each
+agent or element in the system far greater power to adapt to its environment and by attempt-
+ing to solve problems through emergent behavior rather than simple analysis.
+Most agents representing real-world entities will likely have a set of core functions that
+are activated on a periodic basis during each model run. The activations typically occur at
+hourly, daily, weekly, monthly, and yearly intervals during runs. Creating a simple and uni-
+form set of functions or methods for each time step will allow diverse groups of agents to all
+use the same simulation engine.
+Taking an object-oriented programming (OOP) approach to CAS is consistent with the
+approach taken by most CAS model developers. OOP texts refer to the ability to call methods
+appropriate to each object using the same uniform name as “polymorphism” (Booch, 1994).
+In Java, this is implemented as either a common base class or as a formal interface. In Swarm,
+this is implemented using either a common method name or a formal protocol.
+In addition to the core periodic methods, several conditionally activated methods may be
+used. These “triggers” are used either for efficiency or for convenience. They can make a sys-
+tem more efficient by only being checked and activated when the associated conditions
+occur. They can also simplify programming by providing a simple scheduling mechanism.
+Swarm uses an advanced scheduler to set up such triggers.
+308 SOCIAL SCIENCE COMPUTER REVIEW
+
+THE PRESENT AND FUTURE
+Several tools presently exist:
+• SMART Version 2.0 (SMART II) is a Swarm model with an integrated set of agents and inter-
+connections representing the electric power marketing and transmission infrastructure.
+• SMART II VR is a virtual reality (VR) interface for SMART II.
+• SMART II+ is an extension to SMART II that includes an integrated set of agents and intercon-
+nections representing the electric power infrastructure, the natural gas infrastructure, and con-
+nections between them in the form of natural gas–fired electric generators.
+FAST is currently under construction. FAST is a complete redesign of SMART II+ that
+includes improvements in the modeling environment, model detail, and representational
+fidelity.
+SMART II
+SMART II is a Swarm-based (Burkhart, Askenazi, & Minar, 2000; Panepento, 2000)
+model that uses a set of agents and interconnections to represent electric power systems.
+SMART II is the Swarm Development Group 2000 Conference (SwarmFest 2000) Best Pre-
+sentation winner. SMART II itself builds on several other models (VanKuiken et al., 1994;
+Veselka et al., 1994). SMART II includes three different kinds of components: (a) generation
+agents that produce electric power, (b) consumer agents that use electric power, and (c) inter-
+connections that represent the transmission grid.
+SMART II considers important economic issues such as production costs, investment
+capital, demand growth for successful consumers, new generation capacity for profitable
+producers, and bankruptcy for noncompetitive organizations.
+SMART II uses two different kinds of agents to model the electric spot market. Spe-
+cifically, agents are either electric power generators or consumers.
+Generation agents choose whether to sell power based on cost curves similar to that
+shown in Figure 1. Generators determine their production level based on the potential profit
+to be made. Each generator has investment capital that is increased by profits and reduced by
+losses. If a generator reaches a predetermined level of investment capital, it can purchase
+additional production capacity in the form of new generators.
+New generators are similar to their owner and can connect to the distribution network in
+either the same location or a new one. Generators that run out of investment capital go bank-
+rupt and no longer participate in the market.
+The generator agent rules are the following:
+• If the agent made a profit in the last hour, then attempt to increase sales.
+• If the agent posted a loss in the last hour, then attempt to decrease sales.
+• If the total profit has risen above the investment level for a new unit, then purchase a new
+generator.
+• If the total profit has fallen to zero, then go bankrupt.
+Consumer agents choose whether to sell power based on cost curves similar to that shown
+in Figure 1. Consumers buy electric power for their own use. Consumers buy on the basis of
+the potential to use the purchased power to make a profit. This can include industrial users
+who produce goods based on electric power and populations of individuals who vary their
+demand based on power prices. If a consumer reaches a predetermined level of investment
+capital, it can grow in the form of new consumers.
+North / AGENT-BASED MODELING 309
+
+New consumers are similar to their originator and can connect to the distribution system
+in either the same location or a new one. This can represent the growth of electric
+power-based businesses or an influx of people due to favorable economic conditions, partic-
+ularly employment opportunities. Consumers who run out of investment capital go bankrupt
+and no longer participate in the market. Bankruptcy represents the decline of electric
+power-based businesses or the departure of people due to unfavorable economic conditions.
+The consumer agent rules are the following:
+• If the agent made a profit in the last hour, then attempt to increase purchases.
+• If the agent posted a loss in the last hour, then attempt to decrease purchases.
+• If the total profit has risen above the investment level expansion, then grow by creating new
+consumers.
+• If the total profit has fallen to zero, then go bankrupt.
+SMART II has undergone initial qualitative validation by matching its outputs to several
+basic analytic predictions. Markets with a single superior producer among a large number of
+higher cost competitors have been tested. Also, markets with many identical participants
+have been tested.
+Much more work is clearly required to quantitatively validate and calibrate SMART II;
+therefore, only limited qualitative insights are currently being derived.
+The SMART II interface is shown in Figure 2, and the price graph is shown in Figure 3.
+As originally presented at SwarmFest 2000, qualitative insights from SMART II indicate
+that certain transmission line configurations may encourage price spikes. Soon after
+SwarmFest 2000, this insight was borne out.
+As was specifically noted at SwarmFest 2000, the California electrical grid has a configu-
+ration of a type that may cause price spikes. Substantial price spikes of the kind predicted by
+SMART II were recently observed in this market.
+Further qualitative insights suggest that greater electrical market price stability may be
+gained by consciously avoiding specific configurations that encourage instabilities. In other
+words, qualitative insights from SMART II can help us make things better by not making
+things worse.
+310 SOCIAL SCIENCE COMPUTER REVIEW
+0
+50
+100
+150
+200
+0 500 1000 1500 2000
+MWh
+$/MWh
+Cost
+Value
+Figure 1: Example SMART I Agent Cost and Value Curves
+NOTE: SMART = Spot Market Agent Research Tool.
+
+SMART II VR
+SMART II VR is a prototype agent visualization tool. SMART II VR is intended to
+explore the use of advanced interactive three-dimensional visualization in agent-based
+modeling.
+SMART II VR is a CA VE Automatic Virtual Environment (CA VE)–based virtual reality
+interface for SMART II. The CA VE is a VR library codeveloped by the University of Illinois
+at Chicago and Argonne (Pape, Cruz-Neira, & Czernuszenko, 2000). From theCAVE User’s
+Guide:
+The CA VE is a projection-based VR system that surrounds the viewer with four screens. The
+screens are arranged in a cube made up of three rear-projection screens for walls and a
+down-projection screen for the floor; that is, a projector overhead points to a mirror, which
+reflects the images onto the floor. A viewer wears stereo shutter glasses and a
+six-degrees-of-freedom head-tracking device. As the viewer moves inside the CA VE, the cor-
+North / AGENT-BASED MODELING 311
+Figure 2: The SMART II Interface
+NOTE: SMART = Spot Market Agent Research Tool.
+
+rect stereoscopic perspective projections are calculated for each wall. A second sensor and but-
+tons in a wand held by the viewer provide interaction with the virtual environment. (Pape et al.,
+2000)
+SMART II VR includes an interactive multifunction wand and two rendering modes. The
+interactive multifunction wand is sensitive to wand position and wand orientation and
+includes buttons and a joystick. The wand buttons control interactions. The wand angle
+selects the joystick feature:
+• Above 45°, the wand controls elevation and rotation:
+• Moving the joystick forward and back controls elevation. Forward moves the viewer up.
+Backward moves the viewer down.
+• Moving the joystick left and right controls rotation.
+• Between 45° and –45°, the wand controls planar translation:
+• Moving the joystick forward and back changes the X-axis location.
+• Moving the joystick left and right changes the Z-axis location.
+• Below –45°, the wand controls the model run and the rendering mode:
+• Moving the joystick forward and back controls the model run. Forward starts the model run.
+Backward stops the model run.
+• Moving the joystick left and right controls the rendering mode. Left selects detail-rendering
+mode. Right selects speed-rendering mode.
+The wand buttons allow object resizing. Pressing a button while the wand is in contact
+with an object activates resizing. Holding the button and dragging the object selects a new
+size. The wand display color gives grip feedback. A red glow surrounding the wand when the
+wand buttons are pressed means that the wand is not currently interacting with a target. A
+green glow surrounding the wand when the wand buttons are pressed means that the wand is
+interacting with a target.
+Detail-rendering mode focuses on rendering quality. Directional lighting is included.
+Agents are rendered as lighted spheres. A texture-mapped floor with shadows and first-order
+312 SOCIAL SCIENCE COMPUTER REVIEW
+Figure 3: The SMART II Price Graph
+NOTE: SMART = Spot Market Agent Research Tool.
+
+reflections is included. This mode allows SMART II VR to take advantage of computers with
+high-graphics performance. An example is shown in Figure 4.
+Speed-rendering mode focuses on rendering time. Agents are rendered as flat shaded
+cubes. This mode allows SMART II VR to be used on low-performance personal computers.
+Figure 5 shows an example.
+In SMART II VR, generation agents are shown as green spheres or cubes. Spheres are
+shown in detailed-rendering mode, and cubes are shown in speed-rendering mode. The size
+of each object represents its total normalized investment capital level. Size can be interac-
+tively changed with the CA VE wand. Each object’s color intensity represents its hourly profit
+level.
+In SMART II VR, consumer agents are shown as blue spheres or cubes. Spheres are
+shown in detailed-rendering mode, and cubes are shown in speed-rendering mode. The size
+of each object represents its total normalized investment capital level. Sizes can be interac-
+tively changed with the CA VE wand. Each object’s color intensity represents its hourly profit
+level.
+North / AGENT-BASED MODELING 313
+Figure 4: SMART II VR Detail Mode
+NOTE: SMART = Spot Market Agent Research Tool; VR = virtual reality.
+Figure 5: SMART II VR Speed Mode
+NOTE: SMART = Spot Market Agent Research Tool; VR = virtual reality.
+
+In SMART II VR, interconnections are displayed as red tubes. The size of each tube repre-
+sents its normalized transmission capacity level. Sizes can be interactively changed with the
+CA VE wand. Each tube’s color intensity represents its hourly utilization level.
+SMART II+
+SMART II+ is a Swarm-based (Burkhart et al., 2000; Panepento, 2000) extension to
+SMART II. SMART II+ includes an integrated set of agents and interconnections represent-
+ing each of the following:
+• the electric power marketing and transmission infrastructure;
+• the natural gas marketing and distribution infrastructure;
+• the interconnections between the two infrastructures in the form of natural gas–fired electric
+generators.
+Both of the infrastructures modeled in SMART II+ include many features:
+• two different kinds of agents, producers and consumers, represent the market participants;
+• interconnections represent transmission or distribution systems with capacities on each line or
+pipe and complex routing;
+• important economic issues are considered such as investment capital, demand growth for suc-
+cessful consumers, new generation capacity for profitable producers, and bankruptcy for non-
+competitive organizations;
+• components can be disabled in real time to simulate failures.
+The electric power infrastructure includes the added feature of natural gas–fired electric
+generators. These generators buy fuel from the natural gas market. The resulting electricity is
+then sold in the electric power market.
+SMART II+ Time Management
+SMART II+ is implemented in Swarm (Booch, 1994). This focuses the model on a
+time-stepped approach to time management. Furthermore, SMART II+ models use a cyclic
+bidding process during market clearing. This further focuses it on time-stepped simulation.
+SMART II+ Producer Agents
+SMART II+ producers determine their production level based on the potential profit to be
+made. Each producer has investment capital that is increased by profits and reduced by
+losses. If a producer reaches a predetermined level of investment capital, it can purchase
+additional production capacity in the form of new electric generators or new natural gas
+sources. New producers are similar to their owner and can connect to the distribution net -
+work in either the same location or a new one. Producers who run out of investment capital go
+bankrupt and no longer participate in the market. Producers choose whether to sell energy
+based on either their cost curves or natural gas prices.
+Standard producers derive their costs and capacities from cost curves with maximum gen-
+eration limits as shown in Figure 6. Both costs and capacities are exogenous. SMART II+
+producer agents obey the same basic rules as SMART II generation agents, with the excep-
+tion of natural gas–fired electric generator agents.
+314 SOCIAL SCIENCE COMPUTER REVIEW
+
+Natural gas–fired electric generation agents derive their costs and capacities from the nat-
+ural gas market. These agents are consumers in the natural gas marketplace. Their costs are
+based on the price they pay for natural gas. Their capacities are based on both the amount of
+natural gas they can purchase and their design limits.
+The rules for natural gas–fired electric generation agents are as follows:
+• If the agent made a profit in the last hour, then attempt to increase natural gas purchases and offer
+more electrical generation capacity.
+• If the agent posted a loss in the last hour, then attempt to decrease natural gas purchases and offer
+more electrical generation capacity.
+• If the total profit has risen above the investment level for a new unit, then purchase a new genera-
+tor. Select the new generator type based on a combination of the parent’s fuel source and the
+availability of natural gas.
+• If the total profit has fallen to zero, then go bankrupt.
+Producer simulation display appearance depends on current profit levels (Figure 7).
+SMART II+ Consumer Agents
+SMART II+ consumer agents buy energy for their own use. Businesses buy fixed amounts
+of energy to remain in business. Populations buy fixed amounts of energy to live their lives.
+Natural gas–fired electric generators buy natural gas to produce salable electric power.
+Each consumer has investment capital that is increased by profits and reduced by losses. If
+a consumer reaches a predetermined level of investment capital, it can grow in the form of
+new consumers. Consumers who run out of investment capital go bankrupt and no longer
+participate in the market.
+Consumer simulation display appearance depends on current profit levels (Figure 8).
+Investment capital represents several things. For industrial users, it is their total financial
+North / AGENT-BASED MODELING 315
+0
+50
+100
+150
+200
+0 500 1000 1500 2000
+MWh
+$/MWh
+Cost
+/K32/K35/K30
+/K33/K30/K30
+Figure 6: An Example Producer Cost Curve
+
+capital. For individuals, it is the employment and personal opportunities that keep them in an
+area or encourage them to leave.
+SMART II+ Interconnections
+Interconnections represent transmission lines or distribution pipes each with an individ-
+ual capacity limit. Individual capacity limits vary by interconnection type. Central transmis-
+sion lines or main distribution pipes have high-capacity limits and are drawn with thick
+marks. Outlying transmission lines or secondary distribution pipes have moderate-capacity
+limits and are drawn with medium marks. Feeder lines or pipes have low-capacity limits and
+are drawn with thin marks. Interconnection color represents contents and usage as shown in
+Figure 9.
+SMART II+ Market Indicators
+The key SMART II+ market indicators are market prices, unserved energy, and natural
+gas–fired electric generator market share. All key SMART II+ indicators are represented by
+graphs updated in real time.
+316 SOCIAL SCIENCE COMPUTER REVIEW
+Profitable producers appear as light green circles
+Unprofitable producers appear as dark green circles
+Bankrupt producers appear as dark rings
+Figure 7: Producer Appearance
+Profitable consumers appear as light green circles
+Unprofitable consumers appear as dark green circles
+Bankrupt consumers appear as dark green rings
+Figure 8: Consumer Appearance
+
+Market price is the per unit purchase price of the given energy resource. Electric power
+prices are given in tenths of a cent per kilowatt-hour (Mills/KWh). Natural gas prices are
+given in dollars per thousand cubic feet ($/1,000 cubic feet). The SMART II+ price graphs
+are shown in Figure 10.
+Unserved energy (UE) is the energy demand that was not met by the market. UE repre-
+sents a form of market failure. UE is given as a percentage of total energy demand. The
+SMART II+ UE graph is shown in Figure 11.
+Natural gas–fired electric generator market share (NG Generator MS) is a measure of the
+electric generation capacity that is supplied by natural gas units. NG Generator MS is key to
+infrastructure interdependency. NG Generator MS is given as a percentage of total capacity.
+The SMART II+ NG Generator MS graph is also shown in Figure 11.
+6.5. SMART II+ Network Display
+The geographic SMART II+ display is based on an equivalenced network. An example
+notional SMART II+ network is shown in Figure 12.
+SMART II+ seeks to apply CAS techniques to investigate system reliability in the face of
+cascading failures. As such, the focus is on modeling a large number of infrastructures with
+properties approximating those of real equivalenced electrical systems.
+To achieve the goal of modeling a large number of electrical infrastructures, SMART II+
+uses probability distributions to create example networks. These distributions are carefully
+chosen to approximate real equivalenced electrical systems. This approach allows many net-
+works to be rapidly created and simulated. The result is a broad understanding of the eco -
+nomic issues that surround general electric infrastructures. It is possible to fix the SMART
+II+ distributions to particular values to model specific, real-world networks. However, to
+provide more detail on individual electric infrastructures, the approach followed by FAST is
+recommended.
+SMART II+ Validation and Calibration
+As with SMART II, SMART II+ has undergone initial qualitative validation by matching
+its outputs to basic analytic predictions. Markets with a single superior producer among a
+large number of higher cost competitors have been tested. Also, markets with many identical
+participants have been tested.
+SMART II+ has undergone initial qualitative calibration by comparing the model’s natu-
+ral gas–fired electric generator market share trends with those found in real systems. Much
+more work is clearly required to quantitatively validate and quantitatively calibrate SMART
+II+; therefore, only limited qualitative insights are currently being derived.
+North / AGENT-BASED MODELING 317
+/K48/K69/K67/K68 /K55/K73/K61/K67/K65 /K69/K73 /K4C/K69/K67/K68/K74/K4C/K6F/K77 /K55/K73/K61/K67/K65 /K69/K73 /K44/K61/K72/K6B
+/K4E/K61/K74/K75/K72/K61/K6C /K67/K61/K73 /K70/K69/K70/K65/K73 /K61/K70/K70/K65/K61/K72 /K62/K6C/K75/K65
+/K45/K6C/K65/K63/K74/K72/K69/K63/K61/K6C /K6C/K69/K6E/K65/K73 /K61/K70/K70/K65/K61/K72 /K72/K65/K64
+Figure 9: Interconnection Appearance
+
+SMART II+ Insights
+As originally presented to our research sponsors in May 2000, preliminary insights from
+SMART II+ indicate that rising the natural gas–fired electric generator market share radi -
+cally increases market interdependence. This increasing market interdependence can pit the
+electric power and natural gas markets against each other during simultaneous failures
+because both markets are fighting for the same underlying resource, natural gas. This inter-
+dependency insight was borne out in the aftermath of the recent El Paso natural gas pipeline
+explosion.
+What is the state of the world today? Nationwide natural gas–fired electric generator mar-
+ket share is roughly 15% to 20%. Nationwide natural gas–fired electric generator market
+share is expected to radically increase during the next 5 years. J. P. Morgan analysts predict
+that there is expected to be a 31% increase in generation capacity (Anderson, 2000). These
+analysts predict that roughly 95% of new electric generation capacity will come from natural
+318 SOCIAL SCIENCE COMPUTER REVIEW
+Figure 11: UE and NG Generator MS Graph
+NOTE: UE = unserved energy; NG Generator MS = natural gas–fired electric generator market share.
+Figure 10: Price Graphs
+
+gas–fired units (Anderson, 2000). An example is the midwestern region dominated by Com-
+monwealth Edison (ComEd).
+ComEd presently gets less than 10% of its current 20,000 MW generation capacity from
+natural gas–fired generators. Permits are being issued for the construction of 8,000 MW of
+new capacity, of which more than 95% will be natural gas fired.
+The interdependency between the electric power and natural gas markets implies that
+when natural gas–fired electric generator market share becomes high enough, a single
+energy resource, “virtual natural gas,” is being traded in both markets. Viewing energy sys-
+tems from the perspective of virtual natural gas suggests that future electric system capacity
+expansion planning should explicitly feature the natural gas distribution infrastructure as a
+key component. Power systems engineers should note that electric models might be substan-
+tially incomplete without explicitly including the natural gas infrastructure. Highly distrib-
+uted electric generation plans including local load-servicing schemes may especially benefit
+from this view because they rely heavily on the existence of other energy sources such as nat-
+ural gas.
+North / AGENT-BASED MODELING 319
+Figure 12: Example Notional SMART II+ Network
+NOTE: SMART = Spot Market Research Tool.
+
+FAST
+FAST is an integrated infrastructure model based on SMART II+. FAST includes many of
+the features of SMART II+ along with improvements in modeling infrastructure, detail, and
+fidelity. FAST is currently under construction. FAST has three components: (a) The first is
+the runtime infrastructure called FAST:Run that will be merged with RePast (Collier &
+Sallach, 2001), (b) the second is the electric power system model called FAST:E, and (c) the
+third is the natural gas system model called FAST:G.
+FAST:Run is designed to be a lightweight large-scale system with the major features that
+(a) it is written entirely in Java, (b) it is fully distributed, and (c) it has a multithreaded sched-
+uler that focuses on maximizing parallel execution.
+FAST Time Management
+The underlying design paradigm of FAST is that of a time continuum ranging from
+decades to seconds. On the scale of decades, the focus is long-term human decisions con -
+strained by economics:
+• Radical technology changes are possible.
+• Radical legal/regulatory environmental changes are possible.
+• Radical market structure changes are possible.
+• Radical demand change is possible.
+• Radical capacity expansion is possible.
+• Radical business model changes are possible.
+On the scale of years, the focus is short-term human economic decisions constrained by
+economics:
+• Radical legal/regulatory environmental changes are possible.
+• Radical market structure changes are possible.
+• Substantial demand change is possible.
+• Substantial capacity expansion is possible.
+• Substantial business model changes are possible.
+On the scale of months and days, the focus is short-term human economic decisions con-
+strained by economics and physical laws:
+• Substantial price change (e.g., fuels, power) is possible.
+• Substantial demand change is possible.
+• Small business models changes are possible.
+• Substantial component failures are possible.
+On the scale of hours, the focus is short-term human economic decisions constrained by
+physical laws and economics:
+• Moderate demand change is possible.
+• Substantial component failures are possible.
+On the scale of minutes or less, the focus is on physical laws:
+• Small demand changes are possible.
+• Substantial component failures are possible.
+320 SOCIAL SCIENCE COMPUTER REVIEW
+
+On longer time scales, human economic decisions are emphasized. On shorter time
+scales, physical laws dominate. FAST includes a large number of different agents to model
+these varying time scales. Modeling across the full range of time scales is necessary to under-
+stand the complex infrastructure interdependencies between the electric power and natural
+gas markets.
+Many agents representing real-world entities have a set of basic functions that are acti-
+vated on a periodic basis during each model run. Typically, these activations will occur at
+hourly, daily, weekly, monthly, and yearly intervals during runs. The agents also occasion-
+ally will be activated at irregular intervals for special tasks. A combination of regular peri-
+odic activation combined with occasional irregular activation forms the core structure of the
+FAST agent-based simulation approach. The FAST classes that implement these concepts
+follow.
+The new classes that implement the core structure of the FAST agent-based simulation
+focus on activities. Activities can either be specific tasks or collections of subtasks. The
+subtasks may either be sequential or concurrent. In all cases, tasks may begin and end at spe-
+cific times. These ideas are embodied in the specific FAST interfaces.
+Interfaces in OOP reflect a general contract for functionality without a specific imple -
+mentation (Booch, 1994). The contract details the names and parameters of the available
+functions without saying how those functions are actually coded. This allows interface users
+to write working programs that are independent of any particular interface implementation.
+Users are free to choose any implementation that is available. At the same time, interface
+writers maintain maximum implementation flexibility. They can even use completely differ-
+ent implementation approaches without affecting users.
+For example, one interface implementation might be local and sequential. It would pro-
+vide the type of code most people imagine when they think of a simple computer program. A
+second implementation might use Java Remote Method Invocation (RMI) to distribute the
+computation across a Beowulf cluster. Both the standard and RMI approaches could use the
+same interfaces so no user code changes would be required to switch implementations. In
+fact, this is exactly what FAST does. All of the classes in the FAST hierarchy use interfaces to
+maximize internal and external flexibility.
+FAST Agents
+Many FAST agents are relatively “thick” compared with typical agents. FAST agents are
+highly specialized to perform diverse tasks ranging from acting as independent system oper-
+ators to being transmission lines. To support specialization, FAST agents include large num-
+bers of highly specific rules.
+More than 20 unique FAST agents are being created to model the electric and natural gas
+infrastructures in detail. An example is the electric generator agent with the following basic
+considerations:
+• Electric generator agents simulate the physical characteristics of an individual electric
+generator.
+• There will be many different types of generator agents including thermal generators, hydroelec-
+tric generators, renewable generation systems, combined heat and power generators, and others.
+• Generators themselves do not adapt; all decisions on their operation are made by generation
+company agents.
+• Random events can affect electric generator operations (e.g., unplanned outages).
+• Multiple generators may be physically connected to a single node in the network.
+North / AGENT-BASED MODELING 321
+
+• A generator may be the only supply owned by a given generation company agent, or it could be
+one of several owned by a given generation company agent.
+• A generator may have shared ownership with several generation company agents.
+Overall, the electric generator agents have limited ability to adapt to their environment.
+They must operate within their physical limits. If these limits are exceeded or are about to be
+exceeded, the electric generator will trip out. If it does, it must follow its physical rules for
+restarting before becoming available again.
+The generation company that owns the unit makes operating decisions that address issues
+other than the physical limits. Examples of such issues include economic decisions on
+whether to operate the plant and, if so, at what level.
+A simplified set of example steps for generator agents working in the hourly market is as
+follows:
+• Receive the committed capacity for the next 24 hours.
+• For each hour:
+• Calculate the available capacity for the next hour.
+• Distribute the available capacity to the committed generation categories.
+• Send the results to the real-time dispatch agent.
+• Receive feedback from the real-time dispatch agent.
+• Determine if the generator has tripped as a result of the dispatch.
+• Calculate generator results.
+Detailed rules are provided for each step. For example, the rules for generator tripping are
+as follows:
+• If the dispatched capacity received from the real-time dispatch agent for the given generator in
+the specific hour is less than the generator’s minimum capacity, then trip out the generator.
+• If the dispatched capacity received from the real-time dispatch agent for the given generator in
+the specific hour is greater than the generator’s maximum capacity, then trip out the generator.
+• If the generator has instantaneously failed, then trip out the generator.
+FAST Networks
+FAST will use specific data from actual equivalenced electric and natural gas systems.
+These data will be created manually by power systems and natural gas systems experts in
+close coordination with ABM experts. The close coordination will be necessary due to the
+emergent behavior of CAS.
+The emergent behavior of CAS implies that many model results cannot be predicted until
+the simulation is actually run. The presence of emergent behavior means that modelers
+should develop simulations in an iterative manner much like that of the spiral software engi-
+neering model (Schach, 1993).
+The FAST system and its component agents will be subjected to rigorous quantitative val-
+idation and calibration. This process will include matching the outputs from FAST under the
+following scenarios:
+• Basic analytic predictions such as markets with a single superior producer among a large num-
+ber of higher cost competitors and markets with many identical participants will be tested.
+• Existing test cases from recognized organizations such as those created by the Institute of Elec-
+trical and Electronics Engineers (IEEE) will be used (IEEE, 1973a, 1973b).
+322 SOCIAL SCIENCE COMPUTER REVIEW
+
+• Known events such as the California electricity price spikes and the El Paso natural gas pipeline
+explosion will be tested.
+• A variety of special purpose cases will be created and investigated.
+CONCLUSION
+Developing the initial capability to create CAS models requires substantial organiza -
+tional investment as demonstrated by the SMART and FAST efforts. Once this initial invest-
+ment has been made, models can be created that allow innovate studies. Argonne National
+Laboratory has made this investment by creating both SMART and FAST and applying
+SMART.
+REFERENCES
+Anderson, J. A. (2000, September 19) . What’s electrifying natural gas? Business Week Online [Online]. Available:
+http://www.businessweek.com/bwdaily/dnflash/sep2000/nf20000919_238.htm
+Booch, G. (1994).Object-oriented analysis and design with applications(2nd ed.). Reading, MA: Addison-Wesley.
+Burkhart, R., Askenazi, M., & Minar, N. (2000). Swarm release documentation [Online]. Available:
+http://www.santafe.edu/projects/swarm/swarmdocs/set/set.html
+Collier, N., & Sallach, D. (2001). RePast [Online]. Available:http://repast.sourceforge.net/
+Institute of Electrical and Electronics Engineers. (1973a).14-bus IEEE transmission test system. New York: Author.
+Institute of Electrical and Electronics Engineers, Working Group on a Common Format for the Exchange of Solved
+Load Flow Data. (1973b, November/December). Common data format for the exchange of solved load flow
+data. IEEE Transactions on Power Apparatus and Systems, 6, 1916-1925.
+Panepento, P. (2000, August 14). The perfect swarm.Computerworld, p. 56.
+Pape, D., Cruz-Neira, C., & Czernuszenko, M. (2000). CAVE user’s guide [Online]. Available:
+http://www.evl.uic.edu/pape/CAVE/prog/CAVEGuide.html (1997).
+Schach, S. (1993). Software engineering (2nd ed.). Homewood, IL: Irwin.
+VanKuiken, J. C., Veselka, T. D., Guziel, K. A., Blodgett, D. W., Hamilton, S., Kavicky, J. A., Koritarov, V . S.,
+North, M. J., Novickas, A. A., Paprockas, K. R., Portante, E. C., & Willing, D. L. (1994).APEX user’s guide
+(Argonne production, expansion, and exchange model for electrical systems), Version 3.0. (ANL/DIS/TM-21).
+Argonne, IL: Argonne National Laboratory.
+Veselka, T. D., Portante, E. C., Koritarov, V . S., Hamilton, S., VanKuiken, J. C., Paprockas, K. R., North, M. J.,
+Kavicky, J. A., Guziel, K. A., Poch, L. A., Folga, S., Tompkins, M. M., & Novickas, A. A. (1994).Impacts of
+western area power administration’s power marketing alternatives on electric utility systems (ANL/DIS/
+TM-10). Argonne, IL: Argonne National Laboratory.
+Michael J. North is the lead CAS software engineer in Argonne National Laboratory’s Decision and Infor-
+mation Sciences Division CAS Section, where he has spent 8 years modeling infrastructures such as electri-
+cal transmission systems, natural gas distribution systems, and military logistics systems. A graduate of the
+Illinois Institute of Technology, he holds nine earned college degrees spanning computer science, computer
+systems engineering, mathematics, engineering science, physics, biology, chemistry, and business adminis-
+tration. He can be reached via e-mail at Decision and Information Sciences Division, Complex Adaptive
+Systems Section, Argonne National Laboratory, 9700 S. Cass Ave., Argonne, IL 60439; phone: (630)
+252-6234; e-mail:north@anl.gov.
+North / AGENT-BASED MODELING 323

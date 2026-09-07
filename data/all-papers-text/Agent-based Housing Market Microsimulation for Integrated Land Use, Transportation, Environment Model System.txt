@@ -1,0 +1,325 @@
+Procedia Computer Science   19  ( 2013 )  841 – 846 
+1877-0509 © 2013 The Authors. Published by Elsevier B.V.
+Selection and peer-review under responsibility of Elhadi M. Shakshuki
+doi: 10.1016/j.procs.2013.06.112 
+The 2nd International Workshop on Agent-Based Mobility, Traffic and Transportation         
+Models, Methodologies and Applications (ABMTRANS) 
+Agent-based housing market microsimulation for integrated land use, 
+transportation, environment model system 
+Adam Rosenfielda, Franco Chingcuancob, Eric J. Millerc* 
+aDivision of Engineering Science, University of Toronto, 40 St. George Street, Toronto, ON, Canada, M5S 2E4 
+bDept. of Civil and Environmental Engineering, Massachusetts Institute of Technology, 77 Massachusetts Avenue, Cambridge, MA, 02139  
+cDept. of Civil Engineering, University of Toronto, 35 St. George Street, Toronto, ON, Canada, M5S 1A4 
+ 
+Abstract 
+The Housing Market Evolutionary System (HoMES) is the updated housing market module for the Integrated Land Use, 
+Transportation, Environment (ILUTE) model system. HoMES is a disaggregate, agent-based microsimulation of the owner-
+, location choices and valuations,  the 
+endogenous supply of housing by type and location, and the endogenous determination of sale prices and rents. The new model 
+offers significant improvements over previous attempts by including a reformulated market clearing mechanism, market 
+dependency on macro-economic conditions, and improved computational performance. A 100% synthesized population is validated 
+against historical data for the Greater Toronto-Hamilton Area. 
+ 
+© 2011 Published by Elsevier Ltd. Selection and/or peer-review under responsibility of [name organizer] 
+ 
+Keywords: microsimulation; market; disequilibrium; housing; integrated model; agent-based, ILUTE 
+ 
+1. Introduction 
+The ILUTE (Integrated Land Use, Transportation, Environm ent) model system is an agent-based microsimulation 
+model that evolves an urban  spatial form, demographics, travel behavior and economic structure over time. 
+An operational prototype of ILUTE has been developed fo r the Greater Toronto-Hamilton Area (GTHA), simulating 
+the evolution of a synthesized population over a twenty-year timespan (1986-2006).   
+  
+The model system uses a dynamic population of agents (individuals, households, firms, etc.) that are endogenously 
+evolved as the simulation progresses. Recently, there ha s been much progress towards developing the ILUTE 
+Demographic Updating Module (I-DUM), which updates socio-demographic attributes throughout the simulation. I-
+DUM has received comprehensive testing, including historical validation over a twenty-year period [1]. Current efforts 
+have focused on ling component, specifically the owner-occupied housing market 
+ [2] [3]; the 
+endogenous supply of housing by type an d location [4]; and the endogenous determi nation of sale prices and rents [5]. 
+ 
+* Corresponding author. Tel.: 416-978-4076; fax: 416-978-5054. 
+E-mail address: miller@civ.utoronto.ca. 
+Available online at www.sciencedirect.com
+© 2013 The Authors. Published by Elsevier B.V.
+Selection and peer-review under responsibility of Elhadi M. Shakshuki
+Open access under CC BY-NC-ND license.
+Open access under CC BY-NC-ND license.
+
+842   Adam Rosenﬁ  eld et al.  /  Procedia Computer Science   19  ( 2013 )  841 – 846 
+This component, in tandem with automobile ownership, la bor force and firmographic models, serves as a key input for
+modeling transportation demand.
+housing market modul e. It is a complete microsimulation of urban housing market dynamics, with new models for
+market demand, price formation, as well as a bid-auction process on a fully disaggregate level. A framework of the
+new implementation is discussed in comparison to previous modeling efforts, and preliminary results are presented.
+2. HoMES Overview
+Various processes in ILUTE employ either a pric e-taking or pric e-formation mark et fram ework a s a m eans of 
+matching supply and demand agent s [5]. The labor, marriage, and rental housing markets are all examples of pric e-
+taking markets, whereby prices are s et prior to the market clearing proces s. In the case of marriage, no such 
+exists, but the process can otherwise be modeled through the concept of supply and demand agents [6].
+The owner-occupied housing market is, conversely, a price-formation market in which buyers bid the amounts they 
+are willing to pay and sellers ch oose among the bids they recei ve. The housing market is updated in monthly tim e-
+steps, where individual dwelling units are listed on or w ithdrawn from the market and are cleared in an auctio n-type
+as there is no requirement 
+for all supply and demand ag ents to clear at each step . Rather, homes may remain vacant should an acceptable bid not 
+be received, and potential buyers may remain active in the market for several months at a tim e. Market dynamics are 
+thus affected by the micro -level decisions of agents, as well as by the macroscopic impacts of excesses or deficiencies
+in either supply or demand.
+Market entry for demand agents (i.e. households) aris es from (a) the decision of an existing househol d t o seek 
+relocation, or (b) the formation of a new household seeking residenc e. Existing households may choose to enter the
+market by means of the Residential Mobility Model , while new households are formed as a result of the Demographic 
+Updating Module. Either process results in a household entering the market demand pool . A binary choice model the n 
+determines whether the household will search in the rental or owner-occupied market.
+Supply agents, namely dwellings, also enter the market through two diff erent means: (a) the dwelling of an actively
+searching household may be put up on the market once th at household decides to begin its search, or (b) a new
+dwelling may be constructed and listed on the market by its developer. 
+Figure 1. Framework of housing market supply, demand and clearing mechanisms.
+NeN
+N w Buili
+i tl
+l SpS
+S ace
+Zoning
+Interest rates
+Demogo rapa hic UpU
+U dad
+d tet
+t
+New household fof
+f rmation
+Household dissolution
+Market Agent
+Vacancies
+Prices
+Choice set
+fof
+f rmation Auction Agent upu dates
+Residential Mobility Decision
+Household composition
+EEmpplloyymentt chhangges
+Neighborhood characteristics
+Supply
+Type
+Location
+SSiizzee
+Market valuation
+Demand
+Decision to become
+active in market
+TTenure chhoiice: rentt or
+own
+
+843 Adam Rosenﬁ  eld et al.  /  Procedia Computer Science   19  ( 2013 )  841 – 846 
+Following market entry, the clearing process takes place whereby:  
+1. Sellers determine their asking prices based on their perceived value of their dwelling. 
+2. Buyers form their choice sets of potential dwellings. 
+3. Auctions take place for the active dwellings in the current time-step. 
+ 
+Agents may exit the market by either completing a successful transaction or withdrawing from the auction. In either 
+case, the market agent will then assign the appropriate linkage s and update the bidder and seller pools. An overview of 
+market processes is shown in Figure 1. 
+3. Module Components 
+3.1. Market Entry 
+The determinants of residential mobility can be interpreted through the concept of residential stressors [7]. Various 
+atisfaction for its current 
+dwelling against alternatives; this difference in perceived satisfaction is defined as stress. Residential stress evolves 
+ons 
+resulting in push or pull forces towards moving. Life-c ycle events occurring through I-DUM such as marriage, 
+childbirth and divorce all contribute to increased likelihood of residential mobility and are thus important factors to be 
+considered in a mobility model. A mixed-logit model developed by Habib [3] quantifies the effect of various 
+residential stressors on . These stressors include: changes in employment 
+(e.g., gains/losses/changes of jobs), changes in family co mposition (e.g., childbirth, moving out, aging), duration in 
+current dwelling, and spatiotemporal economic data. 
+ 
+If a household decides to enter the housing market, the factors that trig ger its mobility later become determinants of 
+its choice set of dwelling alternatives. This forms an im portant linkage between residential stressors and location 
+choice. This is of particular significance since the tenure decision (rental or owner-occupied housing), which directly 
+impacts the supply and demand numbers for the owner-occu pied market, has been shown to be dependent on a 
+-cycle phase, as well as the macroeconomic climate in which it resides [8]. Furthermore, this decision 
+has also been found to be highly correlated to the previous tenure of a household: renters frequently choose to become 
+homeowners, while the inverse is relatively uncommon. Other significant explanatory factors include household size 
+and gross income, both of which are positively correlated to a higher propensity of homeownership.  
+3.2. Property Valuation 
+Upon market entry, each seller determines a price at which to list its house, with the asking price serving two 
+purposes: firstly, it narrows the set of potential bidders, wh o have preconceived financial search constraints; secondly, 
+it acts as a benchmark for dwelling utility calculations which form the basis of the market clearing mechanism. The 
+asking price model has been updated to better incorporate the set of factors that have been found to affect list prices. 
+These include physical dwelling attributes such as size and structural type. Also  included are several macroeconomic 
+indicators, namely unemployment, fuel prices and mortgage rates , all of which were found to be strong predictors of 
+future housing market performance. 
+ 
+The most powerful predictor of future prices, however,  is through historical trends. The new valuation model 
+accounts for the results of previous endogenous housing mark et interactions, thus forming a longitudinal link between 
+. Aggregate market trends such as supply-demand imbalances will affect prices, as will an 
+. For example, a home that has lingered on the market for several months will tend 
+to drop its asking price. By integrating the dwelling valu ation model within the ILUTE system, the interdependencies 
+between economic growth and housing market performa nce can be captured while allowing for exogenous 
+macroeconomic indicators to influence market dynamics. 
+3.3. Location Choice 
+While the seller seeks to maximize profit, the homebuyer is seeking to maximize his or her utility attained by 
+purchasing a new home. Although the buyer is seeking an optimal solution 
+constraints preclude the searcher from considering all possible dwelling alternatives. Thus, a confined choice set forms
+
+844   Adam Rosenﬁ  eld et al.  /  Procedia Computer Science   19  ( 2013 )  841 – 846 
+(1) 
+(2) 
+the sample space for each potential transactio n. In this sense, buyers and sellers have a myopic approach to the market 
+whereby only limited information about each agent is kno wn to others. Prospective buyers only have detailed 
+information on dwellings in their choice set, and sellers ar e similarly unaware of the actions of other sellers. As such, 
+it is imperative that the choice set formation model accurately represent the preferences of each  household as all 
+subsequent market clearing processes depend on an appropriate selection of homes. 
+ 
+Of all the mechanics of the housing market, the choice set pr oblem is possibly the most difficult to model, owing to 
+the inherent subjectivity associated with how househ olds choose potential homes. Young [9] proposed an elimination-
+by-aspects 
+important attributes are first used to eli minate alternatives, followed by successively less important traits. This is in 
+contrast to traditional residential lo cation models, which assume a trade-
+attribute and its satisfaction for another [10]. An EBA approa ch simplifies the choice set restriction while more closely 
+capturing the decision process of individuals who seldom  consider all attributes of a an alternative simultaneously 
+when confining their search [11].  
+ 
+The HoMES choice set formation is based on an EBA algorithm, using search preferences revealed by a 1998 
+Residential Search Survey [12]. Up to twelve dwellings  are considered each month, reflecting observed search 
+tendencies. Dwelling alternatives are firs t filtered by tenure, with the assumption that dwelling tenure remains fixed 
+and no tenure conversion or subletting occurs. Alternatives are then narrowed down by structural type (detached, semi-
+detached, row house, low/high rise apartment) using a multinomial logit with household income, size, and previous 
+dwelling characteristics as predictor variables.  
+ 
+Following choice set restriction by structural type, the searcher will only consider dwellings whose size matches the 
+needs of the household, based on the results of the resi dential mobility model (i.e. expanding households looking to 
+upsize). The final restriction of alternatives is by asking price, which scopes down the list of potential dwellings 
+significantly. Historical patterns provide a range of typic al price-to-income ratios for homebuyers. In all, these 
+restrictions result in a choice set small enough to be manageable for the potential homebuyer.  
+3.4. Auction Process 
+The final step in the HoMES model is market clearing. The previous version, as described in Farooq and Miller [5], 
+is determined through a search procedure that clears this dw elling unit. Due to this probabilistic formulation, however, 
+the previous approach has some limitations. For instance, th e market fails to clear whenever a bidder only has one 
+house in his or her choice set since that probability will al ways be one at any price. To overcome this limitation, the 
+new version -to-pay (WTP) for dwellings in 
+their choice sets. Under a random utility framework [13], the attractiveness of dwelling j to buyer i can be expressed as 
+a utility composed of three terms: a price utility term ( ), a non-price utility term ( ) based on dwelling 
+characteristics, and an error term ( ) accounting for differences between obs erved and predicted choice behavior. 
+Dwelling utility  is the sum of these terms: 
+ 
+ 
+ 
+where  , where , weighted by a parameter ; 
+ , where  is a vector of dwelling attributes weighted by a vector of parameters ; and 
+   is a Type I Extreme Value distributed error term. 
+ 
+The total utility is therefore: 
+ 
+ 
+ 
+Each active household  has a choice set of dwellings ( ), and each active dwelling has a set of bidders ( ). In the 
+previous market clearing formulation [5], a micro-
+price is varied until certain conditions are met (probab ility sums across buyers and sellers both equal one). This 
+algorithm was found to break down when bi dder sets are too small or too large. If a dwelling has very few bidders, the 
+transaction price may be forced to drop significantly to achi eve a unit sum of probabilities. Conversely, for a dwelling
+
+845 Adam Rosenﬁ  eld et al.  /  Procedia Computer Science   19  ( 2013 )  841 – 846 
+(3)
+(4)
+(5)
+Figure 2. HoMES validation against TREB and CMHC data.
+0%
+5%
+10%
+15%
+20%
+b) Transaction Prices, 1987
+Historical ILUTE
+0
+1000
+2000
+3000
+4000
+5000
+1986 1988 1990 1992 1994 1996 1998 2000 2002 2004 2006
+Monthly Housing Completions
+c) New Detached Housing Supply
+Historical ILUTE
+$100,000
+$200,000
+$300,000
+$400,000
+$500,000
+1986 1988 1990 1992 1994
+a) Asking and Transaction Prices, Detached Homes
+Historical Asking
+Historical Selling
+ILUTE AskingILUTE Asking
+ILUTE Selling
+with many interested homebuyers, the price may be inflated beyond reasonable values. Furthermore, such an algorithm 
+only determines a transaction price, with the winning bidder chosen randomly from amongst the bidder set. 
+A new clearing mechanism has been implemented that, rather than imposing a micro -equilibrium, auctions off each 
+dwellin . Bidders first determine their non-price utility for each dwelling in their choice set: 
+is evaluated based on the attributes of the dwelling unit and the parameters found in Habib [14]. The random 
+error term is simulated by drawing from a Type 1 Extreme Value distribution. Then, for each active dwelling with 
+bidder set , members of the bidder set determine the high est utility they can achieve for all homes in their choice set 
+other than the current dwelling :
+where gives the maximum utility bidde r i can obtain fr om th e other 
+alternatives in its choice set and therefore sets bidder i
+means of 
+comparison between choice set alternatives . Household , with a maximum utility of , can bid a certain amount 
+on dwelling to achieve that same utilit y. Substituting equations (3) and (4) into (2), t he price the bidder is willing to
+pay for this utility is therefore
+.
+Once all bids have been tendered, the seller evaluates its options and may choose to either sell to the highest bidder,
+or reject all offers if none are deemed acceptabl e. 
+a Vickrey auction whereby the transaction p rice is equal to the second highest bid (plus a dollar) which most closel y
+reflects th e true mark et value of th e h ome [15]. This bid-auction process results in a more realistic simulation of 
+market . It 
+further improves the dependence of market clearing on ma croeconomic and land use trends as manifested in suppl y-
+demand interactions.
+
+846   Adam Rosenﬁ  eld et al.  /  Procedia Computer Science   19  ( 2013 )  841 – 846 
+4. Model Performance and Validation 
+The HoMES module of ILUTE has been implemented in the C# .NET framework. Parallelization of many of the 
+computationally expensive algorithms has resulted in starkly improved performance; run-time for a twenty year 
+simulation of the 
+result of streamlined and parallelized code. Efforts are under way to comprehensively test and validate HoMES using 
+data from the Toronto Real Estate Board (TREB) and th e Canadian Mortgage and Housing Corporation (CMHC). 
+2a), though ILUTE selling prices tend to be slightly higher than asking, contrary to conventional market dynamics. 
+Figure 2b compares cross-sectional distri butions of transaction prices in 1987, and is indicative of slight systematic 
+over-prediction. Supply of new detached houses, illustrated in Figure 2c, generally exhibits strong correspondence 
+with CMHC data. Results for other types of housing show similar temporal trends; further results on housing supply 
+can be found in Farooq and Miller [5]. While preliminary validation results are promising, challenges remain to 
+attribute model inaccuracies to the appropriate sub-component. For example, skewed distributions of transaction prices 
+may be a product of the bid-auction process, asking price formation, improper residential mobility determination or 
+even population demographics. Such interdependencies are reflective of the integrated modeling paradigm and present 
+challenges in model calibration. Understanding and resolving these discrepancies is the subject of current analysis. 
+5. Conclusion 
+This paper has presented an agent-ba sed implementation of urban housing market dynamics as part of the ILUTE 
+model system. HoMES introduces some key features that offer marked improvement over previous models. These 
+include: better integration among housing market sub-models, such as predictors  of residential mobility becoming 
+determinants of choice set formation; explicit modeling of the residential tenure decision; an improved asking price 
+model more sensitive to endogenous micro and macro-economic factors; a willingness-to-pay framework of market 
+clearing using a bid-auction process; and finally, a streamlined technical implementation with performance capabilities 
+to rapidly execute full-population simulations. Future wo rk remains to be done to further incorporate the spatial 
+attributes of location choice into the land use model. Fu rthermore, completed implementation of a rental housing 
+market simulation would complete the HoMES framework. Co mmercial and industrial land use models are also a key 
+necessity in modeling firmographic and labor force dynamics, and remain as priorities for the ILUTE modeling team. 
+References 
+[1] Chingcuanco, F. and Miller, E.J. Demographic Microsimulation Model for Integrated Land Use, Transportation, and Environment Model 
+System. In 92nd Annual Meeting of the Transportation Research Board (Washington, D.C. 2013). 
+[2] Habib, M.A. and Miller, E.J. Influence of Transportation Access and Market Dynamics on Property Values: Multilevel Spatio-Temporal 
+Models of Housing Price. Transportation Research Record: Journal of the Transportation Research Board (2008), 2076: 188-191. 
+[3] Habib, M.A. and Miller, E.J. Reference-Dependent Residential Location Choice Model within a Relocation Context. Transportation Research 
+Record, Journal of the Transportation Research Board (2009), 2133: 56-63. 
+[4] Haider, M. and Miller, E.J. Modelling location choices of housing builders in the Greater Toronto Area. Transportation Research Record, 1898 
+(2004), 148-156. 
+[5] Farooq, B. and Miller, E.J. Towards integrated land use and transportation: A dynamic disequilibrium based microsimulation. Transportation 
+Research Part A: Policy and Practice, 46, 7 (2012), 1030-1053. 
+[6] Miller, E.J., Chingcuanco, F., Farooq, B., Habib, K.M.N., Habib, M.A., and McElroy, D. Development of an operational integrated urban 
+model system, volume IV: Demographic and labour market updating. University of Toronto (2008). 
+[7] Rossi, P. Why families move: A study in the social psychology of urban residential mobility. Free Press, Glencoe, Illinois, 1955. 
+[8] Henderson, J. V. and Ioannides, Y. M. A model of housing tenure choice. The American Economic Review, 73, 1 (1983), 98-113. 
+[9] Young, W. A non-tradeoff decision making model of residential location choice. Transportation Research, 18A (1984), 1-11. 
+[10] Lerman, S. R. A disaggregate behavioural model of urban mobility decisions. PhD Thesis, Cambridge, 1975. 
+[11] Michelson, W. Environmental choice, human behaviour, and residential satisfaction. Oxford University Press, New York, 1977. 
+[12] Pushkar, A. O. Modelling household residential search processes. MASc Thesis, Toronto, 1998. 
+[13] McFadden, D. Conditional logit analysis of qualitative choice behaviour. Frontiers in Econometrics (1974), 105-142. 
+[14] Habib, M.A. Microsimulating residential mobility and location choice processes within an integrated land use and transportation modelling 
+system. PhD Thesis, Toronto, 2009. 
+[15] Vickrey, W. Counterspeculation, Auctions, and Competitive Sealed Tenders. The Journal of Finance, 16, 1 (1961), 8-37.

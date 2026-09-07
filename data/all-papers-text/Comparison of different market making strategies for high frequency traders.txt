@@ -1,0 +1,441 @@
+Proceedings of the 2015 Winter Simulation Conference 
+L. Yilmaz, W K. V. Chan, 1 Moon, T. M K. Roeder, C. Macal, and M D. Rossetti, eds. 
+COMPARISON OF DIFFERENT MARKET MAKING STRATEGIES FOR HIGH FREQUENCY 
+TRADERS 
+ABSTRACT 
+Yibing Xiong 
+Takashi Yamada 
+Takao Terano 
+Department of Computational Intelligence and 
+System Science 
+Tokyo Institute of Technology 
+4259 Nagatsuta-cho 
+Yokohama, Kanagawa, 226-8503 JAPAN 
+This paper utilizes agent-based simulation to compare different market making strategies for high 
+frequency traders (HFTs). After proposing a model representing HFTs' activities in fmancial market when 
+they act as market makers, we carry out simulations to explore how different quoting strategies affect 
+their profit. The results show that combination of (i) offering prices based on the latest trading price, and 
+(ii) using the information about market volatility and order imbalance, increase market makers' daily 
+returns. In addition, other scenarios including the competition environment of increased competitors and 
+decreased latencies are incorporated in the model, in order to find out how these factors change the 
+performance of market making strategy. 
+1 INTRODUCTION 
+Market making refers to a trading strategy that seeks to profit by providing liquidity to other traders and 
+gaining the ask/bid spread, while avoiding accumulating a large net position in a stock. Market making is 
+not a new trading strategy, but the wide spread of high frequency trading (HFT), a form of algorithmic 
+trading which use sophisticated technologies to rapidly trade securities, has given it new features. It is 
+now involved in higher trading speed, and greater trading volume. The Securities and Exchange 
+Commission (SEC) generalized four types of trading strategies that often utilized by HFTs (SEC 2010). 
+Among them, market making is the most transparent one and constitutes more than 60% of HFT volume 
+(Hagstromer and Norden 2013). Menkveld (2013) carefully studies the profit and net position of a large 
+HFT who acts as a modern market maker. But the strategy under the performance of this HFT, as well as 
+the relationship between strategy and market condition, are not described. The extensive usage and 
+considerable profit of this strategy have attracted many scholars (Guilbaud and Pham 2013, Gueant et al. 
+2013). 
+The formidable challenge to get to better understanding of trading strategies, is obtaining 
+comprehensive and detailed transaction data and testing the strategy in different market conditions. In this 
+regard, agent-based simulation provides an effective way to solve these problems, and has already been 
+used to design trading strategies. 
+There have been some approaches focused on marker making and try to find optimal strategies 
+(Nevmyvaka et al. 2003, Kendall and Su 2004, Wang et al. 2013, Wah and Wellman 2015). However, the 
+key difference between the traditional market making and the high frequency market marking, is that the 
+978-1-4673-9743-8/15/$31.00 ©2015 IEEE 324 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:05:21 UTC from IEEE Xplore.  Restrictions apply.
+
+Xiong, Yamada, and Terano 
+latter is assumed to gain market information faster, thus submitting and adjusting orders much quicker. 
+Hence, market makers' orders will affect market price, and the competition between market makers 
+becomes intense. Contemplating these facts, this paper differs from the previous papers in the following 
+aspects: 
+• Previous research considers the trading volume of market marker is small and his order to be 
+executed fully and immediately without market impact. Contrarily, we consider high frequency 
+market makers conducting considerable trading volumes, thus the situation of order execution is 
+quite different and the activity of market makers are likely to affect the whole market. 
+• Previous research mainly encompasses only one market maker, while in this paper, multiple 
+market makers are included and we test the strategy under competition environments. 
+In this paper, we utilize an agent-based model to analyze the performance of different market making 
+strategies. Our main contributions are as follows: 
+• We build an artificial transaction system to represent HFTs' activities in stock market when they 
+act as market makers. This system fits with main statistical properties of financial markets and is 
+used to compare the performance of different market making strategies. 
+• We fmd one market making strategy which increases daily return, is offering prices based on the 
+latest trading price, as well as utilizing the information of market volatility and order imbalance. 
+• We further introduce the environment of increased competitors and decreased latencies in the 
+model, in order to test the strategy under different market conditions. 
+The rest of the paper proceeds as follows. The next section reviews the relevant literature in HFT and 
+market making. Section 3 describes the design of the transaction system and its validatio. Section 4 
+presents the results of simulation experiments to compare different kinds of market making strategies for 
+HFTs. In section 5, we further analyze how the number and the trading speed of market makers affect the 
+performance of this strategy, and section 6 concludes. 
+2 RELATED WORK 
+2.1 High Frequency Trading 
+The rapid development of HFT raises many concerns among scholars on its strategy and profit. For 
+instance, Brogaard (2010) analyzes a dataset of 26 HFT firms to study their strategies and profitability. 
+He finds that HFTs tend to follow a price reversal strategy driven by order imbalances, and provide the 
+best bid and offer quotes for a significant portion in a trading day. In another study, Menkveld (2013) 
+studies a large HFT who has an annualized Sharpe ratio of 9.35, acting as a modern market-maker of a 
+new market, chi-X. The gross profit of the HFT have been decomposed into spread profit and position 
+loss, and the position loss has been decomposed into profit less than five seconds and loss on longer 
+duration positions. In this study, the single HFT firm has an aggressiveness ratio of only 22%. 
+Differently, in other studies, Carrion (2013), as well as Brogaard et at. (2013) analyze NASDAQ 
+Datasets and find that more than 50% of HFT activity is aggressive. Since these HFTs use combination 
+of strategies and are involved in different market conditions, the conclusions may lack of generality. But 
+they can be a great help for the design of agent-based HFT model, which is able to focus on a certain 
+type of strategy and test its performance in different market environments. 
+Regarding the complexity of HFT, agent-based models have been used to represent HFTs' activity 
+and explore their role on financial market. In this stream of research, Paddrik et at. (2012) propose a zero­
+intelligence agent-based model of the E-Mini S&P 5 00 futures market, and suggest that HFTs do 
+contribute to generate the May 6th flash crash. Also, Leal et at. (2014) build an agent-based model to 
+325 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:05:21 UTC from IEEE Xplore.  Restrictions apply.
+
+Xiong, Yamada, and Terano 
+study how the interplay between low- and high-frequency trading affects asset price dynamics, and find 
+that the presence of high-frequency trading increases market volatility and plays a fundamental role in the 
+generation of flash crashes. In their approaches, HFTs' strategies are relatively simple and they focus on 
+HFT's market impact. On the other hand, our model assumes HFTs adjust their strategy according to the 
+market conditions, and we focus on the performance of different trading strategies. 
+2.2 Market Making Strategy 
+Market making is considered as a trading strategy which providing limit orders on both sides of the mid­
+price. How these limit orders are placed in terms of volume and distance from the mid-price, are the 
+concerns of this strategy. Relatively, Nevmyvaka et al. (2003) use a simple class of non-predictive trading 
+strategies to test electronic market making, and examine the impact of various parameters on the market 
+maker's performance. Kendall and Su (2004) also use an agent-based model to evolve successful trading 
+strategies by integrating individual learning and social learning. Wang et al. (2013) implement a learning 
+algorithm for market makers to search the optimal trading frequency, and they study how different trading 
+frequencies of market makers affect the market. In another paper, Wah and Wellman (2015) employ 
+simulation based methods to evaluate heuristic strategies for market makers and find the presence of the 
+market maker is benefit to both impatient investors and overall market. However, the high frequency 
+market marking is differ from the traditional one in respect of the speed they gain market information and 
+conduct their transactions. So in our model, we take into account the huge trading volume of high 
+frequency market makers, and consider how the competition between market makers affects the 
+performance of strategy. 
+3 MODELLING OF HIGH FREQUENCY MARKET MAKING 
+In this section, we build a continuous double auction stock market in which agents trade using 
+information on the limit order book (LOB), a place records unexecuted limit orders. Agents in the model 
+are classified into two categories according to their goals and strategies. The one is Low Frequency 
+Traders (LFTs), who evaluate the value of the asset and try to earn the profit by using an integrated 
+strategy of fundamental value-based and trend-follow. The other is High Frequency Traders (HFTs), who 
+ignore the value of the asset but only pay attention to the trading environment itself, and they mainly try 
+to accumulate the profit on the spread using the market making strategy. We stimulate the intra-day 
+transaction scenario where both agent categories trade on one single asset. The framework of the model 
+and more details are presented in following subsections. 
+3.1 Framework 
+The model is an extension of the one presented by Leal et al. (2014). For the totally T trading sessions, 
+trading procedure is as follows: 
+• Active LFTs decide whether to enter the market according to their expected returns. If enter, they 
+submit either a sell or a buy order with size and price based on their expectations. 
+• Knowing the orders submitted by LFTs, HFTs decide whether to enter the market. If enter, they 
+usually submit both a sell and a buy order with size and price in order to absorb the orders of 
+LFTs and earn the profit on the spread. 
+• LFTs and HFTs' orders are matched and executed according to their price and arrival time. The 
+latest trading price is determined then and unexecuted orders rest in the LOB for the next trading 
+session. 
+• After each session, LFTs and HFTs decide whether to update their trading parameters according 
+to their performances. 
+326 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:05:21 UTC from IEEE Xplore.  Restrictions apply.
+
+Xiong, Yamada, and Terano 
+3.2 Low Frequency Traders Activity 
+Por each trading session, LPT i acts as following: 
+1. Decides whether to be active according to his active probability Lpi_ ap. 
+Lpi_ap is drawn from a uniform distribution with support [a\nin, aL max] and can be changed 
+according to individual profit. 
+2. If being active, LPT i first calculates the expected price of the asset Lpi_ EP based on the expected 
+return Lpi_ ER, then generates the ask price Lpi_ APt and bid price Lpi_ BPt at time t based on the 
+latest trading price Pt. 
+The return at time t is defined as 
+(1) 
+Utilizing the idea of LeBaron and Yamamoto (2007), LPTs form their weighted forecasts on the 
+future returns by combining fundamental-, chart-, and noise-based forecasts as follows: 
+LFi _ER= n: x log(pf ) + n� x ± i)og(�) + n� x N(O,l). 
+Pt )=1 Pt-)-1 
+And the expected price Lpi_EP is calculated as Pt X e A Lpi ER. 
+(2) 
+Ii represents the memory length of LPT i, and Ii � U(1, Imax). nIl ' n � , n � are the weights for 
+fundamentalist, chartist, and noise-induced components for LPT i, respectively, and randomly 
+assigned according to normal distributions: nil � IN(O, (JI)I, n� � N(O, (J2) and n� � N(O, (J3). 
+And price for sell/buy orders at time t are formed as follows: 
+i L LF _ A� = Pt-I X (1- Ki ) (3) i L LF _ B� = Pt-I X (1 + Ki ) 
+Where Ki � U(Kmin, Kmax) represents the price fluctuation parameter. 
+3. If the ask price of LPT i is higher than its expected future price, LPT i will submit a sell order at 
+price Lpi_ APt with size Lpi_ AS; if the bid price of LPT i is lower than its expected future price, 
+he will submit a buy order at price Lpi_BPt with size LPi_BS. The valid time of the order is l. 
+The size of the orders are proportional to expected returns and are formed as: 
+LFi _ AS = LFi _ ERx lJ/ 
+LFi _ BS = -LFi _ ERx lJ/ 
+(4) 
+where 11� represents the size fluctuation parameter of LPTs and 11: � U(l1L min, llLmax), it can be 
+changed according to individual profit. And if the order has not been fully executed within yL, the 
+rest of it will be removed from the LOB. 
+4. After 't sessions, LPT i decides whether to update his trading parameters based on his profit 
+Lpi Pt. 
+If Lpi_pt > 0, LPT i will update some of his parameters as: 
+Lpi_ap � U(Lpi_ap, amax), 11� � U(l1:, l1;a,) 
+If Lpi_Pt:::; 0, it becomes: 
+327 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:05:21 UTC from IEEE Xplore.  Restrictions apply.
+
+Xiong, Yamada, and Terano 
+LFi_ap � U(�nin , LFi_ap), 11� � U(l1;," , 11:) 
+If LFi_Pt:::; 0 and a random number � U[O,l] < Ie, then the component-weighted parameters and 
+memory length will be renewed based on the distributions: 
+nIl � IN(O, (J])I, n� � N(O, (J2), n� � N(O, (J3) and Ii � U(1, lmax). 
+3.3 High Frequency Market Makers Activity 
+Concerning market making strategies of high frequency traders, their activities are quite different from 
+the original model since they submit both ask and bid orders. Each trader aiming to profit from the 
+ask/bid spread and needs to control his inventory. For each trading session, HFT j acts as follows: 
+1. HFT j decides whether to be active based on the price fluctuation p�u (bps) at time t and his action 
+threshold HFi at. 
+Since evidences suggest HFT activities prefer higher volatility. We calculate 
+�f]u =1 (Pt-l - Pt-2 ) 1 xl 0000. 
+Pt-l 
+And HFi_at � U(aH min, aHmax). If P�u > HFi_at, then HFT j becomes active. 
+(5) 
+2. If being active, HFT j submits both a sell order at price HFi_ AP with size HFi_ AS and a buy 
+order at price HFi_BP with size HFi_BS. All orders from HFTs are submitted in a random order, 
+and the valid time of the orders is yH. 
+Under the default setting, HFi_AP = Pt + Kr , HFi_BP = Pt - Kr , KH refers to price fluctuation. 
+While HFTs decide the order quantity based on the quotes in the LOB. HFi_AS = HFi_BS = 0.5 
+X (qb + qs) X llH. Where qb (qs) refers to the total size of buy (sell) orders in the LOB at this 
+session, and llH refers to order absorption rate. 
+3. Like LFTs, after't sessions, HFT j decides whether to update llH based on his performance. 
+3.4 Model Validation 
+Table 1 lists the default value of all the parameters. The number of sessions is set as 400 for intra-day 
+trading. There are 400 traders, and 2% (8) of them are HFTs (Hagstromer and Norden 2013). Price and 
+volume related parameters are calibrated to fit with market volatility and liquidity condition respectively, 
+while keeping the diversity of agents. 
+328 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:05:21 UTC from IEEE Xplore.  Restrictions apply.
+
+Xiong, Yamada, and Terano 
+Table 1: Parameters in initial simulation. 
+Description Symbol Value 
+Number of trading sessions T 400 
+N umber of traders N 400 
+Fundamental value Pr 50 
+Tick size t5 0.01 
+LFT initial active possibility [aLmin, a\nax] [0.01, 0.1] 
+LFT max memory length lmax 30 
+LFT order price fluctuation [KL min, 0max] [-0.002, 0.01] 
+LFT order size fluctuation [llLmin, llL max] [200, 1000] 
+LFT order life yL 10 
+LFT parameter evolution circle T 30 
+LFT parameter evolution rate A 0.3 
+Std of fundamental component (J\ 0.3 
+Std of chartists component (J2 0.6 
+Std of noise-trader component (J3 0.1 
+HFT percentage HFToer 2% 
+HFT active threshold [aH min, aH max] [5, 5] 
+HFT order price fluctuation KH 0.01 
+HFT order absorption rate [llHmin, llHmax] [0.1, 0.5] 
+HFT order life yH 1 
+We check whether the model is able to account for the main stylized facts of financial markets. The 
+price movement generated by the model is in line with the empirical evidence as absence of 
+autocorrelation, see as Figure 1. In contrast, the autocorrelation function of absolute return display a slow 
+decaying pattern, see as Figure 2. In addition, the existence of fat tails in the distribution of return is 
+shown in Figure 3, which is also fit with observing evidence. 
+Autocorrelation function of returns 
+Figure 1: Autocorrelation of return in HFT simulations. 
+329 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:05:21 UTC from IEEE Xplore.  Restrictions apply.
+
+Xiong, Yamada, and Terano 
+Autocorrelation function of the absolute returns 
+Figure 2: Volatility clustering in HFT simulations. 
+Return Distribution 
+Number 
+-4 
+Figure 3: Return distribution in HFT simulations. 
+4 COMPARISON OF MARKET MAKING STRATEGY 
+100 
+RelUl1l 
+8 
+X 10-3 
+In this section, some experiments that compare the performance of different market making strategies are 
+discussed. For more clarification, we mainly discuss the relationship between different quoting prices and 
+daily return. 
+4.1 Strategies considering quoting position and spread 
+Market makers usually submit their orders in both buy and sell sides in order to earn the spread. A 
+common approach is to submit limit buy/sell orders at the current best bid/ask prices (denoted as P� / P :). 
+This implies that the spread position is relatively constant. Hence the mid-quote is taken as the base price. 
+Another alternative is using the latest trading price as the base price. This approach considers trading 
+price in next few sessions may evenly distributed around the latest trading price. 
+Regarding the ask/bid order spread of market makers, we first look into the situation which taking 
+mid-quote as the base price. If a market maker places his orders at the current best bid/ask prices, denoted 
+as "ask/bid" strategy, then his ask/bid order spread is equal to the spread in the LOB. One can also place 
+his ask (bid) orders at a marginal lower (higher) price than the current ask (bid), in order to get priority in 
+330 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:05:21 UTC from IEEE Xplore.  Restrictions apply.
+
+Xiong, Yamada, and Terano 
+the order execution. However, spreads in the LOB for a liquid stock are usually extremely tight and leave 
+little profit margin. Therefore, such submission strategy may hit the opposite side of the LOB and in fact 
+bring a loss to the market maker. Moreover, a market maker can place his orders deeper into the LOB, 
+such as one tick away from current best ask/bid price, denoted as "ask/bid-" strategy. This strategy results 
+in higher margins as well as lower order execution rate for market makers. 
+The previously described mechanisms are expected when a market maker uses the latest trading price 
+as the base price. We assume he places ask/bid quotes one or two ticks away from the base price. These 
+scenarios are denoted as "last" and "last-" strategy respectively. Quoting prices of each strategy are 
+illustrated in Table 2. 
+Table 2: Quoting price of market making strategies(l). 
+Strategy Ask order price Bid order price 
+ask/bid P� P� 
+ask/bid- P� + t5 P� + t5 
+last Pt+ t5 Pt - t5 
+last- Pt+ tsX 2 Pt- tsX 2 
+In addition to quoting strategies, 2% of the traders are considered to be HFTs. Moreover, all of those 
+traders use a same quoting strategy, selected from the Table 2, and their orders are submitted in a random 
+order. We test the performance of these strategies evaluating the daily return and end-of-day inventory. 
+(end-of-day inventory for strategy "last" is seen as l.) Each strategy is simulated for 200 times, and the 
+average return and end-of-day inventory are calculated. The comparative results are shown in Figure 4. 
+Figure 4: Comparison of market making strategies(l). 
+Figure 4 shows that quoting based on the latest trading price helps to gain more daily return than 
+quoting based on mid-quote price. This strategy is also likely to result in higher end-of-day inventory. 
+4.2 Strategies considering volatility and order imbalance 
+The prior market making strategy can work well when the trajectory of the price is similar to a random 
+walk, but it may meet with difficulties if things happen in another way. For example, if there comes the 
+331 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:05:21 UTC from IEEE Xplore.  Restrictions apply.
+
+Xiong, Yamada, and Terano 
+period that price keeps going up, the market maker can hardly get his bid orders executed. Hence he 
+accumulates a large short position and loses a lot of money. So the information of market volatility and 
+the order book imbalance need to be considered to avoid such situation. 
+According to empirical study (Raman et al. 2014), market makers are likely to reduce their 
+participation and their liquidity provision in periods of significantly high volatility. In this case, we 
+assume the market maker will place his orders deeper from standard situation, denoted as strategy "v". 
+Moreover, market makers tend to adjust their quoting price when observing an order imbalance in the 
+LOB (Hendershott and Menkveld 2010). When the difference between the volume of ask quotes and bid 
+quotes becomes significant in the LOB, i.e. when (CLb - CLS)/(CLb + CLS) > A], market makers expect an 
+uptrend in the price movement and adjust their ask/bid quotes with an increment A2. They can also lower 
+the ask/bid quotes when observing there are much more sells than buys. We set AI equals to 0.5 and A2 
+equals to ts, and name this order imbalance concerned strategy as "im". 
+We assume a market maker can use either one or the combination of these strategies. The quoting 
+prices of these strategies are listed in Table 3, and the "last" strategy is taken as the baseline. 
+Strategy 
+last 
+lasHv 
+las Him 
+lasHim+v 
+Table 3: quoting price of market making strategies(2). 
+Ask order price 
+Pt+ ts 
+Pt + (IPt-Pt-11+ 1 )ts 
+Pt + ts X 2, if (qb - qs)/( qb + qs) > 0.5 
+Pt , if (qs -qb)/(qb + qs) > 0.5 
+Pt+ ts , if others 
+Pt + (!Pt-Pt-ll+2)ts, if (qb - qs)/(qb + qs) > 0.5 
+Pt + !PcPt-dts, if (qs -qb)/(qb + qs) > 0.5 
+Pt + (!Pc Pt-II+ 1 )ts, if others 
+Bid order price 
+Pt - ts 
+Pt -(IPCPt-11+ 1 )ts 
+Ph if (qb - qs)/(qb + qs) > 0.5 
+Pt-t sX 2, if (qs-qb)/(qb+ qs) >0.5 
+Pt - ts , if others 
+Pt - !PcPt-llts, if (qb - qs)/(qb + qs) > 
+0.5 
+Pt -(!PcPt-II+2)ts, if (qs -qb)/(qb + qs) > 
+0.5 
+Pt -(!Pt-Pt-II+ 1 )ts, if others 
+After simulating each strategy for 200 times, the average daily return and average inventory are 
+calculated. The results are shown in Figure 5. 
+332 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:05:21 UTC from IEEE Xplore.  Restrictions apply.
+
+Xiong, Yamada, and Terano 
+Figure 5: Comparison of market making strategies(2). 
+From Figure 5, we see that the strategy concerning the order book imbalance increases market makers' 
+daily return and end-of-day inventory. In addition, adjustment of the ask/bid spread according to market 
+volatility helps to increase return and decrease inventory. Combining these two strategies together can 
+reach the highest daily return. 
+5 EXPERIMENTS ON COMPETITION 
+In the following simulations, the percentage of HFTs (2% in previous experiments) is adjusted to see how 
+the total number of HFTs affect the performance of strategy. On the other hand, in past experiments, all 
+HFTs submit their orders in a random order, which means they have similar latencies. Considering 
+trading speed plays an important role in the order execution of market makers, we arrange different 
+latencies for HFTs. In this scenario HFTs submit their orders one after another in a fixed order, so a HFT 
+with lower latency submits its orders quicker and is likely to have higher order execution probabilities. 
+We discuss how HFTs' profits will be affected by increased competitors and decreased latencies. In 
+the experiments, all HFTs using the "Iast+im+v" strategy, but different HFTs have different order 
+submitting latencies. We adjust the number of HFTs, and run 200 simulations for each different HFT 
+percentage (0.5%, 1%, l.5%, ... 5%). The return differences among LFTs, normal HFTs and the fastest 
+HFT are illustrated in Figure 6. 
+Figure 6: Return in competition environment. 
+In Figure 6, the dash line shows the average return of HFTs. It decreases with the increase of HFTs 
+percentage and can be seen as the return of a normal HFT. The solid line, on the other hand, is calculated 
+as the difference between the average and the highest return (return of the HFT with the lowest latency). 
+This chart suggests that trading speed plays an important role in the performance of this market making 
+strategy. If a market maker is faster than others, he is likely to earn much more than the average. On the 
+contrary, when the number of market maker becomes larger, losing the competition of speed may bring 
+one zero or even negative return. 
+6 CONCLUSIONS 
+This paper focuses on comparing the performance of different market making strategies for high 
+frequency traders. We find one market making strategy which offering prices based on the latest trading 
+price, adjusting ask/bid spread according to market volatility, as well as adopting a trend-follow strategy 
+333 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:05:21 UTC from IEEE Xplore.  Restrictions apply.
+
+Xiong, Yamada, and Terano 
+driven by order imbalance, helps to earn more profits than others. In addition, simulation results show that 
+trading speed plays an important role in this strategy, especially when the number of HFTs increases. 
+REFERENCES 
+Brogaard, J. 2010. "High Frequency Trading and Its Impact on Market Quality." Northwestern University 
+Kellogg School of Management Working Paper, 66. 
+Brogaard, J., T. Hendershott, and R. Riordan. 2013. "High Frequency Trading and Price Discovery." 
+Carrion, A. 2013. "Very Fast Money: High-frequency Trading on the NASDAQ." Journal of Financial 
+Markets 16(4): 680-711. 
+Gueant, 0., C.-A. Lehalle, and J. Fernandez-Tapia. 2013. "Dealing with the Inventory Risk: A Solution to 
+the Market Making Problem." Mathematics and Financial Economics 7(4): 477-507. 
+Guilbaud, F., and H. Pham. 2013. "Optimal High-frequency Trading with Limit and Market 
+Orders." Quantitative Finance 13(1): 79-94. 
+Hagstr6mer, B., and L. Norden. 2013. "The Diversity of High-frequency Traders." Journal of Financial 
+Markets 16(4): 741-770. 
+Hendershott, T., and A. J. Menkveld. 2014. "Price Pressures." Journal of Financial Economics 114(3): 
+405-423. 
+Kendall, G., and Y. Suo 2004. "Learning with Imperfections-a Multi-agent Neural-genetic Trading System 
+with Differing Levels of Social Learning." Cybernetics and Intelligent Systems, 2004 IEEE 
+Conference on. Vol. 1. IEEE. 
+Leal, J., M. Napoletano, A. Roventini, and G. Fagiolo. 2014. "Rock Around the Clock: An Agent-based 
+Model of Low-and high-frequency Trading." Mauro and Roventini, Andrea and Fagiolo, Giorgio, 
+Rock Around the Clock: An Agent-Based Model of Low-and High-Frequency Trading Oanuary 31, 
+2014). 
+LeBaron, B., and R. Yamamoto. 2007. "Long-memory in an Order-driven Market." Physica A: Statistical 
+Mechanics and its Applications 383(1): 85-89. 
+Menkveld, A. J. 2013. "High Frequency Trading and the New Market Makers." Journal of Financial 
+Markets 16(4): 712-740. 
+Nevmyvaka, Y., K. Sycara, and D. Seppi. 2003. "Electronic Market Making: Initial Investigation." In 
+Proceedings of Third International Workshop on Computational Intelligence in Economics and 
+Finance. 
+Paddrik, M., R. Hayes, A. Todd, S. Yang, B. Scherer, and P. Beling. 2012. "An Agent Based Model of the 
+E-Mini S&P 5 00 Applied to Flash Crash Analysis." 2012 IEEE Conference on Computational 
+Intelligence for Financial Engineering & Economics (CIFEr). IEEE. 
+Raman, V., M. A. Robe, and P. K. Yadav. 2014. "Electronic Market Makers, Trader Anonymity and 
+Market Fragility." Trader Anonymity and Market Fragility (May 29,2014). 
+Securities and Exchange Commission. 2010. "Concept Release on Equity Market Structure." Federal 
+Register 75(13): 3594-3614. 
+Wah, E., and M. P. Wellman. 2015. "Welfare Effects of Market Making in Continuous Double 
+Auctions." Fourteenth International Conference on Autonomous Agents and Multi-Agent Systems. 
+Wang, C., T. Mizuta, and S. Yoshimura. 2013. "Investigating the Impact of Trading Frequencies of 
+Market Makers: A Multi-Agent Simulation Approach." SICE Journal of Control, Measurement, and 
+System Integration 6(3): 216-220. 
+AUTHOR BIOGRAPHIES 
+Yibing Xiong is a Ph.D. candidate of the Department of Computational Intelligence and System Science 
+at Tokyo Institute of Technology. His email address is ybxiong@trn.dis.titech.ac.jp. 
+334 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:05:21 UTC from IEEE Xplore.  Restrictions apply.
+
+Xiong, Yamada, and Terano 
+Takashi Yamada is an Assistant Professor of the Department of Computational Intelligence and System 
+Science at Tokyo Institute of Technology. His email address is tyamada@trn.dis.titech.ac.jp. 
+Takao Terano is a Professor of the Department of Computational Intelligence and System Science at 
+Tokyo Institute of Technology. He received his BA degree in 1976, M.A. degree in 1978, both from the 
+University of Tokyo, Japan, and had the Doctor of Engineering Degree in 1991 from Tokyo Institute of 
+Technology, Japan. His research interests include Genetic Algorithm-based machine learning, Case-based 
+reasoning, Analogical reasoning, Distributed Artificial Intelligence, Cooperative Agents, Computational 
+Organization Theory, and Knowledge System Development Methodology. His email address is 
+terano@dis.titech.ac.jp. 
+335 
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 19:05:21 UTC from IEEE Xplore.  Restrictions apply.

@@ -1,0 +1,911 @@
+1 Introduction
+The retail petrol market comprises a variety of different petrol retailers ranging from
+large multinationals to small independent outlets. Due to the commercial nature of the
+petrol market, there is little published information on strategies that retailers may
+employ . However, a recent study by Ning and Haining (2003) showed that changes in
+petrol prices at a local level are influenced by the location of competitors and the
+amount of custom. At a higher (national) level, influences such as taxation and crude
+oil prices become significant. All these factors interact to produce the price at the
+pump.
+Traditionally , researchers have employed empirical regression techniques to model
+the retail petrol market, focusing on the relationship between the petrol price and one
+or more variables, normally crude oil p rice (G aloetti et al, 2003; Reilly and Witt, 1998).
+However, this approach is incapable of modelling the numerous spatial and temporal
+influences found in the retail petrol market. An alternative method, a hybrid agent-
+based model, has been constructed (Heppenstall et al, 2005). This approach uses
+agents to model the decisions and strategies taken by individual petrol stations whilst
+a spatial interaction (SI) model is used to represent the effects of consumer behaviour
+and predict sales and station profit. This framework was successful, with initial results
+reported in Heppenstall et al (2006) supporting the use of this methodology for a
+dynamic, locally interacting system such as the retail petrol market.
+Within this paper, we examine the expert-led method used to select model param-
+eter values based on numerical experiments and real data analysis. A genetic algorithm
+(GA) is presented as an alternative and objective method for optimising model param-
+eters. The results of using the GA for optimising the model parameters are compared
+with the results of the first method and conclusions drawn about the validity of each
+approach.
+Genetic algorithm optimisation of an agent-based model
+for simulating a retail market
+Alison J Heppenstall, Andrew J Evans, Mark H Birkin
+School of Geography , University of Leeds, Leeds LS2 9JT, England;
+e-mail: a.j.heppenstall@leeds.ac.uk; geoaje@leeds.ac.uk; m.h.birkin@leeds.ac.uk
+Received 1 April 2005; in revised form 9 June 2006; published online 9 March 2007
+Environment and Planning B: Planning and Design 2007, volume 34, pages 1051 ^ 1070
+Abstract. Traditionally, researchers have used elaborate regression models to simulate the retail petrol
+market. Such models are limited in their ability to model individual behaviour and geographical
+influences. Heppenstall et al presented a novel agent-based framework for modelling individual petrol
+stations as agents and integrated important additional system behaviour through the use of estab-
+lished methodologies such as spatial interaction models. The parameters for this model were initially
+determined by the use of real data analysis and experimentation. This paper explores the param-
+eterisation and verification of the model through data analysis and by use of a genetic algorithm (GA).
+The results show that a GA can be used to produce not just an optimised match, but results that
+match those derived by expert analysis through rational exploration. This may suggest that despite
+the apparent nonlinear and complex nature of the system, there are a limited number of optimal
+or near optimal behaviours given its constraints, and that both user-driven and GA solutions converge
+on them.
+DOI:10.1068/b32068
+
+2 Agent-based modelling
+There is no universal definition of an agent (Franklin and Graesser, 1996), and with an
+ever-increasing list of agents appearing (Nwana, 1996) the most useful characterisation
+comes from Wooldridge and Jennings (1997):
+‘‘An agent is an encapsulated computer system that is situated in some environment
+and that is capable of flexible, autonomous action in that environment in order to
+meet its design objectives. ’’
+This approach is well suited to geographical applications where there is a discrete set of
+spatially distributed entities which interact with each other, and their environment.
+As alluded to in the introduction, the retail petrol price market exists within a complex
+network of subsystems, subsystem components, interactions, and organisational relation-
+ships. In simplistic terms, changes in petrol prices at a local level are influenced by the
+location of competitors and the amount of custom. At a higher/national level, influences
+such as taxation and crude oil prices become significant. All these factors interact to affect
+the final price.
+Agent-based models are a natural metaphor for complex systems such as the retail
+petrol market. As petrol stations are discrete entities with their own price setting strategies,
+it is easy for individual petrol stations to implement different price setting strategies to
+model, for example, the pricing policies of different multinationals (such as BP and Esso)
+or supermarket chains.
+2.1 Assigning rules
+Rules could be assigned to stations on the basis of the company running them,
+geographically , or simply given identically to all the stations. The rules in this
+model are based on industry knowledge and implemented after experimentation
+with differing parameters (parameters are listed in table 1). The interplay of different
+rule sets allows the stations to compete and implement behaviour with the aim of
+profit maximisation.
+Tab l e 1.Name, definition, and value of each parameter used within the model.
+Parameter Definition ‘Optimal’ value
+b Coefficient controlling the impact of distance on 0.0003
+consumers’ propensity to buy fuel at a petrol station
+l Coefficient controlling the impact of price on 0.7
+consumers’ propensity to buy fuel at a petrol station
+fixedCosts Fixed daily costs, eg, salaries £80
+costT oProduce The amount per litre that it costs the station to 66 p
+produce and sell the petrol
+changeInProfit The level of profit under which the station will not £40
+change its strategy
+Overprice The amount a retailer believes they can be more 5 p
+expensive than their neighbours without losing
+customers (cf, the actions of the SI model which
+determines whether this is actually true )
+Undercut The amount by which petrol stations can undercut 1 p
+competitors, eg, 1 p, 2 p
+Neighbourhood Radius around each petrol station within which it 5 km
+looks to compete with other stations’ prices
+1052 A J Heppenstall, A J Evans, M H Birkin
+
+The first set of rules that were derived for the petrol agents were reliant on the
+assumption that remaining competitively priced would result in profit maximisation.
+After assessing their own price and their neighbour’s price, the following rules were
+operated:
+1. If my profit is increasing then carry on with the current price-change strategy .
+2. If my profit is falling, either:
+(a) increase the price or
+(b) decrease the price.
+3. If my profit between the last two iterations has not changed much, then keep the
+price constant until the profit falls again.
+Initial experimentation detailed in Heppenstall et al (2005) showed that using these
+rules alone was ineffective at recreating the patterns and trends in the real data: the
+petrol agents were not competitive enough. Even though petrol consumption is rela-
+tively insensitive to price changes and consumers tend to buy petrol on the way to
+complete other tasks, the model still needs consumer choice to accurately reflect real
+profit-driven trends.
+2.2 Spatial interaction models
+A solution that would account for both consumer behaviour and a strong profit-based
+strategy within the agent model was the incorporation of a spatial interaction model
+and a travel network. Traditionally , SI models are used for ‘what-if?’ scenarios (Birkin
+et al, 2002); for example, what will happen to the sales of supermarket X if super-
+market Y locates nearby? Within this research, the SI model was used to calculate
+customer numbers and, hence, volume of sales information by assuming a constant,
+average, customer fuel requirement. This information is then used to calculate the
+amount of profit that is being made. Each petrol station implements profit-maximising
+strategies based on this information (see Heppenstall et al, 2005, for further details).
+The use of an SI model replaces the computationally difficult alternative of modelling
+millions of individual consumers.
+3 Model and data overview
+Within the model, individual petrol stations are created as agent-objects. The stations
+are located in geographical space. In this paper all the petrol stations in West Y orkshire
+were modelled. The p rice-setting behaviour of each station is governed by a predefined
+rule set that is directed at maximising profit levels. Customer behaviour is modelled
+using an SI model. In the SI model, the volume of petrol sold by a particular station
+to the people in a particular census ‘ward’ ( 10 000 people) depends exponentially
+onÿbd andÿlp where d is the distance between the station and the ward and p
+is the price of the petrol at the station. Parameters b and l therefore determine the
+sensitivity of consumers to distance and price.
+The parameters that formed the basis of the agent rules were decided upon after
+analysis of two separate sources of information; the real price data for petrol retailers
+with a known geography over a period of three months and published information on
+retailer behaviour (see table 1 for list and definition of parameters). The rules were
+formed on the basis of this information and experimentation. The real data consisted
+of daily petrol price readings taken throughout the months of July , August, and
+September 1999 for petrol stations within West, North, and South Y orkshire (hence-
+forth referred to as the Y orkshire region). Unleaded petrol prices were recorded at a
+range of stations from large multinationals to independent retailers. Analysis revealed
+price differences between individual stations and broad geographical areas, as well as
+the extent of the local competitive environment. Information from published sources
+Genetic algorithm optimisation of an agent-based model 1053
+
+(The Monopolies and Mergers Commission, 1990; Ning and Haining, 2003) and expert
+knowledge supplied details on profit margins and amounts or volumes of petrol sold in
+different locations such as rural, urban, and supermarket-controlled areas.
+4 Assigning parameter values
+4.1 b and k
+In the Y orkshire region, the average distance from a petrol station to its nearest
+neighbour is 1423 m. This is partly skewed by large rural distances. Within a neighbour-
+hood of this size each petrol station would actually have, on average, four neighbours.
+For b to exert an influence on the system, there needs to be significant competition
+between stations. T o enable this, 1000 m was added onto the average distance giving a
+value of 2400 m. This gives an average of seven stations within the neighbourhood.
+T aking this value, a consumer located 2400 m from the garage would be half as likely
+to buy petrol at the station as from an equivalently priced station situated adjacent to
+the consumer. T aking 2400 m as the distance at which sales drop by half produces a
+b value of 0.0003.
+Parameter l was calculated by using a combination of the average and maximum
+price change per day , derived from the real data. The mean absolute price change
+(calculated over those stations where the price altered) was 0.27 p per day , the maxi-
+mum price change was 2.6 p. However, only a small percentage of stations changed
+their prices by any amount greater than 1.0 p. On the basis of this, 1.0 p was chosen.
+Assuming a 1 p price rise leads to a halving in the sales, this tr anslates to a l value of
+0.7. As can be seen, in both the case of b and l, informed assumptions were utilised;
+however, detailed experimentation (Heppenstall et al, 2006) revealed that the model is
+relatively insensitive to both the values.
+4.2 fixedCosts and costT oProduce
+Initial experimentation concluded that station profit decreased with increasing
+fixedCosts and costT oProduceas one might expect. However, detailed data pertaining
+to a retailer’s profit are commercially sensitive and therefore not available within the
+public domain. The Monopolies and Mergers Commission’s (1990) report usefully
+highlighted that the profit margin is very tight due to the constraining factors of fuel
+tax and duty . From this we can assume that the costT oProduceparameter will be a
+higher proportion of the actual price than the fixedCosts parameter.
+One detailed breakdown of a station’s costs was published by The Monopolies and
+Mergers Commission (1990) report. Breaking down a price of 74.9 p per litre: 57 p
+accounts for the duty and tax, 13.9 p covers the cost of the product and the remaining
+4 p goes to the retailer. It can be assumed that the greater proportion of the 13.9 p
+covers the costT oProduce(minus tax) and the remainder per litre covers the fixedCosts.
+This is estimated at 13 p for costT oProduce and 0.9 p for fixedCosts. The total
+costT oProducein this example was 57 p  13 p  70 p (these are the variable costs).
+Given, on average,8 000 litres per day is sold from the average station (based on data
+from Catalist.com accessed 2003), the 0.9 p per litre that goes to fixedCosts gives
+an estimate for total fixedCosts of »80. However, petrol in the real price data was,
+on average, 4 p cheaper than that quoted by the Commission’s report, therefore the
+costT oProduceis taken as 66 p rather than 70 p. The fixedCosts remain at »80.
+4.3 changeInProfit
+Initial experimentation showed that the system was sensitive to variability in the
+changeInProfit level. V alues over »50 led rapidly to a steady solution, whilst values
+under »30 resulted in the system staying in flux, with prices at stations continually
+varying by several pence. The median value, »40, was chosen to ensure that the system
+1054 A J Heppenstall, A J Evans, M H Birkin
+
+ran for around thirty days (enough time for the system to operate the rules) before
+reaching equilibrium (matching the rate of real fluctuations).
+4.4 Neighbourhood
+The average distance between stations in the Y orkshire region was calculated at 1423 m;
+this equated to an average of four neighbours. However, to ensure that stations within
+rural areas have some neighbours to compete with, the Neighbourhood needed to be
+considerably larger. Esso promise to match any competitors’ price within 5 km/3 miles
+in their Price Watch Policy , and this is thought to be approximately true of all p rice-
+watching stations. A Neighbourhood of 5 km gave an average of eighteen neighbours,
+and initial experimentation showed this to produce realistic results.
+4.5 Undercut
+A small value for the Undercut parameter may result in the removal of the variations
+that the real price data show to occur; too large a value may result in the parameter
+having no effect as other controls swamp it. T o find a suitable value, the difference in
+the cheapest and second cheapest stations was calculated for each neighbourhood. For
+a5k m Neighbourhood, 157 of the neighbourhoods had an Undercut value of less than
+1 p. The standard deviation (an indicator of price variation) for the area was also
+calculated, the range of which was between 0.32 and 0.90. On the basis of these two
+sets of analyses, 1.0 p was selected as the Undercut value. This value was large enough
+to allow natural variations to occur, but not too large to be ineffectual.
+4.6 Overprice
+T o find a suitable Overprice value, the maximum price change within the real data was
+calculated and found to range between 2.0 and 4.6 p. T o prevent both unrealistically
+large price variations and the suppression of naturally occurring variations, Overprice
+was set to 5 p.
+5 Performance of parameters
+T o test the ability of the model to reproduce the patterns and trends within the real data,
+two series of experiments were run. In the first set, the model was initialised with all
+the real data prices for the Y orkshire region and run for a period of ten days (this was to
+allow comparison with real data over a similar period of time). After ten days, the mean
+price and standard deviation for all the stations were calculated (figure 1). The results
+in figure 1 show that the model is replicating the trends of the real data accurately .
+73.0
+72.5
+72.0
+71.5
+71.0
+70.5
+70.0
+69.5
+69.0
+Mean price (p)
+Model results
+Real data
+27/07 29/07 31/07 02/08 04/08 06/08
+Date
+Figure 1. Comparison of the mean price and standard deviation of the model results and real
+(1999) data.
+Genetic algorithm optimisation of an agent-based model 1055
+
+County boundary
+Y orkshire region
+Petrol station
+Price (p)
+74.89
+67 .90 25 12.5 0 25 km
+(a) Model data
+(b) Real data (27 July 1999)
+Figure 2. Comparison of (a) the model performance on the Y orkshire region with (b) the real
+data for 27 July 1999. The price surface is interpolated from the point station locations for ease of
+viewing.
+1056 A J Heppenstall, A J Evans, M H Birkin
+
+The model is slightly overpredicting prices compared with the real data, but the standard
+deviation indicates that the model is mirroring the price variations well.
+Real prices in rural areas were found to be higher than in urban areas (figure 2). T o
+test the ability of the model to reproduce these spatial differences, a second experiment
+was run. Each station within the Y orkshire region was given a starting price of 71 p,
+the parameter values in table 1, and the model run. Assessing the results in figure 2, it
+can be clearly seen that the model captures the main rural and urban trends within the
+Y orkshire region. The rural area of North Y orkshire is sustaining p rices on average 2 p
+higher than in the more urban areas of West and South Y orkshire. Within West and
+South Y orkshire, the intraurban variations have also been recreated: for example, Leeds,
+Huddersfield, Barnsley , and Sheffield have lower prices than those in their suburban
+surroundings. This corresponds with the patterns found in the real data.
+6 Further validation of parameters
+A further test of the suitability of these parameter values can be achieved by testing
+the ability of the model to make long-term predictions using the 1999 data. The SI
+component of the model calculates the profit made at each station; on the basis of
+this, strategy is determ ined. A test of how well the model is predicting these profit
+levels (and thus if the parameter values selected are giving accurate results) is to
+assess whether stations with low profit l evels were still operating in 2004. It is
+hypothesised that stations with low or neg ative profit levels are most likely to have
+been driven out of business. A survey of stations was taken in June 2004. This
+provided a list of stations that had closed since the original data were collected in
+1999 . These stations were overlaid on a profitability map gene rated by the model
+initialised with the real data from 27 July 1999 and using the parameter values
+presented in table 1.
+Of the forty-three stations surveyed, fourteen have closed since 1999 . Figure 3
+shows a strong correlation between sites that the model identified as not being profit-
+able and stations that have closed. A Wilcoxon rank-sum test was performed with the
+null hypothesis ‘‘there is no difference between the mean profits of stations that are
+open and closed’’ . The test gave a result of p 0:000812, showing that there is a
+smaller than 0.1% chance of the null hypothesis being true. The null hypothesis can
+therefore be rejected. As clearly evident in figure 3, there is a definite difference in the
+profit between stations that are open and closed.
+One of the possible factors that catalysed stations going out of business is the
+influence of supermarkets and their aggressive pricing strategies. As evident from
+figure 3, a high proportion of low-profit stations located near supermarkets have
+closed. The correlation between low profitability and out-of-business stations provides
+an alternative assessment of the performance of the model and the parameters that
+does not rely directly on the price data for validation. As well as suggesting that the
+profit-maximisation ethos of the rules is useful for predicting profit levels and prices,
+the results support the choice of the derived model parameters.
+However, despite the success of the model, the subjective manner in which param-
+eter values were assigned is open to criticism. Initial experimentations with the variables
+showed that the retail petrol market is characterised by nonlinear relationships with
+multiple local optima. This suggests that there are many different potential solutions,
+and experimenting with one parameter at a time may not result in an optimal set of
+parameters.
+There are a range of techniques available that can be used to find the global
+optima, ranging from conventional search techniques (for example, hill climbing
+and brute force searches), to artificial intelligence techniques (such as evolutionary
+Genetic algorithm optimisation of an agent-based model 1057
+
+algorithms and tabu searches). Conventional techniques are often incapable of optimising
+nonlinear, multimodal functions (see Pham and Karaboga, 2000, for a detailed discussion).
+In contrast, evolutionary algorithms can find the globally optimal solution in complex
+multidimensional space.
+7 Genetic algorithms
+GAs are a branch of evolutionary algorithms that are particularly useful for multi-
+dimensional optimisation problems where there are several variables to be optimised
+(Reeves and Rowe, 2003). Modelled on natural evolution, GAs use genetic operators
+(selection, recombination, and mutation) to manipulate individuals in a population
+over several generations to improve the model.
+In a GA, the properties of each individual are represented in an encoded form
+known as a chromosome (or genome), in our case, rule parameters are encoded as a
+series of numbers. Chromosomes are combined or mutated to breed new individuals,
+and the ‘fittest’ of these (that is, those creating the best model) pass to the next
+generation. Recombination (or crossover) of two chromosomes models the sexual
+reproduction occurring in nature. Here, an offspring’s chromosome is created by
+joining segments chosen alternately from each of two parents’ chromosomes which
+Motorway
+Ar o a d
+Closed
+Unsurveyed
+Profit (»)
+105 981
+53
+New supermarket
+Petrol station 2.5 1.25 0 2.5
+km
+Figure 3. Map showing the profitability of stations in Leeds using the models with data from
+1999 . Also shown for comparison are the status (open or closed) of the stations in 2004.
+1058 A J Heppenstall, A J Evans, M H Birkin
+
+are of fixed length. Selection is the process of choosing the chromosomes to be
+recombined. Mutation is the alteration of one or more parts of the chromosome with
+a random probability .
+There are several advantages to using GAs over traditional techniques for optimi-
+sation (Pham and Karaboga, 2000). One of the most significant is parallelism. GAs are
+capable of considering many points at once during the search process. This reduces the
+chance of converging to local optima in the solution space, that is, suboptimal solutions
+overall. During the search process, GAs use probabilistic rather than deterministic
+rules. This allows them to outperform conventional optimisation techniques on difficult,
+discontinuous, and multimodal functions (Reeves and Rowe, 2003). Additionally , GAs
+do not require derivative information or other auxiliary knowledge which may not be
+easily available; only the definition of ‘fitness’ and corresponding levels influence the
+directions of search.
+One of the strengths of using GAs is the ability to hybridise with other techniques.
+Examples can be found within the literature of GAs hybridised with neural networks
+(Harp and Samad, 1991; Whitley , 1988), fuzzy logic (See, 1999), and multiagent systems
+(Choi et al, 2004; Dosi et al, 1999; Wu et al, 2003).
+7.1 Operation of the GA
+The GA (and indeed the model in general), was built using the Java programming
+language. A flowchart illustrating the operation of the GA is given in figure 4.
+Using this method, each of the genes (parameters) presented in table 2 will be
+optimised within their ranges. During the operation of the GA, values are randomly
+selected from these ranges and assigned to each gene. Fitness was judged by calculation
+of the standardised root mean square error (SRMSE) between the real and model data
+(following recommendations by Knudsen and Fotheringham, 1986).
+One of the key factors in the success of a GA is finding the correct balance between
+the amount of exploration and exploitation required (Flake, 2001). Factors include the
+initial size of population and the methods used for selection, recombination, and
+mutation. A poor selection of control parameters can result in a corresponding poor
+performance in the GA.
+Several studies have concentrated on developing optimal parameter settings for GAs
+(see De Jong, 1975; Greffenstette, 1986; Schaffer et al, 1989). Each study presents a different
+set of optimal parameters; for example, suggested values for population size range between
+50 ^ 100 (De Jong, 1975), 20 ^ 30 (Schaffer et al, 1989), and 30 (Greffenstette, 1986). These
+values are obviously dependent on the problem under investigation. On the basis of
+recommendations within the literature, selection by ranking, intermediate recombina-
+tion, and a mutation rate of 1=n (n being the number of chromosomes) were chosen.
+Tab l e 2 .Range of allowed values assigned to each gene.
+Gene (parameter) Range of values
+b 0.000003 – 0.003
+l 0.001 – 1.5
+costT oProduce 60.0 p – 70.0 p
+fixedCosts 100 p – 10000.0 p
+changeInProfit 2000 p – 5000 p
+Undercut 0.1 p – 5.0 p
+Overprice 0.1 p – 5.0 p
+Neighbourhood 1000 m – 10 000 m
+Genetic algorithm optimisation of an agent-based model 1059
+
+In addition, a convergence factor (size of mutation at each generation) of 0.99 and a
+selection pressure (related to the probability of the fittest chromosome being selected) of
+two were chosen. This was explained in section 6.2.
+Start
+Write out the best
+solution.
+END.
+Rank the new generation
+according to its fitness.
+For each new chromosome,
+mutate numMutate variants.
+Calculate fitness and
+keep the best one.
+Select pairs of parents.
+Breed new chromosomes.
+Start the next generation.
+Copy numKeep best
+chromosomes.
+Write out the best
+solution so far.
+Create initial random
+chromosomes, calculate their
+fitness, and rank them.
+3 33 333 33
+Number of
+generations
+completed?
+3
+NO
+YES
+3
+3
+3
+Figure 4. Flowchart summarising the operation of the GA. The number of chromosomes kept at
+the end of each generation is denoted numKeep, and numMutate is the number of chromosomes
+mutated.
+1060 A J Heppenstall, A J Evans, M H Birkin
+
+7.2 Selection
+Holland (1975) commented that ‘‘the very essence of good GA design is retention of
+diversity’’ . Selection by ranking was chosen primarily because this technique gives any
+of the population the chance of becoming parents. The fitter the chromosomes, the
+more likely they are to be parents. The probability P of a chromosome being selected is
+linearly related to its ranking, k, (which is determined by its fitness), that is
+Pk 1
+N
+
+2ÿ S 2Sÿ 1kÿ 1
+Nÿ 1
+
+,( 1 )
+where N is the number of chromosomes, k is the position in the ranking of the
+chromosome ( k 1 is the least fit, k N is the most fit), and S is the selection
+pressure. The selection pressure is the probability of the best chromosome being
+selected compared with the average probability of a chromosome being selected. For
+the linear ranking used here S must be in the range [1, 2]. A value of 2 ensures the
+maximum chance of the fittest chromosomes being selected.
+7.3 Intermediate recombination
+In intermediate recombination, the variable values of the offspring are randomly chosen
+from between the values of the parents. This has the advantage of preventing ‘super
+genes’ from dominating the search space and thus producing a suboptimal solution.
+Therefore, in producing any generation, the best solutions from the previous generations
+are copied across and the rest of the population is generated from random recom-
+binations of the previous generations. For each gene X the value of the offspring, Xoff is
+Xoff  aX1  1ÿ aX2 , (2)
+where X1 and X2 are the gene (parameter) values of the parents and a is uniformly
+distributed in the range [ ÿd : 1 d ]. This means the offspring value for each gene is a
+linear combination of the two parent genes. A value of d 0 would ensure that the
+offspring value was somewhere between the two parent values. However, over time this
+results in a shrinkage of the range of values covered by the various chromosomes.
+A value of d 0:25 ensures (statistically) that the variable area of the offspring is
+the same as the variable area spanned by the variables of the parents.
+7.4 Mutation
+Adding mutations increases the gene’s search space. This potentially allows the fitness
+of the gene to be improved. Initially , the range of mutation values for each gene was
+specified, and the actual mutation was chosen uniformly from within this range. After
+each generation, the size of the range was decreased by a fixed factor to aid convergence
+on an optimal solution. At each generation, several different mutated versions of each
+chromosome were created and their fitness calculated (see below for details). Only the best
+mutation from each chromosome was kept. This prevents too rapid a loss of diversity
+within the population resulting from several similar genes becoming dominant.
+8 Model parameter variation
+A set of exploratory runs was undertaken to assess the impact of varying different
+GA-related parameters on the performance of the GA and to generate a benchmark
+set. T able 3 presents the values chosen on the basis of these.
+The GA was then run to derive the model parameters. T o ensure that the GA-
+related parameters did not skew the model parameters chosen, a series of GA runs
+were undertaken to generate the model parameters, each varying a single GA-related
+parameter (table 4). Each experiment was repeated at least five times to give an idea of
+the variability in the solution.
+Genetic algorithm optimisation of an agent-based model 1061
+
+Figure 5 shows each model parameter value as a function of the SRMSE. For each
+parameter there is a range of possible solutions that correspond to different local
+optima. In addition, each parameter value has a cluster of results situated around the
+lowest value of the SRMSE. This clustering around one particular value for each
+parameter suggests that there is indeed a global optimum for this problem. The
+number of points in the clusters also suggests that, provided an experiment with a
+given set of GA-related parameters is repeated 5 ^ 10 times, there is a high probability
+that a good approximation to this optimum will be found. In general, these clusters are
+not located near the edges of the allowed parameter range, suggesting that the specified
+ranges are wide enough so as not to interfere with the search.
+9 Comparison of parameter values
+T able 5 details the optimal parameters derived by modeller-driven experimentation and
+the optimal parameters suggested by the GA. The GA was run five times to give an
+indication of the spread of values produced; figure 6 shows the spread of values for
+each parameter as a function of the SRMSE.
+Tab l e 4 .Summary of the various experiments conducted with the genetic algorithm (GA). In each
+case, the default benchmark GA-related parameters (see table 3) are used except for the variation
+shown.
+Experiment Variation
+1 default (see values in table 3)
+2 200 chromosomes
+3 50 generations
+4 500 generations
+5 0 mutations
+6 3 mutations
+Tab l e 3.V alues of control parameter selected after benchmark runs.
+Control parameter Value
+Number of generations (runs) 100
+Number of chromosomes (rule sets) 100
+Number to keep between generations 1
+Number of mutations to generate 3
+Tab l e 5.Comparison of parameter values derived using modeller-driven experimentation and the
+genetic algorithm (GA).
+Parameter Modeller-derived GA value Standard deviation
+value (5 GA runs)
+b 0.0003 0.0002 2.04 6 10ÿ4
+l 0.7 0.4 0.176
+fixedCosts (£) 80.00 12.73 15.9
+costT oProduce(p) 66.00 65.75 2.27
+changeInProfit (p) 40.00 1.0 22.8
+Overprice (p) 5 4.4 0.73
+Undercut (p) 1 0.8 1.12
+Neighbourhood (km) 5.0 3.6 1.21
+1062 A J Heppenstall, A J Evans, M H Birkin
+
+The GA values for b and l were both reasonably close to the parameters derived
+by modeller-driven experimentation. As evident in figures 6(a) and (b), neither of
+these values produced definite clusters. This means that reasonable solutions can
+be produced from a wide range of values and do not greatly effect other variables.
+8
+6
+4
+2
+0
+100
+80
+60
+40
+20
+0
+50
+40
+30
+20
+10
+0
+5
+4
+3
+2
+1
+Maximum overprice (p) No change profit (£) Fixed cost (£) b (610ÿ4 )
+Distance scale ( 61000 m) Maximum undercut (p) Cost to produce (p) l
+0.8
+0.6
+0.4
+0.2
+0.0
+70
+68
+66
+64
+62
+60
+4
+3
+2
+1
+0
+9
+7
+5
+3
+1
+0.008 0.010 0.012 0.014 0.008 0.010 0.012 0.014
+(a) (b)
+(c) (d)
+(e) (f)
+(g) (h)
+Experiment 1 Experiment 2 Experiment 3 Experiment 4 Experiment 5 Experiment 6
+SRMSE SRMSE
+Figure 5. V ariation in model parameters plotted against standard root mean square error (SRMSE)
+for simulations with different genetic algorithm control parameters: (a) b,( b ) l,( c ) fixedCosts,
+(d) CostT oProduce,( e ) changeInProfit,( f ) Undercut, (g) Overprice,( h ) Neighbourhood. The various
+experiments are explained in table 4.
+Genetic algorithm optimisation of an agent-based model 1063
+
+The standard deviation (SD) values in table 5 also support this conclusion. The SD for
+b is the same size as the optimal value. For l the SD is smaller, but still 40% of the
+optimal value. The optimal values for b and l were converted into distance and p rice
+scales. These give scales of 3.5 km and 1.7 p over which the sales predicted by the SI
+model be reduced by a half.
+10
+8
+6
+4
+2
+0
+40
+30
+20
+10
+0
+50
+40
+30
+20
+10
+0
+5
+4
+3
+2
+1
+0
+0.008 0.01 0.012 0.014 0.008 0.01 0.012 0.014
+Default Default
+Default Default
+Default
+Default
+Default
+Default
+Maximum overprice (p) No change profit (£) Fixed cost (£) b (610ÿ4 )
+Distance scale ( 61000 m) Maximum undercut (p) Cost to produce (p) l
+0.8
+0.6
+0.4
+0.2
+0.0
+70
+68
+66
+64
+62
+3
+2
+1
+0
+10
+8
+6
+4
+2
+0
+SRMSE SRMSE
+(a) (b)
+(c) (d)
+(e) (f)
+(g) (h)
+Figure 6. Variation in model parameters plotted against root mean square error (SRMSE) for
+simulations with different genetic algorithm control parameterss: (a) b,( b ) l,( c ) fixedCosts,
+(d) CostT oProduce,( e ) changeInProfit,( f ) Undercut,( g ) Overprice,( h ) Neighbourhood.
+1064 A J Heppenstall, A J Evans, M H Birkin
+
+The GA gave the Neighbourhood parameter a slightly smaller value than the
+modeller-derived values. The values are also slightly more clustered than those for b
+and l, with an SD of 1.2 km and an optimal value of 3.6 km [figure 6(h)]. The
+Overprice parameter was well clustered and in good agreement with the modeller-
+derived value [figure 6(g)]. The clustering for the Undercut value [figure 6(h)] was also
+quite tightly clustered. The optimal value of 0.8 p is still close to the value of 1 p used
+in the values derived by the modeller. The optimal Undercut parameter is much smaller
+than the Overprice parameter.
+There is a large difference between the GA-predicted value (»1) and the modeller-
+derived value (»40) for the changeInProfit [figure 6(e)]. In experimentation with the
+modeller-derived parameters, the simulations were run for thirty days to achieve
+equilibrium. However, the GA only runs the model for ten days and therefore the
+long-term equilibrium is not important in determining the optimal changeInProfitvalue.
+For short-term model predictions, a smaller changeInProfit value provides a greater
+scope for stations to change their p rice in the model. There is also a very large SD
+(»22.80) for the parameter, indicating a large degree of uncertainty in the optimal
+value. The system modelled here is highly complex with many nonlinear processes
+contributing to price setting at each station. One of the interesting finds here was the
+control over the stability of the system that this parameter appeared to exert. This is an
+area for further research.
+The costT oProduce and fixedCosts parameters are closely linked (profit will
+decrease as a result of an increase in either or both of these parameters) and they
+will therefore be assessed together. The overall cost is a combination of these two
+values. The GA-optimal value for costT oProduce almost matched the mode ller-
+derived value. However, the GA values were not tightly clustered [figure 6(d)] with
+an SD of 2.27 p, again suggesting that a reasonable solution can be obtained from a
+range of values. The costT oProduce value is strongly related to the fixedCosts
+value. The GA-predicted value (»12.73) is considerably smaller than the value derived
+by the modeller (»80). This was one of the parameters that l ittle information was
+known about. However, in figure 6(c), the best solutions for the fixedCosts are not
+tightly clustered ö they span a »20 range. This suggests that this parameter does
+not have as great an effect on the overall solution. The fixedCosts parameter will
+affect the profit level the same way at all stations and so it will have less effect on the
+changes in profit (which control the pricing st rategy).
+In summary , the values derived on the basis of real data analysis and modeller
+experimentation provided a good set of parameter values for the model. The param-
+eters produced by the GA are not constrained to agree with the modeller-driven
+parameters, they are merely chosen to minimise the SRMSE of the model. It is
+reassuring that the parameters obtained by optimising the model using a GA are in
+close agreement with those obtained independently on the basis of features of the real
+petrol market. This suggests that the model is behaving in a realistic manner and that
+the assumptions made in deriving the parameter values using real data analysis and
+modeller experimentation were reasonable.
+10 Comparison of performances
+Identical simulations were run with the model using the modeller-driven and
+GA-optimised parameters. The results were examined using a combination of statis-
+tical and visual comparisons. Statistically , the difference between the real and model
+price at each petrol station was calculated over a period of ten days (27 July ^
+6 August). Assessment of the mean price over time [figure 7(a)] shows that the
+modeller-driven parameters, on average, perform better than the GA parameters.
+Genetic algorithm optimisation of an agent-based model 1065
+
+However, both solut ions overpredict the real data. On day 9 (5 August), the GA
+overpredicts by approximately 0.4 p (ie, the model is 0.4 p higher than the real
+data), whilst the modeller-derived parameters are only 0.1 p overpriced. H owever,
+on day 10 (6 August) the GA overprediction price has fallen to 0.05 p. This is due
+to a marked increase in price between 5 August and 6 August which results in the GA
+becoming closer to the real data at the end of the period than the modeller-driven
+parameters.
+Figure 7(b) shows the SRMSE of the different parameter values over time. The
+overall model performance for the GA and modeller-driven parameters are very
+similar over the first part of the ten-day period and also in close agreement with
+results assuming the prices remain constant at their values on 27 July (denoted by
+‘constant price’ on the graph). However, after 29 July the SRMSE of the GA solution
+decreases and remains lower than the nonoptimised parameters and the constant
+price data for the rest of the period. This indicates that the GA parameters are better
+at representing the real data than either of the other two sets of results. Due to its
+ability to search the parameter space effect ively, the GA has evolved an optimal set of
+parameters.
+However, a better test is to see whether the spatial variations within the real data
+are reproduced by the GA or the modeller-driven parameters. Figure 8 presents a
+comparison of the prices produced at the end of the experimental period with the
+modeller-driven and GA parameterised model both initialised with all the stations
+at 71 p.
+Figure 8(c) shows that the GA parameter values are recreating the rural ^ urban
+divide seen in the real data [figure 8(a)]. For example, the petrol stations within the
+predominantly rural area of North Y orkshire are sustaining higher prices than West or
+South Y orkshire. The main difference lies in the magnitude of the prices. On average,
+the prices produced by the GA are approximately 1 ^ 2 p lower than the real data. This
+probably reflects a mild disequilibrium in the real prices; for example, as the result of
+crude oil price changes.
+73
+72
+71
+70
+69
+Mean price (p)
+0.020
+0.015
+0.010
+0.005
+0
+Modeller parameters
+GA parameters
+Real data
+Modeller parameters
+GA parameters
+Constant price
+27/07 29/07 31/07 02/08 04/08 06/0 27/07 29/07 31/07 02/08 04/08 06/08
+SRMSE in price
+Date (1999) Date (1999)
+(a) Mean price (b) SRMSE
+Figure 7. Comparison of (a) the mean difference and (b) the standard root mean square error
+(SRMSE) over time between the real data, the model results using the modeller-driven param-
+eters, and the model results using the genetic algorithm (GA) parameters. In each case the model
+was initialised with the real data from 27 July . Standard deviations in the mean price are
+represented by vertical bars in (a).
+1066 A J Heppenstall, A J Evans, M H Birkin
+
+(a)
+(b)
+(c)
+County boundary
+Y orkshire region
+Petrol station
+Price (p)
+74.89
+67 .90
+40 20 0 40
+km
+Figure 8. (a) Real data for 27 July 1999. (b) and (c) Comparison of the model results for Y orkshire
+using (b) the modeller-derived parameters and (c) the optimal parameters from the genetic
+algorithm. In each run the stations were initialised with a constant price of 71 p.
+Genetic algorithm optimisation of an agent-based model 1067
+
+The solution produced by the GA parameter values has improved on the model
+by reproducing the lower prices surrounding Scarborough and Harrogate [figures 8(b)
+and (c)]. It has also successfully identified the lower priced areas (cities) within
+West and South Y orkshire and the area of higher prices between W akefield and
+Barnsley . There is evidence of variation within urban areas, although this is not as
+prominent as within the real data. Based on assessment of figure 7, the parameters
+optimised by the GA have improved the spatial distribution of prices compared with
+the modeller-led values.
+The ability of the model (using the GA parameter values) to predict profit in the long
+term was tested by repeating the experiment outlined in section 4. Figure 9 shows similar
+results to those reported in figure 3. Areas of low station profitability correspond to
+locations where stations are now closed. This relationship was again formalised by a
+Wilcoxon rank sum test with a result of p 0:000947. This means that there is a smaller
+than 0.1% chance of the null hypothesis ‘‘there is no difference between the mean profits of
+stations that are open and closed’’ being true.
+Motorway
+Ar o a d
+Closed
+Unsurveyed
+Profit (»)
+105 981
+53
+New supermarket
+Petrol station 2.5 1.25 0 2.5
+km
+Figure 9. Map showing the profitability of stations in Leeds using data from 1999 and the genetic
+algorithm parameter values. Also shown for comparison are the status (open or closed) of the
+stations in 2004.
+1068 A J Heppenstall, A J Evans, M H Birkin
+
+11 Conclusion
+An agent-based system to model retail petrol prices (Heppenstall et al, 2005) was run
+on the basis of rule sets constructed from simple parameters. The parameters and
+their values were decided upon on the basis of real data analysis and numerical
+experimentation. This paper explored two contrasting methodologies for model
+calibration.
+The model was tested with these parameter values and the results demonstrated
+that the main trends and patterns within the real data were being replicated, with the
+model only slightly overpredicting the prices within the real data. The ability of
+the model to predict long-term market trends was also tested by making predictions
+on the profitability of stations in 1999 and examining whether these same stations were
+trading in 2004. A strong correlation was found between stations predicted as having a
+low profit and those closed in 2004. This work provided further validation of the
+parameter values used independent of the price data and time scale used to calibrate
+and validate the model. The variation within the parameter results (figure 6) shows that
+there are potentially several sets of optimal calibration values that would produce good
+results within the model. The values chosen here were selected simply because they
+produced the best results statistically .
+The subjective manner in which the model parameters were obtained was discussed
+and a GA presented as an alternative and objective method for optimising model
+parameters. A comparison of the GA and modeller-driven parameters were found to
+be in close agreement with the GA making a minor improvement in the final p rice
+prediction though a day-to-day comparison shows little difference. This suggests that
+the arguments used to derive suitable parameter values were justified. The closeness
+of the results may suggest that, despite the apparent nonlinear and complex nature of
+the system, there are a limited number of optimal or near optimal parameter values
+given the model framework and the constraint to match real price data, and that both
+the modeller-driven and GA solutions converge on them. This may , in part, be reflected
+in the general stability of the real retail system, which, in the absence of external
+forcing, is not chaotic to the point of breaking down. In terms of reproducing spatial
+trends in pricing, the GA parameters outperformed the modeller-driven parameters.
+In addition, its success at predicting the long-term profitability of stations showed the
+parameters from the GA to be dependable.
+Deriving parameters on the basis of numerical experimentation and real data
+analysis has been shown to produce reasonable values and good agreement between
+the model and real data. However, the choice of these values is somewhat subjective.
+Use of a GA allows parameters in this nonlinear system to be obtained objectively .
+The success of this method suggests that it may be useful for other similar problems.
+Acknowledgements. The work reported within this paper was funded by the Economic and Social
+Research Council and GMap. All digitised boundary data are UK Crown and ED-Line Copyright.
+References
+Birkin M, Clarke G, Clarke M P , 2002 Retail Geography and Intelligent Network Planning (John
+Wiley , Chichester, Sussex)
+Choi H R, Kim H S, Park B J, 2004, ‘‘Multi-agent based integration scheduling system under
+supply chain management environment’’Lecture Notes in Computer Science number 3029
+249 ^ 263
+De Jong K A, 1975 An Analysis of the Behaviour of a Class of Genetic Adaptive Systems PhD thesis,
+University of Michigan, Ann Arbor, MI
+Dosi G, Marengo L, Bassanini A, Valente M, 1999, ‘‘Norms as emergent properties of adaptive
+learning’’Journal of Evoluti onary Economics 9(1) 5 ^ 26
+Flake G W , 2001The Computational Beauty of Nature: Computer Explorations of Fractals, Chaos,
+Complex Systems and Adaptation (MIT Press, Cambridge, MA)
+Genetic algorithm optimisation of an agent-based model 1069
+
+Franklin S, Graesser A (Eds), 1996, ‘‘Is it an agent, or just a program?’’ , inProceedings of the Third
+International Workshop on Agent Theories, Architectures and Languages Budapest, Hungary ,
+http://www.cs.memphis.edu/franklin/AgentProg.html
+Galoetti M, Lanza A, Manera M, 2003, ‘‘Rockets and feathers revisited: an international
+comparison on European gasoline markets’’Energy Economics 25 175 ^ 19 0
+Grefenstette J J, 1986, ‘‘Optimisation of control parameters for genetic algorithms’’IEEE
+Transactions on Systems Man and Cybernetics 16 122 ^ 128
+Harp S A, Samad T, 1991, ‘‘Genetic synthesis of neural network architecture’’ , inHandbook of
+Genetic Algorithms Ed. L Davis (V an Nostrand Reinhold, New Y ork) pp 203 ^ 221
+Heppenstall A J, Evans A J, Birkin M H, 2005, ‘‘ A hybrid multi-agent/spatial interaction model
+system for petrol price setting’’Transactions in GIS 9(1) 35 ^ 51
+Heppenstall A J, Evans A J, Birkin M H, 2006, ‘‘ Application of multi-agent systems to modelling a
+dynamic, locally interacting retail market’’Journal of Artificial Societies and Social Simulation
+9(3), http://jasss.soc.surrey.ac.uk/9/3/2.html
+Holland J (Ed. ), 1975Adaptation in Natural and Artificial Systems (MIT Press, Cambridge, MA)
+Knudsen D C, Fotheringham A S, 1986, ‘‘Matrix comparison, goodness-of-fit and spatial
+interaction modelling’’International Regional Science Review 10 127 ^ 147
+Ning X, Haining R, 2003, ‘‘Spatial pricing in interdependent markets: a case study of petrol
+retailing in Sheffield’’Environment and Planning A 35 2131 ^ 2159
+Nwana H S, 1996, ‘‘Software agents: an overview’’Knowledge Engineering Review 11 2 0 5^2 4 4
+Pham D T, Karaboga D, 2000 Intelligent Optimisation T echniques (Springer, London)
+Reeves C R, Rowe J E, 2003 Genetic Algorithms: Principles and Perspectives (Kluwer Academic,
+New Y ork)
+Reilly B, Witt R, 1998, ‘‘Petrol price asymmetries revisited’’Energy Economics 20 297 ^ 308
+Schaffer J D, Caruana R A, Eshelman L J, Das R, 1989, ‘‘Combinatorial optimisation by genetic
+algorithms’’ , inProceedings of the 3rd International Conference on Genetic Algorithms
+Ed. J D Schaffer (Morgan Kaufmann, San Mateo, CA) pages 51 ^ 60
+See L M, 1999 Geographical Applications of Fuzzy Logic and Fuzzy Hybrid T echniques PhD thesis,
+School of Geography , University of Leeds
+The Monopolies and Mergers Commission, 1990 The Supply of Petrol: A Report on the Supply in
+the United Kingdom of Petrol by Wholesalechapter 4, http://www.competition-commission.org.uk/
+rep pub/reports/1990/fulltext/265c4.pdf
+Whitley D, Kauth 1988, ‘‘GENITOR: a different genetic algorithm’’ , Department of Computer
+Science, Colorado State University , Fort Collins, CO
+Wooldridge M J, Jennings N R (Eds), 1997Intelligent Agents: Lecture Notes in Artificial Intelligence
+(Cambridge University Press, Cambridge)
+Wu C G, Liang Y C, Lee H P , 2003, ‘‘Study on optimisation of agent initial positions in land
+combat simulation’’Progress in Natural Science 14 257 ^ 261
+ß 2007 a Pion publication printed in Great Britain
+1070 A J Heppenstall, A J Evans, M H Birkin
+
+Conditions of use. This article may be downloaded from the E &P website for personal research
+by members of subscribing organisations. This PDF may not be placed on any website (or other
+online distribution system) without permission of the publisher.

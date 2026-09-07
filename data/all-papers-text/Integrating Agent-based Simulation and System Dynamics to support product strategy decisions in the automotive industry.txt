@@ -1,0 +1,693 @@
+Proceedings of the 2009 Winter Simulation Conference 
+M. D. Rossetti, R. R. Hill, B. Johansson, A. Dunkin and R. G. Ingalls, eds.  
+ 
+ 
+ 
+INTEGRATING AGENT-BASED SIMULATION AND SYSTEM DYNAMICS TO SUPPORT PRODUCT 
+STRATEGY DECISIONS IN THE AUTOMOTIVE INDUSTRY 
+ 
+ 
+Karsten Kieckhäfer Joachim Axmann Thomas Spengler 
+Grit Walther   
+   
+TU Braunschweig Volkswagen AG TU Braunschweig 
+Institute of Automotive Manage-
+ment and Industrial Production 
+Products Division,  
+Dept. of Process Development 
+Institute of Automotive Manage-
+ment and Industrial Production 
+Katharinenstraße 3 Mailbox 1256 Katharinenstraße 3 
+Braunschweig, 38106, GERMANY Wolfsburg, 38436, GERMANY Braunschweig, 38106, GERMANY 
+ 
+ 
+ 
+ABSTRACT 
+Especially in the European Union b oth, regulatory requirements regarding the CO2 emissions of new vehicles and the shor t-
+age of crude oil force car manufacturers to introduce alternative fuel and powertrain concepts. Due to high investments and 
+long development times as well as the parallel offer of conventional and alternative technologies, an appropriate product 
+strategy is required. Car manufacturer s have to decide, which powertrain to introduce at wh ich time in which vehicle class . 
+Hence, the aim of this paper is to develop a framework for the analysis of product strategies in the automotive industry with 
+special regard to alternative fuel and powertrain technologies. The framework integrates System Dynamics and Agent -based 
+Simulation in a simulation environ ment. On basis of this analysis recommendations can be deduced concerning the impl e-
+mentation of different product portfolios. 
+1 INTRODUCTION 
+Public discussions concerning the contribution of the t raffic sector on climate change  lead to ever stricter CO2 regulatory re-
+quirements in the automotive sector , especially in the European Union . Here, car manufacturers are required to ensure that 
+the average emissions of the new vehicle fleet are below a manufacturer specific target . If the average CO2 emissions exceed 
+the target, manufacturers have to pay high penalties. Furthermore, increasing fuel prices are expected due to future scarcity of 
+crude oil. Hence, car manufacturer s have to reduce CO2 emissions and fuel consumption of passenger cars. However, only 
+slight reductions of fuel consumption are possible for conventional passenger cars . Consequently, car manufactures  have to 
+develop and introduce alternative fuel and powertrain concepts, in order to comply with legal and customers requirements  in 
+the European Union and other regions worldwide.  
+High investments and long development times, as well as the parallel offer of conventional and alternative technologies 
+require an appropriate product strategy. Due to legal and customers requirements, in particular a strategy has to be developed, 
+which considers the offer of a great variety of vehicles, powertrains and fuels. Thus, active decisions about the arrangement 
+of different product portfolios including the consideration of substitution effects (on supply and demand) between powertrain  
+and fuel technologies, as well as between vehicle classes have to be taken . Thereby, the aim of the manufacturer is to achieve  
+required market and financial objectives considering regulatory and public requirements, in order to secure existence of bus i-
+ness.  
+Regarding to such product strategy decisions, p opular examples for missing market success in Germany are two passe n-
+ger cars of the Volkswagen Group. Introduced in the smallest vehicle class in 1997 respectively 1999 , both the Volkswagen 
+Lupo and the Audi A2 were offered as fuel economic cars. Based on different measures, such as light construction, start -stop-
+function and motor management, a special model of both vehicles has a fuel consumption of only 3 l/100 km. After a positive 
+initial response to the offered models, demand broke down, production was stopped and e. g. only 6.500 vehicles of the Audi 
+A2 3L were produced ( Figure 1). Nowadays, demand for the Audi A2 3L on the second -hand car market is twice as high as 
+supply and the price of a second -hand car is appro ximately 3.000 € higher than the list price. Furthermore, the then new and 
+neglected technologies are getting more and more integrated in current vehicles. Hence, it seems that the right technology 
+was introduced at the wrong point in time (PwC 2007, Flohr 2008). In order to counteract such economically inefficient strat-
+1433
+978-1-4244-5771-7/09/$26.00 ©2009 IEEE
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:09 UTC from IEEE Xplore.  Restrictions apply.
+
+Kieckhäfer, Walther, Axmann and Spengler 
+ 
+egies, a decision support is required, which can deal with the dynamic complex character of the challenge of the introduction 
+of alternative powertrain and fuel concepts. 
+ 
+175.000
+0
+10000
+20000
+30000
+40000
+50000
+60000
+70000
+1997 1998 1999 2000 2001 2002 2003 2004 2005 2006
+Vehicles per year
+Lupo
+A2
+Registration of new cars (Germany): VW Lupo und Audi A2
+Total vehicle
+production Audi A2
+Fraction Audi A2 3L
+(6.500)
+ 
+Figure 1: Market development VW Lupo, Audi A2 
+ 
+Against this background, the aim of this paper is the development of a framework for the analysis of product strategies in 
+the automotive industry with special regard to alternative fuel and powertrain technologies. T he framework has to allow the 
+simulation and analysis of different strategy options of a manufacturer, in order to assess portfolio decisions. To this end , a 
+detailed analysis of the socio -economic system is necessary. On basis of this analysis, requiremen ts regarding the develo p-
+ment of the framework will be derived.  Afterwards, the framework will be developed considering the interactions between 
+vehicle supply and demand, competitor behavior, supply of infrastructure , as well as  macro-economic and regulatory condi-
+tions. In order to comply with requirements derived by this framework , System Dynamics and Agent -based Simulation will 
+be integrated. 
+2 ANALYSIS OF THE AUTOMOTIVE MARKET 
+The automotive market is mainly characterized by the interaction of three actors: car manufacturers, customers, and legisla-
+ture. While legislature pursues public goals (e.g. reduction of emissions), both the manufacturers (e.g. maximization of profit) 
+and at the customers (e.g. economic mobility) pursue individual goals. Thereby, each of these actors has different options of 
+action, which are affected by the further groups of interests (Figure 2). 
+ 
+Legislature
+Objectives: 
+Reduction of 
+emissions, …
+Customer
+Objective: 
+Economic 
+mobility, …
+Manufacturer
+Objectives: 
+Maximization of 
+profit, …
+Legal measures concerning 
+vehicle offering
+Legal measures concerning 
+purchase behavior
+Purchase behavior
+Impact of legal 
+measures:
+Purchase behavior
+Vehicle offering
+Impact of legal 
+measures:
+Vehicle offering
+ 
+Figure 2: System automotive market 
+ 
+Legislature determines the basic conditions in the automotive market. By the employment of legal measures (e. g. incen-
+tives, subsidies, malus payments, taxes)  legislature tries to influence both , vehicles offered by the manufacturers and pu r-
+chase behavior of the customers. Thereby, decisions of measure depend on the expected reaction of the manufacturers respec-
+tively customers. Regarding the regulation on CO2 emissions from cars in the European Union the interaction between the 
+two stakeholders can be described as follows: The European, Japanese and Korean car manufacturers ’ associations commit-
+ted to reduce  the average CO2 emis sions from new passenger cars to 140 g CO2/km until 2008 or 2009. Since in 2004 the 
+average CO2 emissions of new passenger cars were still about 161 g CO2/km and considerable improvements were not e x-
+1434
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:09 UTC from IEEE Xplore.  Restrictions apply.
+
+Kieckhäfer, Walther, Axmann and Spengler 
+ 
+pected, the European Commission decided to revise their strategy proposed in 1995. For this reason, the European Commi s-
+sion is currently developing  a legislative framework focusing on mandatory measures. From 2012, manufacturers will be r e-
+quired to ensure that the average emis sions of the new vehicle fleet are below a manufacturer specific target, which will be 
+lowered gradually to 120 and/or 130 g CO2/km until 2018. At the same time, the European Commission forces the adaption 
+of a proposal for a directive on passenger car taxation, which aims at calculating the annual tax on motor vehicles on the basis 
+of CO2 emissions. Furthermore, an amending proposal for the directive relating to the availability of consumer information 
+on fuel economy and CO2 emissions in respect of the ma rketing of new pas senger cars is developed. Similar to the sector of 
+household appliances, in the future passenger cars are assigned to energy efficiency classes. This way, sales of more efficient 
+and environmentally friendly vehicles shall be increased (EU 2007, EU 2008). 
+According to this, legislature’s action forces car manufacturers to adapt the range of vehicles, in order to fulfill regul a-
+tory requirements. For this purpose, different options are available to car manufacturers. On the one hand, maintai ning the 
+present range of products while decreasing the fuel consumption of conventional gasoline and diesel engines is an option. On 
+the other hand, offering a higher number of vehicles in small classes (e.g. Volkwagen Fox, Smart, Toyota Aygo) or  the intro-
+duction of alternative powertrain and fuel concepts (e.g. hybrid, electric power train, biofuels) is conceivable  (PwC 2007) . 
+The choice on these options leads to  implications, e. g. with regard to forecast of  sales volumes, as well as allocation of re-
+search & development and production capacities.  
+Referring to the customer, legal measures might have an impact on the purchase behavior, if  influencing factors, which 
+are considered by the customer during a purchase decision, are affected and/or information about these factors is made avai l-
+able. Factors influencing the purchase decision are hygiene factors (e.  g. security and reliability), technical factors (e.  g. per-
+formance, acceleration, range, and fuel consumption), economic factors (e.  g. purchase price a nd running costs), as well as 
+emotional factors (e.  g. design and brand). In terms of the amending proposal for the directive relating to the availability of 
+consumer information on fuel economy and CO2 emissions, customers must receive information about the vehicle efficiency. 
+Hence, customers will  be able to monetarize the technical factor fuel consumption during their purchase decision. Also, the 
+annual tax on motor vehicles based on CO2 emissions is expected to increase the impact of fuel consumption on the purchase 
+decision. Thus, higher consumption comes along with a higher tax rate and higher running costs. Assuming constant values 
+of the further influencing factors (e.  g. performance, purchase price, and range) , sales of less fuel consuming passenger  cars 
+should be increased (Gärtner 2005, Lane 2005). 
+In order to reach their individual goals, customers and manufacturers interact directly in the automotive market. Due to 
+the fact that the automotive market in the European Union is getting more and more  a mature market, the market can be ch a-
+racterized as a buyers’ market.  Customers requirements are becoming very diverse and sophisticated while manufacturers 
+face high competition. For this reason, car manufacturers expand their model variety. On the one h and, they offer vehicles in 
+different vehicle classes. On the other hand, the number of vehicle variants offered in one vehicle class is increased (e.  g. VW 
+Golf, VW Golf Plus, VW Golf Variant) (Becker 2007, Schneider 2008). 
+The behavior of the different stakeholders in the automotive market is influenced by dynamic and uncertain  basic condi-
+tions. Especially basic macro-economic conditions like crude oil prices, income distribution or demographic change have an 
+impact (Becker 2007). Furthermore, the competition between transportation  modes (e.g. public passenger traffic), as well as 
+the supply of infrastructure respectively energy has to be considered (Struben and Sterman 2007). 
+To sum up, car manufacturers are facing the following challenges in the automotive market. Forced by custo mer and 
+regulatory requirements as well as changing basic macro -economic conditions, they have to develop an appropriate product 
+strategy, in order to achieve business goals. As mentioned above, different options are avail able for the manufacturers (Figure 
+3): maintaining the present range of vehicles while decreasing fuel consumption, changing the range of vehicles by increasing 
+the number of vehicles supplied in smaller classes, or changing the range of vehicles  by introducing alternative powertrain 
+and fuel concepts. Currently, a combination of these options occurs in practice . At short notice, manufacturers are improving 
+the fuel consumption of new passenger cars, while in the long run alternative powertrain and fuel con cepts will be applied.  
+To succeed with a strategy option, car manufacturers have to come to three major decisions. First, they have to decide 
+which powertrain and fuel concepts shall be offered respectively introduced at which time to match with regulator y require-
+ments. Here, especially dynamic relations with regard to the diffusion of new technologies have to be considered  (Bass 1969, 
+Milling 2002). Second, the offered vehicles have to match with customer requirements in terms of exhibiting the right vehi cle 
+characteristics (e. g. performance, range and price) at any time  (Train and Winston 2007) . Third, product interdependencies 
+on supply (e. g. complementary relations between different ve hicles and/or powertrains in  production) and demand (e. g. 
+substitution effects between different vehicles and/or powertrains) have to be taken into account. Hence, vehicle portfolio d e-
+cisions have to be carried out (Devinney and Stewart 1988) . Expanding model variety results in ever higher product and 
+process complexity and thus in increasing costs  (Becker 2007, Schneider 2008 ). Due to the fact that the forced introduction 
+of alternative powertrain and fuel concepts causes an acceleration of this process, limiting model variety during portfolio d e-
+cisions seems to be important in order to realize profit.  
+1435
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:09 UTC from IEEE Xplore.  Restrictions apply.
+
+Kieckhäfer, Walther, Axmann and Spengler 
+ 
+Car manufacturers’ options
+ Reduction of fuel consumption of conventional 
+technologies
+ Supply of smaller vehicles
+ Development and introduction of alternative powertrain
+and fuel technologies
+ Combination of the measures
+Legislature
+Objective: Reduction
+of CO2 Emissions
+Manufacturer
+Objective: Rate of return, market share, sales
+Requirement: Threshold for CO2 emissions
+Customer
+Requirement: Range, fuel consumption, …
+Incentive: Tax 
+reduction for fuel
+efficient cars
+Objective: Economic
+mobility
+Basic conditions: Development of the oil price, …  
+Figure 3: Car manufacturers’ options 
+ 
+Based on manufacturers’ decisions regarding the described challenges, further questions arise. For example research and 
+development budgets have to be allocated and advertising measures have to be implemented, in order to ensure both , the in-
+troduction of competitive products as well as awareness of customers (PwC 2007, Schneider 2008 ). To conclude, developing 
+product strategies in the automotive sector require s the consideration of many actors with different objectives and decision 
+rules, various interdependences and feedback loops between the influencing factors, several delays between cause and effect, 
+as well as uncertainties regarding the development of the basic conditions. Hence, the problem is characterized by dynamic 
+complexity (Sterman 2000). Due to this circumstance, results desired by the introduction of new passenger cars can fall short 
+off expectation. For example business goals and/or regulatory req uirements can be missed, because the offered technologies 
+are not accepted by the market, or the required infrastructure is missing. 
+3 REQUIREMENTS AND LITERATURE REVIEW 
+In order to develop appropriate product strategies,  the automotive market must be seen  as a dynamic interaction between v e-
+hicle supply and vehicle demand embedded in changing macro -economic and regulatory conditions. Special regard has to be 
+paid to competitor behavior and supply of infrastructure. Several requirements for an appropriate deci sion support concerning 
+the introduction of alternativ e powertrain and fuel concepts can be derived from this understanding. Both , an appropriate 
+modeling of the socio-economic system of the automotive market, as well as the analysis respectively evaluation of strategy 
+options of the car manufacturer must find consideration. This implies the consideration respectively modeling of 
+ 
+• the system elements as well as the individual actors in the market (e.g. different customer groups),  
+• quantified decision rules and existing feedbacks of the decisions on different aggregation levels (e. g. disaggregated 
+purchase decisions and aggregated decisions about the supply of infrastructure),  
+• uncertainties regarding the development of the basic conditions, 
+• interdependences between the vehicles and/or powertrain and fuel concepts, 
+• the development of different company objectives under uncertainty. 
+  
+Several models already exists for the analysis of  the market potential respectively the market development of alternati ve 
+powertrain and fuel concepts, mostly focusing on public and macro -economic questions. With regard to System Dynamics, 
+(Struben and Sterman 2007 ) model the interaction between supply of infrastructure and demand in the automotive market. 
+(Bosshardt et al. 2008; Walther et al. 2008) model basic regulatory conditions, in order to examine the effectiveness and eff i-
+ciency of regulatory measures . A first approach focusing on the description of manufacturer and consumer behavior, regar d-
+ing the introduction of alternative powertrain and fuel concepts is presented by (Wansart, Walther, and Spengler 2008) . Here, 
+the impact of different strategy options of a manufacturer on the compliance with regulatory emission requirements and on 
+company objectives are analyzed. Due to the fact that adjustment of the range of vehicles  takes place to fit with regulatory 
+requirements, reactive manufacturer behavior is presup posed. Active decisions about the arrangement of different product 
+portfolios including the consideration of substitution effects (on supply and demand) between powertrain and fuel technol o-
+1436
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:09 UTC from IEEE Xplore.  Restrictions apply.
+
+Kieckhäfer, Walther, Axmann and Spengler 
+ 
+gies, as well as between vehicle classes are largely neg lected. Most of the models consider the impact of changing basic m a-
+cro-economic conditions lik e increasing crude oil prices. In any case, the models are based on generic model structures r e-
+garding the description of diffusion processes, manufacturers’ behavior/reaction to changing market conditions, as well as th e 
+installed base and aging chains, which can be found amongst others in (Forrester 1961, Milling 2002, Sterman 2000). Besides 
+that (Größler 2007) introduced a System Dynamic Model to analyze price and product strategies.  To conclude, these models 
+fulfill several of the derived requirements, bu t there are two major points of criticism. First, consumer behavior is modeled 
+homogeneously, due to the fact that System Dynamics takes an aggregated view. Second until now, no portfolio decisions are 
+considered, which can also be attributed to the aggreg ation level. Modeling a complete product portfolio is at least very diff i-
+cult with System Dynamics. 
+ In order to take a disaggregated view and model individual decision rules, as well as a great number and diversity of v e-
+hicles, Multiagent Systems respecti vely Agent -based Simulation can be used. Here, the description and analysis of socio -
+economic systems is not based on feedback loops, but on the disaggregated interaction between the agents, as well as b e-
+tween the agents and their environment  (Rahmandad and Sterman 2008,  Schieritz and Milling 2008) . Different Agent-based 
+Simulation models have been introduced, which consider either the introduction of alternative powertrain and fuel technol o-
+gies or the analysis of consumer behavior. (Garcia 2007; Stephen and Sullivan 2004;  Sullivan et al. 2005)  use Agent-based 
+Simulation to describe the interaction between infrastructure and demand, as well as to model vehicle choice behavior. (Haan 
+et al. 2007) introduce an Agent-based model to analyze the impact of differe nt regulatory measures on purchase behavior. In 
+order to analyze individual purchase decisions, the model allows both , a distinction between several consumer groups as well 
+as the consideration of a detailed vehicle fleet.  Although it would be possible , portfolio decisions of the manufacturer are not 
+taken into account in these studies. Fur thermore, main elements as wells as cause and effect chains of the automotive market 
+are largely neglected. For this reason and because of the general potential to comple ment each other  (Schieritz and Milling 
+2008), an integration of Agent-Based Simulation and System Dynamics seems to be appropriate for the decision support. The 
+next section deals with this integration, in order to design the framework for the development of product strategies in the a u-
+tomotive sector.  
+4 FRAMEWORK 
+The framework for the development of product strategies in the automotive sector is designed as follows ( Figure 4): in con-
+trast to other analyses regarding the introduction of alternative powertrai n and fuel technologies, the framework focuses on 
+the car manufacturer. The product strategy, especially the defined vehicle portfolio of the manufacturer represents the start ing 
+point of the analysis (1). Based on the offered vehicle fleet, the interactio n between supply and demand is regarded on a di s-
+aggregated level (2). This interaction takes place considering the competitor behavior of different modes of transport and th e 
+supply of infrastructure  on an aggregated level . Furthermore, the success and failure of the product strategy is mainly infl u-
+enced by basic macro -economic and regulatory conditions, which are also taken into account in the framework, in order to 
+define different scenarios (3). The three main modules of the framework are discussed in  depth below.  
+ 
+Product
+strategy
+ 
+Figure 4: Framework product strategy in the automotive sector 
+1437
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:09 UTC from IEEE Xplore.  Restrictions apply.
+
+Kieckhäfer, Walther, Axmann and Spengler 
+ 
+(1) In order to define the vehicle portfolio regarding the introduction of alternative powertrain  and fuel concepts, vehicles 
+are classified on the basis of two characteristics: the class the vehicle belongs to and the powertrain, which is used. For t his 
+reason, decisions must be made, which powertrain and fuel concept to offer in which vehicle class (utilized and unutilized 
+combinations in Figure 5). Afterwards, the different vehicle characteristics (e. g. range, price, fuel consumption) have to be 
+configured for every combination of vehicle class and powertrain. This portfolio decision represents the  strategy option of the 
+car manufacturer, which will be defined exogenously as the system input, in order to evaluate different strategy options. 
+Since the product portfolio has to match with customer requirements at any given time, decisions must also be taken with re-
+gard to the time of introduction respectively end of supply of the different powertrains in the individual vehicle classes. Fu r-
+thermore vehicle characteristics have to be adapted over time (modified combinations in Figure 5). This adaption is based on 
+the dynamic developments of the automotive market and thus is considered endogenously in the framework.  
+ 
+Zeit
+Portfolio t1 Portfolio t2
+Unutilized
+combination
+Utilized
+combination
+Modified
+combination
+Characteristic
+(e. g. Range)
+Vehicle class
+Powertrain
+Characteristic
+(e. g. Range)
+Vehicle class
+Powertrain
+ 
+Figure 5: Definition of the portfolio 
+ 
+(2) The framework aims at defining the product portfolio in an Agent -based Simulation environment. This way, the defi-
+nition of the vehicle fleet can be made accurately in terms of the consideration of a great number and diversity of vehicles.  
+Furthermore, the segmentation of the population on the basis of socio -economic factors, which are relevant fo r the purchase 
+decision (e. g. gender, income, age), and preferences (e. g. preference for passenger cars with low fuel consumption) becomes 
+possible. Thus, purchase decision rules can be modeled individually and the interaction between car supply and demand c an 
+be considered on a disaggregated level. In the Agent -based model, the high degree of freedom  to model agents, as well as 
+their behavior and environment is used (Gilbert 2008, Jennings and Woolwridge 1998, Klügl 2001). 
+The customers are modeled as reactive agents. They take the purchase decision on basis of different information in terms 
+of an if -then rule. While the information can change during a simulation run, the predefined decision rules of the different 
+population segments remain constant. Thus, th e same agent is able to take different decisions at different points in time. For 
+example, although the influence of the factor fuel cost on the purchase decision is kept constant over time, different purcha se 
+decision can occur, due to the fact that fuel costs can change during a simulation run. In order to define the decision rules, 
+Discrete Choice Theory is used based on Random Utility Theory. It combines basic approaches of the economic consumer 
+theory with decision-theoretical aspects of the quantitati ve psychology, in order to model the probability of a purchase dec i-
+sion. The probability of choosing a certain passenger car is calculated on basis of utilities of the different vehicles, whic h are 
+considered by the customer. In turn, the utility is a weig hted function of the vehicle and customer characteristics. In order to 
+take uncertainty into account, a stochastic random variable is used, which comprises unobserved product and customer ch a-
+racteristics as well as measurement errors (Bierlaire 1998, Train 2003). The combination of Agent-based Simulation and Dis-
+crete Choice Theory allows modeling the purchase decision close to reality, since the vehicle selection takes place individua l-
+ly and in consideration of uncertainty (Haan et al. 2007). 
+(3) In order t o model the basic market structure accurately, the Agent -Based model is embedded in a System Dynamics 
+simulation environment. Thus, the most important system elements and decision rules (besides the individual purchase dec i-
+sions), as well as major cause an d effect relations, feedback structures and delays, can be considered on an aggregated level. 
+Here, existing m odel structures, which describe  generic relations in the automotive market  are used . For this reason, the 
+1438
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:09 UTC from IEEE Xplore.  Restrictions apply.
+
+Kieckhäfer, Walther, Axmann and Spengler 
+ 
+framework aims at implementing a modular system dynamics model, in order to integrate several modules. The generic stru c-
+tures include amongst others the adjustment of production capacities and infrastructure on basis of current demand. For e x-
+ample adjustment of capacities happens not immediately, due to long-range planning horizon in the automotive industry. This 
+delays could lead to an under- respectively over-utilization of production, which possesses again influence on production cost 
+and thus on vehicle price and demand. Additionally, the Sys tem Dynamics model allows the evaluation of different strategy 
+options considering different scenarios. On the one hand, the definition of different basic macro -economic and regulatory 
+conditions becomes possible by the use of exogenous time series (e.  g. crude oil price forecasts) and constants (e.  g. emis-
+sions thresholds). On the other hand, several objectives of the car manufacturer (e. g. vehicle sales and market share in dif fer-
+ent vehicle classes) can be taken into account. 
+Thus, the framework provides  the integration of a continuous and deterministic System Dynamics model with a discrete 
+and probabilistic Agent-based model. Furthermore, two different aggregation levels are taken into account, in order to model 
+the socio-economic system automotive marke t appropriate for the evaluation. The linkage of the two models takes place by 
+the exchange of information. On the one hand, global information of the continuous simulation model (System Dynamics) 
+affects individual, discrete decisions in the Agent -based model. For example aggregated production cost information can be 
+used to calculate different vehicle prices ( Figure 6). Furthermore, disaggregated decision influencing factors like fuel costs 
+can be calculated on basis of global (e.  g. fuel price and kilometers travelled) and detailed (e. g. fuel consumption of a specif-
+ic passenger car) information.  On the other hand, accumulated effects of the individual agent decisions again have influence 
+on system behavior of the System Dynamics model. For example, the d ecision rule for the supply of infrastructure for a sp e-
+cific powertrain can be modeled as a function of the installed base of this powertrain resulting from individual purchase dec i-
+sions. This course of action allows the consideration of product independen cies. For example, learning effects in production 
+can be implemented in the System Dynamics model on basis of complementary relations, regarding the accumulated sales of 
+a specific powertrain in different vehicle classes. Also, it is possible to identify s ubstitution patterns between vehicles by 
+changing the range of vehicles, vehicle characteristics, or the basic conditions. 
+ 
+VehiclepopulationVehicleoffering
+System Dynamics model
+Agent model
+Definition of basic conditions 
+(e. g. oil price development)
+Definition of 
+vehicle offering:
+Combination of 
+vehicle class 
+and powertrain
+Exchange of vehicle characteristic
+(e. g. production costs)
+Exchange of decision influencing factor 
+(e. g. fuel price)
+Exchange of vehicle population
+(e. g. number of powertrains)
+Analysis of objectives 
+(e. g. rate of return)
+Modules
+Infrastructure
+Market demand
+Production
+…
+Action
+Characteristics: Income, age
+Decision Rule:
+Discrete Choice model
+Perception
+Agent
+Action
+Characteristics: Income, age
+Decision Rule:
+Discrete Choice model
+Perception
+Agent
+Action
+Characteristics: Income, age
+Decision Rule:
+Discrete Choice model
+Perception
+Agent
+Action
+Characteristics: Income, age
+Decision Rule:
+Discrete Choice model
+Perception
+Agent
+Price
+Power
+ 
+Figure 6: Method integration 
+5 EXAMPLE OF METHOD INTEGRATION 
+The following example is used to illustrate the integration of Agent -based Simulation and System Dynamics. We assume a 
+car manufacturer, who offers vehicles with two different powertrains ( i = ICE: Internal Combustion Engine , EPT: Electric 
+Powertrain) in two different vehicle classes (j = Small, Large). The vehicles are descr ibed by two characteristics (k = Price, 
+Range). Furthermore, two different population segments respectively agent groups (n= Rich, Poor) are defined, which are dif-
+1439
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:09 UTC from IEEE Xplore.  Restrictions apply.
+
+Kieckhäfer, Walther, Axmann and Spengler 
+ 
+ferentiated by the characteristic income. Customers respectively agents of the different segm ents purchase the offered v e-
+hicles in the Agent-based Simulation model. On basis of the purchase decisions,  improvements in price and range of a certain 
+powertrain are estimated in the System Dynamics model. To this end, the following notation is used: 
+ 
+)(tUijn   utility derived by a consumer of population segment n from choosing vehicle ij at time t 
+nkβ   taste of a consumer of population segment n for the vehicle characteristic k 
+)(txijk   value of vehicle characteristic k of vehicle ij at time t 
+ijnε   random term capturing the uncertainty 
+)(tPijn   probability that a consumer of population segment n chooses vehicle ij at time t 
+τnD   discrete demand in segment n and period τ 
+τijnS   number of sales of vehicle ij in population segment n in period τ 
+τiS    number of sales of powertrain i over all vehicle classes and population segments in period τ  
+)(tASi
+  
+accumulated number of sales of powertrain i at time t 
+)(tCi
+  
+cost of powertrain i at time t 
+iλ    elasticity of unit costs of powertrain i 
+ 
+With regard to Discrete Choice Theory, the utility derived by a consumer of population segment n from choosing vehicle 
+ij at time t is (Ben-Akiva and Bierlaire 2003) 
+ 
+njitxtU
+k
+ijnijknkijn ,,)()( ∀+⋅=∑ εβ , 
+where the deterministic part of the utility is a linear in the parameters function , and ijnε is a random term capturing the uncer-
+tainty on basis of a probability distribution function . Thus, the utility derived by a rich consumer from ch oosing a small ve-
+hicle with electric powertrain at time t is given by  
+ 
+RichSmallEPTRangeSmallEPTRangeRichiceSmallEPTiceRichRichSmallEPT txtxtU ,,,,,Pr,,Pr,,, )()()( εββ +⋅+⋅= . 
+ 
+Using a Multinomial Logit Model (Ben-Akiva and Bierlaire 2003 , Bierlaire 1998), the probability that a consumer of  
+population segment n chooses vehicle ij at time t is  
+ 
+nji
+e
+etP
+i j
+tx
+tx
+ijn
+k
+ijknk
+k
+ijknk
+,,)( )(
+)(
+∀=
+∑∑
+∑ ⋅
+∑ ⋅
+β
+β
+. 
+ 
+On basis of the purchase probability, which is calculated continuously, the customers respectively agents in the Agent -based 
+Simulation model take their purchase decision at discrete points in time. To this end, a transition from the continuous time t 
+to discrete time periods τ takes place. Assuming a given discrete demand τnD  in segment n and period τ, the number of sales 
+of vehicle ij in population segment n in period τ is 
+ 
+ττττ ,,,))(,( njitPDfS ijnnijn ∀== . 
+ 
+Thus, the number of sales of powertrain i over all vehicle classes and population segments in period τ is 
+ 
+ττττ ,))(,( itPDfS
+j n
+ijnni ∀==∑∑ . 
+ 
+1440
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:09 UTC from IEEE Xplore.  Restrictions apply.
+
+Kieckhäfer, Walther, Axmann and Spengler 
+ 
+For example the number of sales of electric powertrains in period τ is 
+ 
+))(,())(,(
+))(,()(,(
+,arg,,,,,
+,arg,,,,,,
+ττ
+ττ
+ττ
+τττ
+=+=
++=+==
+tPDftPDf
+tPDftPDfS
+RicheLEPTRichRichSmallEPTRich
+PooreLEPTPoorPoorSmallEPTPoorEPT
+    τ∀ . 
+ 
+On basis of variable τiS , cost reduction and range improvement due to learning effects in production can be implemented 
+in the System Dynamics model. To this end, the number of sales of powertrain i has to be accumulated continuously over 
+time in the System Dynamics model 
+ 
+iStAS
+t
+ii ∀= ∫
+=τ
+τ)( . 
+ 
+Using the experience curve  concept (Montgomery and Day 1985,  Sterman 2000), cost of powertrain i at time t is given 
+by 
+ 
+ittAS
+tASttCtC
+i
+i
+i
+ii ∀
+
+
+
+
+
+=⋅==
+−λ
+)(
+)()()(
+0
+0 . 
+ 
+Cost reduction on basis of the experience curve  can be passed into purchase price. In a similar manner, increase in range of a 
+certain powertrain  can be calculated. Again, i mprovements in price and range lead to a changed purchase behavior in the 
+Agent-based Simulation model. 
+6 CONCLUSION 
+The introduced framework allows the development of product strategies in the automotive industry with special reg ard to al-
+ternative fuel and powertrain technologies. To this end, the framework provides a detailed and appropriate description of the  
+socio-economic and dynamic complex system automotive market. This is achieved by the integration of System Dynamics 
+and Agent-based Simulation in a modular simulation environment and the use of different aggregation levels. The usage of a 
+simulation environment makes the analysis of different strategy options respectively vehicle portfolios possible. Several 
+company objectives as well as uncertainties about the development of basic conditions can be considered. This way, reco m-
+mendation can be derived regarding the introduction of alternative powertrain and fuel concepts.  
+In the next steps the introduced concept is to be mode led and implemented in a simulation environment. Suitable valid a-
+tion methods are to be selected and utilized. In order to evaluate the different strategy options, a procedure of strategy fo rmu-
+lation and an evaluation procedure for the several objectives ar e to be considered. With regard to the evaluation of the obje c-
+tives, recourse to portfolio theory seems promising. For example correlations between sales development of different vehicles  
+or powertrains could be used as a risk measure for defined portfolios. 
+REFERENCES 
+Bass, F.M. 1969. A new product growth for model consumer durables. Management Science 15: 215-227. 
+Becker, H. 2007. Auf Crashkurs: Automobilindustrie im globalen Verdrängungswettbewerb. 2nd ed. Berlin: Springer. 
+Ben-Akiva, M., M. Bierlaire. 2003. Discrete choice methods with applications to departure time and route choice. In Hand-
+book of transportation science, 2nd ed., ed. R. W. Hall, 7-37. Norwell: Kluwer Academic Publishing. 
+Bierlaire, M. 1998. Discrete choice models. In Operations research and decision aid methodologies in traffic and transporta-
+tion management, ed. M. Labbé et al., 203-227. Berlin: Springer. 
+Bosshardt M., S. Ulli-Beer, F. Gassmann, A. Wokaun. 2008. The effect of multi -incentive policies on the competition of dr i-
+vetrain technologies. In Proceedings of the 2008 International System Dynamics Conference , ed. B. C. Dangerfield. Al-
+bany: System Dynamics Society. 
+Devinney T. M.,  D. W. Stewart. 1988. Rethinking the product portfolio: a generalized i nvestment model. In Management 
+Science 34: 1080-1095. 
+1441
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:09 UTC from IEEE Xplore.  Restrictions apply.
+
+Kieckhäfer, Walther, Axmann and Spengler 
+ 
+European Union. 2007 . Results of the review of the Community Strategy to reduce CO2 emissions from passenger cars and 
+light-commercial vehicles  (COM(2007) 19 final ). Available via  <http://eur-lex.europa.eu/ 
+LexUriServ/LexUriServ.do?uri=COM:2007:0019:FIN:EN:PDF> [accessed March 22, 2009]. 
+European Union. 2008. European Parliament legislative resolution of 17 December 2008 on the proposal for a regulation of 
+the European Parliament and of the Council setting emission performance standards for new passenger cars as part of the 
+Community's integrated approach to reduce CO2 emissions from ligh t-duty vehicles (COM(2007)0856, C6 -0022/2008, 
+2007/0297(COD)). Available via  <http://www.europarl.europa.eu/sides/getDoc.do?pubRef=-
+//EP//TEXT+TA+P6-TA-2008-0614+0+DOC+XML+V0//EN&language=EN#top> [accessed March 22, 
+2009].  
+Flohr, U. 2008 . Audi A2: Zu viel Vorsprung. Avaiable via  <http://www.spiegel.de/ 
+auto/aktuell/0,1518,546187,00.html> [accessed March 22, 2009]. 
+Forrester, J. W. 1961. Industrial Dynamics. Cambridge: MIT Press. 
+Garcia, R. 2007. Modeling vehicle choice behavior using agent -based approach. Second Workshop on agent-based models of 
+market dynamics and consumer behaviour  2007. Groningen: European Social Simulation Association and University of 
+Groningen. Available via <http://www.essa.eu.org/Special%20Interest%20Groups/Second 
+WorkshopOnMarketDynamics2007/Garcia.pdf> [accessed March 22, 2009]. 
+Gärtner, A. 2005. Study on the Effectiveness of Directive 1999/94/EC  Relating to the Availability of Consumer Information 
+on Fuel Economy and CO2  Emissions in Respect of the Marketing of N ew Passenger Cars.  Final Report, ADAC, Mün-
+chen. 
+Gilbert, N. 2008. Agent-based Models. Los Angeles: Sage Publications. 
+Größler, A., T. Löpsinger, M. Stotz, H. Wörner. 2007. Analyzing price and product strategies with a comprehensive system 
+dynamics model – A case study from the capital goods industry. In Journal of Business Research 61: 1136-1142. 
+Haan, P. de,  M. G. Mueller, A. Peters, A.  Hauser. 2007. Lenkungsabgaben zur Senkung des CO 2-Ausstosses beim 
+Neuwagenkauf: Hintergrund, Mechanismen, Prognosen. Schlussbericht, Programm Energiewirtschaftliche Grundlagen, 
+Bundesamt für Energie, Bern.  
+Jennings, N. R., M. J. Woolwridge. 1998. Agent technology: foundations, applications, and markets. Berlin: Springer. 
+Klügl, F. 2001. Multiagentensimulation: Konzepte, Werkzeuge, Anwendungen. München: Addison-Wesley. 
+Lane, B. 2005 . Car buyer research report : consumer attitudes to low carbon  and fuel-efficient passenger cars . Final Report, 
+Ecolane Transport Consultancy, Bristol.  
+Milling, P. M. 2002. Understanding and managing innovation processes. In System Dynamics Review 18: 73-86. 
+Montgomery, D. B., G. S. Day. 1985. Experience curves: evidence, empirical issues, and applications. In Strategic marketing 
+and management, ed. H. Thomas, D. Gardner, 213-238. Chichester: John Wiley & Sons. 
+PwC. 2007 . The automotive industry  and climate change : Framework and dynamics of the CO 2 (r)evolution. Final report, 
+PricewaterhouseCoopers, Stuttgart. 
+Rahmandad, H., J. Sterman. 2008. Heterogeneity and network structure in the dynamics of diffusion: comparing agent -based 
+and differential equation models. In Management Science 54: 998-1014. 
+Schieritz, N., P. M.  Milling 2008. Agents first! Using agent -based simulation to i dentify and quantify m acro Structures. In 
+Complex decision making: theory and practice , ed. H. Quadrat-Ullah, J. M.  Spector, P. E. Davidsen, 139-152. Berlin: 
+Springer. 
+Schneider, A. 2008. Die strategische Planung des Produktportfolios bei Automobilherstellern: Konzeption eines Instruments 
+zur Bewertung des Cycle-Plans. Baden-Baden: Nomos. 
+Sterman, J. 2000. Business dynamics: systems thinking and modeling for a complex world. Boston: Irwin McGraw-Hill. 
+Stephen, C., J. L. Sullivan. 2004. An agent-based hydrogen vehicle/infrastructure m odel. In Proceedings of the Congress on 
+Evolutionary Computation 2004, Vol. 2,1774-1779.  Piscataway: IEEE Service Center. 
+Struben, J. R., J. Sterman. 2007. Transition Challenges for Alternative Fuel Vehicle and  Transportation Systems. MIT Sloan 
+Research Paper No. 4587 -06. Available via  
+<http://papers.ssrn.com/sol3/papers.cfm?abstract_id=881800> [accessed March 22, 2009]. 
+Sullivan J. L., C. Stephen, B. Goodman, M. Everson. 2005. Market penetration of more sustainable vehicles: the HEC case. 
+In Proceedings of the Agent 2005 Conference on Generative Social Processes, Models, and Mechanisms , ed. C. M. 
+Macal, M. J. North, D. Sallach, 295-306. Chicago: Argonne National Laboratory and the University of Chicago. 
+Train, K. E. 2003. Discrete Choice Methods with Simulation. Cambridge: Cambridge University Press. 
+Train, K. E., C. Winston. 2007. Vehicle choice behavior and the declining market share of  US automakers. In  International 
+Economic Review 48: 1469-1496. 
+1442
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:09 UTC from IEEE Xplore.  Restrictions apply.
+
+Kieckhäfer, Walther, Axmann and Spengler 
+ 
+Walther, G., G. Meyer, T. S. Spengler, J. Wansart.  2008. Regulatory impact assessment for the transportation s ector – case 
+study Germany. In Proceedings of the 2008 International System Dynamics Conference , ed. B. C. Dangerfield.  Albany: 
+System Dynamics Society. 
+Wansart J., G. Walther, T. S. Spengler. 2008. Limiting motor vehicles’ CO2 emissions – a manufacturer’s challenge In Pro-
+ceedings of the 2008 International System Dynamics Conference , ed. B. C. Dangerfield. Albany: System D ynamics So-
+ciety. 
+ 
+AUTHOR BIOGRAPHIES 
+KARSTEN KIECKHÄFER is research and teaching assistant  at the Institute of Automotive Management and Industrial 
+Production (AIP). His main fields of research are modeling and simulation of dynamic systems, and model -/simulation-based 
+product strategy development in the automotive industry. His email is <k.kieckhaefer@tu-bs.de>. 
+ 
+GRIT WALTHER is postdoctoral research fellow at the  Institute of Automotive Management and Industrial Production 
+(AIP) at Technische Universtität Braunschweig. Her main fields of research interests are sustainable supply chain manag e-
+ment, eco -efficient production and logistics, and modeling and simulation of sustain able systems.  Her email is  
+<g.walther@tu-bs.de>. 
+ 
+JOACHIM AXMANN is head of the department Process Development at the Volkswagen AG and applied professor at the 
+Technische Universtität Braunschweig. His main fields of research interests are evolution, system and neuro bionics as well 
+as modeling, simulation and optimization of t echnical and economical systems . His email address is <j.axmann@tu-
+bs.de>. 
+ 
+THOMAS S. SPENGLER is full professor at the Institute  of Automotive Management and Industrial Production (AIP) at 
+Technische Universtität Braunschweig.  His main fields of research are production planning and control, modeling and simu-
+lation of production systems, material flow management, and (closed -loop) supply-chain management. He is vice president of 
+the Technische Universtität Braunschweig  for research and young scientists and board member of the Automotive Research 
+Centre Niedersachsen. His email address is <t.spengler@tu-bs.de>. 
+1443
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:09 UTC from IEEE Xplore.  Restrictions apply.

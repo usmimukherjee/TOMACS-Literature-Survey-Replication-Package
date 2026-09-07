@@ -1,0 +1,1112 @@
+Journal of Economic Dynamics & Control 156 (2023) 104753
+Available online 4 October 2023
+0165-1889/© 2023 Elsevier B.V. All rights reserved.
+Contentslistsavailableat ScienceDirect
+Journal of Economic Dynamics and Control
+journal homepage: www.elsevier.com/locate/jedc
+Taming the housing roller coaster: The impact of macroprudential 
+policy on the house price cycle ✩
+AdrianCarro a,b,∗
+a Financial Stability and Macroprudential Policy Department, Banco de España, Madrid, Spain
+b Institute for New Economic Thinking at the Oxford Martin School, University of Oxford, Oxford, UK
+A R T I C L E I N F O A B S T R A C T
+JEL classiﬁcation:
+D1
+D31
+E58
+G51
+R21
+R31
+Keywords:
+Agent-based modelling
+Housing market
+Macroprudential policy
+Borrower-based measures
+Buy-to-let sector
+Employing an agent-based model of the Spanish housing market, this paper explores the main 
+drivers behind the large amplitude of the Spanish house price cycle—as compared to most other 
+European countries—, as well as the scope for macroprudential policy to reduce this amplitude. 
+First, we exploit the availability of a previous calibration to the UK, characterised by a smaller 
+house price cycle, to show the prominent role played by the distributions of various mortgage 
+risk metrics: loan-to-value, loan-to-income and debt-service-to-income ratios. Second, we use the 
+model to calibrate both a hard loan-to-value and a soft loan-to-income limit to smooth the Spanish 
+house price cycle and match the amplitude of the UK equivalent. Finally, we characterise the 
+eﬀects of these calibrated policies over the diﬀerent phases of the cycle, ﬁnding both instruments 
+to reduce credit and price growth during the expansionary phase as well as to reduce their decline 
+during the contractionary phase. Moreover, both instruments lead to a compositional shift in 
+lending: the loan-to-value policy from ﬁrst-time buyers to buy-to-let investors and the loan-to-
+income policy from both ﬁrst-time buyers and home movers to buy-to-let investors.
+1. Introduction
+Numerous empirical studies have emphasised the role played by house price ﬂuctuations within the business cycle, uncovering 
+a strong co-movement of housing prices with GDP, consumption, investment, hours worked, real wages and housing investment 
+(Carroll etal.,  2011; Mian etal.,  2013; Piazzesi and Schneider, 2016; Lambertini etal.,  2017). In particular, 9 out of 11 US recessions 
+since 1985 have been preceded by a decline in housing investment (Leamer, 2015). More generally, downturns in real house prices 
+have been shown to be useful leading indicators of economic recessions across a broad sample of countries (Haavio et al., 2014). 
+Moreover, housing prices have also been shown to play a relevant role within the ﬁnancial cycle, strongly co-moving with credit 
+and leverage (Claessens et al., 2011, 2012; Borio, 2014; Cerutti et al., 2017). Importantly, housing markets are characterised by 
+✩ I would like to thank Matías Lamas for assistance in obtaining the data; Ángel Estrada, Carlos Pérez Montes, Javier Mencía, Jorge E. Galán, Salomón García, 
+Enric Martorell, and David Martinez-Miera for their support and valuable comments. I would also like to thank an anonymous reviewer for carefully reading an 
+earlier version of the manuscript and providing very relevant suggestions, as well as two additional reviewers who provided very useful and detailed comments on 
+the current version of the manuscript. I am also grateful to the participants of the 5th European Central Bank (ECB) Macroprudential Policy Group (MPPG) Research 
+Workshop (Valletta, Malta, 2022) and the 29th International Conference on Computing in Economics and Finance (Nice, France, 2023). Finally, I would also like to 
+express my gratitude to seminar participants at Banco de España for valuable feedback. Any views expressed in this paper are solely those of the author and should 
+not be attributed to the Banco de España or the Eurosystem.
+* Correspondence to: Banco de España, Calle Alcalá 48, 28014 Madrid, Spain
+E-mail address:adrian.carro@bde.es.
+https://doi.org/10.1016/j.jedc.2023.104753
+Received 3 March 2023; Received in revised form 14 September 2023; Accepted 27 September 2023
+
+Journal of Economic Dynamics and Control 156 (2023) 104753
+2
+A.Carro
+Fig. 1. Cyclical component of the house price index (HPI) for various European countries. AHodrick-Prescott  ﬁlter with a smoothing parameter 𝜆 =129600 has been 
+applied to the data. Note that the HPI is deﬁned with a base value of 100 and that its cyclical component has mean zero. Source: OECD real house price index data.
+a pro-cyclical feedback loop between asset prices and credit: rising asset prices contribute to higher collateral values and greater 
+borrowing capacity, while a surge in credit availability further fuels the upward trajectory of asset prices (Anundsen and Jansen, 
+2013; Biljanovska etal.,  2023). Diﬀerent theoretical channels have been proposed to rationalise the impact of the house price cycle on 
+ﬁnancial variables and the broader economy. For instance, the housing net worth channel,1 the liquidity channel,2 the expectations 
+channel,3 the collateral channel,4 or the deleveraging channel.5
+For all these reasons, while the main focus of macroprudential policy is the smoothing of the ﬁnancial cycle to enhance system-
+wide ﬁnancial stability (Galati and Moessner, 2013; Haldane, 2013; Borio, 2015), various measures of the house price cycle are 
+often used as intermediatetargets of macroprudential regulation (Galati and Moessner, 2017). That is, they feature among a broader 
+set of indicators aimed at quantifying the build-up of imbalances and systemic risk in the real estate sector. For instance, a recent 
+meta-analysis by Araujo etal.  (2020), covering 58 empirical studies on macroprudential policy and more than 6000 estimates, found 
+housing prices to be among the most common variables identiﬁed as intermediate targets and used to evaluate the impact of the 
+studied policies, together with credit growth and household leverage (Biljanovska etal.,  2023). Furthermore, many studies developing 
+theoretical and quantitative models also rely on housing prices to calibrate the macroprudential policies under consideration, as well 
+as to quantify their eﬀects (Gatt, 2023; Angelini etal.,  2011; Lambertini etal.,  2013; Funke and Paetz, 2018; Carreras etal.,  2018; 
+Gross and Población, 2017). Finally, housing prices feature prominently within the set of systemic risk indicators regularly monitored 
+by Central Banks and Macroprudential Authorities across the world (Borio, 2014; Vandenbussche et al., 2015; Castro et al., 2016; 
+ESRB, 2022).
+Given the weight of the real estate sector in its economy, as well as the role this sector played during the Global Financial 
+Crisis, Spain oﬀers an excellent setting to explore the potential use of macroprudential policy to moderate the house price cycle. As 
+shown in Fig.1, house price cycles in Spain have been stronger than in most other European countries, consistently ranking among 
+the strongest since at least the 80s. This has been particularly the case during the most recent boom-bust cycle around the Global 
+Financial Crisis, when only Ireland suﬀered a stronger price reversal and both Spain and Ireland experienced a boom and bust far 
+exceeding the size of those observed in other European economies. Finally, exposures to the housing sector have traditionally been 
+a key part of the bank-dominated Spanish ﬁnancial system. For instance, at the peak of the most recent boom phase—right before 
+the Global Financial Crisis—mortgages to households amounted to 65%of the GDP, while loans to real estate and construction ﬁrms 
+amounted to a further 45%of the GDP, thereby leading to more than 100%of the GDP in direct exposures to the housing sector (Akin 
+etal.,  2014).
+From a modelling perspective, housing markets are characterised by a number of challenges related to their highly heterogeneous 
+nature. First, households interacting in housing markets are heterogeneous across multiple dimensions, such as their income, wealth 
+and preferences, which strongly inﬂuence their decisions. Importantly, given its relevance in the cash ﬂows of many households, 
+1 Since housing is typically the single largest asset in households’ balance sheet, ﬂuctuations in house prices signiﬁcantly aﬀect household wealth and consumption 
+(Mian and Suﬁ, 2011; Liu etal.,  2016; Berger etal.,  2018).
+2 The transmission of shocks from housing to consumption can be ampliﬁed by endogenously emerging housing illiquidity during downturns (Garriga and Hedlund, 
+2020).
+3 House price movements have a signiﬁcant inﬂuence on households’ expectations of future price growth and, as a consequence, on the level of leverage they are 
+willing to assume when obtaining new mortgages (Piazzesi and Schneider, 2009; Lambertini etal.,  2013; De Stefani, 2021).
+4 Housing is also an important source of collateral used by economic actors, whose borrowing capacity will thereby be aﬀected by changing housing prices (Chaney 
+etal.,  2012; Liu etal.,  2013; Bahaj etal.,  2020).
+5 Since both the construction and acquisition of real estate are generally characterised by high leverage, when the bubble bursts, the resulting deleveraging depresses 
+business and household spending for a long time, leading to slower recoveries (Crowe etal.,  2013; Jordà etal.,  2015, 2016).
+
+Journal of Economic Dynamics and Control 156 (2023) 104753
+3
+A.Carro
+housing can itself become a driver of further diﬀerences, for instance, regarding household wealth. Furthermore, when studying 
+policy interventions, it would be hard to assess the eﬀects of a given instrument on the various segments of the housing market, 
+such as renters, ﬁrst-time buyers, home movers or buy-to-let investors, unless these segments are explicitly considered, together with 
+their characteristic dynamics. Second, housing is an extremely heterogeneous good, with houses diﬀering in aspects such as their 
+location, size, condition and dwelling type. Given this high degree of heterogeneity and the associated diﬃculty to assess and compare 
+diﬀerent properties, housing markets are fraught with information asymmetries. These factors, together with high transaction costs 
+and long investment horizons, make housing a relatively illiquid asset and allow for imbalances between supply and demand to 
+persist for much longer than in markets for more homogeneous products (Riddel, 2004). For instance, an excess in demand at a given 
+location or for a certain type of dwelling cannot be easily counterbalanced by an excess in supply at a faraway location or of a very 
+diﬀerent type of dwelling. Third, the speciﬁc features of the mortgage products oﬀered by lenders can also vary greatly, depending, 
+for instance, on the characteristics of the borrower, the house, the purpose of the purchase or even the particular institutional setting 
+of the country under consideration. Agent-based models are particularly well suited to meet these challenges and capture many of 
+these features, thereby providing an ideal tool to study the emergence of systemic risks in housing markets. In particular, they can 
+easily incorporate large degrees of heterogeneity across multiple dimensions, they can explicitly capture local market interactions, 
+they are capable of generating out-of-equilibrium dynamics and fully endogenous cycles, and they are ﬂexible enough to simulate 
+a great variety of policies as well as their potentially complex interactions (Farmer and Foley, 2009; Fagiolo and Roventini, 2017; 
+Haldane and Turrell, 2018, 2019).
+In this paper, we use an agent-based model of the Spanish housing market to explore the main drivers behind the large amplitude 
+of the Spanish house price cycle—as compared to most other European countries—, as well as to investigate the scope for macro-
+prudential policy to reduce this amplitude. In particular, we build upon a well-known agent-based model of the housing market 
+originally developed for the UK (Baptista et al., 2016; Carro et al., 2023) and further applied to Denmark (Cokayne, 2019) and 
+Italy (Catapano et al., 2021). This model includes life cycle dynamics, agent heterogeneity across multiple dimensions, heuristic 
+(boundedly rational) rules of behaviour, adaptive expectations, both a sales and a rental market and a dynamic buy-to-let sector. 
+Importantly, the dynamics of the model are characterised by the emergence of fully endogenous house price cycles, derived from the 
+actions and interactions of the agents and not requiring any external input of shocks. We adapt and calibrate this model to Spain. 
+To this end, ﬁrst, we have improved the design of the model in a number of key aspects, allowing it to better reproduce both the 
+dynamic and distributional features of the observed data. For instance, the introduction of an expected rate of return on alternative 
+non-housing investments has greatly improved the matching of several buy-to-let market features. Second, we have introduced sev-
+eral modiﬁcations and simpliﬁcations of mechanisms within the model so as to better capture the speciﬁcities of the Spanish housing 
+market. For example, noting the absence of any generally available mortgage product speciﬁc for buy-to-let investing in Spain, we 
+have replaced the interest-only mortgages characteristic of the original model by normal repayment mortgages, which has a direct 
+impact on the borrowing capacity of buy-to-let households. Finally, we have completely recalibrated the model parameters using a 
+large selection of both macro-and  micro-databases, including loan-level regulatory data.
+With this model in hand, and noting the signiﬁcantly smaller amplitude of the UK house price cycle as compared to the Spanish 
+equivalent (see Fig. 1), we ﬁrst exploit the availability of both calibrations—to the UK and to Spain—to explore which aspects of 
+the Spanish calibration are behind the increased amplitude of its house price cycle. To this end, we build hybrid parameterisations, 
+allowing us to assess the impact of speciﬁc parameters, small sets of parameters and particular mechanisms on the amplitude of 
+the resulting cycles. In this way, we ﬁnd that parameters and mechanisms related to lending standards and desired down-payments 
+play a prominent role in generating the stronger Spanish cycles. Second, we use the model to calibrate both a hard loan-to-value 
+(LTV) and a soft loan-to-income (LTI)6 limit to smooth the Spanish house price cycle and match the amplitude of the UK equivalent. 
+Interestingly, both calibrated limits are less restrictive than the corresponding UK distributions of lending standards would suggest. 
+Finally, we characterise the eﬀects of these calibrated policies over the cycle. In this sense, we ﬁnd both instruments to reduce credit 
+and price growth during the expansionary phase, as well as to reduce their decline during the contractionary phase. Importantly, 
+both instruments lead to a compositional shift in lending towards buy-to-let investing: in the case of the LTV policy, credit shifts 
+mostly from ﬁrst-time buyers to buy-to-let investors, while in the case of the LTI policy, credit shifts from both ﬁrst-time buyers 
+and home movers towards buy-to-let investors. This is due to the generally higher wealth and income of buy-to-let investors, who 
+are thereby less constrained by these policies, combined with the fact that both policies make buy-to-let investing more attractive 
+by reducing purchase prices while increasing the demand for rental accommodation. Furthermore, as home movers have had time 
+to progressively increase their equity through monthly mortgage payments, they are less constrained by the LTV policy than ﬁrst-
+time buyers. Crucially, the fact that two policies calibrated to lead to the exact same reduction in house price volatility result 
+in such divergent impacts on diﬀerent types of households implies that secondary policy objectives, such as home ownership or 
+intergenerational fairness, can become paramount in guiding the choice of an adequate policy mix.
+The remainder of the paper is structured as follows. In Section2we brieﬂy review the relevant literature and describe our main 
+contributions. Section3provides a general overview of the model, with a strong focus on the main enhancements and modiﬁcations 
+we have introduced with respect to the original UK version. Thus, amore  detailed description of the simulation procedure and model 
+mechanisms is left for AppendixA, together with Appendix C in the Supplementary Material. Likewise, an in-depth account of the 
+estimation and calibration of model parameters is left for AppendixB, together with AppendixD  in the Supplementary Material. In 
+Section4we validate the model by comparing its output with Spanish data from various sources, including multiple distributions of 
+6 A soft limit allows for a certain fraction of new mortgages to exceed said limit.
+
+Journal of Economic Dynamics and Control 156 (2023) 104753
+4
+A.Carro
+mortgage and household micro-data as well as the time series of housing prices. The main results of our analysis are presented in 
+Section5, starting with an exploration of the main drivers behind the amplitude of the house price cycle in Subsection5.1, continuing 
+with two exercises to calibrate borrower-based macroprudential policies in Subsection5.2and ﬁnishing with an extensive analysis 
+of the various eﬀects of these calibrated policies on diﬀerent distributions, types of households and over the diﬀerent phases of the 
+house price cycle in Subsection5.3. Finally, Section6presents some concluding remarks about these results and the associated policy 
+implications, as well as an outline of future research avenues.
+2. Related literature
+This paper contributes to four main strands of literature. First, it is related to other contributions focusing on the Spanish housing 
+market and its house price cycles. Estrada and Saurina (2016)provide  a general description of the recent boom-bust cycle in Spain 
+around the Global Financial Crisis, with a focus on macroprudential policy. Using granular data on mortgage loans in Spain, Akin 
+etal.  (2014)underline  the role played by too soft lending standards and excessive risk-taking during the boom phase previous to the 
+Global Financial Crisis. Martín etal.  (2018)focus  on a compositional shift in credit from non-housing to housing ﬁrms in the early 
+years of the recent housing bubble in Spain, later on replaced by a shift in the opposite direction as housing ﬁrms paid back their 
+initial loans. With respect to this strand of literature, this paper provides a closer look at the distributions of diﬀerent mortgage risk 
+metrics (loan-to-value, loan-to-income and debt-service-to-income ratios), as well as a model able to, on the one hand, reproduce 
+such distributions and, on the other hand, display realistic house price cycles.
+Second, the model presented here relates to a number of other (non-agent-based) models with a focus on the housing market and 
+including diﬀerent forms of borrowing constraints. For instance, in a seminal contribution Iacoviello (2005) introduces a business 
+cycle model with housing as collateral, and thus with a borrowing constraint tied to housing prices. Rubio and Carrasco-Gallego 
+(2016) develop a two-country version of this seminal paper and use it to study the impact of various shocks in the Euro area. 
+Greenwald (2018)a n d Ingholt (2022)f o c u s on comparing a debt-service-to-income limit with a loan-to-value limit. Using a life-
+cycle model with housing and both a loan-to-value and loan-to-income limit, Paz-Pardo (2021)f o c u s e s on the impact of changes in 
+earning dynamics on the reduction of home-ownership across generations. In the context of these contributions, our model represents 
+an alternative approach, based on heuristic (boundedly rational) rules of behaviour and adaptive expectations, as well as including a 
+high degree of household heterogeneity across multiple dimensions. Importantly, our approach displays fully endogenous house price 
+cycles with realistic features, derived from the actions and interactions of the agents in the model and therefore not requiring any 
+external input of shocks. Furthermore, our model includes a dynamic buy-to-let sector and rental market and shows a good match of 
+the distributions of various mortgage risk metrics (loan-to-value, loan-to-income and debt-service-to-income ratios). As opposed to 
+most contributions in this strand of literature, however, our model lacks a dynamic ﬁrm and production sector.
+Third, while not developing fully-ﬂedged agent-based models, anumber  of contributions based on simple discrete-time nonlinear 
+dynamical systems and boundedly rational behaviour have also investigated the origin of house price cycles (Dieci and Westerhoﬀ, 
+2012, 2016). Their conclusions, underlining the important role played by speculative (capital-gains seeking) behaviour and extrapola-
+tive (trend-following) expectations, are well in line with our own results. Aopposed  to these simple models, however, our agent-based 
+approach allows us to consider higher levels of heterogeneity across households, more realistic mechanisms and behaviours, as well 
+as further types of agents, such as the banking sector. Importantly, this greater level of detail is essential for the cycles to be realistic 
+(for instance, in their amplitude and period), as well as to explore the role of mortgage credit provision by the banking sector and the 
+regulation of the corresponding lending standards. Finally, while this stream of literature has considered the eﬀects of policies such 
+as taxes (Martin et al., 2021), construction programmes (Martin and Westerhoﬀ, 2019), monetary policy (Martin et al., 2022), and 
+rent controls (Schmitt and Westerhoﬀ, 2022), no attention has been paid yet to borrower-based macroprudential measures, which 
+are the focus of our paper.
+Fourth, our work is also related to a stream of papers developing agent-based models to represent diﬀerent local and national 
+housing markets initiated by Geanakoplos etal.  (2012)and  Axtell etal.  (2014)with  their model of the Washington DC housing mar-
+ket. Baptista etal.  (2016)and  Carro etal.  (2023)build  upon this original model by incorporating a life cycle dynamics, afully-ﬂedged  
+buy-to-let sector together with an autonomous rental market, and a more realistic double auction market mechanism. They use this 
+expanded model to study the impact of borrower-based macroprudential policy on the UK housing market. This ﬁrst application 
+of an agent-based model for the study of borrower-based macroprudential instruments sparked a series of related contributions by 
+Cokayne (2019), Laliotis etal.  (2020), Catapano etal.  (2021), Tarne etal.  (2022)and  Mér˝o etal.  (2023).7 With respect to this strand 
+of literature, this paper contributes (i)a model capturing the speciﬁcities of the Spanish housing market, (ii) a detailed parameter 
+calibration to Spain, (iii) a novel comparative exercise (hybrid parameterisations) exploiting the existence of multiple calibrations 
+and versions of the same core model, (iv)a calibration exercise for the studied borrower-based instruments with a given amplitude 
+of the house price cycle as a target, and (v)an in-depth analysis of policy eﬀects over the cycle.
+3. Model overview
+After providing a brief and general outline of the model, this section will focus on the main enhancements and modiﬁcations we 
+have introduced in the model with respect to the original UK version as described by Carro etal.  (2023). For the sake of clarity, we 
+7 For a separate body of literature with a speciﬁc focus on the spatial features of housing markets, see Ge (2013, 2017), Pangallo etal.  (2019)a n d Evans et al. 
+(2023). For an exploration of the role of herding in housing markets, see Glavatskiy etal.  (2021).
+
+Journal of Economic Dynamics and Control 156 (2023) 104753
+5
+A.Carro
+have organised these modiﬁcations into three groups depending on their purpose and their impact on the output of the model. In 
+particular, Subsection3.1presents several general design improvements with major impact on the results, Subsection3.2describes 
+various relevant modiﬁcations adapting the model to the speciﬁcities of the Spanish housing market, and Subsection3.3 reports a 
+few minor simpliﬁcations introduced to facilitate the calibration to Spanish data. A description of the initial model setup, as well 
+as a more detailed account of the simulation step, are left, respectively, for Appendix A.1 and Appendix A.2. For a more detailed 
+explanation of the main (heuristic) rules of behaviour of the agents in the model, see Appendix C in the Supplementary Material. 
+Likewise, the values of all model parameters, as well as an explanation of the estimation or calibration procedures and of the data 
+sources used, can be found in Appendix D in the Supplementary Material. Finally, for a more in-depth description of the model, 
+except for the modiﬁcations introduced here, we refer the reader to Carro etal.  (2023).
+We build upon the agent-based model of the UK housing market developed by Baptista et al. (2016)a n d Carro et al. (2023). 
+In particular, we introduce a series of modiﬁcations designed to improve the capacity of the model to reproduce several dynamic 
+and distributional features of the observed data, as well as to adapt the model to the speciﬁcities of the Spanish housing market. 
+Furthermore, we fully recalibrate the model using a breadth of Spanish (mostly micro-) data sources. The model has three main 
+classes of agents: (i) households, (ii) a bank, and (iii) a Central Bank. Households interact with each other via the sales and the 
+rental markets, i.e., by buying, selling, renting and letting out houses to each other. To buy houses, households can also interact 
+with the bank by requesting a mortgage. In providing such mortgages, the bank applies its own internal lending standards in the 
+form of loan-to-value (LTV), loan-to-income (LTI) and debt-service-to-income (DSTI) requirements. Finally, the Central Bank has the 
+power to further regulate those lending standards in the form of borrower-based macroprudential policies, potentially imposing more 
+constraining limits.
+3.1. Major design improvements
+These are modiﬁcations with a signiﬁcant impact on the results of the model and introduced with the goal of improving its 
+capacity to reproduce several dynamic and distributional features observed in the data.
+Expected rate of return on alternative non-housing investments:As in the original model, we do not explicitly incorporate any 
+alternative investment option apart from housing. However, we have introduced an exogenous expected rate of return on alternative 
+non-housing investments. Buy-to-let investors in our model use this rate to compare with the expected rate of return on the housing 
+investments they consider, thereby moderating their demand for such housing investments when their expected rate of return is 
+below the non-housing equivalent [see Eq. (11) in Appendix C in the Supplementary Material]. Importantly, this new rate is only 
+used by buy-to-let investors considering adjustments to their property portfolio, and not by non-investor households deciding whether 
+to rent or buy a new home.8 Apart from this, all forms of non-housing income are considered within our calibration of the income 
+distribution from which household incomes are drawn in our model, hence also including any return on non-housing investments 
+(e.g., ﬁnancial investments). In this way, even if not considered explicitly, alternative (non-housing) assets or investments are taken 
+into account both in the form of an opportunity cost of housing investments and as generating income streams for households. 
+Crucially, this new mechanism has greatly improved the matching of several buy-to-let market features, such as the number of 
+investors, the monthly number of buy-to-let transactions or the fraction of the housing stock owned by investors.
+Buy-to-let desired down-payments:In the original model, buy-to-let desired down-payments were set as drawn from an estimated 
+normal distribution of down-payment fractions. On the contrary, we set these down-payments as drawn from an estimated log-
+normal distribution of nominal down-payments, the same functional form as used for the desired down-payments of ﬁrst-time buyers 
+and home movers, although with its own parameter values estimated from Spanish buy-to-let mortgage data. This new design has 
+been key to better matching the distributions of several mortgage risk metrics of interest, such as loan-to-value, loan-to-income and 
+debt-service-to-income ratios.
+Home selling heuristics:We have improved the rules used by households to decide whether to sell their homes by preventing them 
+from selling if (i)given current market prices, their desired bid price and the maximum mortgage available to them, they would, in 
+any case, decide to rent, or if (ii)given their current net wealth (including housing), moving house would lead to a decrease in house 
+quality. These revised heuristics are key to better capture realistic life trajectories and hence also to better reproduce variables such 
+as the age distribution of mortgagors or the tenure shares.
+3.2. Major modiﬁcations to better reﬂect the Spanish housing market
+These are modiﬁcations with a relevant impact on the results of the model and introduced with the goal of adapting it to the 
+speciﬁcities of the Spanish housing and credit markets.
+Lending standards of the bank:The hard loan-to-value (LTV) limit imposed by the bank in the original model has been replaced 
+by a soft limit, thus allowing for a certain fraction of mortgages with LTV values over the limit. This allows the model to capture the 
+double peak nature of the Spanish LTV distribution.9
+8 This design is supported by empirical evidence based on survey data from the Encuesta Financiera de las Familias, 2017 wave, indicating that renters primarily 
+save in the form of non-interest-bearing ﬁnancial assets and aim to purchase a home as soon as they can aﬀord it. In contrast, buy-to-let investors diversify their 
+savings across housing, interest-bearing ﬁnancial assets, and non-interest-bearing ﬁnancial assets.
+9 Actually, the results of the model are rather compared to the Spanish loan-to-price (LTP) distribution, as this is more reliable than the LTV distribution in the 
+presence of a historical tendency to over-appraise the value of transacted properties (Akin etal.,  2014; Galán and Lamas, 2019).
+
+Journal of Economic Dynamics and Control 156 (2023) 104753
+6
+A.Carro
+Mortgages for buy-to-let investors: As opposed to the original model, we do not consider interest-only mortgages for buy-to-let 
+investors, but rather the same type of repayment mortgage product oﬀered to owner-occupiers. Likewise, in our model, buy-to-
+let mortgages are subjected to the same loan-to-value (LTV), loan-to-income (LTI) and debt-service-to-income (DSTI) constraints 
+as owner-occupying mortgages, in contrast to the LTV and interest-coverage-ratio constraints applied to buy-to-let mortgages in 
+the original UK version. These changes are motivated by the fact that, as opposed to the UK equivalent, the Spanish mortgage 
+market lacks a generally available mortgage product speciﬁc for buy-to-let investing. The only diﬀerence between these two types of 
+mortgages in our model is that, while owner-occupying mortgages are to be fully repaid by a certain household age, it is enough for 
+buy-to-let investors to apply for the mortgage before a certain age, the maturity oﬀered being always the same. The main reason for 
+this diﬀerence is that, as opposed to employment income, the stream of rental income from investment properties is not expected to 
+decrease when the owner retires. All these modiﬁcations have a direct impact on the borrowing capacity of buy-to-let households, 
+with the overall eﬀect of better aligning the supply of credit for investment and the number of properties per investor with Spanish 
+data.
+3.3. Minor mechanism simpliﬁcations adapting the model to the new Spanish calibration
+These are modiﬁcations with either no or only a minor impact on the results of the model and introduced so as to facilitate its 
+calibration given the data sources available for Spain.
+Taxes:We have completely removed taxes from the model, both in the form of income taxes and National Insurance contributions. 
+Given that we estimate and calibrate all other model parameters to be expressed in terms of gross income, as opposed to the net 
+income used in the original model, this convenient simpliﬁcation has virtually no eﬀect on the results.
+Government income support: Since the measure of gross income that we use to estimate the exogenous income distribution 
+for Spain already includes any government support received by the surveyed households, we have removed this mechanism and 
+parameters as redundant for the Spanish calibration.
+Essential consumption:While the original model deﬁnes essential consumption as a fraction of the household’s income, we deﬁne 
+it instead as a minimum value of nominal consumption, with only negligible impact on the output of the model.
+4. Validation
+In this section, we assess the ability of the model to reproduce a number of key features observed in the data about the Spanish 
+housing and mortgage markets. Following the macroeconomic agent-based modelling literature, we use three types of comparisons 
+(Dawid etal.,  2012; Ashraf etal.,  2017; Popoyan etal.,  2017; Fagiolo etal.,  2019). First, we make sure the model captures the main 
+patterns and stylised facts relevant to our research questions, such as house price cycles similar to those observed in reality. Second, 
+we compare speciﬁc quantitative measures to make sure the model matches relevant moments, such as the amplitude of the cycles. 
+Third, we focus also on the distribution of key variables for our study, such as those corresponding to the various mortgage risk 
+metrics (loan-to-value, loan-to-income and debt-service-to-income ratios). For the sake of space, we show here only a selection of the 
+whole range of validation checks performed.
+In order to validate the model, it is necessary to ﬁrst set the values of its parameters. While a comprehensive account of the 
+estimation and calibration procedures is left for AppendixB, let us brieﬂy outline here the reasons behind our choice of 2016 as our 
+target calibration year. First, 2016 can be considered as a neutral year for the Spanish housing market, in the sense that it cannot be 
+categorised as part of a boom or a bust of the corresponding price trajectory. This is important because our goal is not to bias the 
+outcomes of the model towards a boom (or a bust) by intentionally calibrating it using data from such a boom (or bust) period. On 
+the contrary, our objective is to allow for the model to endogenously generate boom-bust cycles even if calibrated using data from 
+a neutral point in time, i.e., from a time period that is neither a boom nor a bust. These boom-bust cycles, thus, emerge from the 
+actions and interactions of the agents and mechanisms included in the model. Second, 2016 coincides with the best availability of 
+data after the Global Financial Crisis, specially regarding census, survey data and micro-data on housing transactions. Finally, since 
+no housing-related macroprudential policy has ever been adopted in Spain, choosing a year that precedes such adoption plays no 
+role in our decision.10 Note that we will also use 2016 as our reference year for model validation, with the exception of the house 
+price cycle, which, by deﬁnition, requires a longer time series.
+An illustrative comparison of the house price cycles displayed by our model and those in reality is shown in Fig. 2, where the 
+cyclical component of the house price index (HPI) is plotted for both Spanish data and a single model run, representative of the 
+usual output of the model. For the sake of easing the visual comparison, the displayed time window for the model results has been 
+chosen so that the boom and the bust of a given cycle roughly coincide with those of the most recent full cycle around the Global 
+Financial Crisis in the data. As can be seen in this ﬁgure, the model appears to capture the amplitude, frequency and general pattern 
+of the cycles reasonably well. Importantly, this resemblance is quantitatively veriﬁed in Table 1, where average results over 100 
+Monte Carlo simulations conﬁrm that both the amplitude and the period of the cycles generated by the model, as well as a few other 
+key market variables, are very well in line with those observed in reality. This remarkable match suggests that, beyond the speciﬁc 
+10 In the case of the UK, these same reasons led Carro et al. (2023)t o choose 2011 as their target calibration year. In particular, 2011 was a rather neutral year 
+in the UK in terms of house price dynamics, data was available for census and the various surveys used for the calibration, and the Bank of England introduced a 
+loan-to-income policy and an aﬀordability test for the UK in 2014.
+
+Journal of Economic Dynamics and Control 156 (2023) 104753
+7
+A.Carro
+Fig. 2. Comparison of model results with real data for the cyclical component of the house price index (HPI), deﬁned with a base value of 100. Model results 
+correspond to a single simulation and the displayed time window has been chosen so that the boom and the bust of a given cycle roughly coincide with those of the 
+most recent full cycle around the Global Financial Crisis in the data (see Table1for average results over 100 Monte Carlo simulations). AHodrick-Prescott  ﬁlter with 
+a smoothing parameter 𝜆 =129600 has been applied to the data. Source: OECD real house price index data.
+Table 1
+Comparison of model results with real data. All model results are averages over 100 Monte Carlo 
+simulations, with the corresponding standard deviation reported in parentheses. Note that both the 
+house price index (HPI) and the rental price index (RPI) are deﬁned with a base value of 100, 
+and that the cyclical component of the data has, by deﬁnition, mean zero. Since the model has no 
+inherent trend, only the base value is subtracted from the HPI and the RPI. Source: (HPI) OECD 
+real house price index data; (tenure shares) Encuesta Financiera de las Familias, 2017 wave; (rental 
+yield, interest rate spread) Indicadores del Mercado de la Vivienda, collected by Banco de España, 
+2014–2020.
+Variable Data Model
+Std.dev.ofHPI(cyclicalcomponent) 40.10 40 .28(±0.96)
+PeriodofHPI(cyclicalcomponent) 201.0months 202.45months( ±6.54)
+MeanHPI(cyclicalcomponent) 0.00 −1 .04(±1.16)
+MeanRPI(cyclicalcomponent) 0.00 −4 .89(±3.44)
+Meanshareofhouseholdsowning 0.7753 0 .7247(±0.0033)
+Meanshareofhouseholdsrenting 0.1733 0 .1687(±0.0032)
+Meanshareofhouseholdsbuy-to-letinvesting 0.0781 0 .0609(±0.0007)
+Meanrentalyield 4.42% 3 .85%(±0.13)
+Meaninterestratespread 2.35% 2 .47%(±0.01)
+simulation and time window displayed in Fig.2, the model is indeed able to capture important statistical properties of the real time 
+series. Note that we measure the amplitude of the cycle with the standard deviation of the cyclical component of the house price 
+index. It should also be noted that these cycles are completely endogenous, i.e., resulting from the actions and interactions of buyers 
+and sellers in the market, and not related to any external input of shocks, as is generally required in other methodologies.
+We further compare simulation results with the empirical distributions of the main mortgage risk metrics—loan-to-value (LTV), 
+loan-to-income (LTI) and debt-service-to-income (DSTI) ratios.11 As can be observed in Fig. 3, the model correctly captures such 
+distributions, including not only their ﬁrst moments, but also their general shape and, importantly, the upper tails of both the loan-
+to-income (LTI) and the debt-service-to-income (DSTI) distributions. This remarkable match results from the complex interaction 
+between the borrowing decisions of households and the mortgage limits or lending standards applied by the bank. In turn, the 
+borrowing decisions of households depend on the income distribution (exogenous), the house price distribution, the rent versus buy 
+decisions of households, and their desired down-payments. Conversely, the lending standards of the bank are explicitly determined 
+by a few parameters setting maximum values for the mortgages the bank is willing to oﬀer.12 At this point, it is important to 
+underline that the empirical distributions of LTV, LTI and DSTI ratios are mostly not used in the calibration of the parameters of the 
+11 Historically, the Spanish housing market has been prone to the over-appraisal of the value of transacted properties. As a consequence, at a given point in time, 
+average appraisal values—which capture also expectations about the future evolution of prices—exceed average transaction prices (Akin et al., 2014; Galán and 
+Lamas, 2019). For this reason, when comparing simulation results with Spanish data, we use loan-to-price ratios instead of loan-to-value ratios, as the former are 
+more reliable and more directly comparable with the results of a model in which price is the metric of direct interest.
+12 Although in an indirect and highly simpliﬁed manner, the calibration of these parameters intends to capture factors such as the prevailing risk appetite, the 
+speciﬁc approach to banking regulation and the tax system adopted in the country under consideration.
+
+Journal of Economic Dynamics and Control 156 (2023) 104753
+8
+A.Carro
+Fig. 3. Comparison of model results with real data for the distributions of loan-to-value (LTV, note that loan-to-price, LTP, is used for data), loan-to-income (LTI) 
+and debt-service-to-income (DSTI) ratios. All model results are averages over 100 Monte Carlo simulations. Source: (LTP) Colegio de Registradores, 2016; (LTI) and 
+(DSTI) European Data Warehouse, 2016.
+Fig. 4.Comparison of model results with real data for key housing market variables. All model results are averages over 100 Monte Carlo simulations. Source: (a) and 
+(c) European Data Warehouse, 2014–2020; (b) and (d) Encuesta Financiera de las Familias, 2017 wave.
+model.13 That is, the outcomes of the model are not biased towards the empirical distributions by using them in the calibration of its 
+parameters. On the contrary, these outcome distributions emerge as a result of the actions and interactions of the agents in the model.
+Finally, let us focus in Fig. 4 on a few stylised facts characterising several speciﬁcities of the Spanish housing market and 
+portraying the broad range of empirical patterns our model is able to reproduce. First, the Spanish house-price-to-income distribution 
+is characterised by a relatively long and heavy upper tail, with more than 20% of mortgages with ratios above 8 [see Panel (a)].14
+13 Only the value of the mode, for the LTV ratio, and the upper 99th percentile of the distribution, for the LTI and DSTI ratios, are used for the calibration of the 
+bank parameters setting its lending standards.
+14 It should be noted that, while income is exogenous in our model, both the decision to buy and the speciﬁc bidding and transaction prices paid by households are 
+endogenous, and thus the house-price-to-income distribution is also an endogenous property of the model which cannot be simply attributed to the exogenous income 
+distribution.
+
+Journal of Economic Dynamics and Control 156 (2023) 104753
+9
+A.Carro
+Second, the Spanish housing market has traditionally been characterised by a particularly high proportion of home-owners and a 
+particularly small social housing sector [see Panel(b)].  Even if the proportion of home-owners has been progressively decreasing in 
+recent years, it was still as high as 76%in 2016, our target calibration year. Third, the proportion of younger buyers among Spanish 
+borrowers is extremely low, with less than 1.5% of borrowers below 25 years old, while the proportion of middle-aged buyers 
+is relatively high, with more than 42% of borrowers between 35 and 44 years old [see Panel (c)]. Fourth, buy-to-let investment 
+properties are fairly spread among small-scale landlords, with around 54%of investor households owning a single buy-to-let property 
+and less than 7.6%of them owning 5or more investment properties [see Panel(d)].  Summing up, our model successfully reproduces 
+numerous and varied stylised facts characterising the Spanish housing market.
+Three features are key for the emergence of realistic house price cycles in the model: (i)a feedback loop between transaction and 
+oﬀer prices, (ii) trend-following household expectations, and (iii) household heterogeneity.15 The feedback loop between realised 
+(past) transaction prices and those at which new sellers oﬀer their properties in the market allows for the build-up of persistent price 
+trends by accumulating price variations from month to month. Backward-looking, trend-following expectations regarding house price 
+growth are crucial for creating momentum in the market, as they lead to an increase (decrease) in demand precisely when prices 
+are already increasing (decreasing). Finally, income and wealth heterogeneity are essential for the emergence of strong cycles with 
+realistic peak-to-trough amplitudes, as they make the pool of households who can potentially aﬀord to buy progressively vary in size 
+as prices change. Importantly, the range of prices these households can aﬀord is strongly boosted by the availability of credit, and thus 
+also tightly linked to the predominant lending standards. While not strictly necessary for the emergence of cycles, the existence of a 
+dynamic buy-to-let sector also plays a relevant role in making them more realistic. On the one hand, capital-gains-driven investors, 
+who share the trend-following expectations of normal households, reinforce house price trends by seeking to acquire additional 
+properties during the boom phase while they seek to decrease their portfolios during the contractionary phase. On the other hand, 
+rental-income-driven investors arbitrate between the sales and the rental market, seeking to increase their portfolios when purchase 
+prices are low relative to rental prices and vice versa.
+In order to clarify the speciﬁc role played by these model features across the diﬀerent phases of the cycle, we provide here a more 
+detailed explanation of such a cycle. Let us ﬁrst focus on the beginning of the expansionary phase, when prices start increasing, and 
+thus so do the capital gains expected by households.16 As a consequence of this increase in expectations, more and more households 
+opt for a purchase instead of a rental bid, thereby increasing the demand in the ownership market. In terms of buy-to-let investing, 
+this increase in expectations leads capital-gains-driven investors to choose to keep their properties and even try to acquire more, 
+thereby increasing the demand and, at the same time, reducing the oﬀer. Since the expansionary phase has just started and prices are 
+still low, even rental-income-driven investors would seek to increase their portfolios to proﬁt from attractive rental yields. As prices 
+continue to rise, more constrained households (lower income, lower ﬁnancial wealth) are progressively priced out of the market. 
+However, for a while, there is still a large enough pool of less constrained households (higher income, higher ﬁnancial wealth) 
+able to bid and absorb the available houses on oﬀer, thereby driving further price increases. In this way, we progressively move 
+from a situation in which demand is sustained by the entire household sector to one in which demand is increasingly concentrated 
+among wealthier households and buy-to-let investors. This underlines the relevance of household heterogeneity to sustain longer and 
+stronger expansionary phases.
+As prices increase further, however, the pool of possible buyers (wealthy enough households) becomes so small that the resulting 
+demand is unable to fully meet the available oﬀer in the market. Af u r t h e r decrease in demand is due to rental-income-driven 
+investors, as high purchase relative to rental prices make rental yields less attractive. As a consequence, a growing number of houses 
+remain unsold on the market, experiencing progressive price drops as time advances and sellers slowly adapt to current demand 
+levels. This leads to a reversal of the price trend, thereby initiating the contractionary phase of the cycle.
+As prices start dropping, households are more and more likely to decide to rent as opposed to buy, since they now expect 
+purchases to lead to increasing capital losses. This same expectation of capital losses also drives capital-gains-driven investors to 
+decrease their portfolios of properties, thereby both reducing the demand and increasing the oﬀer in the ownership market. For a 
+while, even if dropping prices are gradually making home-ownership more aﬀordable, the expected capital losses are so large and 
+the pool of unconstrained households still so small that the eﬀective demand remains extremely weak.
+Finally, as prices decrease further and the pool of unconstrained households becomes large enough, even if the probability for 
+each of them to choose to buy is still very low, since the number of trials is now suﬃciently large, stochastically some of them will 
+decide to buy. Furthermore, as purchase prices are now signiﬁcantly lower while the demand in the rental market is still quite strong, 
+high rental yields will drive rental-income-driven investors to increase their portfolios, thereby adding to the demand by non-investor 
+households. In this way, the decreasing price trend will gradually moderate, eventually stop, and ﬁnally reverse, thereby triggering 
+the beginning of a new cycle. Again, we note that household heterogeneity is crucial to sustain longer and deeper contractionary 
+phases.
+15 Importantly, if either of these factors is deactivated (for example, by modelling oﬀer prices as independent of past sale prices, by setting the expected price 
+growth to zero and by assigning all households the same income and propensity to save), the cycles completely disappear and the house price index behaves as small 
+ﬂuctuations around the mean.
+16 Note that this initial increase in prices might be arbitrarily small and due to either the heterogeneity among households or any of the stochastic components 
+within the model dynamics. In any case, the mechanisms in the model will tend to strengthen this initially small price trend.
+
+Journal of Economic Dynamics and Control 156 (2023) 104753
+10
+A.Carro
+Table 2
+Comparison of UK-calibrated model results with UK real data. All model results are averages over 100 
+Monte Carlo simulations, with the corresponding standard deviation reported in parentheses. Note 
+that both the house price index (HPI) and the rental price index (RPI) are deﬁned with a base value 
+of 100, and that the cyclical component of the data has, by deﬁnition, mean zero. Since the model 
+has no inherent trend, only the base value is subtracted from the HPI and the RPI. Source: (HPI) 
+OECD real house price index data; (tenure shares) Wealth and Assets Survey, 2011 wave; (rental 
+yield) Association of Residential Letting Agents, annual report for 2013; (interest rate spread) Bank 
+of England Housing Core Indicators, 2011.
+Variable UKData UKModel
+Std.dev.ofHPI(cyclicalcomponent) 34.24 32 .71(±1.19)
+PeriodofHPI(cyclicalcomponent) 201.0months 221.45months( ±7.79)
+MeanHPI(cyclicalcomponent) 0.00 −10 .07(±3.11)
+MeanRPI(cyclicalcomponent) 0.00 −2 .98(±4.04)
+Meanshareofhouseholdsowning 0.65 0 .62(±0.01)
+Meanshareofhouseholdsrenting 0.17 0 .23(±0.01)
+Meanshareofhouseholdsbuy-to-letinvesting 0.0753 0 .0631(±0.0008)
+Meanrentalyield 5.00% 5 .72%(±0.11)
+Meaninterestratespread 2.9985% 2 .9774%(±0.0088)
+5. Results
+For the sake of the experiments to be presented below, we exploit the fact that this same methodology has already been success-
+fully applied to the UK housing market. In fact, the UK is an ideal candidate to set as a benchmark for several reasons. First, it displays 
+a price dynamics that is close enough to the Spanish case so as to be characterised by noticeable cycles, with a similar frequency and 
+general shape. Second, these cycles are, however, considerably milder than the Spanish equivalent—particularly around the Global 
+Financial Crisis—, such that it makes sense using their amplitude as an example of a possible target for Spain. Finally, the availability 
+of data for model calibration is particularly good for the UK in comparison with most other European countries. We reproduce in 
+Table2the results of the calibration to the UK17 (see also Carro etal.,  2023), for comparison with the previously presented Table1. 
+In particular, note that the amplitude of the Spanish house price cycle is more than 17%larger than the UK equivalent.
+5.1. Exploring the drivers of house price cycle amplitude: hybrid parameterisations
+In this subsection, we present the results of several experiments we have performed to quantify the eﬀects of diﬀerent model 
+mechanisms on the amplitude of the resulting house price cycles. While a precise identiﬁcation of all the factors empirically aﬀecting 
+the house price cycle, as well as the complex interactions between these factors, is well beyond the scope of this paper, the exper-
+iments in this subsection oﬀer a few valuable insights regarding the inﬂuence of the various mechanisms included in the model. 
+More speciﬁcally, on the one hand, we have shown above that the UK is characterised by a smaller house price cycle amplitude than 
+Spain (see also Fig.1), and Carro et al. (2023)h a v e shown that our model with a UK calibration is able to reproduce that smaller 
+amplitude. On the other hand, we have shown in the previous section that the model with a calibration to Spain is able to reproduce 
+the increased amplitude of the Spanish cycles. Thus, the question is: which aspects having changed between both calibrations are 
+behind the increased amplitude of the Spanish cycles? To answer this question, we use a number of hybrid parameterisations of 
+the model, that is, simulations mixing parameter values from multiple calibrations. In our case, we are interested in keeping most 
+parameter values as those corresponding to the Spanish calibration, while testing the eﬀects of switching one or just a few parameters 
+to their UK calibration values. In this way, we can assess the eﬀects of, for example, imposing the income distribution of the UK on 
+an otherwise fully Spanish calibrated model.
+Table3shows a summary of our results exploring the drivers of the house price cycle amplitude using hybrid parameterisation 
+experiments. In particular, we notice that imposing on an otherwise Spanish calibrated model the UK distributions of income and 
+wealth actually leads to stronger cycles. Switching parameters related to the desired bid price of households to their UK values 
+leaves the amplitude of the cycles unchanged, while switching parameters related to their desired down-payments does lead to 
+smaller cycles, but not enough to explain the full diﬀerence between the UK and Spain. On the contrary, by forcing the bank to draw 
+mortgage characteristics from the UK distributions of loan-to-value (LTV), loan-to-income (LTI) and debt-service-to-income (DSTI) 
+ratios whenever a household applies for a mortgage, we do observe important reductions of the amplitude of the cycles. In fact, in 
+these three cases, the amplitude becomes even smaller than the actual UK value. Notably, this all suggests that the factors aﬀecting 
+the amplitude of the house price cycle are multiple—some boosting it, some shrinking it—and it is only their combination which 
+allows the model to correctly reproduce the diﬀerence between the UK and Spain regarding the amplitude of their respective cycles.
+The relevance of the distributions of LTV, LTI and DSTI ratios in leading to the strong Spanish house price cycle, as compared 
+to the UK equivalent, is coherent with the important diﬀerences these distributions show between these two countries. Fig.5shows 
+17 Note that the version of the model used for the UK calibration results presented in Table2is the one updated with the general design improvements discussed in 
+Subsection3.1, but not those modiﬁcations speciﬁc to Spain and described in Subsections3.2and3.3. Importantly, except for the parameters strictly related to these 
+general design improvements, all estimated and postulated parameter values remain the same as in Carro etal.  (2023).
+
+Journal of Economic Dynamics and Control 156 (2023) 104753
+11
+A.Carro
+Table 3
+Hybrid parameterisation results in terms of the standard deviation of the cyclical 
+component of the house price index (HPI), deﬁned with a base value of 100. All 
+model results are averages over 100Monte Carlo simulations. Source: OECD real 
+house price index data.
+Speciﬁcation Std.dev.ofHPI(cyclicalcomponent)
+SpanishData 40.10
+FullSpanishParameterisation 40.28
+“”+UKIncomeDist. 49.22
+“”+UKWealthDist. 42.52
+“”+UKDesiredBidPrice 40.18
+“”+UKDesiredDown-Payment 37.66
+“”+UKLTVDist. 31.60
+“”+UKLTIDist. 27.57
+“”+UKDSTIDist. 25.06
+UKData 34.24
+Fig. 5. Comparison of Spanish and UK data for the distributions of loan-to-value (LTV, note that loan-to-price, LTP, is used for Spanish data), loan-to-income (LTI) 
+and debt-service-to-income (DSTI) ratios. Source: (LTP Spain) Colegio de Registradores, 2016; (LTI and DSTI Spain) European Data Warehouse, 2016; (LTV, LTI and 
+DSTI UK) The Financial Conduct Authority’s (FCA) loan-level Product Sales Data, 2011.
+these distributions both for the UK and for Spain. In particular, we can observe that, while the UK LTV distribution has its peak at 
+a higher value than the Spanish equivalent distribution (90%vs 80%), the latter has far more mass above the peak (∼47%vs <5%). 
+Furthermore, while the UK LTI distribution has almost no mass over 6, the Spanish equivalent distribution has around 20% of its 
+mass over this value of 6. Equivalently, regarding DSTI ratios, the UK distribution has virtually no mass over 50while the Spanish 
+equivalent has around 7.5%of its mass over 50.
+5.2. Calibration of borrower-based macroprudential policies
+We present in Fig. 6 results from two diﬀerent calibration exercises: one with a hard loan-to-value (LTV) limit, i.e., with no 
+mortgage allowed over the given limit, and the other one with a soft loan-to-income limit (LTI), i.e., with a certain fraction of 
+mortgages (15%) allowed over the given limit. In both cases, the goal is to ﬁnd the policy limit that would lead the Spanish house 
+price cycle to match the amplitude of the UK equivalent. That is, the aim is not to explain the diﬀerence in amplitude between both 
+countries, but, rather, to explore how macroprudential policy can be used to reduce such diﬀerence—regardless of its origin. As 
+before, the amplitude of the cycles is deﬁned as the standard deviation of the cyclical component of the house price index. Also, in 
+both cases, the 𝑥-axis represents the speciﬁc policy limit simulated while the 𝑦-axis represents the amplitude of the cycles obtained 
+as a result.
+As can be observed in Panel 6(a), ah a r d LTV limit of 94% makes the amplitude of the Spanish cycles equal to that of the UK 
+cycles. Importantly, this value is larger than the natural limit (99th percentile) in the UK, which is 90%. Furthermore, note that this 
+limit would have been binding for ∼21%of Spanish mortgages in 2016. Regarding the calibration of the soft LTI limit policy, shown 
+in Panel6(b), a limit of 4.77applied to Spain would equate the amplitude of the cycles in both countries. Again, this value is slightly 
+larger than the natural limit (99th percentile) in the UK, which is 4.5. Moreover, note that this limit would have been binding for 
+∼19%of Spanish mortgages in 2016, already taking into account the 15%allowance over the soft limit.
+In terms of the mortgage credit cycle, both types of policies also lead to a reduction of the corresponding amplitude as the speciﬁc 
+regulatory limits imposed are tightened (see Fig. 1 in the Supplementary Material). Interestingly, this eﬀect is considerably more 
+pronounced for the calibrated LTI limit of 4.77, leading to credit cycles 21% smaller than in the no-policy baseline, than for the 
+calibrated LTV limit of 94%, for which credit cycles are only 15%smaller than in the baseline scenario.
+
+Journal of Economic Dynamics and Control 156 (2023) 104753
+12
+A.Carro
+Fig. 6. Calibration of an loan-to-value (LTV) hard limit and a loan-to-income (LTI) soft limit for the amplitude of the Spanish house price cycle to match that of the 
+UK equivalent. All model results are averages over 100 Monte Carlo simulations. Note that the house price index (HPI) is deﬁned with a base value of 100. Source: 
+OECD real house price index data.
+Fig. 7. Impactofcalibratedpoliciesonthedistributionsofloan-to-value(LTV),loan-to-income(LTI)anddebt-service-to-income(DSTI)ratios.
+Table 4
+Impact of calibrated policies on mean values of loan-to-value (LTV), loan-to-
+income (LTI) and debt-service-to-income (DSTI) ratios. All model results are 
+averages over 100Monte Carlo simulations.
+Experiment MeanLTV MeanLTI MeanDSTI
+Baseline 75.20% 4.17 27.15
+LTVcap 72.82% 3.79 23.78
+LTIcap 72.09% 3.28 21.11
+5.3. Further eﬀects and distributional consequences of calibrated policies
+In this subsection, we will analyse in more detail the eﬀects of the policies calibrated in the previous subsection, including their 
+eﬀects on several distributions, on diﬀerent types of households and over the diﬀerent phases of the house price cycle.
+Let us start with the eﬀects of the calibrated policies on the distributions of mortgage risk metrics (loan-to-value, loan-to-income, 
+debt-service-to-income ratios), shown in Fig.7, as well as their mean values, summarised in Table4. The most important observation 
+here is that policies targetinga  given risk metric have an impact on other metrics. For instance, the loan-to-income (LTI) policy has a 
+strong eﬀect on the loan-to-value (LTV) distribution. In fact, this eﬀect is even stronger than for the LTV cap, in the sense of leading 
+to a smaller mean LTV ratio (see Table4). Moreover, the LTV policy also leads to a signiﬁcantly reduced tail of the LTI distribution. 
+Finally, both policies have an impact on the DSTI distribution, though the impact of the LTI policy is certainly stronger.
+We turn now our attention to the eﬀects of the calibrated policies on the four stylised facts characterising speciﬁcities of the 
+Spanish housing market as set out in Section 4, which are shown in Fig. 8. As can be observed in Panel (a), both policies lead to 
+a decrease of house-price-to-income ratios, with the share of mortgages falling for ratios above 5 and growing for ratios below 5. 
+The LTI policy has a far stronger eﬀect in this sense, almost 3 times stronger. Panel (b) shows that both policies lead to a decrease 
+in home-ownership, replaced almost exclusively by private renting as opposed to social housing. This eﬀect is twice as important 
+with the LTV as with the LTI policy. As shown in Panel(c),  the LTV policy leads to an increase in the share of older with respect to
+
+Journal of Economic Dynamics and Control 156 (2023) 104753
+13
+A.Carro
+Fig. 8. Impactofcalibratedpoliciesonkeyhousingmarketvariables. Allmodelresultsareaveragesover100MonteCarlosimulations.
+younger borrowers, while the LTI policy seems to have a negligible eﬀect in terms of this age distribution. Finally, Panel(d)  shows 
+that both policies lead to an increase in the size of buy-to-let portfolios, with the share of single-property portfolios decreasing and 
+the share of multi-property portfolios increasing. Here again, the impact of the LTV policy is almost twice as important as the impact 
+of the LTI policy.
+Using a Hodrick-Prescott ﬁlter to ﬁnd the trend component of the house price index, we can divide each cycle into two diﬀerent 
+phases: an expansionary or boom phase, with an increasing price trend, and a contractionary or bust phase, with a decreasing price 
+trend. In this way, for any variable of interest, we can compute two means by conditioning on the phase of the cycle, apart from the 
+usual aggregate mean. Over the following ﬁgures, we will show the change or deviation from the no-policy baseline in these three 
+types of means for several key variables as a result of applying the two calibrated policies.
+Fig. 9 displays this deviation from the no-policy baseline for the monthly credit growth, in Panel (a), and the monthly price 
+growth, in Panel (b). There, we can observe that both policies lead to a strong reduction of credit and price growth during the 
+expansionary phase and to an equivalently strong reduction of their decline during the contractionary phase. Interestingly, while the 
+eﬀect on price growth seems to be the same for both policies, the eﬀect on credit growth is larger with the LTI policy. In other words, 
+while the price cycle has, by calibration of our policies, the same amplitude for both of them, the LTI policy leads to a smoother 
+credit cycle, as measured by month-to-month credit growth.18 The importance of this diﬀerence in the impact of both policies on 
+the credit cycle is to be underlined, as it suggests that additional policy objectives beyond reducing house price ﬂuctuations, such 
+as smoothing also the credit cycle, can play a key role in determining the appropriate policy mix. In essence, this diﬀerence stems 
+from the fact that, while the LTI policy is binding for both ﬁrst-time buyers and home movers, the LTV policy is restrictive mostly 
+for ﬁrst-time buyers (see Fig. 10), thereby leaving some leeway for home movers to increase or decrease their demand for credit 
+throughout the cycle. Finally, it is important to note that, in the aggregate, i.e., on average over both cycle phases, policies seem to 
+have no eﬀect either on credit or price growth.
+Fig. 10 shows the eﬀect of both calibrated policies over the two phases of the house price cycle for the total monthly number 
+of new mortgage approvals, as well as this number disaggregating by buyer type into mortgages for ﬁrst-time buyers, home movers 
+and buy-to-let investors. In Panel(a)  we can see that, while both policies lead to a slight decrease of total mortgage approvals in the 
+aggregate, this decrease only aﬀects the expansionary phase, mortgage approvals actually increasing during the bust phase. Finally, 
+18 Note that this stronger impact of the LTI policy in the sense of smoothing month-to-month credit growth is also coherent with its more pronounced eﬀect in 
+reducing the relative standard deviation of the total mortgage lending (see Fig.1  in the Supplementary Material). Both measures suggest a more powerful impact of 
+the LTI regulation on the mortgage credit cycle than the corresponding LTV limit.
+
+Journal of Economic Dynamics and Control 156 (2023) 104753
+14
+A.Carro
+Fig. 9. Impactofcalibratedpoliciesoncreditandpricegrowthoverthecycle.Allmodelresultsareaveragesover100MonteCarlosimulations.
+Fig. 10. Impactofcalibratedpoliciesonlendingtodiﬀerenttypesofhouseholdsoverthecycle.Allmodelresultsareaveragesover100MonteCarlosimulatio ns.
+by comparing Panels (b), (c) and (d), respectively for ﬁrst-time buyers, home movers and buy-to-let investors, we can observe a 
+strong shift in credit supply with the LTV policy from ﬁrst-time buyers—decreasing mostly during the expansionary phase—to buy-
+to-let investors—increasing mostly during the contractionary phase. The LTI policy has a similar eﬀect, but the impact in this case 
+is observed for both ﬁrst-time buyers and home movers, with both types of households experiencing a decrease in credit during 
+the expansionary phase, again counterbalanced by an important increase in credit to buy-to-let investors during the contractionary 
+phase.
+Two main mechanisms are responsible for this shift in credit. On the one hand, buy-to-let investors are generally characterised by 
+a higher level of wealth and income, and are therefore less constrained by the policies under consideration. Our model captures this 
+mechanism via the probability for a household to receive the buy-to-let ﬂag, which depends on its income percentile as estimated
+
+Journal of Economic Dynamics and Control 156 (2023) 104753
+15
+A.Carro
+Table 5
+Impact of calibrated policies on the mean values of several key market variables. All model results 
+are averages over 100Monte Carlo simulations.
+Variable Baseline LTVcap LTIcap
+Value Change Value Change
+Saleprice( e) 162845.4 148606 .3− 8 .74% 147885 .5− 9 .19%
+Rentalprice( e) 381.24 0 1 .4+ 5 .30% 389 .8+ 2 .26%
+Monthlysaletransactions(#) 53601.5 55881 .0+ 4 .25% 54910 .4+ 2 .44%
+Monthlyrentaltransactions(#) 151997.3 165669 .3+ 8 .99% 157553 .0+ 3 .66%
+Timeonsalesmarket(months) 10.35 10 .48 +1 .26% 10 .45 +0 .97%
+Timeonrentalmarket(months) 1.23 1 .20 −2 .44% 1 .21 −1 .62%
+Buy-to-lethousingstock(%) 20.20% 22 .94% +13 .54% 21 .14% +4 .65%
+Ginicoeﬃcient 0.6494 0 .6595 +1 .56% 0 .6505 +0 .16%
+from data. On the other hand, as shown in Table 5, by moving constrained households from the sales to the rental market, both 
+policies lead to a decrease in purchase prices, together with an increase in the demand for rental accommodation and therefore 
+rental prices. In this way, ahigher  expected stream of rental income combines with a lower purchase cost to make buy-to-let investing 
+more attractive to potential investors, who thereby increase the fraction of the housing stock under their control (see Table5). This 
+increase in the number of houses they own, together with the higher turnover of houses owned by buy-to-let investors, results in a 
+higher volume of monthly transactions in both markets. In terms of the time houses spend on the market before being sold or rented 
+out, both policies lead to slightly longer times in the sales market and slightly shorter times in the rental market. This divergent 
+behaviour is a consequence of the fact that the shift to buy-to-let ownership, while strong, is not enough to fully compensate for the 
+drop in the demand by non-investor household in the sales market nor for the corresponding surge in their demand in the rental 
+market.
+Interestingly, this strong shift in credit—and thus also in property ownership—towards buy-to-let investors translates only into 
+a small increase in wealth inequality in the system.19 In particular, the corresponding Gini coeﬃcient increases only by 1.56%with 
+the LTV policy and only by 0.16% with the LTI policy (see Table 5). This is due to the fact that, while buy-to-let investors do 
+indeed own a larger share of the housing stock under the policies (speciﬁcally, 13.54% larger with the LTV policy and 4.65% larger 
+with the LTI policy), since both of them lead, on average, to lower housing prices, the value of what these households own does 
+not grow much with respect to the baseline case. Furthermore, also as a consequence of lower housing prices, wealth diﬀerences 
+between homeowners and non-homeowners are also smaller. Thus, the higher concentration of property under the policies is mostly 
+counterbalanced by the smaller value of that property.
+6. Conclusion
+We have extended, adapted, calibrated and validated for Spain an agent-based housing market model with endogenous house 
+price cycles originally developed for the UK. This model includes life cycle dynamics, agent heterogeneity across multiple dimensions, 
+heuristic rules of behaviour with adaptive expectations, both a sales and a rental market, and a dynamic buy-to-let sector. Exploiting 
+the availability of these two parallel calibrations for two countries characterised by cycles of diﬀerent amplitude, we have shown the 
+prominent role played by the distributions of several mortgage risk metrics (loan-to-value, loan-to-income, debt-service-to-income), 
+as well as desired down-payment mechanism, in leading to the observed larger amplitude of the Spanish house price cycle. We have 
+used the model to calibrate both a hard loan-to-value (LTV) limit and a soft loan-to-income (LTI) limit—allowing for a certain fraction 
+of mortgages over this limit—to smooth the Spanish house price cycle and match the amplitude of the UK equivalent. Importantly, 
+both calibrated limits are less restrictive than the UK distributions would suggest. We have shown that both policies reduce credit and 
+price growth during the expansionary phase, while they reduce their decline during the contractionary phase. In particular, the LTI 
+policy was found to have a stronger eﬀect on credit growth than the LTV policy, their impact on house price growth being equivalent. 
+Finally, we have also uncovered a spillover to the buy-to-let sector, as both policies lead to a compositional shift in lending towards 
+buy-to-let investors, the LTV policy from ﬁrst-time buyers and the LTI policy from both ﬁrst-time buyers and home movers.
+From a policy point of view, our work has several implications. First, we contribute a novel calibration exercise for borrower-
+based instruments in which we take a given amplitude of the house price cycle as a target, thereby explicitly focusing on the 
+macroprudential policy intermediategoal of moderating house price ﬂuctuations.
+Second, by using the amplitude of the UK cycle as a target in our policy calibration for Spain, we show that the calibrated limits 
+might be less restrictive than the corresponding UK distributions would suggest. For instance, by focusing on the UK LTV distribution, 
+one could naively assume that an LTV cap of 90%, corresponding to its 99th percentile, would be required to match its house price 
+cycle amplitude. On the contrary, our calibration exercise suggests that a higher limit of 94%would be enough for the Spanish cycle 
+to match the amplitude of the UK equivalent. This is a consequence of the fact that, among the many aspects that change between the 
+two calibrations, some tend to make cycles softer while others tend to make them stronger. In other words, by fully calibrating the 
+19 For the purpose of this analysis on wealth inequality, we use total net wealth, deﬁned for each household as the sum of its ﬁnancial wealth and its net housing 
+wealth. Likewise, net housing wealth is deﬁned as the mark-to-market value of the properties owned by the household—taking into account the speciﬁc quality 
+segments they belong to—minus any mortgage debt owed by the household on these properties.
+
+Journal of Economic Dynamics and Control 156 (2023) 104753
+16
+A.Carro
+model to two diﬀerent countries, our simulated policies are not applied in a neutral setting, but rather in two economies characterised 
+by two speciﬁc and diﬀerent combinations of dampening and enhancing factors, and thus diﬀerent policy limits might be required 
+to attain the same eﬀect. Importantly, this underlines the relevance of carefully calibrating models used for policy analysis to the 
+country under consideration in order to obtain quantitatively meaningful policy limits.
+Third, as found by Carro etal.  (2023), our results show that a policy targeting a speciﬁc risk metric can also have an important 
+impact on other risk metrics. In fact, we ﬁnd our calibrated LTI policy to have a stronger impact on the mean LTV than our calibrated 
+LTV policy itself. This is an important eﬀect that should be taken into account when calibrating any given policy to achieve a certain 
+overall reduction in risk.
+Fourth, we ﬁnd that the calibrated policies aﬀect diﬀerent types of households diﬀerently. In particular, we identify a shift in 
+credit towards buy-to-let investors in substitution of ﬁrst-time buyers (for both policies) and home movers (for the LTI policy).20 In 
+order to explain this shift in credit, we must bear in mind, on the one hand, that buy-to-let investors are typically less constrained by 
+the policies under consideration, given their generally higher level of wealth and income. On the other hand, as the policies prevent 
+some households from securing mortgages large enough to purchase properties, there is a drop in demand in the ownership market 
+and a corresponding increase in demand in the rental market. This, in turn, increases rental yields, thereby encouraging buy-to-
+let investors to increase their portfolios, which partially counterbalances the movements in demand in both markets. In this way, 
+purchase prices do not drop by as much as they would without the intervention of buy-to-let investors, as part of the oﬀer previously 
+acquired by non-investor households is now hoarded by buy-to-let investors, who take advantage of the rise in rental yields to 
+increase their portfolios. As a consequence, for most of the households initially prevented from buying by the implementation of the 
+policy, the resulting decrease in purchase prices would not suﬃce for them to aﬀord to buy under the new lending limits. Finally, 
+while the LTI policy leads to a reduction in the amount of credit extended to both ﬁrst-time buyers and home movers, with the LTV 
+policy, this contraction aﬀects almost exclusively ﬁrst-time buyers, as home movers had the opportunity to progressively increase 
+their equity through monthly mortgage payments and are therefore less constrained by down-payment requirements. Again, it is 
+of paramount importance that these distributional eﬀects and spillovers are taken into account in the design and calibration of 
+macroprudential policies. In particular, the fact that policies calibrated to lead to the exact same reduction in house price volatility 
+result in such divergent impacts on diﬀerent types of households suggests that additional policy objectives—such as home ownership, 
+intergenerational fairness or smoothing the credit cycle—, can play a crucial role in determining the appropriate policy mix.
+A caveat of the analysis presented here is the lack of a macroeconomic framework, which prevents us from exploring possible 
+eﬀects of macroprudential policies on the wider economy. To solve this, the housing model could be embedded into an agent-based 
+macroeconomic model with a dynamic production sector.21 This would make income endogenous and allow for unemployment 
+shocks to arise from the interaction of the consumption and production decisions of the households and ﬁrms in the model. Thus, 
+this extension would pave the way for exploring the impact of household bankruptcy in terms of the stability of the ﬁnancial system, 
+as well as for assessing the role of macroprudential policy in curbing such default risk. Apossible  further improvement of our model 
+would be to consider a more detailed banking sector. For instance, one could allow for dynamic lending standards, responsive to 
+the phase of the house price cycle, as implemented by Tarne etal.  (2022), or even to the quality of the bank’s mortgage portfolio. 
+Another example would be to include heterogeneous banks with diﬀerent risk-taking behaviour and, as a consequence, diﬀerent 
+balance sheet structure. Finally, expanding the model in these two directions—adding macroeconomic features and considering a 
+more detailed banking sector—would provide us with an ideal framework in which to study the impact of macroprudential capital 
+buﬀers.22 Importantly, such a framework would allow not only to compare borrower-based with capital-based measures, but also 
+to explore their interactions when applied in combination. Finally, this extended model would also enable the integration of the 
+production of houses as an additional sector within the economy, including its tight connection with the ﬁnancial system. This would 
+thereby provide a pathway to investigate the role played by the construction sector within the house price cycle and, more generally, 
+in terms of the stability of the ﬁnancial system.
+Appendix A. Further model details
+This appendix oﬀers additional insights into the initial conﬁguration and simulation process of the model. In particular, Subsec-
+tionA.1focuses on the initial model setup, while SubsectionA.2provides an overview of the simulation step. For a more in-depth 
+description of the behavioural rules of the agents in the model, see AppendixC  in the Supplementary Material.
+20 Note that our results go beyond the analysis by Carro etal.  (2023), whose simulated policies explicitly excluded buy-to-let investors. In our case, all households 
+are subject to the simulated policies, and yet they are still aﬀected diﬀerently.
+21 The most relevant examples of macroeconomic agent-based models are the works by Dosi etal.  (2010), Delli Gatti etal.  (2011), Caiani etal.  (2016), Seppecher 
+et al. (2018), Ashraf et al. (2017), Cincotti et al. (2012), Dawid et al. (2012), Mandel et al. (2010), Poledna et al. (2023)a n d Hommes et al. (2022). See also the 
+overview article by Dawid and Delli Gatti (2018).
+22 The macroeconomic agent-based model proposed by Gurgone et al. (2018), recently expanded by Gurgone and Iori (2022)t o study macroprudential capital 
+buﬀers, represents a signiﬁcant step forward in this direction. However, ahousing  market component is still lacking in their model.
+
+Journal of Economic Dynamics and Control 156 (2023) 104753
+17
+A.Carro
+A.1. Initial model setup
+Every simulation starts by creating the desired number of households,23 each of them with (i) an initial age, drawn from a 
+distribution estimated from data24; (ii) a permanent income percentile, drawn from a uniform distribution; and (iii) a permanent 
+propensity to save, also drawn from a uniform distribution. Derived from these basic attributes, households are also assigned an 
+initial income, dependent on the household’s initial age and its income percentile, and an initial ﬁnancial wealth, dependent on the 
+household’s initial income and its propensity to save. While both income percentile and propensity to save remain ﬁxed throughout 
+the life of the household, its age evolves in time, driving the evolution of other household attributes, such as its actual income 
+and desired ﬁnancial wealth. Furthermore, with a probability dependent on their income percentile as estimated from data, some 
+households are assigned a buy-to-let ﬂag, allowing them to invest in buy-to-let properties.25 These households are further divided into 
+three diﬀerent investor types depending on the relative importance they place on capital gains as opposed to rental yield. Speciﬁcally, 
+we consider capital-gains-driven households, rental-income-driven households and mixed type households, equally weighting both 
+forms of yield. Finally, all newly created households are said to be in social housing, understood as a form of temporary, free of 
+charge accommodation which households can always use while trying to ﬁnd a house to rent or buy. Importantly, households never 
+choose to be in social housing and they are only sent there if they fail to secure another form of accommodation.26 Thus, it is a proxy 
+for situations like homelessness, living with parents or living out of housing and other social beneﬁts.
+The required number of houses, corresponding to an estimated target ratio of houses to household, are also created at the 
+beginning of each simulation.27 Each house is characterised by an integer-valued parameter representing its quality. This parameter 
+serves as a proxy for all possible features making houses diﬀerent and some more desirable than others, such as their location, size, 
+condition or dwelling type. House qualities are assigned uniformly at random at the beginning of the simulation and remain ﬁxed 
+throughout. Thus, the housing stock is divided into approximately equally sized quality segments. This stock of houses, which is to 
+remain constant throughout the simulation, is initially distributed at random among households. Importantly, this random initial 
+distribution avoids imposing any correlation structure between income, ﬁnancial wealth, home ownership and house quality. These 
+correlations will instead endogenously emerge due to the dynamics of the model, that is, as a consequence of the decisions and 
+interactions of its agents.
+A.2. Overview of the simulation step
+Once initialised, the model proceeds iteratively in discrete simulation steps of one month. In each of these time steps, the following 
+model components are updated:
+1. Demographics: New households are born, some households die and the rest of them age. We choose appropriate birth and 
+death rates dependent on age so that both the total number of households and their distribution of age remain constant. As those 
+created at the beginning of the simulation (see previous subsection), new households are born with all their characteristics—
+initial age, income percentile, propensity to save, initial income, initial ﬁnancial wealth and, potentially, buy-to-let ﬂag and 
+investor type—drawn from suitable distributions. Moreover, they are initially set to live in social housing. When a household 
+dies, all its ﬁnancial and housing wealth is inherited by another randomly chosen household.
+2. Households:
+(a) Receive income, pay housing expenses and consume: Households receive an exogenous monthly income, which is computed 
+using a distribution of income conditional on age by evaluating the corresponding inverse cumulative function at the house-
+hold’s age and income percentile. Thus, as the household ages, its income changes, even though its income percentile remains 
+ﬁxed.28 Then, households pay their housing expenses: Renters pay their monthly rent, and owners with a mortgage make 
+their monthly mortgage payment.29 Note that, as a consequence of rental payments, buy-to-let households with investment 
+23 In order to adequately explore the parameter space during the calibration process, with the associated computational cost, we restrict ourselves to 10,000
+households for all results to be presented here. In any case, we have conﬁrmed the robustness of our main results with a reduced number of simulations with up to 
+two million households.
+24 This is thought as representing the age of the Household Reference Person, aconcept  used in a number of surveys and usually understood to be the person within 
+the household with the highest income.
+25 Note that, according to the data, this probability displays an increasing trend as a function of the income percentile, with a particularly strong slope in the upper 
+quartile of the income distribution.
+26 For simplicity and in order to avoid modelling housing transaction chains—the coordinated and simultaneous sale and purchase of a number of properties linked 
+in a chain—, households having sold their homes are also said to be temporarily in social housing while they look for a new home.
+27 There are four main reasons why an active construction sector has not been included in the model. First, the ratio of houses to households is more important than 
+the absolute number of houses in our model. Second, incorporating a construction sector without considering a growing population or a mechanism to remove houses 
+would destabilize the model, leading to a collapse of prices. Third, even if both a construction sector and either a growing population or a mechanism to remove 
+houses are considered, if the ratio of houses per household remains close to constant, results would be mostly unaﬀected. Finally, in fact, empirically, this ratio has 
+remained relatively stable during the recent boom-bust cycle in Spain.
+28 Note that this ﬁxed income percentile assumption eﬀectively implies that we do not consider idiosyncratic income shocks, such as unemployment.
+29 At this point, it is possible that a household cannot aﬀord these payments. However, due to the lack of idiosyncratic income shocks as discussed above, this is in 
+fact very unlikely. In any case, since the nuances of bankruptcy dynamics are beyond the scope of our model, we directly consider these households as bankrupt and 
+we artiﬁcially inject as much liquidity as necessary so that all scheduled payments are made, with no further action against the bankrupt household.
+
+Journal of Economic Dynamics and Control 156 (2023) 104753
+18
+A.Carro
+properties currently rented out will receive these payments as rental income. Finally, households spend on non-housing 
+consumption depending on their remaining current ﬁnancial wealth.
+(b) Make their housing decisions depending on their current housing status:
+•I f in social housing, they decide whether to rent or buy a new house.
+•I f renting, they always continue to rent until the end of their current rental contract, when they decide whether to ﬁnd a 
+new rental property or try to buy a house.
+•I f owner-occupying a house and not having the buy-to-let ﬂag, they decide whether to sell this house.
+•I f owner-occupying a house and having the buy-to-let ﬂag, they decide whether to buy a new investment property and, for 
+each of their currently vacant investment properties, they decide whether to sell it.
+Apart from this, house owners with unsuccessful oﬀers left on the sales or rental market from previous months decide 
+whether to lower the price of these oﬀers.
+(c) Place their bids and oﬀers on the relevant market, whether sales or rental.
+3. Markets: Both markets are cleared following a double auction mechanism, with the sales market being cleared ﬁrst, followed 
+by the rental market.30 In particular, bids and oﬀers are matched in a number of rounds, until no further match is possible. In 
+each of these rounds, ﬁrst, bidders are matched to the highest quality oﬀer they can aﬀord given their bid price. Then, oﬀers 
+with a single bid are directly cleared while for oﬀers with multiple bids there is a certain probability of a price increase before 
+selecting one of the bidders at random and clearing the transaction. Unsuccessful bids are removed from the market at the end 
+of this process, while unsuccessful oﬀers are kept for the following month.
+4. Bank: There is a single bank in the model, representing the mortgage lending sector in the aggregate. This bank provides 
+mortgages as requested by households, complying both with its internal lending standards as well as with any borrower-based 
+macroprudential limits imposed by the Central Bank. Mortgages are eﬀectively issued after market matching, when transactions 
+are executed. However, at the stage when households are making their housing decisions, the bank provides each one of 
+them considering a house purchase with a mortgage in principle letter setting out the conditions on oﬀer and, speciﬁcally, 
+the maximum principal available to each of them. At the end of the time step, the bank updates its mortgage interest rate for 
+the next month, based on the rate for the current month and the resulting excess demand for credit over the bank’s target.
+Appendix B. Estimation and calibration of model parameters
+This appendix provides general information about the estimation and calibration of model parameters, while the speciﬁc values 
+used and the underlying data sources employed are deferred to Appendix D in the Supplementary Material. In particular, Subsec-
+tionB.1describes the main procedures used to set values for these parameters. SubsectionB.2provides a sensitivity analysis for a 
+few parameters whose values are based on UK data. Finally, SubsectionB.3explains the use of the method of simulated moments to 
+calibrate the parameters which cannot be estimated nor postulated.
+B.1. Types of parameters by estimation or calibration procedure
+Depending on the type of procedure used to set their value, the parameters of the model can be classiﬁed into four diﬀerent 
+categories:
+1. User set parameters: These parameters are used either for general control of the model, such as the number of time steps to 
+simulate, or to determine the policies in place in the diﬀerent experiments, such as most Central Bank parameters. Regarding 
+the latter, their default values are set as equal to those used by the private bank, such that they are not binding in the baseline 
+(no policy) case. They are only set to stricter, and thus binding, values for the purpose of policy experiments, such as the ones 
+described in Section5.
+2. Directly estimated parameters: These parameters and distributions are directly estimated from available data sources. Most 
+parameters in our model (34) belong to this category. Since some of the databases are only available for 2016, we set this year 
+as our target for calibration, using always the closest possible year if data for 2016 are not available.
+3. Postulated parameters with a sensitivity analysis: Due to the lack of data sources readily available to estimate these parameters, 
+we have opted to postulate plausible values for them. This applies to 20 parameters in our model. In a few cases (12), these 
+postulated values are based on the corresponding estimation made for the UK by Carro et al. (2023)( s e e Subsection B.2 for 
+further details and a sensitivity analysis). Since the eﬀects of these parameters are generally restricted to speciﬁc parts of the 
+model or speciﬁc outputs, we perform an independent sensitivity analysis for each of them, instead of including them in our full 
+calibration exercise.
+4. Calibrated parameters: These parameters cannot be directly estimated from the available data sources for Spain, their eﬀects are 
+widespread across the model and its outputs and it is not clear how to postulate plausible values for them. In order to calibrate 
+or ﬁnd values for these parameters, we use the method of simulated moments. In particular, this applies to 5parameters in our 
+model.
+30 In this way, buy-to-let investors acquiring a new investment property can directly oﬀer it for rent within the same month.
+
+Journal of Economic Dynamics and Control 156 (2023) 104753
+19
+A.Carro
+Fig. 11.Impact of variations in the value of the model parameters estimated with UK data, as measured by changes in the amplitude of the resulting house price cycle 
+(standard deviation of the corresponding house price index time series).
+B.2. Sensitivity analysis for parameters based on UK data
+Given the lack of access to equivalent data sources for Spain, 12 parameters of the model have values postulated based on the 
+corresponding estimation made for the UK by Carro et al. (2023). These 12 parameters can be gathered into 4 main categories or 
+mechanisms according to their role within the model: (i) initial price mark-up mechanism, independently estimated for the sales 
+and the rental market; (ii)price bid-up mechanism; (iii)price reduction mechanism, independently estimated for the sales and the 
+rental market; and (iv) buy-to-let motivations mechanism. Importantly, all these parameters are more related to the behavioural 
+rules of households than to the institutional settings of a speciﬁc market, and thus it seems reasonable to assume the corresponding 
+parameters and behaviours would be relatively similar across countries. For instance, it seems plausible that households in both the 
+UK and Spain oﬀering a house for sale would set relatively similar mark-ups over the recent sale price of similar houses.
+In order to test the inﬂuence of these parameters on the outcomes of the model Fig.11presents a sensitivity analysis for them. 
+In particular, this ﬁgure shows the impact of changes in the value of these parameters on the amplitude of the resulting house price 
+cycle, as measured by the standard deviation of the corresponding house price index time series. As can be seen in this ﬁgure, none 
+of the explored parameters seems to have a too strong inﬂuence on the amplitude of the house price cycle. For most of them, even 
+increasing or decreasing the value of the parameter by up to 20% would only lead to changes in the amplitude below 5%. Only 
+the three parameters related to the sale price reduction mechanism seem to have a slightly more pronounced impact, leading to 
+variations a bit above 5%. Even in that case, though, variations remain always well below 10%.
+
+Journal of Economic Dynamics and Control 156 (2023) 104753
+20
+A.Carro
+B.3. Calibration: method of simulated moments
+After using available data sources to estimate as many parameters as possible, as well as postulating parameter values whenever 
+data is missing but an informed guess together with a sensitivity analysis are enough, we are still left with 5 parameters requiring 
+a calibration. To this end, we use the method of simulated moments (Gilli and Winker, 2003; Franke, 2009; Franke and Westerhoﬀ, 
+2012; Fabretti, 2013; Chen and Lux, 2018; Platt and Gebbie, 2018). In particular, we ﬁrst build an objective function that measures 
+the distance or error between a set of simulated moments and their corresponding data equivalents. Then, we explore the parameter 
+space by launching simulations with diﬀerent combinations of parameter values. Finally, by ﬁnding the minimum of the objective 
+function over these simulations, we identify those parameter values which minimise the distance between the simulated moments 
+and those estimated from data.
+In applying this general methodology to the model at hand, we have incorporated three distinct characteristics. First, when 
+exploring the parameter space, we use parameter values evenly distributed across the corresponding Latin hypercube. This is an 
+important simpliﬁcation with respect to a fully-ﬂedged method of simulated moments, where the minimisation of a moment-based 
+distance is usually coupled with a more sophisticated a search procedure in the parameter space. In particular, while in our case the 
+parameter combinations tested are pre-determined, in a fully-ﬂedged method of simulated moments neither the speciﬁc parameter 
+combinations to test nor the number of such combinations are pre-determined. This simpliﬁcation is motivated by the substantial 
+computational cost associated with running a large-scale agent-based model like the one presented here, which doesn’t ﬁt well 
+within the open-ended character of a proper search-based exploration of the parameter space, particularly in terms of the number 
+of parameter combinations that might need to be simulated. Furthermore, the validity of this simpliﬁcation is substantiated by the 
+remarkable match of target moments shown in Table1, together with the fact that none of the selected parameter values falls on the 
+boundaries of the examined range of values.
+Second, we use a quadratic objective function, 𝒅𝑻 𝑾−𝟏𝒅, where 𝒅 is the distance between the set of simulated moments and 
+their corresponding data counterparts and 𝑾 is a weighting matrix determining the relative importance assigned to each moment 
+(diagonal terms), as well as any potential correlations between them (oﬀ-diagonal terms). In particular, we have considered no 
+correlations between moments and we have assigned the relative importance of each moment as follows:
+•L e s s relevant targets have been assigned a standard weight of 1. This includes the mean rental price index, the mean share of 
+households owning, and the mean interest rate spread. Given our primary focus on the house price index, the mean level of 
+rental prices has a reduced and indirect inﬂuence on our variables of interest. Since the share of households who own their 
+home is much larger than those in private renting or social housing, small variations around this target have less impact on 
+the outcomes of the model than variations around these other shares. Finally, the interest rate spread is relatively stable in our 
+model, so assigning more or less weight to it leads to similar results in terms of how close the simulated moment is from its data 
+counterpart.
+• More relevant targets have been assigned an increased weight of 2. This includes the mean share of households renting and the 
+mean share of households buy-to-let investing. Given their impact on the demand by buy-to-let investors, these two moments, 
+while less critical than others, do play a signiﬁcant role in our model.
+•T h e most relevant targets have been assigned a maximum weight of 5. This includes the standard deviation of the house price 
+index, its period, its mean value, and the mean rental yield. The three moments of the house price index are crucial in our 
+analysis, as it mostly focuses on housing prices and their cycles. The rental yield, because of its strong inﬂuence on the demand 
+by buy-to-let investors, is also a highly inﬂuential variable for our analysis.
+Third, importantly, we ignore parameter combinations for which any of the simulated moments lies outside a bound of acceptabil-
+ity of ±25%from the corresponding target moment. This ensures being close enough to each of the moments selected, thus avoiding 
+being too close in some and too far in others.
+The parameters calibrated with this method, together with the speciﬁc values explored, are:
+• Psychological cost of renting [see Eq.(5)  in AppendixC  in the Supplementary Material]. Values explored: 0.0, 0.2, 0.4, 0.6, 0.8, 
+1.0.
+•R e n t vs purchase sensitivity [see Eq. (5) in Appendix C in the Supplementary Material]. Values explored: 0.00001, 0.00003162, 
+0.0001, 0.0003162, 0.001, 0.003162, 0.01, 0.03162, 0.1.
+•B u y - t o - l e t probability adjustment. Values explored: 1.48, 1.52, 1.56, 1.6, 1.64, 1.68, 1.72, 1.76, 1.8.
+• Sensitivity of buy-to-let buy and sell decisions [see Eqs. (10) and (12) in Appendix C in the Supplementary Material]. Values 
+explored: 0.1, 0.3162, 1, 3.162, 10, 31.62, 100, 316.2, 1000.
+•W e i g h t of market vs segment house prices. Values explored: 0.1, 0.3, 0.5, 0.7, 0.9.
+Thus, we have explored 21870parameter combinations, with 10simulations per parameter combination, and with 5000time steps per 
+simulation, out of which the ﬁrst 1000time steps are always discarded. Finally, the moments used in building the objective function, 
+as well as the speciﬁc values targeted and the simulation values resulting from the calibration, are shown in Table1.
+Appendix. Supplementary material
+Supplementary material related to this article can be found online at https://doi .org /10 .1016 /j .jedc .2023 .104753.
+
+Journal of Economic Dynamics and Control 156 (2023) 104753
+21
+A.Carro
+References
+Akin, O., Montalvo, J.G., García Villar, J., Peydró, J.-L., Raya, J.M., 2014. The real estate and credit bubble: evidence from Spain. SERIEs5,  223–243.
+Angelini, P., Neri, S., Panetta, F., 2011. Monetary and macroprudential policies. Temi di Discussione (Working Paper) 801. Bank of Italy.
+Anundsen, A.K., Jansen, E.S., 2013. Self-reinforcing eﬀects between housing prices and credit. J.Hous.  Econ.22  (3), 192–212.
+Araujo, J.D., Patnam, M., Popescu, M.A., Valencia, M.F., Yao, W., 2020. Eﬀects of macroprudential policy: evidence from over 6,000 estimates. Working Paper 
+WP/20/67. International Monetary Fund (IMF).
+Ashraf, Q., Gershman, B., Howitt, P., 2017. Banks, market organization, and macroeconomic performance: an agent-based computational analysis. J. Econ. Behav. 
+Organ.135,  143–180.
+Axtell, R., Farmer, D., Geanakoplos, J., Howitt, P., Carrella, E., Conlee, B., Goldstein, J., Hendrey, M., Kalikman, P., Masad, D., Palmer, N., Yang, C.-Y., 2014. An 
+agent-based model of the housing market bubble in metropolitan Washington, DC. In: Deutsche Bundesbank’s Spring Conference on “Housing Markets and the 
+Macroeconomy: Challenges for Monetary Policy and Financial Stability”, pp.5–6.
+Bahaj, S., Foulis, A., Pinter, G., 2020. Home values and ﬁrm behavior. Am. Econ. Rev.110  (7), 2225–2270.
+Baptista, R., Farmer, J.D., Hinterschweiger, M., Low, K., Tang, D., Uluc, A., 2016. Macroprudential policy in an agent-based model of the UK housing market. Staﬀ 
+Working Paper 619. Bank of England.
+Berger, D., Guerrieri, V., Lorenzoni, G., Vavra, J., 2018. House prices and consumer spending. Rev. Econ. Stud.85  (3), 1502–1542.
+Biljanovska, N., Chen, S., Gelos, G., Igan, D., Martinez Peria, M.S., Nier, E., Valencia, F., 2023. Macroprudential policy eﬀects: evidence and open questions. Depart-
+mental Paper DP/2023/002. International Monetary Fund (IMF).
+Borio, C., 2014. The ﬁnancial cycle and macroeconomics: what have we learnt? J.Bank.  Finance45,  182–198.
+Borio, C., 2015. Macroprudential policies: what have we learnt? In: Speech at the Bank of Italy Conference on “Micro and Macroprudential Banking Supervision in 
+the Euro Area”, 24 November.
+Caiani, A., Godin, A., Caverzasi, E., Gallegati, M., Kinsella, S., Stiglitz, J.E., 2016. Agent based-stock ﬂow consistent macroeconomics: towards a benchmark model. 
+J.Econ.  Dyn. Control69,  375–408.
+Carreras, O., Davis, E.P., Hurst, I., Liadze, I., Piggott, R., Warren, J., 2018. Implementing macroprudential policy in NiGEM. NIESR Discussion Paper 490. National 
+Institute of Economic and Social Research (NBER).
+Carro, A., Hinterschweiger, M., Uluc, A., Farmer, J.D., 2023. Heterogeneous eﬀects and spillovers of macroprudential policy in an agent-based model of the UK 
+housing market. Ind. Corp. Change32  (2), 386–432.
+Carroll, C.D., Otsuka, M., Slacalek, J., 2011. How large are housing and ﬁnancial wealth eﬀects? A new approach. J.Money  Credit Bank.43  (1), 55–79.
+Castro, C., Estrada, A., Martínez, J., 2016. The countercyclical capital buﬀer in Spain: an analysis of key guiding indicators. Documento de Trabajo 1601. Banco de 
+España.
+Catapano, G., Franceschi, F., Loberto, M., Michelangeli, V., 2021. Macroprudential policy analysis via an agent based model of the real estate sector. Temi di 
+Discussione (Working Paper) 1338. Bank of Italy.
+Cerutti, E., Dagher, J., Dell’Ariccia, G., 2017. Housing ﬁnance and real-estate booms: a cross-country perspective. J.Hous.  Econ.38,  1–13.
+Chaney, T., Sraer, D., Thesmar, D., 2012. The collateral channel: how real estate shocks aﬀect corporate investment. Am. Econ. Rev.102  (6), 2381–2409.
+Chen, Z., Lux, T., 2018. Estimation of sentiment eﬀects in ﬁnancial markets: a simulated method of moments approach. Comput. Econ.52  (3), 711–744.
+Cincotti, S., Raberto, M., Teglio, A., 2012. The EURACE macroeconomic model and simulator. In: Aoki, M., Binmore, K., Deakin, S., Gintis, H. (Eds.), Complexity and 
+Institutions: Markets, Norms and Corporations. Palgrave Macmillan, UK, pp.81–106.
+Claessens, S., Kose, M.A., Terrones, M.E., 2011. Financial cycles: What? How? When? In: NBER International Seminar on Macroeconomics, vol. 7. University of 
+Chicago Press, Chicago, IL, pp.303–344.
+Claessens, S., Kose, M.A., Terrones, M.E., 2012. How do business and ﬁnancial cycles interact? J.Int.  Econ.87  (1), 178–190.
+Cokayne, G., 2019. The eﬀects of macro-prudential policies on house price cycles in an agent-based model of the Danish housing market. Working Paper 138. 
+Danmarks Nationalbank.
+Crowe, C., Dell’Ariccia, G., Igan, D., Rabanal, P., 2013. How to deal with real estate booms: lessons from country experiences. J.Financ.  Stab.9  (3), 300–319.
+Dawid, H., Delli Gatti, D., 2018. Agent-based macroeconomics. In: Handbook of Computational Economics, vol.4,  pp.63–156.
+Dawid, H., Gemkow, S., Harting, P., Van der Hoog, S., Neugart, M., 2012. The Eurace@Unibi model: an agent-based macroeconomic model for economic policy 
+analysis. Bielefeld Working Papers in Economics and Management No. 05-2012. Bielefeld University.
+De Stefani, A., 2021. House price history, biased expectations, and credit cycles: the role of housing investors. Real Estate Econ.49  (4), 1238–1266.
+Delli Gatti, D., Desiderio, S., Gaﬀeo, E., Cirillo, P., Gallegati, M., 2011. Macroeconomics from the Bottom-Up. Springer Science & Business Media.
+Dieci, R., Westerhoﬀ, F., 2012. A simple model of a speculative housing market. J.Evol.  Econ.22,  303–329.
+Dieci, R., Westerhoﬀ, F., 2016. Heterogeneous expectations, boom-bust housing cycles, and supply conditions: a nonlinear economic dynamics approach. J. Econ. 
+Dyn. Control71,  21–44.
+Dosi, G., Fagiolo, G., Roventini, A., 2010. Schumpeter meeting Keynes: a policy-friendly model of endogenous growth and business cycles. J. Econ. Dyn. Control 34 
+(9), 1748–1767.
+ESRB, 2022. Vulnerabilities in the residential real estate sectors of the EEA countries. Report. European Systemic Risk Board (ESRB).
+Estrada, Á., Saurina, J., 2016. Spanish boom-bust and macroprudential policy. Rev. Estab. Financ.30,  35–61.
+Evans, B.P., Glavatskiy, K., Harré, M.S., Prokopenko, M., 2023. The impact of social inﬂuence in Australian real estate: market forecasting with a spatial agent-based 
+model. J.Econ.  Interact. Coord.18,  5–57.
+Fabretti, A., 2013. On the problem of calibrating an agent based model for ﬁnancial markets. J.Econ.  Interact. Coord.8  (2), 277–293.
+Fagiolo, G., Guerini, M., Lamperti, F., Moneta, A., Roventini, A., 2019. Validation of agent-based models in economics and ﬁnance. In: Computer Simulation Validation. 
+Springer, pp.763–787.
+Fagiolo, G., Roventini, A., 2017. Macroeconomic policy in DSGE and agent-based models redux: new developments and challenges ahead. J.Artif.  Soc. Soc. Simul.20  
+(1), 1.
+Farmer, J.D., Foley, D., 2009. The economy needs agent-based modelling. Nature460  (7256), 685–686.
+Franke, R., 2009. Applying the method of simulated moments to estimate a small agent-based asset pricing model. J.Empir.  Finance16  (5), 804–815.
+Franke, R., Westerhoﬀ, F., 2012. Structural stochastic volatility in asset pricing dynamics: estimation and model contest. J.Econ.  Dyn. Control36  (8), 1193–1211.
+Funke, M., Paetz, M., 2018. Dynamic stochastic general equilibrium-based assessment of nonlinear macroprudential policies: evidence from Hong Kong. Pac. Econ. 
+Rev.23  (4), 632–657.
+Galán, J., Lamas, M., 2019. Beyond the LTV ratio: new macroprudential lessons from Spain. Documento de Trabajo 1931. Banco de España.
+Galati, G., Moessner, R., 2013. Macroprudential policy – a literature review. J.Econ.  Surv.27  (5), 846–878.
+Galati, G., Moessner, R., 2017. What do we know about the eﬀects of macroprudential policy? Economica85  (340), 735–770.
+Garriga, C., Hedlund, A., 2020. Mortgage debt, consumption, and illiquid housing markets in the great recession. Am. Econ. Rev.110  (6), 1603–1634.
+Gatt, W., 2023. Loan-to-value limits as a macroprudential policy tool: developments in theory and practice. J.Econ.  Surv.
+Ge, J., 2013. Who creates housing bubbles? An agent-based study. In: International Workshop on Multi-Agent Systems and Agent-Based Simulation. Springer, 
+pp.143–150.
+
+Journal of Economic Dynamics and Control 156 (2023) 104753
+22
+A.Carro
+Ge, J., 2017. Endogenous rise and collapse of housing price: an agent-based model of the housing market. Comput. Environ. Urban Syst.62,  182–198.
+Geanakoplos, J., Axtell, R., Farmer, J.D., Howitt, P., Conlee, B., Goldstein, J., Hendrey, M., Palmer, N.M., Yang, C.-Y., 2012. Getting at systemic risk via an agent-based 
+model of the housing market. Am. Econ. Rev.102  (3), 53–58.
+Gilli, M., Winker, P., 2003. A global optimization heuristic for estimating agent based models. Comput. Stat. Data Anal.42  (3), 299–312.
+Glavatskiy, K.S., Prokopenko, M., Carro, A., Ormerod, P., Harre, M., 2021. Explaining herding and volatility in the cyclical price dynamics of urban housing markets 
+using a large-scale agent-based model. SN Bus. Econ.1  (6), 1–21.
+Greenwald, D., 2018. The mortgage credit channel of macroeconomic transmission. Research Paper 5184-16. MIT Sloan.
+Gross, M., Población, J., 2017. Assessing the eﬃcacy of borrower-based macroprudential policy using an integrated micro-macro model for European households. 
+Econ. Model.61,  510–528.
+Gurgone, A., Iori, G., 2022. Macroprudential capital buﬀers in heterogeneous banking networks: insights from an ABM with liquidity crises. Eur. J. Finance28  (13–15), 
+1399–1445.
+Gurgone, A., Iori, G., Jafarey, S., 2018. The eﬀects of interbank networks on eﬃciency and stability in a macroeconomic agent-based model. J.Econ.  Dyn. Control91,  
+257–288.
+Haavio, M., Mendicino, C., Punzi, M.T., 2014. Financial and economic downturns in OECD countries. Appl. Econ. Lett.21  (6), 407–412.
+Haldane, A., 2013. Macroprudential policies – when and how to use them. In: Paper Presented at the Re-Thinking Macro II: First Steps and Early Lessons Conference. 
+IMF, Washington, DC.
+Haldane, A.G., Turrell, A.E., 2018. An interdisciplinary model for macroeconomics. Oxf. Rev. Econ. Policy34  (1–2), 219–251.
+Haldane, A.G., Turrell, A.E., 2019. Drawing on diﬀerent disciplines: macroeconomic agent-based models. J.Evol.  Econ.29  (1), 39–66.
+Hommes, C., He, M., Poledna, S., Siqueira, M., Zhang, Y., 2022. CANVAS: a Canadian behavioral agent-based model. Working Paper 2022-51. Bank of Canada.
+Iacoviello, M., 2005. House prices, borrowing constraints, and monetary policy in the business cycle. Am. Econ. Rev.95  (3), 739–764.
+Ingholt, M.M., 2022. Multiple credit constraints and time-varying macroeconomic dynamics. J.Econ.  Dyn. Control143,  104504.
+Jordà, Ò., Schularick, M., Taylor, A.M., 2015. Leveraged bubbles. J.Monet.  Econ.76,  S1–S20.
+Jordà, Ò., Schularick, M., Taylor, A.M., 2016. The great mortgaging: housing ﬁnance, crises and business cycles. Econ. Policy31  (85), 107–152.
+Laliotis, D., Buesa, A., Leber, M., Población, J., 2020. An agent-based model for the assessment of LTV caps. Quant. Finance20  (10), 1721–1748.
+Lambertini, L., Mendicino, C., Punzi, M.T., 2013. Leaning against boom–bust cycles in credit and housing prices. J.Econ.  Dyn. Control37  (8), 1500–1522.
+Lambertini, L., Mendicino, C., Punzi, M.T., 2017. Expectations-driven cycles in the housing market. Econ. Model.60,  297–312.
+Leamer, E.E., 2015. Housing really is the business cycle: what survives the lessons of 2008–09? J.Money  Credit Bank.47  (S1), 43–50.
+Liu, Z., Miao, J., Zha, T., 2016. Land prices and unemployment. J.Monet.  Econ.80,  86–105.
+Liu, Z., Wang, P., Zha, T., 2013. Land-price dynamics and macroeconomic ﬂuctuations. Econometrica81  (3), 1147–1184.
+Mandel, A., Jaeger, C., Fuerst, S., Lass, W., Lincke, D., Meissner, F., Pablo-Marti, F., Wolf, S., 2010. Agent-based dynamics in disaggregated growth models. Working 
+Paper 2010.77. Centre d’Economie de la Sorbone (CES).
+Martín, A., Moral-Benito, E., Schmitz, T., 2018. The ﬁnancial transmission of housing bubbles: evidence from Spain. Documento de Trabajo 1823. Banco de España.
+Martin, C., Schmitt, N., Westerhoﬀ, F., 2021. Heterogeneous expectations, housing bubbles and tax policy. J.Econ.  Behav. Organ.183,  555–573.
+Martin, C., Schmitt, N., Westerhoﬀ, F., 2022. Housing markets, expectation formation and interest rates. Macroecon. Dyn.26  (2), 491–532.
+Martin, C., Westerhoﬀ, F., 2019. Regulating speculative housing markets via public housing construction programs: insights from a heterogeneous agent model. Jahrb. 
+Natl.ökon. Stat.239  (4), 627–660.
+Mér˝o, B., Borsos, A., Hosszú, Z., Oláh, Z., Vágó, N., 2023. A high-resolution, data-driven agent-based model of the housing market. J.Econ.  Dyn. Control104738.
+Mian, A., Rao, K., Suﬁ, A., 2013. Household balance sheets, consumption, and the economic slump. Q. J. Econ.128  (4), 1687–1726.
+Mian, A., Suﬁ, A., 2011. House prices, home equity-based borrowing, and the US household leverage crisis. Am. Econ. Rev.101  (5), 2132–2156.
+Pangallo, M., Nadal, J.-P., Vignes, A., 2019. Residential income segregation: a behavioral model of the housing market. J.Econ.  Behav. Organ.159,  15–35.
+Paz-Pardo, G., 2021. Homeownership and portfolio choice over the generations. Working Paper 2021/2522. European Central Bank (ECB).
+Piazzesi, M., Schneider, M., 2009. Momentum traders in the housing market: survey evidence and a search model. Am. Econ. Rev.99  (2), 406–411.
+Piazzesi, M., Schneider, M., 2016. Housing and macroeconomics. Handb. Macroecon.2,  1547–1640.
+Platt, D., Gebbie, T., 2018. Can agent-based models probe market microstructure? Physica A503,  1092–1106.
+Poledna, S., Miess, M.G., Hommes, C., Rabitsch, K., 2023. Economic forecasting with an agent-based model. Eur. Econ. Rev.151,  104306.
+Popoyan, L., Napoletano, M., Roventini, A., 2017. Taming macroeconomic instability: monetary and macro-prudential policy interactions in an agent-based model. 
+J.Econ.  Behav. Organ.134,  117–140.
+Riddel, M., 2004. Housing-market disequilibrium: an examination of housing-market price and stock dynamics 1967–1998. J.Hous.  Econ.13  (2), 120–135.
+Rubio, M., Carrasco-Gallego, J.A., 2016. Liquidity, interest rates and house prices in the euro area: a DSGE analysis. J.Eur.  Real Estate Res.9  (1), 4–25.
+Schmitt, N., Westerhoﬀ, F., 2022. Speculative housing markets and rent control: insights from nonlinear economic dynamics. J.Econ.  Interact. Coord.17  (1), 141–163.
+Seppecher, P., Salle, I.L., Lavoie, M., 2018. What drives markups? Evolutionary pricing in an agent-based stock-ﬂow consistent macroeconomic model. Ind. Corp. 
+Change27  (6), 1045–1067.
+Tarne, R., Bezemer, D., Theobald, T., 2022. The eﬀect of borrower-speciﬁc loan-to-value policies on household debt, wealth inequality and consumption volatility: an 
+agent-based analysis. J.Econ.  Dyn. Control144,  104526.
+Vandenbussche, J., Vogel, U., Detragiache, E., 2015. Macroprudential policies and housing prices: a new database and empirical evidence for Central, Eastern, and 
+Southeastern Europe. J.Money  Credit Bank.47  (S1), 343–377.

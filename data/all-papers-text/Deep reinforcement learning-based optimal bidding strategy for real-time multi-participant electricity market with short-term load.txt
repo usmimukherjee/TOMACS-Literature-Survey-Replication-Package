@@ -1,0 +1,1040 @@
+Electric Power Systems Research 233 (2024) 110404
+Available online 16 May 2024
+0378-7796/© 2024 Elsevier B.V. All rights reserved.
+Contents lists available at ScienceDirect
+Electric Power Systems Research
+journal homepage: www.elsevier.com/locate/epsr
+Deep reinforcement learning-based optimal bidding strategy for real-time
+multi-participant electricity market with short-term load
+Chuwei Liu a, Xuan Raob, Bo Zhaob,∗, Derong Liuc,d, Qinglai Weie,f, Yonghua Wanga
+a School of Automation, Guangdong University of Technology, Guangzhou 510006, China
+b School of Systems Science, Beijing Normal University, Beijing 100875, China
+c School of System Design and Intelligent Manufacturing, Southern University of Science and Technology, Shenzhen 518055, China
+d Department of Electrical and Computer Engineering, University of Illinois Chicago, Chicago, IL 60607, USA
+e The State key Laboratory for Management and Control of Complex Systems, Institute of Automation, Chinese Academy of Sciences, Beijing 100190, China
+f School of Artificial Intelligence, University of Chinese Academy of Sciences, Beijing 100049, China
+A R T I C L E I N F O
+Keywords:
+Deep reinforcement learning
+Proximal policy optimization algorithm
+Bi-level optimization
+Electricity market bidding strategy
+Nash equilibrium
+A B S T R A C T
+This paper aims to address the bidding strategy optimization in the real-time multi-participant electricity
+market with short-term load dynamics. In order to avoid the sub-optimal solution and the dependence on
+the complete information in traditional mathematical programming methods, an electricity market bidding
+strategy optimization algorithm based on deep reinforcement learning (DRL) is developed. While conventional
+reinforcement learning algorithms (e.g., Q-learning and deep Q-learning) are only capable of handling simple
+problems in discrete state spaces, the proximal policy optimization (PPO) algorithm is implemented in the
+bidding strategy optimization since it can optimize the bidding strategy in the continuous action and state
+spaces. In order to substantiate the aforementioned perspective, this paper conducts a two-part experimental
+study. First, experiments which consider the fixed demand load of market participants show that the developed
+method can reach the Nash equilibrium just like the bi-level optimization, and higher profits can be achieved
+by adjusting hyperparameters. Then, complex experiments which consider the time-varying demand load verify
+the DRL-based electricity market bidding strategy performs better than bi-level optimization-based methods
+and increases the profits of generators.
+1. Introduction
+In order to improve the electricity efficiency and maximize the
+social welfare, the electricity market has introduced the competition
+mechanism. In particular, the deregulated electric wholesale market
+has introduced competition among multiple self-interested market par-
+ticipants, i.e., the generation companies (GenCos). In the electricity
+clearing process, independent system operators (ISOs) clear the market
+based on the supply and demand quotations provided by market par-
+ticipants, where GenCos are viewed as agents. As rational participants,
+GenCos select the most appropriate bidding strategies to maximize their
+profits through cooperation and competition. Generally speaking, the
+optimization of electricity market bidding strategy is formulated as a bi-
+level mathematical programming, where the upper-level optimization
+aims to maximize the profits of individual GenCos and the lower-level
+optimization aims to clear the electricity market under the condition of
+supply–demand balance of powers. The superiority of this model lies
+in its ability to capture the interaction between the strategy making of
+∗ Corresponding author.
+E-mail addresses: 2112104365@mail2.gdut.edu.cn (C. Liu), 2112004117@mail2.gdut.edu.cn (X. Rao), zhaobo@bnu.edu.cn (B. Zhao), liudr@sustech.edu.cn ,
+derong@uic.edu (D. Liu), qinglai.wei@ia.ac.cn (Q. Wei), wangyonghua@gdut.edu.cn (Y. Wang).
+GenCos and the market clearance. In this paper, a bi-level mathematical
+programming bidding strategy optimization method based on deep
+reinforcement learning (DRL) is developed.
+For the single-level mathematical programming, some methods in-
+cluding the simple method, the big 𝑀 method and the interior-point
+method [ 1] have been developed. However, the above methods can
+only solve problems with simple objective functions and simple con-
+straints. Thus, they are not applicable to the bi-level optimization of
+bidding strategy. In the bi-level-based framework, the evaluation of the
+upper-level problem depends on the settlement of the lower-level prob-
+lem, which makes it difficult and time-consuming for optimizing the
+bidding strategy of a GenCo. In fact, many bi-level optimization prob-
+lems are non-deterministic polynomial-time hard (NP-hard) [ 2], and
+thus, sub-optimal solutions are always obtained. Nevertheless, some
+special approaches, such as the traversal algorithm [ 3], the interior-
+point method [ 4] and the ergodic method [ 5], have been developed
+to obtain appropriate solutions for optimizing the electricity market.
+https://doi.org/10.1016/j.epsr.2024.110404
+Received 8 December 2023; Received in revised form 16 March 2024; Accepted 9 April 2024
+
+Electric Power Systems Research 233 (2024) 110404
+2
+C. Liu et al.
+Among these methods, the most popular way is the mathematical
+programming methods with equilibrium constraints (MPEC). In this
+method, the lower-level problem which is replaced by the Karush–
+Kuhn–Tucker (KKT) can be viewed as part of constrained conditions
+of the upper-level optimization problem. In this case, the bi-level
+optimization is converted to a single-level MPEC model which eases
+the upper-level optimization problem. However, the MPEC method has
+two limitations. First, the complicated transformation from the lower-
+level problem to its KKT conditions always requires the lower-level
+formulas to be convex. Otherwise, the global optimal solution of the
+bi-level programming cannot be guaranteed. This requirement means
+that MPEC cannot be used to non-convex programming. Meanwhile, it
+is not realizable to collect the complete information from all GenCos,
+which are necessary in optimizing the MPEC model in the real-time
+electricity market.
+As a model-free machine learning algorithm, reinforcement learning
+(RL), which does not require a precise mathematical programming
+model, enables agents to optimize the action by using their behavior
+and experience feedback in an interactive environment through trial
+and error. This motivates many researchers to employ RL in computer
+games [6], robotics [7], industrial automation [8–10] and so on. As
+one of the earliest RL algorithms, Q-learning which searches discrete
+state and action spaces by looking up the table, easily suffers from
+the ‘‘curse of dimensionality’’ due to the increase in state or action
+spaces [11], which leads to an adverse effect on the feasible action
+space, and results in a sub-optimal strategy. In the complex electricity
+market environment, the state (e.g., the market clearing price and
+dispatch) and the action space of the agent are not only continuous but
+also multi-dimensional. DRL, which is popularized by the intelligent
+computer program AlphaGo, is an advanced variant of RL to solve
+temporal decision problems with partial or hidden information due to
+the combination of deep neural network (DNN) [12] and RL. Compared
+with the traditional Q-learning algorithm, the advantage of DRL lies in
+that it uses DNN to establish the generalized mapping between states
+and action-state values (i.e., the Q-function) [13], rather than storing
+the specific look-up tables as in Q-learning. Thus, the DRL algorithm
+can be applied to continuous environment settings.
+Beyond the above success of RL algorithms in various domains, it
+is also applied to the sub-domains of the electricity market research,
+such as demand-side energy management [14,15] and residential load
+control [16,17]. In particular, RL algorithms are also used to optimize
+the bidding strategy of the electricity market. For example, [18] em-
+ployed a fuzzy Q-learning method to model the GenCo strategic bidding
+behaviors. The experiments demonstrate that the proposed fuzzy Q-
+learning can accumulate more profits in the long run in comparison
+with the conventional Q-learning. However, this method is still con-
+fined to the discrete state space and cannot deal with the uncertainties
+of the market. [19] employed the deep deterministic policy gradient
+(DDPG) to optimize the profit of single agent. The experiments show
+that the DDPG obtains higher profits than other methods. However,
+it can only optimize the strategy of single agent. [20] developed the
+bidding strategy in the day-ahead electricity market. In the proposed
+method, a GenCo submits the offer price for the next 24 h in day-ahead
+electricity market while it submits the offer price every 15 min to the
+real-time electricity market. In this approach, the real-time electricity
+market is described as a partially observable Markov decision process
+(MDP), which is solved through an RL algorithm [21]. MDP offers
+a systematic way to solve multi-stage probabilistic decision-making
+problems. In this process, the market participants continuously find the
+optimal strategy to maximize the expected reward.
+As a prominent approach of deep reinforcement learning, the prox-
+imal policy optimization (PPO) [22] algorithm is introduced in this
+paper. The PPO algorithm is a kind of two neural networks-based off-
+policy method, which has excellent robustness and accuracy. Compared
+with MPEC, this paper proposes a PPO-based electricity market bid-
+ding strategy algorithm (PPO-EMBSA) by employing RL to handle the
+bidding strategy optimization problem in the electricity market. The
+clip mechanism [23] of the PPO-EMBSA limits the step size of policy
+updating, and prevents instability during the training process. When
+the user demand continuously changes, the advantages of PPO-EMBSA
+enable it to learn the optimal policy efficiently and to effectively adapt
+to the dynamics of the market. The stability is ensured through the
+great robustness of PPO-EMBSA. In general, in order to achieve the
+supply function equilibrium (SFE) of the electricity market, two kinds
+of experiments are accomplished to test the algorithm performance. On
+the one hand, the feasibility of the PPO-EMBSA is verified by testing
+whether it can approximate the Nash equilibrium (NE) [24] solution
+with simple experiments. Furthermore, the hyper-parameter experi-
+ment, which is conducted as part of simple experiments, demonstrates
+that adjusting the hyper-parameter of the algorithm can lead to higher
+profits. On the other hand, the PPO-EMBSA is tested on a more complex
+optimization problem model by considering the long-term profit. In
+particular, this paper proves the superiority of the PPO-EMBSA by
+comparing it with Q-learning, DQN, asynchronous advantage actor-
+critic (A3C) and deep deterministic policy gradient (DDPG). The main
+contributions and novelties of this paper are summarized as follows.
+1. A PPO-EMBSA is proposed to overcome the limitations of the
+MPEC-based method in two distinct aspects. First, PPO-EMBSA
+does not need to transform the lower-level problem of the bi-
+level programming to the corresponding KKT condition. Instead,
+it selects bidding actions directly based on a neural network
+and continuously optimizes the policy until the NE is approxi-
+mated in the training process. Second, agents select appropriate
+strategies by PPO-EMBSA in an environment with incomplete in-
+formation and optimizes the present strategy for future rewards,
+which is superior to the requirement of complete information in
+the MPEC-based method.
+2. Compared with other RL algorithms, the proposed PPO-EMBSA
+tackles the high-dimensional continuous action more appropri-
+ately. It employs two neural networks to approximate the action
+and the value functions, respectively. This greatly improves the
+accuracy and the stability of RL-based electricity market bidding
+strategies.
+3. Experimental results show that the PPO-EMBSA derives appro-
+priate bidding strategies in situations of both fixed demand load
+and time-varying load. Then, the experiments also verify that the
+proposed method is more competitive than bidding algorithms
+based on Q-learning, DQN and A3C. In particular, additional
+ablation studies discuss the sensitivity of PPO-EMBSA to some
+hyper-parameters. Furthermore, comparative experiments with
+DDPG confirm its superior robustness and adaptability in the
+electricity market environment.
+The rest of this paper is organized as follows. Section 2 introduces
+the bidding framework of power producers and formulates the clear-
+ing process of market electricity. Section 3 establishes the bidding
+strategies of GenCos based on the PPO algorithm. Section 4 simulates
+the electricity market and analyzes the results by using different al-
+gorithms. Section 5 summarizes this paper and presents the future
+work.
+2. Bidding framework in the electricity market
+This paper employs SFE model [25,26] to construct the market
+clearing model, which is commonly utilized in real-time electricity
+markets to represent the competitive behavior of GenCos. The market
+clearing model interacts with the agents as part of the training process.
+For further understanding the background of the electricity market, we
+may refer to papers [20,27,28].
+The bidding framework of the electricity market consists of two
+parts, i.e., the liquidation of competition in the electricity market
+(lower-level), and the strategic game between the self-interested market
+participants (upper-level).
+
+Electric Power Systems Research 233 (2024) 110404
+3
+C. Liu et al.
+2.1. Market clearing model
+SFE which represents the type of competition among GenCos is
+commonly employed in ISO’s marketing clearing model, and the SFE
+model is adopted to the function of GenCos’ bidding process. In this
+model, ISO clears the market in order to maximize the social welfare.
+Each GenCo is indexed by 𝑔 ∈ (1, 2, …,𝐺 ), and the cost function for
+the gth GenCo is modeled as the quadratic function of its electricity
+generation output as
+𝐶𝑚
+𝑔 (𝑝𝑔𝑡) = 𝑎𝑚
+𝑔𝑝𝑔𝑡 + 1
+2𝑏𝑚
+𝑔𝑝2
+𝑔𝑡, (1)
+where 𝑝𝑔𝑡 ∈
+[
+𝑝min
+𝑔 ,𝑝 max
+𝑔
+]
+is the power generation output of the gth
+GenCo, 𝑎𝑚
+𝑔 and 𝑏𝑚
+𝑔 are the coefficients of the cost function, and a co-
+efficient with upper index𝑚 indicates that the coefficient is a constant.
+Furthermore,𝑝max
+𝑔 and𝑝min
+𝑔 are the maximum and minimum generation
+limits, respectively. The marginal cost of a GenCo is linearly expressed
+by
+𝜌𝑚
+𝑔 (𝑝𝑔𝑡) = 𝑎𝑚
+𝑔𝑡 +𝑏𝑚
+𝑔𝑝𝑔𝑡. (2)
+At the time instant 𝑡, the power generation bidding function can be
+formulated as
+𝜌𝑔(𝑝𝑔𝑡) = 𝑎𝑔𝑡 +𝑏𝑚
+𝑔𝑝𝑔𝑡, (3)
+where the intercept of the bidding function 𝑎𝑔𝑡 denotes the bidding
+strategy of the gth GenCo. In particular, the slope 𝑏𝑚
+𝑔 remains un-
+changed. At the time instant𝑡, the inverse demand line of the consumer
+side at the load 𝑑 is formulated as
+𝜌𝑑𝑡 (𝑞𝑑𝑡 ) = 𝑓𝑑 ⋅
+(
+𝐷max
+𝑑𝑡 −𝑞𝑑𝑡
+)
+, (4)
+where 𝑞𝑑𝑡 is the demand quantity on the consumer side, 𝐷max
+𝑑𝑡 is the
+maximum load demand which is fixed at each time step, and 𝑓𝑑 is a
+constant coefficient.
+According to (1) and (4), the marketing clearing process of ISO at
+the time instant 𝑡 is formulated as
+max
+𝑝𝑔𝑡,𝑞𝑔𝑡
+∑
+𝑑∈𝐷
+(
+−𝑓𝑑𝑡𝐷max
+𝑑𝑡 𝑞𝑑𝑡 + 1
+2𝑓𝑑𝑡𝑞2
+𝑑𝑡
+)
+−
+∑
+𝑔∈𝐺
+(
+𝑎𝑔𝑡𝑝𝑔𝑡 + 1
+2𝑏𝑚
+𝑔𝑝2
+𝑔𝑡
+)
+,
+s.t.
+∑
+𝑔∈𝐺
+𝑝𝑔𝑡 −
+∑
+𝑑∈𝐷
+𝑞𝑑𝑡 = 0,
+−𝐹𝑙 ≤𝐽𝑙(𝑝𝑡 −𝑞𝑡) ≤𝐹𝑙,
+𝑝min
+𝑔 ≤𝑝𝑔𝑡 ≤𝑝max
+𝑔 , (5)
+where𝐷,𝐺 are the sets of loads and GenCos,𝑝𝑔𝑡 and𝑞𝑑𝑡 are the column
+vectors of power supply and demand of all nodes, 𝐽𝑙 is the row vector
+of DC power flow distribution factor corresponding to the branch𝑙, and
+𝐹𝑙 is the vector of flow limits. ISO satisfies the node power balancing
+constraints, branch constraints and the power generation output. The
+objective of market clearance by ISO is to maximize the total social
+welfare, i.e., ∑
+𝑑∈𝐷
+(
+−𝑓𝑑𝑡𝐷max
+𝑑𝑡 𝑞𝑑𝑡 + 1
+2𝑓𝑑𝑡𝑞2
+𝑑𝑡
+)
+−∑
+𝑔∈𝐺
+(
+𝑎𝑔𝑡𝑝𝑔𝑡 + 1
+2𝑏𝑚
+𝑔𝑝2
+𝑔𝑡
+)
+. In
+the whole framework of the bi-level optimization, the market clearing
+model acts as the lower-level optimization.
+2.2. Optimization objective of the GenCo
+The objective of each GenCo is to find a suitable strategy which
+maximizes its own interests by playing games with competitors. It is
+worth pointing out that the upper-level of the bi-level optimization has
+to be achieved on the promise of satisfying the constraint of the lower-
+level optimization. When (5) is a convex quadratic programming, it can
+be replaced by its KKT [29] optimality condition. Therefore, the bi-level
+optimization problem corresponding to the GenCo is formulated as
+max
+𝑎𝑔𝑡
+𝑟𝑔𝑡 =𝜆𝑔𝑡𝑝𝑔𝑡 −
+(
+𝑎𝑚
+𝑔𝑝𝑔𝑡 + 1
+2𝑏𝑚
+𝑔𝑝2
+𝑔𝑡
+)
+,
+Fig. 1. The formulation process of bidding strategy.
+𝑎𝑔𝑡 ∈ [0, 3𝑎𝑚
+𝑔 ],
+the KKT conditions of (5), (6)
+where𝜆𝑔𝑡 is the nodal price of the GenCo. In the grid, the marginal cost
+of additional GenCos to the node 𝑔 is called nodal price 𝜆𝑔. When the
+electric consumption of each area is the same, the marginal price of
+each node is the same. In practice, the electricity used in all areas are
+always different, which always leads to power transmission blockage
+and different nodal prices.
+The bi-level optimization mathematical programming of electricity
+market is shown in Fig. 1 . The bi-level-optimization model ( 5) repre-
+sents multiple GenCos. The linear marginal price function ( 1) is used
+for the bidding of each GenCo. Through the lower-level optimization,
+the ISO receives the tenders and determines which unit and how
+much electricity to buy, how much electricity to deliver to customers,
+and how to decide the price of electricity by calculating the optimal
+power flow (OPF) [30]. The clearing results of lower-level optimization
+determine the objective of the upper-level optimization, i.e., the profit
+of each GenCo. Particularly, the bid price in OPF, rather than a true
+cost function is used by ISO. Each GenCo determines the bid price at
+its own discretion.
+In the MPEC method, market participants are supposed to share all
+the bidding parameters for competitors, such as nodal price 𝜆𝑔𝑡 and
+bidding strategy𝛼𝑔𝑡. In general, the lower-level optimization constraint
+is replaced by its equivalent KKT condition, which however can only be
+applied to solve continuous and convex bi-level problems. Furthermore,
+it is obviously unrealistic to solve the KKT conditions for time-varying
+demand load with considering the long-term profits since it requires a
+plenty of computational resources. Thus, the MPEC method can only
+solve the NE of the static game where the agents only consider the
+fixed-load profit with complete information. In this paper, it is used
+as a baseline approach to RL-based bidding strategy algorithms [ 3].
+In particular, we claim that an algorithm is appropriate as long as it
+can approximate the NE strategy. On this basis, we present the strategy
+optimization performance of RL on time-varying demand load within
+a time interval. Specifically, the NE strategy calculated by the MPEC
+method is denoted by (𝛼∗
+1𝑡,𝛼 ∗
+2𝑡, …,𝛼 ∗
+𝐺𝑡).
+
+Electric Power Systems Research 233 (2024) 110404
+4
+C. Liu et al.
+3. PPO-based electricity market bidding strategy
+Before presenting the method, a brief description of RL is given here.
+In the RL training process, the agent first takes an action according to
+the environment state. Next, the environment transfers to the next state
+based on the transition probability. Meanwhile, the agent receives the
+immediate reward by interacting with the environment. The algorithm
+repeats the above process until termination.
+Agents act to the environment by taking the sequence of time steps
+in order to maximize the cumulative reward𝑟(𝜏) = ∑𝑇
+𝑡=1𝛾𝑡−1𝑟(𝑠𝑡,𝑎𝑡). The
+parameters required in the training process include: (1) the state space
+𝑆; (2) the action space𝐴; (3) the conditional transition probability with
+Markov property 𝑃 (𝑠𝑡+1 ∣ 𝑠𝑡,𝑎𝑡) = 𝑃 (𝑠𝑡+1 ∣ 𝑠1,𝑎 1,𝑠 2,𝑎 2, …,𝑎𝑡); (4) the
+reward function 𝑟 determined by the environment.
+The Q-value function of RL-based agent with respect to the policy
+𝜋 can be described in a recursive manner according to the Bellman
+equation as
+𝑄𝜋 (𝑠𝑡,𝑎𝑡) = E[𝑟𝑡 +𝛾𝑄𝜋(𝑠𝑡+1,𝜋 (𝑠𝑡+1))]. (7)
+Thus, the estimation of expected cumulative discounted reward for
+a given strategy with the state 𝑠𝑡 is obtained. The goal of RL is
+to find the optimal policy 𝜋 which maximizes the Q-value function,
+i.e., 𝑄∗
+𝜋 (𝑠𝑡,𝑎𝑡) = max𝜋𝑄𝜋 (𝑠𝑡,𝑎𝑡).
+3.1. PPO algorithm
+PPO algorithm is a type of policy gradient (PG) [31]-based RL
+method with the actor-critic framework [32]. According to the RL
+mechanism, the agent interacts with the environment based on the
+policy𝜋 to generate a trajectory𝜏 = (𝑠1,𝑎 1,𝑟 2,𝑠 2,𝑎 2,𝑟 2,...,𝑠𝑡,𝑎𝑡,𝑟𝑡,𝑠𝑡+1).
+The occurring probability of this trajectory is obtained by 𝑝𝜃(𝜏) =
+𝑝(𝑠1)∏𝑇
+𝑡=1𝑝𝜃(𝑎𝑡 ∣𝑠𝑡)𝑝(𝑠𝑡+1 ∣𝑠𝑡,𝑎𝑡).
+In the training process, the PPO-EMBSA tends to choose the trajec-
+tories that can return high rewards, which means the probability of
+high-reward trajectories becomes larger. The objective function of the
+PPO-EMBSA is defined as
+𝐽 (𝜃) = E(𝑠,𝑎)∼𝜋𝜃′
+[𝜋𝜃(𝑎 ∣𝑠)
+𝜋𝜃′ (𝑎 ∣𝑠) ∗𝐴𝑡
+]
+, (8)
+where 𝐴𝑡 =𝑄(𝑠,𝑎 ) −𝑉 (𝑠) is the advantage function at the time instant
+𝑡 and 𝑟(𝜃) = 𝜋𝜃 (𝑎∣𝑠)
+𝜋𝜃′ (𝑎∣𝑠) is the importance sampling ratio between the
+target policy 𝜋𝜃 and the behavior policy 𝜋𝜃′ at the time instant 𝑡.
+Thus, we can obtain the optimal parameter of the actor network by
+𝜃∗ = arg max𝜃𝐽 (𝜃). However, the non-constrained objective function (8)
+may lead to excessive gap in the policy updating, which increases the
+variance and even cause instability of the training process. To avoid
+excessive policy updating, PPO-penalty and PPO-clip are developed.
+Similar to the trust region policy optimization algorithm (TRPO)
+[33], PPO-penalty constrains the updating of 𝜃 by an additional KL
+divergence term. Alternatively, PPO-clip takes a more concise approach
+depending on the engineering experience as
+𝐽 clip(𝜃) = E[min(𝑟(𝜃)𝐴𝑡, clip(𝑟(𝜃), 1 −𝜖, 1 +𝜖)𝐴𝑡)], (9)
+where𝜖 is a hyper-parameter. PPO-clip eliminates the probability ratio
+outside the interval (1−𝜖, 1+𝜖) in order to modify the objective function.
+Since the PPO-clip is proved more effective than PPO-penalty [22],
+it is employed in this paper. The advantage function 𝐴𝑡 has both pos-
+itive and negative states. When the advantage function 𝐴𝑡 is positive,
+the action 𝑎𝑡 at the time instant 𝑡 is better than the average score of
+the actions on the state 𝑠𝑡, and the chosen probability of 𝑎𝑡 should
+be increased; otherwise, 𝑎𝑡 should be reduced. The effect of the clip
+is shown in Fig. 2.
+In addition to the above mentioned modification, a replay buffer
+is used to store the past experience in PPO. Moreover, the actor-
+critic framework is implemented to achieve different purposes by two
+neural networks. The actor network selects the action based on the
+probability distribution, the critic network is used to approximate the
+Q-value function, and the temporal-difference (TD) error based on the
+behaviors is generated by the actor. Then, the actor network modifies
+the probability of actions based on the TD error.
+3.2. The bidding strategy of GenCos with PPO
+In this paper, a PPO algorithm is developed to optimize the bidding
+strategy of GenCos. The training process of each training round for PPO-
+EMBSA is shown in Fig. 3. In the market clearing process, each agent
+independently learns its own strategy, and strategies of other agents
+are considered as part of the environment. Note that the environment
+may not be stable since all agents make the decision independently.
+In the experiments, the independent setting of each agent often causes
+unstable optimization results, i.e., the experimental results have large
+variance. The unstable results of the agents make the decision without
+considering the situation of its competitors. This indicates that an agent
+may make a wrong judge of the actual situation of electricity market
+easily. Thus, a robust algorithm is presented to obtain appropriate
+bidding strategies. Comparison experiments show that the PPO always
+approximates NE strategies stably and obtains higher profits in the
+electricity market.
+The behavior of the PPO-EMBSA is analyzed from two aspects:
+(1) The strategy derived by the PPO-EMBSA is compared with the
+NE strategy derived by the mathematical programming method. If
+the PPO-based bidding strategy approaches the NE, a suitable bidding
+strategy is found. (2) The introduction of the time-varying load demand
+will aggravate the environment instability and affect the algorithm
+convergence. In this case, the bidding strategy will be changed along
+with the load fluctuation and outputs the profit at each time instant.
+The key elements of the electricity market bidding strategy are listed
+as follows.
+(1) Environment: The environment is represented by the market
+clearing process, which is the bi-level optimization model described in
+Section 2. The strategies of GenCos are regarded as the inputs of the
+environment, and the nodal price and profit are regarded as the next
+state and the current reward.
+(2) Agent: The agent makes the corresponding action 𝑎𝑡 according
+to the state 𝑠𝑡 in RL. In this paper, the GenCo is regarded as the agent
+of the PPO-EMBSA to participate in the market clearing process. Note
+that, each GenCo plays games with competitors (other GenCos) in the
+market clearing process in order to obtain higher profits.
+(3) State: The nodal price𝜆𝑔𝑡 of each GenCo and the maximum load
+demand𝐷𝑡 in the time instant 𝑡 are taken as state variables. The nodal
+price which is introduced as the marginal cost of additional GenCo to
+the node where the GenCo located reflects the electric consumption of
+a certain area. The state of the gth agent is defined as node-state
+𝑠𝑔𝑡 = (𝜆1,𝑡−1,𝜆 2,𝑡−1, …,𝜆𝐼,𝑡−1,𝐷 max
+𝑑𝑡 ). (10)
+(4) Action: The action is generated by the marginal cost function (2)
+of the GenCo. The bidding parameters can be selected as the intercept
+𝑎𝑔𝑡, the slope 𝑏𝑔𝑡 or their proportional modification. In this paper, the
+intercept𝑎𝑔𝑡 is selected and varies within [−1, 1]. The strategy variable
+is standardized as
+𝛼𝑔𝑡 = (𝑎𝑔𝑡 + 1) ⋅ 3
+2𝑎𝑚
+𝑔. (11)
+(5) Reward: The profit to be optimized for each time instant is taken
+as a reward as agent-reward
+𝑟𝑔𝑡 =𝜆𝑔𝑡𝑝𝑔𝑡 −
+(
+𝑎𝑚
+𝑔𝑝𝑔𝑡 + 1
+2𝑏𝑚
+𝑔𝑝2
+𝑔𝑡
+)
+.
+The principle of marginal cost pricing [34] where GenCos gain
+revenue by deviating the bidding strategy (i.e., the intercept of cost
+function 𝑎𝑚
+𝑔 ) is adopted in the electricity market. In general, the re-
+lationship among agents includes both competition and cooperation.
+For the competition, the increase in profits of some agents may cause
+
+Electric Power Systems Research 233 (2024) 110404
+5
+C. Liu et al.
+Fig. 2. The advantage function 𝐴(𝑡) for positive (left) and negative (right) values. The blue, green and red lines indicate the unclipped, clipped importance weights and their final
+values, respectively.
+Fig. 3. PPO-based bidding strategy algorithm.
+Fig. 4. PPO-based market bidding strategy. The agents (GenCos) input the initial state (nodal price) 𝜆0 to the PPO algorithm to obtain the action 𝑎𝑡 and interact with the
+environment constantly until convergence. In the experiments with fixed demand loads, the bidding strategy of the PPO-EMBSA is expected to approximate the NE solution of
+MPEC-based methods. Then, output the strategy 𝛼𝑔 and the nodal price 𝜆𝑔, where 𝛼𝑔 and 𝜆𝑔 are positive correlation.
+a decrease in profits of other agents, but cooperation means suitable
+strategies are implemented to increase the changeable total profit.
+In order to achieve this goal, we develop a PPO-EMBSA which is
+illustrated in Algorithm 1 and Fig. 4.
+Remark 1. As it is seen in Fig. 4, the agents (GenCos) input the initial
+state 𝑠0 (nodal price 𝜆0) to the PPO algorithm to obtain the action 𝑎𝑡,
+each training process is illustrated in Fig. 3 . Then, the agents interact
+with the environment and obtain the next state 𝑠𝑡+1 and the reward 𝑟𝑡,
+i.e., the node-state formula and the agent-reward formula, respectively.
+The environment described in Fig. 3 is represented by (5). The training
+process is repeated until the strategy converges.
+4. Experimental results
+The developed PPO-EMBSA is implemented in Python with Pytorch
+framework. All the experiments operate on a computer with 11th Gen
+Intel(R) Core(TM) i7-11700 @ 2.50 GHz and 64 GB of RAM.
+4.1. Strategy optimization of fixed demand load
+4.1.1. Approximation of the NE strategy
+Consider a 3-bus power system with two GenCos and a fixed de-
+mand load 𝐷𝑑𝑡, the goal of each GenCo is to maximize the profit at
+each time instant. The system state is described as 𝑠 = ( 𝜆1,𝜆 2). In
+
+Electric Power Systems Research 233 (2024) 110404
+6
+C. Liu et al.
+Algorithm 1 The PPO-EMBSA
+Input: Maximum epoch 𝑇 , exploration epoch 𝑇𝑒𝑝𝑠 and replay buffer
+size 𝑇𝑅
+Output: Bidding strategy 𝛼𝑔𝑡
+1: for agent 𝑔 = 1:𝐺 do
+2: Randomly initialize the parameters 𝜃𝑄 and 𝜃𝜇 of the critic and
+actor neural networks 𝑄 and 𝜇,
+respectively.
+3: Receive initial state 𝑠𝑔1
+4: end for
+5: for time 𝑡 = 1:𝑇 do
+6: if time 𝑡 = 1:𝑇𝑒𝑝𝑠 then
+7: for agent 𝑔= 1:𝐺 do
+8: Select a random action 𝑎𝑔𝑡 and the probability 𝑝𝑟𝑜𝑏𝑔𝑡 of
+𝑎𝑔𝑡 from actor, and obtain the
+𝛼𝑔𝑡 by (11)
+9: end for
+10: Market clearing by (5)
+11: for agent 𝑔 = 1:𝐺 do
+12: Get the next state 𝑠𝑔,𝑡+1 and payoff 𝑟𝑔𝑡
+13: if epoch 𝑡 =1:𝑇𝑅 then
+14: Store (𝑠𝑔𝑡,𝑎𝑔𝑡,𝑝𝑟𝑜𝑏𝑔𝑡,𝑠𝑔,𝑡+1,𝑟𝑔𝑡) in replay buffer
+15: else
+16: Select a random tuple (𝑠𝑔𝑡,𝑎𝑔𝑡,𝑝𝑟𝑜𝑏𝑔𝑡,𝑠𝑔,𝑡+1,𝑟𝑔𝑡) in the
+relay buffer, and select 𝑁 tuples
+randomly to form a mini-batch (𝑠𝑔𝑖,𝑎𝑔𝑖,𝑝𝑟𝑜𝑏𝑔𝑖,𝑠𝑔,𝑖+1),
+calculate 𝑦𝑔𝑖 =𝑟𝑔𝑖 +𝛾 max
+𝑎𝑔𝑖
+𝑄(𝑠𝑔,𝑖+1,𝑎𝑔𝑖,𝜃𝜇′
+).
+17: Compute advantage estimation𝐴𝑡 =𝑦𝑔𝑖 −𝑄(𝑠𝑔𝑖,𝑎,𝜃 𝜇′
+),
+update the actor 𝜃𝜇
+𝑖+1by (9)
+via gradient ascent with Adam.
+18: Update the critic 𝑄 by the loss function 𝐿(𝜃𝑄
+𝑖+1) =
+𝐸[𝑄(𝑠𝑔𝑖,𝑎𝑔𝑖,𝜃𝜇) −𝑦𝑔𝑖]2
+via gradient descent with Adam.
+19: end if
+20: end for
+21: else
+22: for agent 𝑡 =1:𝐺 do
+23: Select 𝑎𝑔𝑡 = arg max
+𝑎
+𝑄(𝑠𝑔𝑡,𝑎,𝜃 𝜇), the probability 𝑝𝑟𝑜𝑏𝑔𝑡 of
+𝑎𝑔𝑡, and obtain the 𝛼𝑔𝑡 by (11)
+24: end for
+25: Marking clearing by (5)
+26: end if
+27: end for
+the experiment, the key branch where nodes 1 and 2 are located is
+selected as the electricity consumer. Node 1 represents the load and
+power generation, node 2 represents the load of consumer, and node 3
+represents the power generation. Introducing the parameters of nodes
+1 and 2 into the bi-level optimization model (5), the load requirements
+of nodes 1 and 2 are set to 500 kw/h and 660 kw/h, respectively.
+The inverse demand line Eq. (4) are set to 40 − 0.08𝑞 and 40 − 0.06𝑞,
+i.e., 𝑓1 = 0.08 and 𝑓2 = 0.06, respectively. The marginal cost functions
+of GenCos 1 and 2 are 15 + 0.01𝑝1 and 18 + 0.08𝑝2, i.e.,𝑎𝑚
+1 = 15,𝑎𝑚
+2 = 18,
+𝑏𝑚
+1 = 0.01 and 𝑏𝑚
+2 = 0.08.
+For the PPO-EMBSA, two fully connected neural networks are em-
+ployed as the actor and critic networks, with the numbers of hidden
+neurons 128 and 64, respectively. All the hidden layers in both of
+them are activated by the ReLU nonlinear activation function [35], and
+the output layer of the actor neural network is activated by Softplus
+function [36]. The Adam optimizer [37] is used to train the weights of
+neural networks. According to [22,38], the probability ratio is limited
+within [1 −𝜖, 1 +𝜖] = [0.8, 1.2] with 𝜖 = 0.2. The learning rates of both
+Table 1
+Comparison results on the approximation of NE by different algorithms.
+Algorithm Strategy ( 𝛼) Mean of the strategies Variance
+Q-learning 𝛼1 21.00 6.00
+𝛼2 24.00 2.72
+DQN 𝛼1 22.40 5.20
+𝛼2 25.72 7.04
+A3C 𝛼1 21.30 1.30
+𝛼2 23.90 1.52
+DDPG 𝛼1 20.72 0.22
+𝛼2 23.12 0.29
+PPO 𝛼1 21.20 0.42
+𝛼2 23.37 0.34
+the actor and critic neural networks are set to 10−4, and the hyper-
+parameter 𝛾 is set to 0. In addition, the maximum time step is set
+to 20,000, the capacity of the replay buffer is 2,000, and the sample
+number of the mini-batch is set to 128.
+The NE for static games derived by the MPEC method is obtained
+as [𝛼∗
+1,𝛼 ∗
+2 ] = [20 .29, 22.98] [39]. If the strategies of RL-based agents
+converge to the NE, the RL-based algorithm can obtain the appropriate
+strategy. To emphasize the advantage of the proposed algorithm, two
+RL-based algorithms, i.e., Q-learning and DQN are employed for com-
+parison, and the PPO-EMBSA can obtain a more appropriate strategy
+than the other two algorithms. The results of the static games are shown
+in Fig. 5.
+As the earliest DRL algorithm, the DQN adopts a neural network
+to approximate the value function. Compared with the table-based Q-
+learning, DQN can be applied to the continuous state space. However,
+the action space is still required to be discretized since DQN is a
+value function-based RL algorithm. As we can see from Fig. 5, the
+fluctuation during the training procedure means that the performance
+of the strategies chosen by the agent with the Q-learning and DQN-
+based bidding strategy algorithms are still unstable. By comparison, the
+PPO-EMBSA presents smoother training curves and exhibits more stable
+convergence.
+In order to verify the stability of the PPO-EMBSA, the experiment
+has been operated for 10 times independently with different random
+seeds. We calculate the mean and variance to eliminate the randomness
+of the experimental results, the mean and variance of all convergent
+strategies are shown in Table 1, where we can see that the variances
+of Q-learning and DQN-based strategies are much larger than that of
+PPO when the means are almost the same. It means that the PPO-
+EMBSA has higher stability and accuracy. This experiment proves that
+the PPO-EMBSA has the ability to prevent agents from receiving other
+sub-optimal strategies.
+Remark 2. In addition to the aforementioned two algorithms, this
+paper also compares the performance of the PPO-EMBSA with those of
+A3C and DDPG algorithms. Similar to PPO, A3C contains an AC frame-
+work with two neural networks. The A3C algorithm trains multiple
+agents in parallel with each agent independently interacting with the
+environment and updating model parameters. The training process is
+described as follows. The global policy network and value network first
+synchronize their network parameters to each thread, which indepen-
+dently trains and calculates the parameter gradient to asynchronously
+update the global network parameters.
+As we can see in Table 1, the results of the A3C-based bidding
+strategy indicate a slight inferiority compared to PPO. This is attributed
+to two reasons. (1) Due to the parallel asynchronous training process in
+the A3C, interactions and parameter updating among different agents
+may result in inconsistency, which leads to the instability of training.
+(2) The sharing of multiple threads introduces the complexity in pa-
+rameter updating. When different threads simultaneously update the
+same parameter, it may lead to the overwriting by a certain thread and
+impacting the convergence of the model.
+
+Electric Power Systems Research 233 (2024) 110404
+7
+C. Liu et al.
+Fig. 5. Approximation results of NE. (a) Q-learning algorithm; (b) DQN algorithm; (c) PPO algorithm.
+Fig. 6. Convergence of bidding strategies with hyperparameters. (0.95 confidence interval) (a) Learning rate (DDPG); (b) Learning rate (PPO); (c) Batch size (DDPG); (d) Batch
+size (PPO).
+Remark 3. In the comparative experiments between the PPO-EMBAS
+and DDPG algorithms, the results in [ 39] indicate that the conver-
+gence of the DDPG-based algorithm is comparable to that of PPO-
+EMBSA. However, Fig. 6 indicate that DDPG is more sensitive to
+hyper-parameters, whose inappropriate selection may lead to degrada-
+tion. In contrast, the PPO is more suitable to apply to the electricity
+market clearing environment since it exhibits better robustness. Since
+the PPO algorithm cannot handle highly stochastic factors, such as
+noise interference and random transition probabilities, it does not
+involve in the experiments conducted in this paper. Therefore, through
+comparing the convergence of five algorithms, the PPO-based algorithm
+is the most appropriate for the electricity market environment.
+4.1.2. Influence of the hyper-parameters
+In different environments, the hyper-parameters affect the perfor-
+mance of RL algorithms greatly. That is to say, the algorithm is very
+sensitive to some hyper-parameters. The discount factor 𝛾 is used to
+tradeoff the importance between the immediate and future rewards. If𝛾
+is close to 0, the agents pay more attention to current rewards, and less
+foresight of the future rewards. In this case, the agents may converge to
+the bidding strategies with lower profits. If𝛾 is close to 1, the agents pay
+more attention to the future rewards, but it does not mean that𝛾 should
+be selected as high as possible because of the behavioral uncertainty of
+agents. Thus, it is a proper value depending on the experimental results.
+The experiments are still conducted on the 3-bus power system. For
+the PPO-based bidding strategy with different 𝛾, we perform multiple
+experiments and record the average profits. The influence of 𝛾 on
+strategy selection is shown in Fig. 7 . When 𝛾 < 0.9, there exists
+slight fluctuation of𝛼𝑔𝑡. However, the difference among the convergent
+strategies is not obvious, and when 𝛾 > 0.9, the experimental results
+are quite different. At the same time, the significant ascent increases
+the error, which means the action-value function is unstable. That is
+because agents pay more attention to future rewards. The profit of the
+agent also changes with different bidding strategies, which are recorded
+in Table 2. Meanwhile, the huge fluctuation of the DQN-based bidding
+strategies indicates that𝛾 has almost no effect on the strategy selection
+of the DQN-based bidding strategy algorithm.
+The profit improvement in the PPO-EMBSA algorithm is attributed
+to the selection of𝛾. In the MPEC method, the profit GenCos is obtained
+individually as [profit1, profit2]=[793.6, 1750.3] [ 40]. By adjusting
+𝛾 in the PPO-EMBSA algorithm, the agents can achieve higher profits
+Table 2
+Influence of parameter 𝛾 on PPO.
+𝛾 Strategy (𝛼∗) Average-strategy Variance Noda price ($) Profit ($)
+0.0 𝛼1 21.29 0.42 22.04 767.52
+𝛼2 23.28 0.34 25.75 1833.56
+0.2 𝛼1 21.74 0.23 22.44 747.29
+𝛼2 23.37 0.1 25.79 1968.07
+0.4 𝛼1 20.77 0.27 21.80 751.89
+𝛼2 23.19 0.41 25.56 1838.59
+0.6 𝛼1 21.26 0.35 22.31 820.53
+𝛼2 23.70 0.56 25.77 1896.40
+0.8 𝛼1 21.51 0.20 22.30 871.33
+𝛼2 24.03 0.41 25.76 1898.607
+0.9 𝛼1 21.86 0.30 23.08 834.47
+𝛼2 24.15 1.32 25.75 1929.86
+0.95 𝛼1 23.26 0.51 24.58 1172.81
+𝛼2 26.64 0.34 28.06 1929.856
+0.97 𝛼1 23.78 0.70 25.24 1312.44
+𝛼2 28.11 0.64 29.40 1696.45
+0.98 𝛼1 24.68 4.76 26.09 1782.28
+𝛼2 30.29 1.31 30.52 970.63
+0.99 𝛼1 23.55 4.11 26.64 2215.14
+𝛼2 33.98 8.25 32.20 0.01
+than the MPEC method. The relationship between profit and changes
+in𝛾 is illustrated in Table 2. For the PPO-based strategy, when 𝛾 <0.9,
+the profit changes slightly because the fluctuation of𝛼𝑔𝑡 is not obvious.
+The strategy ascends significantly when 𝛾 > 0.9, and 𝛾 has a more
+significant effect on 𝛼2 which means GenCo 2 is more eager for higher
+profit with foresight. The profit of GenCo 1 increases gradually, but
+that of GenCo 2 decreases. When𝛾 >0.97, the profit of GenCo 1 exceeds
+GenCo 2. When𝛾 = 0.99, the gap between𝛼1 and𝛼2 becomes very large.
+Meanwhile, similar phenomenon appears in the nodal price, i.e., the
+profit of GenCo 2 decreases to 0, and GenCo loses its competitiveness
+due to the excessive nodal price. In summary, when 𝛾 > 0.95, the
+profit of GenCo 1 exhibits a sustained upward trend, whereas GenCo
+2 experiences a contrasting decline. Therefore, 𝛾 = 0.95 is the optimal
+choice. The profits achieved by agents are both significantly higher
+than those obtained by the MPEC method (which are 47.77% and
+10.2% higher than the profits of the MPEC approach).
+
+Electric Power Systems Research 233 (2024) 110404
+8
+C. Liu et al.
+Fig. 7. DQN-based and PPO-based bidding strategies with different 𝛾 (0.95 confidence intervals). (a) DQN algorithm; (b) PPO algorithm.
+Fig. 8. Approximation results on the 30-bus system. (a) The curve of 𝛼1,𝛼 2,𝛼 3; (b) The curve of 𝛼4,𝛼 5,𝛼 6.
+Table 3
+GenCos’ supply function parameters of the 30-bus system.
+𝑔 Branch 𝑎𝑚
+𝑔 ($/MW) 𝑏𝑚
+𝑔 ($/MW) 𝑃 −
+𝑔 𝑃 +
+𝑔
+2 2 20 0.2 5 80
+3 13 25 0.2 5 50
+4 22 22 0.2 5 80
+5 23 22 0.2 5 50
+6 27 16 0.25 5 120
+4.1.3. The game on the 30-bus power system
+In order to verify the practicability of the PPO-EMBSA on more
+complex systems, we conduct the same experiments on IEEE 30-bus
+power system with 6 GenCos and 20 customers [ 41]. The parameters
+of the 30-bus are the same as those in [ 39], and the GenCo and load
+parameters are shown in Tables 3 and 4 . The NE of the static game
+is [𝛼∗
+1𝑡,𝛼 ∗
+2𝑡,𝛼 ∗
+3𝑡,𝛼 ∗
+4𝑡,𝛼 ∗
+5𝑡,𝛼 ∗
+6𝑡] =[21.388, 23.807, 34.317, 27.235, 22.43,
+24.85], which is inherited from [ 3] . The approximations of the NE
+strategy are shown in Fig. 8, and the profits of GenCos are recorded in
+Table 5. From the results, we can declare that the PPO-based bidding
+strategy can maintain stable performance in large-scale systems.
+On the basis of the above results, the influence of variable 𝛾 on the
+30-bus power system is discussed. From Table 5 , 𝛼1𝑡 and 𝛼2𝑡 present
+fluctuations within a small range of NE when 𝛾 <0.95. When 𝛾 = 0.95,
+the strategies significantly deviate from NE. When 𝛾 > 0.95, 𝛼5𝑡 and
+𝛼6𝑡 ascend obviously. The experimental results of the 30-bus system
+are also similar to that of the 3-bus power system, i.e., the PPO-based
+bidding strategy fluctuation becomes larger with𝛾 ascends, it indicates
+that the PPO-based strategies are unstable because the agents pay more
+attention to future rewards. In general, 𝛼1 and 𝛼3 are generally in
+an ascend trend. GenCos 5 and 6 always obtain higher profits than
+other generators, which means that they are located in the dominant
+positions.
+4.2. Strategy optimization of time-varying demand load
+In this part, two time-varying demand load datasets, i.e., PJM
+wholesale market and UC Irvine School of Information and Computer
+Table 4
+Load function parameters of 30-bus power system.
+𝑑 Branch 𝐷𝑡 𝑓𝑑 𝑑 Branch 𝐷𝑡 𝑓𝑑
+($/MW) ($/MW) ($/MW) ($/MW)
+1 2 24 −5.0 11 17 25.7 −3.5
+2 3 23.6 −5.5 12 18 27.1 −3.5
+3 4 26.7 −4.5 13 19 25.7 −3.5
+4 7 27.0 −5.0 14 20 25.7 −3.5
+5 8 30.0 −5.0 15 21 26.7 −6.0
+6 10 31.7 −3.0 16 23 24.0 −5.0
+7 12 27.3 −5.5 17 24 25.0 −6.0
+8 14 31.3 −4.0 18 26 22.2 −4.5
+9 15 22.2 −4.5 19 29 27.1 −3.5
+10 16 30.0 −5.0 20 30 27.8 −4.5
+Science, are introduced to further test the stability of the RL-based
+algorithm. The time-varying demand load curves are shown in Fig. 9 .
+Since the fixed demand load of the environment has been replaced
+by the time-varying demand load, the state of each agent is denoted
+as 𝑠𝑔𝑡 = (𝜆1,𝑡−1,𝜆 2,𝑡−1, …,𝜆𝐼,𝑡−1,𝐷 max
+𝑑𝑡 ), the datasets are set as the maxi-
+mum demand load 𝐷max
+𝑑𝑡 for each time step. The experiments are still
+accomplished on the 3-bus power system.
+In the case, it is time-consuming and extremely complex to optimize
+the bidding strategy by using the mathematical programming method.
+The profits of the RL-based bidding strategies are shown in Fig. 10. We
+can see that the PPO-based strategy is able to obtain higher profits than
+Q-learning and DQN-based strategies. Although the DQN-based strategy
+can obtain higher profit than the PPO-based strategy occasionally,
+the performance of DQN-based strategy is unstable, i.e., the DQN-
+based strategy is not superior. The experiments empirically prove the
+competitive performance of PPO on time-varying demand load.
+5. Conclusions
+In this paper, a PPO-based electricity market bidding strategy is
+proposed. Compared with the MPEC method and other mathematical
+
+Electric Power Systems Research 233 (2024) 110404
+9
+C. Liu et al.
+Table 5
+GenCos’ profits of 30-bus power system.
+𝛾 𝛼 1 𝛼2 𝛼3 𝛼4 𝛼5 𝛼6 ($/MW) Profit-1 Profit-2 Profit-3 Profit-4 Profit-5 Profit-6( $)
+0 22.8 21.12 32.57 28.1 21.6 25.33 561.87 584.22 381.87 326.57 971.77 1371.70
+0.2 22.77 22.3 33.74 28.87 20.225 24.72 526.20 643.6 422.65 346.23 996.06 1315.20
+0.4 22.81 22.29 32.97 28.69 20.25 25.52 625.56 650.22 421.58 356.40 998.29 1319.35
+0.6 21.79 23.04 33.12 28..3 20.42 25.02 634.82 630.69 421.47 350.90 990.43 1311.03
+0.8 22.42 20.88 33.83 27.23 23.65 25.93 623.44 652.90 410.61 333.52 997.41 1316.19
+0.9 22.44 21.91 33.99 29.09 26.43 29.15 661.32 684.76 429.56 382.05 1018.89 1296.46
+0.95 24.28 21.83 33.17 28.76 26.66 30.48 626.43 669.86 413.90 424.39 1032.19 1280.14
+0.99 26.66 33.22 36.11 35.78 37.57 31.48 920.92 911.93 656.27 713.22 1138.58 1333.23
+Fig. 9. The load curves of two datasets. (a) PJM; (b) UC Irvine School.
+Fig. 10. The profit curves (a) Profit curve of DQN on PJM load; (b) Profits curve of PPO on PJM load; (c) GenCo 1 profits of Q-learning, DQN, PPO; (d) GenCo 2 profits of
+Q-learning, DQN, PPO; (e) Profit curve of DQN on UC Irvine School load; (f) Profits curve of PPO on UC Irvine School load; (g) GenCo 1 profits of PPO, DQN and Q-learning; (h)
+GenCo 2 profits of PPO, DQN and Q-learning.
+programming methods, the advantages of the proposed method lie
+in that it avoids complicated calculations of the bi-level optimization
+model of the electricity market and obtains appropriate solutions in
+the environment with incomplete information. Moreover, the PPO-
+EMBSA is potentially suitable for non-convex functions. Compared
+with traditional RL (e.g., Q-learning and DQN), the PPO-based bidding
+strategy can be applied to the continuous state and action spaces.
+Experimental results verify the effectiveness of the proposed method. In
+the case of fixed demand load, the proposed method can approximate
+the NE strategy. In the case of time-varying demand load, the PPO-
+based bidding strategy can obtain higher profit than the Q-learning and
+DQN-based bidding strategies.
+At present, this paper has considered the influence of the slope
+bidding function on the strategy in the real-time electricity market only.
+Therefore, we will focus on analyzing the influence of other bidding
+parameters and developing a novel bidding strategy by considering
+the multiple electricity markets, such as day-ahead, intra-day, and
+long-term markets.
+CRediT authorship contribution statement
+Chuwei Liu: Writing – original draft, Methodology, Formal analy-
+sis. Xuan Rao: Software, Methodology, Formal analysis.Bo Zhao: Writ-
+ing – review & editing, Validation, Supervision, Methodology, Fund-
+ing acquisition. Derong Liu: Funding acquisition, Supervision, Valida-
+tion, Writing – review & editing. Qinglai Wei: Funding acquisition,
+Investigation. Yonghua Wang: Investigation, Resources.
+Declaration of competing interest
+The authors declare that they have no known competing finan-
+cial interests or personal relationships that could have appeared to
+influence the work reported in this paper.
+Data availability
+The data that has been used is confidential.
+
+Electric Power Systems Research 233 (2024) 110404
+10
+C. Liu et al.
+Acknowledgments
+This work was supported in part by the National Natural Science
+Foundation of China under Grants 62073085 and 61973330, and in
+part by the Beijing Normal University Tang Scholar.
+References
+[1] A. Agarwal, S. Bhat, A. Gray, I.E. Grossmann, Automating mathematical pro-
+gram transformations, in: Proceedings of the Practical Aspects of Declarative
+Languages, Springer Berlin Heidelberg, 2010, pp. 134–148.
+[2] A. Biswas, C. Hoyle, A Literature Review: Solving constrained non-linear bi-level
+optimization problems with classical methods, in: Proceedings of International
+Design Engineering Technical Conferences and Computers and Information in
+Engineering Conference, Anaheim, California, USA, 2019, Art. no. V02BT03A025.
+[3] E. Bompard, W. Lu, R. Napoli, Network constraint impacts on the competitive
+electricity markets under supply-side strategic bidding, IEEE Trans. Power Syst.
+21 (1) (2006) 160–170.
+[4] J. Castro, S. Nasini, A specialized interior-point algorithm for huge minimum
+convex cost flows in bipartite networks, European J. Oper. Res. 290 (3) (2021)
+857–869.
+[5] T. Li, M. Shahidehpour, Strategic bidding of transmission-constrained GENCOs
+with incomplete information, IEEE Trans. Power Syst. 20 (1) (2005) 437–447.
+[6] X. He, Z. Hu, H. Yang, C. Lv, Personalized robotic control via constrained
+multi-objective reinforcement learning, Neurocomputing 565 (2024) 126986.
+[7] I. Oh, S. Rho, S. Moon, S. Son, H. Lee, J. Chung, Creating pro-level AI for a
+real-time fighting game using deep reinforcement learning, IEEE Trans. Games
+14 (2) (2022) 212–220.
+[8] L. Yan, X. Chen, J. Zhou, Y. Chen, J. Wen, Deep reinforcement learning for
+continuous electric vehicles charging control with dynamic user behaviors, IEEE
+Trans. Smart Grid 12 (6) (2021) 5124–5134.
+[9] A. Bertolini, M.S. Martins, S.M. Vieira, J.M. Sousa, Power output optimization of
+electric vehicles smart charging hubs using deep reinforcement learning, Expert
+Syst. Appl. 201 (2022) 116995.
+[10] W. Luan, F. Yang, B. Zhao, B. Liu, Industrial load disaggregation based on Hidden
+Markov Models, Electr. Power Syst. Res. 210 (2022) 108086.
+[11] N. Yu, C. Liu, J. Price, Evaluation of market rules using a multi-agent system
+method, IEEE Trans. Power Syst. 25 (2010) 470–479.
+[12] J. Li, B. Zhao, D. Liu, DMPP: Differentiable multi-pruner and predictor for neural
+network pruning, Neural Netw. 147 (2022) 103–112.
+[13] D. Elbrächter, D. Perekrestenko, P. Grohs, H. Bölcskei, Deep neural network
+approximation theory, IEEE Trans. Inform. Theory 67 (5) (2021) 2581–2623.
+[14] E. Mocanu, D.C. Mocanu, P.H. Nguyen, A. Liotta, M.E. Webber, M. Gibescu,
+J.G. Slootweg, On-line building energy optimization using deep reinforcement
+learning, IEEE Trans. Smart Grid 10 (4) (2019) 3698–3708.
+[15] C. Shang, L. Fu, X. Bao, X. Xu, Y. Zhang, H. Xiao, Energy optimal dispatching
+of ship’s integrated power system based on deep reinforcement learning, Electr.
+Power Syst. Res. 208 (2022) 107885.
+[16] B.J. Claessens, P. Vrancx, F. Ruelens, Convolutional neural networks for
+automatic state-time feature extraction in reinforcement learning applied to
+residential load control, IEEE Trans. Smart Grid 9 (4) (2018) 3259–3269.
+[17] Y. Du, F. Li, J. Munk, K. Kurte, O. Kotevska, K. Amasyali, H. Zandi, Multi-task
+deep reinforcement learning for intelligent multi-zone residential HVAC control,
+Electr. Power Syst. Res. 192 (2021) 106959.
+[18] M. Rahimiyan, H.R. Mashhadi, An adaptive Q-Learning algorithm developed for
+agent-based computational modeling of electricity market, IEEE Trans. Syst. Man
+Cybern. C 40 (5) (2010) 547–556.
+[19] Y. Ye, D. Qiu, M. Sun, D. Papadaskalopoulos, G. Strbac, Deep reinforcement
+learning for strategic bidding in electricity markets, in: Proceedings of 2020
+IEEE Power Energy Society General Meeting, Canada, 2020, pp. 1343–1355.
+[20] D. Yan, L. Fangxing, Z. Helia, Xue, Yaosuo, Approximating nash equilibrium
+in day-ahead electricity market bidding with multi-agent deep reinforcement
+learning, J. Mod. Power Syst. Clean Energy 9 (3) (2021) 534–544.
+[21] E. Namalomba, H. Feihu, H. Shi, Agent based simulation of centralized electricity
+transaction market using bi-level and Q-learning algorithm approach, Int. J.
+Electr. Power Energy Syst. 134 (2022) 107415.
+[22] J. Schulman, F. Wolski, P. Dhariwal, A. Radford, O. Klimov, Proximal policy
+optimization algorithms, 2017, arXiv preprint arXiv:1707.06347.
+[23] L. Engstrom, A. Ilyas, S. Santurkar, D. Tsipras, F. Janoos, L. Rudolph, A. Madry,
+Implementation matters in deep policy gradients: A case study on ppo and TRPO,
+2020, arXiv preprint arXiv:2005.12729.
+[24] H. Wang, J. Deng, C. Wang, W. Sun, N. Xie, Comparing competition equilibrium
+with nash equilibrium in electric power market, CSEE J. Power Energy Syst. 4
+(3) (2018) 299–304.
+[25] J. Cao, D. Harrold, Z. Fan, T. Morstyn, D. Healey, K. Li, Deep reinforce-
+ment learning-based energy storage arbitrage with accurate lithium-ion battery
+degradation model, IEEE Trans. Smart Grid 11 (5) (2020) 4513–4521.
+[26] G.C. Chasparis, C. Lettner, Reinforcement-learning-based optimization for day-
+ahead flexibility extraction in battery pools, IFAC-PapersOnLine 53 (2) (2020)
+13351–13358.
+[27] M. Peters, W. Ketter, M. Saar-Tsechansky, J. Collins, A reinforcement learning
+approach to autonomous decision-making in smart electricity markets, Mach.
+Learn. 92 (2013) 5–39.
+[28] C. Dou, X. Pan, Z. Zhang, D. Yue, S. Xu, T. Hayat, A. Alsaedi, Multi-agent-system-
+based bi-level bidding strategy of microgrid with game theory in the electricity
+market, Electr. Power Compon. Syst. 47 (8) (2019) 703–719.
+[29] K. Lange, Karush-kuhn-tucker theory, in: Optimization, Springer New York, 2013.
+[30] A.M. Azmy, Optimal power flow to manage voltage profiles in intercon-
+nected networks using expert systems, IEEE Trans. Power Syst. 22 (4) (2007)
+1622–1628.
+[31] D. Silver, G. Lever, N. Heess, T. Degris, D. Wierstra, M. Riedmiller, Deterministic
+policy gradient algorithms, in: Proceedings of the 31st International Conference
+on Machine Learning, Bejing, China, 2014, pp. 387–395.
+[32] J. Peters, S. Schaal, Natural actor-critic, Neurocomputing 71 (7) (2008)
+1180–1190.
+[33] J. Schulman, S. Levine, P. Abbeel, M. Jordan, P. Moritz, Trust region policy
+optimization, in: Proceedings of the 32nd International Conference on Machine
+Learning, Lille, France, 2015, pp. 1889–1897.
+[34] H. Yang, H.-J. Huang, Principle of marginal-cost pricing: how does it work in a
+general road network, Transp. Res. A: Policy Pract. 32 (1) (1998) 45–54.
+[35] Q. Yang, A. Sadeghi, G. Wang, J. Sun, Learning two layer relu networks is nearly
+as easy as learning linear classifiers on separable data, IEEE Trans. Signal Process.
+69 (2021) 4416–4427.
+[36] H. Zhao, F. Liu, L. Li, C. Luo, A novel Softplus linear unit for deep convolutional
+neural networks, Appl. Intell. 48 (2018) 1707–1720.
+[37] D.P. Kingma, J. Ba, Adam: A method for stochastic optimization, Comput. Sci.
+22 (2014).
+[38] C.C.-Y. Hsu, C. Mendler-Dünner, M. Hardt, Revisiting design choices in proximal
+policy optimization, 2020, arXiv preprint arXiv:2009.10897.
+[39] Y. Liang, C. Guo, Z. Ding, H. Hua, Agent-based modeling in electricity market
+using deep deterministic policy gradient algorithm, IEEE Trans. Power Syst. 35
+(6) (2020) 4180–4192.
+[40] T.E. Cheng, Y. Wu, A multiproduct, multicriterion supply-demand network
+equilibrium model, Oper. Res. 54 (2006) 544–554.
+[41] B. Divya, R. Devarapalli, Estimation of sensitive node for IEEE 30 bus system
+by load variation, in: Proceedings of 2014 International Conference on Green
+Computing Communication and Electrical Engineering, Brisbane, QLD, Australia,
+2014, pp. 1–4.

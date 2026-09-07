@@ -1,0 +1,1761 @@
+An adaptive attitude bidding strategy for agents in continuous
+double auctions
+Huiye Ma *, Ho-Fung Leung
+Department of Computer Science and Engineering, The Chinese University of Hong Kong, Hong Kong, China
+Accepted 6 December 2006
+Available online 16 January 2007
+Abstract
+A continuous double auction (CDA) is an eﬃcient market institution for real-world trading of commodities and electronic market-
+places. In this paper, we present the design and analysis of a new bidding strategy for buyer and seller agents participating in agent-based
+CDAs. The strategy employs heuristic rules and a reasoning mechanism based on a two-level adaptive bid-determination method, includ-
+ing short-term and long-term attitudes. Agents adopting the strategy dynamically adjust their behaviors in response to the changes of the
+supply and demand relationships in the market. Experimental results show that agents adopting the strategy outperform agents using
+other strategies reported in the literature.
+/C211 2007 Elsevier B.V. All rights reserved.
+Keywords: E-commerce; Continuous double auctions; Bidding strategy; Autonomous agents; Adaptive behavior
+1. Introduction
+Due to the advent of global computer networks, in par-
+ticular the Internet and the World Wide Web, more and
+more electronic marketplaces have emerged in industrial
+and commercial domains, such as electricity markets [1].
+Among these electronic marketplaces, auctions are widely
+adopted as eﬃcient mechanisms to allocate goods,
+resources, etc., to the entities that value them most highly
+[2]. While there are many diﬀerent types of auctions, one
+popular type of auctions is double auction where multiple
+sellers and multiple buyers can trade simultaneously. In
+double auctions, sellers are allowed to indicate the goods
+they oﬀer at various prices (called asks); buyers are allowed
+to indicate the goods they desire and the price they are will-
+ing to pay (called bids). One of the most common forms of
+double auction is the continuous double auction (CDA),
+which allows buyers and sellers to continuously update
+their bids and asks at any time throughout the trading per-
+iod and which permits trade at any time.
+Because many auctions are complicated [3], it is nontriv-
+ial for traders (sellers and buyers) to consider all factors in
+their bid-determination strategies. Many diﬀerent strategies
+have been developed for agent-based CDAs.
+This paper develops and evaluates the adaptive attitude
+(AA) strategy [4], a strategy that autonomous software
+agents can employ to submit bids and asks in a series of
+CDAs. The agent using AA strategy exploits both the
+short-term and long-term attitudes, and utilizes a set of
+heuristic rules with two thresholds a and x in bid determi-
+nation. All the experimental results show the superior per-
+formance of the agents that adopt AA strategy when
+competing with agents adopting various strategies pro-
+posed in the literature in both static and dynamic CDA
+markets. These results also demonstrate the eﬀectiveness
+of the heuristic rules with a and x, and eagerness which
+is formed on the basis of two-level adaptive attitudes.
+The remainder of this paper is organized as follows. Sec-
+tion 2 gives a short survey and introduces related work.
+Section 3 presents the AA strategy. The performance eval-
+uation of agents employing the AA strategy via experi-
+1567-4223/$ - see front matter /C211 2007 Elsevier B.V. All rights reserved.
+doi:10.1016/j.elerap.2006.12.003
+* Corresponding author. Tel.: +852 3163 4254; fax: +852 2603 5024.
+E-mail addresses: hyma@cse.cuhk.edu.hk (H. Ma), lhf@cse.cuhk.
+edu.hk (H.-F. Leung).
+www.elsevier.com/locate/ecra
+Available online at www.sciencedirect.com
+Electronic Commerce Research and Applications 6 (2007) 383–398
+
+ments can be found in Section 4. Section 5 concludes this
+paper and discusses the limitations and future work.
+2. Background
+Auctions have been used to allocate resources since a
+long time ago [5]. In the modern world, auctions account
+for a signiﬁcant portion of the overall economic transac-
+tions. Governments employ auctions to sell treasury bills,
+foreign exchange, mineral rights, and other assets. Houses,
+cars, livestock and ﬂowers are commonly sold by auctions
+in everyday life. The range of items sold by auctions has
+been greatly increased by e-commerce. In the last decade,
+there has been an explosion of interest in utilizing auctions
+to build new markets for commodity items like electricity
+markets, transport permits, and mobile phone licenses.
+An agent in auctions is usually a software system. It can
+be viewed as a delegate of its user who may be a buyer,
+seller, or an auctioneer. The goal of the agent is to achieve
+a good proﬁt for its user [6–9].
+There are two major research directions related to auc-
+tions. One is the research into auction protocols. An auc-
+tion protocol deﬁnes the valid behaviors of agents. The
+other research direction is on bidding strategies that agents
+can employ to compute bids and asks in auctions. There
+are some other research issues related to auctions, such
+as security [10], trust [11], and collusion, which however
+are not the main focuses of this paper.
+2.1. Auction protocols
+Diﬀerent types of auctions have been designed and
+implemented [12]. The basic type of auctions is single-sided
+auction where either buyers are permitted to submit bids or
+sellers are permitted to submit asks. Representative exam-
+ples are ﬁrst-price ascending (English auction), ﬁrst-price
+sealed-bid auction, second-price sealed-bid (Vickrey auc-
+tion), and ﬁrst-price descending (Dutch auction) [13,14].
+Another type of auctions is double-sided auction where
+multiple sellers and buyers submit their asks and bids,
+respectively, together in a market. The variants include
+continuous double auction, iterated double auction [15],
+etc. In the iterated double auction, agents ﬁrst enter the
+mock market to determine the transaction price; after the
+transaction price is found, all trades actually take place
+at this price. However, in the continuous double auction,
+there is no mock market and all the trades are carried
+out actually and dynamically. The focus of this paper is
+continuous double auction.
+A combinatorial auction is a special type of auctions
+where agents can submit asks or bids on a collection of
+goods [16–18]. In this context, one agent has to express
+its preference and places asks or bids on diﬀerent bundles
+of goods. Much work has been done on collaborative
+action [19], preference elicitation [20], and so on.
+2.1.1. Continuous double auctions
+A continuous double auction (CDA) refers to an auc-
+tion market where there are seller agents and buyer agents
+trading homogeneous goods. In this market, at any time
+sellers and buyers can submit their asks and bids to sell
+and buy one unit of goods. The CDA terminates after a
+transaction or a speciﬁed period of inactivity. An ask refers
+to the price submitted by a seller to sell one unit of goods.
+The currently lowest ask in the market is called the out-
+standing ask , denoted as OA.A valid ask is an ask lower
+than the current OA. Any ask not lower than OA is called
+an invalid ask and will be ignored by the market. A bid
+refers to the price submitted by a buyer to buy one unit
+of goods. The currently highest bid in the market is called
+the outstanding bid , denoted as OB. Any bid higher than
+the current OB is called a valid bid .A n invalid bid refers
+Nomenclature
+OA outstanding ask; the lowest ask in the current
+market
+OB outstanding bid; the highest bid in the current
+market
+TransRi transaction rate of agent i
+TransPi transaction percentage of agent i
+TRi the short-term attitude of agent i
+TPi the long-term attitude of agent i
+WS(TRi) the weight of the short-term attitude
+WL(TPi) the weight of the long-term attitude
+Feager eagerness of agent i
+U a positive real number speciﬁed beforehand
+d a small arbitrary positive real number
+h, b two independent small arbitrary positive real
+numbers
+c1, c2, c3, c4 four independent random real numbers
+a, x two thresholds in a set of heuristic rules
+Pul upper limit; the highest acceptable price in the
+market
+Pll lower limit; the lowest acceptable price in the
+market
+Ptarget target price which gives a target proﬁt for the
+agent to jump towards
+Pbasic basic price which gives a starting proﬁt to the
+agent to start from
+Cik reservation price for seller i on the unit k of
+goods
+Djk reservation price for buyer j on the unit k of
+goods
+384 H. Ma, H.-F. Leung / Electronic Commerce Research and Applications 6 (2007) 383–398
+
+to any bid not higher than OB and will be ignored by the
+market.
+When OB is higher than or equal to OA, the seller who
+submits OA and the buyer who submits OB will make a
+transaction. In each transaction, only one unit of goods
+is traded. The transaction price will be equal to the earlier
+one of OB and OA.A round starts from the beginning of an
+auction and ends when a transaction is settled or when
+there is no new OB or OA in a pre-speciﬁed time interval.
+In each round, at most one transaction is made. After the
+current round terminates, a new round will begin. When
+all the sellers have sold all the units of goods or all the buy-
+ers have bought all the units of goods, a run is terminated.
+A run is often composed of a series of rounds. The supply
+of a run of CDAs is deﬁned to be the total number of units
+of goods that all the sellers need to sell in a run. The
+demand is deﬁned to be the total number of units of goods
+that all the buyers desire to buy in a run. For example, the
+supply is 30 and the demand is 40. Thus there are 30 rounds
+in a run of CDAs where at most 30 transactions can be
+made.
+For each seller or buyer, there is an acceptable price
+range, which has been used by some agents in CDAs, such
+as ZI-U agent or ZI-C agent, and will be further explained
+in the subsequent section. Pll denotes the lowest acceptable
+price and Pul denotes the highest acceptable price. The
+price range is formed based on the seller or buyer’s experi-
+ence and the trading history of the market. For any seller
+or buyer, each unit of goods has a reservation price .I fa
+seller submits an ask lower than the reservation price, it
+will lose proﬁt. If a buyer submits a bid higher than the res-
+ervation price, it will also lose proﬁt.
+2.2. Bidding strategies for agents in CDAs
+In agent-based auctions, bidding strategies are usually
+utilized by agents to maximize their proﬁt [21]. Some auc-
+tions are known to have dominant strategies which are
+always better than any other strategies in all situations.
+For example, in Vickrey auctions, an agent’s dominant
+strategy is to submit its true reservation price [22]. In Eng-
+lish auctions, an agent’s dominant strategy is to bid a small
+amount more than the current highest bid while the bid
+does not exceed the agent’s reservation price [14]. In Dutch
+auctions, ﬁrst-price sealed-bid auctions, and CDAs, there is
+no dominant strategy. In the following, we focus on the
+analysis and discussion of various bidding strategies for
+agents in CDAs.
+Gode and Sunder, in [23], proposed zero intelligence
+(ZI) agents. Each ZI agent generates random asks or
+bids depending on whether it is a seller or a buyer. These
+asks or bids are distributed independently and uniformly
+over the entire range of trading prices. The agent has no
+intelligence, does not seek to maximize the proﬁt, and
+does not observe, remember, or learn. There are two ver-
+sions of ZI agents, ZI with constraint (ZI-C) agents and
+ZI unconstrained (ZI-U) agents. A ZI-C agent is a ZI
+agent and is subject to the budget constraint which for-
+bids the agent to buy or sell at a loss. Thus, a ZI-C
+buyer submits a bid which is a random value, larger than
+the lowest acceptable price range of the market and less
+than the reservation price. Similarly, a ZI-C seller sub-
+mits a randomly generated ask, less than the highest
+acceptable price of the market and larger than the reser-
+vation price. For a ZI-U agent, it is free from the budget
+constraint. A ZI-U seller or buyer can submit an ask or
+a bid which is a random value, within the acceptable
+price range of the market, without considering the reser-
+vation price.
+The zero-intelligence-plus (ZIP) strategy was developed
+by Cliﬀ and Bruten [24]. Each ZIP agent has a proﬁt mar-
+gin which determines the diﬀerence between the reservation
+price and the ask or bid to be submitted. If there was a
+transaction in the last round and the agent was the winner,
+the agent would increase its proﬁt margin in the current
+round. If there was a transaction in the last round and
+the agent was not the winner or there was no transaction
+in the last round, the agent would decrease its proﬁt margin
+in the current round.
+Preist and Tol [25] presented a strategy which is based
+on the ZIP strategy and later on called CP strategy in this
+paper. The main idea of CP strategy is that if there was a
+transaction in the last round, an agent should submit a
+value, slightly better than the outstanding ask or bid in
+the last round, so that it may obtain a trade in the current
+round; otherwise, the agent should try to compete with its
+rivals by submitting a value slightly better than its rivals.
+This procedure allows the agent to squeeze a little more
+proﬁt from the market.
+P strategy [26] was designed by and named after Park
+et al. The idea is to model the auction process with a Mar-
+kov chain (MC). However, this strategy only works with
+the assumption that the probability values for the MC
+model, such as the transition probabilities and the proba-
+bilities of success and failure for trading actions, are avail-
+able. In addition, the computation involved in this
+approach is huge.
+Gjerstad and Dickhaut [27] developed a more sophisti-
+cated strategy which is to be called GD strategy in this
+paper. A GD agent records all the asks and bids occurred
+in the previous rounds. Based on the recorded history, it
+computes a subjective belief of a bid or an ask being
+accepted and then the expected utility. The bid or ask cor-
+responding to the highest expected utility is submitted to
+the market.
+Tesauro and Das [28] proposed some improvements to
+the GD algorithm. For example, the highest transaction
+price and the lowest transaction price from the trading his-
+tory are recorded to solve excessive volatility of the original
+GD algorithm. A principal limitation is that they assume
+that demand and supply do not ﬂuctuate over time. This
+assumption is not valid in real CDA markets, where
+demand and supply constantly change due to the dynamic
+economic condition.
+H. Ma, H.-F. Leung / Electronic Commerce Research and Applications 6 (2007) 383–398 385
+
+Tesauro and Bredin [29] developed a bidding strategy on
+the basis of dynamic programming in CDAs. They use the
+belief function together with a forecast of the changes of
+beliefs over time. However, the belief function resembles
+that of the original GD strategy except slight
+modiﬁcations.
+He et al. [30] proposed the FL strategy, which was the
+ﬁrst time that fuzzy sets and fuzzy reasoning were intro-
+duced into the heuristic rules for agents. A fuzzy logic
+(FL) based approach can cope with uncertainties in a
+timely manner. An FL seller or buyer calculates an ask
+or a bid by considering the relationship among the out-
+standing bid, the outstanding ask, and the reference price
+which was the median of the ordered price history. A-FL
+strategy is an adaptive version of the FL strategy. With
+this strategy, if a seller or buyer waits for too many
+rounds with no transaction made, it should become more
+risk-averse in the next round. On the contrary, it should
+become risk-seeking if it transacts too often. This
+adaptability helps the agent earn more proﬁt from the
+market.
+Although all the aforementioned bidding strategies have
+been proposed for CDAs, many diﬀerences exist among
+them regarding each speciﬁc rules and factors being consid-
+ered which include the history of transaction prices, the
+outstanding ask and the outstanding bid, reservation
+prices, the transaction price of the last round, making com-
+promise when computing asks or bids, upper threshold and
+lower threshold of asks or bids, the calculation of the ﬁrst
+ask or bid in the market, the combination of sellers or buy-
+ers, the number of units of goods that can be dealt with in
+one round, the risk attitude of an agent, the forecast of
+future market behavior, adaptability, etc. For example,
+some strategies, such as ZI-U, ZI-C, and GD, pay no atten-
+tion to adaptability. Others, A-FL, ZIP, CP, and P strat-
+egy, focus on adaptability in a short term. In this paper,
+we propose a new strategy, named AA strategy, which
+employs a set of heuristic rules and two levels of adaptabil-
+ity, long term and short term. Experimental results demon-
+strate that the agents utilizing AA strategy perform better
+than agents using ZI-U, ZI-C, ZIP, GD, A-FL, and CP
+strategies.
+3. The adaptive attitude bidding strategy
+3.1. Eagerness in agent interactions
+Eagerness is a feeling of ‘‘enthusiastic or impatient desire
+or interest’’. 1 Eagerness is a kind of human feelings. In the
+literature, there are several pieces of work which enable
+agents to have the feeling of eagerness.
+Sim deﬁned that eagerness is a measure of an agent’s
+interest to negotiate and come to a deal [31]. It models
+whether there is an absolute need to acquire the goods
+under negotiation. The level of interest may be catego-
+rized as must deal, desirable, nice to have, optional, unes-
+sential, and absolutely unessential. The value of eagerness
+is always speciﬁed by human traders before the experi-
+ments begin. During each experiment, the value is
+constant.
+Dumas et al. [32,33] proposed eagerness which repre-
+sents the minimum probability of obtaining the goods by
+the deadline. A low value of eagerness means that the agent
+is willing to take the risk of not getting the goods by the
+deadline, if this can allow the agent to ﬁnd a better price.
+An eagerness close to 1 means that the agent wants to
+get the goods by the deadline at any price if the reservation
+price permits. However, the value of eagerness is also ﬁxed
+at the beginning of experiments and does not ﬂuctuate with
+the market.
+In real CDA markets, human traders will usually
+become eager for more transactions if they have not been
+able to trade their goods successfully for a long time; on
+the other hand, they will become eager for more proﬁt if
+they have made a lot of transactions recently. Generally
+speaking, eagerness will be aﬀected by human traders’
+feeling in a short time, their feeling in a long time, etc.
+The human traders’ feeling in a short time is aﬀected by
+their trading situation within a short time. Similarly, the
+human traders’ feeling in a long time is related to their
+trading situation during a long time in the past. In view
+of the human traders’ feeling and behavior, we propose
+to enable agents to have the feeling of eagerness similar
+to that of human traders and then to mimic human trad-
+ers’ behavior in the market. Similar to human traders, if
+an agent has made a lot of transactions in the past several
+rounds of the current run, it will be eager for more proﬁt
+in the current round. On the contrary, if the agent cannot
+gain any transactions, it will be eager for more transac-
+tions in the current round. However, considering only
+the trading situation in the current run is not enough
+because there are multiple consecutive runs of CDAs.
+The agent’s feeling in the current run will be aﬀected by
+its trading situation in the last run and the run before
+the last, and so on. If the agent has made a good transac-
+tion record in the last run, it will be encouraged and will
+be eager for more proﬁt in the current run. Otherwise, if it
+has made very few transactions in the last run, the agent
+will be eager for more transactions in the current run.
+Since the time of several rounds is short compared with
+a run, we call the feeling formed during several rounds
+the short-term attitude and the feeling developed during
+a run the long-term attitude .
+In this paper, we propose a possible function to express
+and compute eagerness and is demonstrated to perform
+superiorly through extensive experiments in Section 4.
+The value of eagerness is not a constant during the exper-
+iments. Instead, the value is changing with the dynamic
+market environment and aﬀected by the real-time supply
+and demand relationship, which makes it a meaningful
+indicator of the agent’s feeling in the market.1 http://www.webster.com/dictionary/eagerness.
+386 H. Ma, H.-F. Leung / Electronic Commerce Research and Applications 6 (2007) 383–398
+
+3.2. Eagerness for agents in CDAs
+Before presenting the function to compute eagerness, we
+ﬁrst give four important deﬁnitions related to eagerness.
+Deﬁnition 1. Let NUM winner=i be the number of successful
+transactions in the past r rounds in which agent i is the
+winner, and NUM total be the total number of successful
+transactions in the past r rounds. The transaction rate
+TransRi is deﬁned as
+TransRi ¼ NUMwinner¼i=NUMtotal:
+Deﬁnition 2. Let NUNIT traded be the number of units suc-
+cessfully traded by agent i in the last run, and NUNIT owned
+be the total number of units agent i wanted to trade in the
+last run. The transaction percentage TransP i is deﬁned as
+TransP i ¼ NUNITtraded=NUNITowned:
+Deﬁnition 3. The short-term attitude of agent i, TRi,i sa n
+increasing function of TransRi.
+Intuitively, if the value of TransRi is large, the value of
+TRi will be large, which means that the agent’s short-term
+attitude is eager for more proﬁt. If the value of TransRi is
+small, the value of TRi will be small, which means that the
+agent’s short-term attitude is eager for more transactions.
+Deﬁnition 4. The long-term attitude of agent i, TPi,i sa n
+increasing function of TransPi.
+The value of TPi will be large with a large value of Tran-
+sPi. This means that the agent has a long-term attitude of
+being eager for more proﬁt. The value of TPi is small with
+a small value of TransPi, which means that the agent has a
+long-term attitude of being eager for more transactions.
+The function to compute eagerness has two parameters:
+the short-term attitude TRi and the long-term attitude TPi.
+A high value of eagerness means that the agent is eager to
+gain more proﬁt by selling (buying) each unit of goods at
+high (low) prices. A low value of eagerness means that
+the trader is eager to make more transactions by submitting
+low asks (high bids). In this paper, we use the following
+function to compute eagerness. This function is experimen-
+tally shown eﬀective:
+F eagerðTRi; TP iÞ¼ W SðTRiÞ/C2 W LðTP iÞ: ð1Þ
+WS(TRi) is the weight of the short-term attitude and com-
+puted by Eq. (2), where W1, W2, and W3 are positive real
+numbers and W1 < W2 < W3. WS(TRi) is a generally non-
+linear and increasing function of TRi. If the value of TRi
+is large, it means that the agent is eager for more proﬁt be-
+cause the agent has easily made a lot of transactions in the
+short term. With a large value of TRi, the value of WS(TRi)
+is large because TR2
+i is multiplied by a large number W3,
+which leads to a large value of eagerness. This means that
+the agent is eager for more proﬁt. If the value of TRi is
+small, it means that the agent is eager for more transactions
+since the agent can hardly trade some of its goods. The
+value of WS(TRi) is small and equal to W 1 /C2 TR2
+i . There-
+fore, the value of eagerness is small, which means the agent
+is eager for more transactions. Otherwise, the value of
+WS(TRi) is medium and consequently the agent is not eager
+for more proﬁt or more transactions:
+W SðTRiÞ¼
+W 1 /C2 TR2
+i ; small TRi;
+W 2 /C2 TR2
+i ; medium TRi;
+W 3 /C2 TR2
+i ; large TRi
+8
+><
+>:
+ð2Þ
+WL(TPi) is the weight of the long-term attitude. In a series
+of CDAs, any seller or buyer can compare successive runs
+and remember useful information from previous runs. As a
+seller, if the value of TPi is large, it means that the agent is
+eager for more proﬁt because it has sold all the units it
+wanted to sell in the last run. Therefore, the value of
+WL(TPi) is increased towards a large value which causes
+the value of eagerness to be large. This means that the seller
+is eager for more proﬁt in the current run. The seller be-
+lieves that it has left a lot of proﬁt for buyers in the last
+run and it should increase its asks on each unit of goods
+in the current run so as to grab more proﬁt back from buy-
+ers. Otherwise, the seller agent is eager for more transac-
+tions when the value of TPi is small. The reason is that
+the agent can hardly trade even a few of the goods. The va-
+lue of WL(TPi) becomes small and the value of eagerness is
+small accordingly. The seller is eager for more transactions
+in the current run and is willing to decrease its asks.
+WL(TPi)2 is calculated in the following equation:
+W LðTP iÞ¼ U þ d; TP i ¼ 1:0;
+U /C0 d; TP i < 1:0;
+/C26
+ð3Þ
+where d is a small arbitrary positive real number. U is a po-
+sitive real number speciﬁed at the beginning of CDAs. The
+computation of WL(TPi) for buyers is similar to that of
+sellers.
+3.3. Bidding strategies for sellers and buyers
+Suppose a human seller wants to sell 50 apples in 100
+rounds of CDAs. Assume in each round only one apple
+can be traded. The human seller has successfully sold 40
+apples in the past 50 rounds because he has submitted
+too many low asks to sell his apples. He only has 10 apples
+left for the rest 50 rounds. Hence, he will not be eager to
+trade these 10 apples as soon as he can. Instead, he will
+increase his asks to sell each apple and be eager to gain
+more proﬁt from each apple. On the contrary, if the seller
+ﬁnds that he has sold only 5 apples in the past 50 rounds
+since his asks were too high, there are 45 apples left for
+the rest 50 rounds. Therefore, he will be eager to grab more
+transaction opportunities since he is afraid that he cannot
+trade all his apples and gain a good proﬁt in the end. In
+general, the feeling of eagerness is changing with the
+2 If the number of the units of goods is very large, TPi is not necessarily
+equal to 1.0. TPi, less than 1.0, is acceptable.
+H. Ma, H.-F. Leung / Electronic Commerce Research and Applications 6 (2007) 383–398 387
+
+dynamic trading situation of the seller, which as a result
+will aﬀect the asks submitted by the seller.
+Another typical behavior of a human seller is that he
+makes judgement of asks and bids submitted by other sell-
+ers and buyers. Suppose the current outstanding bid for
+buyers to buy one apple is $4.0. If the cost of one apple
+is $1.0, then the human seller can gain a proﬁt of $3.0 if
+he accepts the outstanding bid. Assume $3.0 is a very good
+proﬁt for him. The seller accepts $4.0 immediately. If the
+seller does not accept the outstanding bid, other sellers in
+the market may accept the price and make the transaction.
+If, the cost of one apple is $1.0 while the current outstand-
+ing ask for sellers to sell one apple is $1.03, the human
+seller can only gain a proﬁt of less than $0.03 if he tries
+to submit an ask even lower than $1.03 and at the same
+time higher than the cost $1.0. Such kind of transactions
+is not proﬁtable at all. The seller will prefer to keep this
+apple for selling it at a good price in the future transaction
+rather than selling it immediately. Hence, the seller will not
+submit any asks in this situation. It will leave such unprof-
+itable transactions to the rest sellers.
+Normally, a human trader will decide what asks or bids
+to submit according to the available information. When
+nobody has submitted asks or bids to the market, there is
+very little information available for the human trader.
+Later on, when traders have submitted asks or bids to
+the market, the outstanding ask or the outstanding bid is
+available for the human trader to consider. Consequently,
+the human trader submit their asks or bids by considering
+diﬀerent available information at diﬀerent phase.
+Based on the above observation of human sellers’ feeling
+and behaviors, we design a bidding strategy in the subse-
+quent section for seller agents to adopt. The bidding strat-
+egy for buyer agents is also designed in a similar manner.
+3.3.1. Bidding strategy for sellers
+At the beginning of a round, there is no seller to submit
+asks and no buyer to submit bids. Consequently, there is no
+OA or OB in the market, which is the ﬁrst phase of the
+market. Later, some buyer (seller) may ﬁrstly submit its
+bid (ask) to the market. So there is only OB (OA) in the
+market, which is the second phase. Finally, there are both
+sellers to submit asks and buyers to submit bids. There are
+OB and OA in the market, which is the third phase.
+Suppose seller i is selling unit k in a round. In the ﬁrst
+phase of the round, the seller has no information other
+than the reservation price Cik of unit k and the acceptable
+price range of the CDA market. The seller tends to submit
+a high ask and computes its ask as follows:
+ask ¼ Cik þð P ul /C0 Cik Þ/C2 c1; ð4Þ
+where c1 is a random real number. 3 A high ask can give all
+the sellers more opportunities to bargain with buyers.
+When there is only either OB or OA in the market, it is
+the second phase of the round. The seller will utilize OB or
+OA to compute its ask. If there is OB and no OA, the seller
+will use the following equation:
+ask ¼
+OB; OB P x;
+OB þð P ul /C0 OBÞ/C2 F eager; OB < x and OB > Cik ;
+Cik þð P ul /C0 Cik Þ/C2 F eager; OB < x and OB 6 Cik ;
+8
+><
+>:
+ð5Þ
+where Feager is the eagerness of the agent. x is a threshold in
+the heuristic rules for sellers. If OB is higher than or equal
+to x, the seller will submit an ask equal to OB since it
+thinks the OB is quite proﬁtable. Otherwise, the seller will
+compute an ask according to its feeling of eagerness. The
+new ask must be higher than the reservation price Cik in
+case of losing proﬁt. At the same time, the ask must be
+higher than the current OB because OB is not high enough.
+If the current OB is higher than Cik, the new ask will be cal-
+culated by OB +( Pul /C0 OB) · Feager. If not, the new ask
+will be calculated by Cik +( Pul /C0 Cik) · Feager.
+If there is OA and no OB in the round, the seller will cal-
+culate its new ask according to OA.I f OA is lower than a
+which is another threshold in the heuristic rules for sellers,
+the seller will submit no new ask because it thinks that the
+current round is not proﬁtable at all. Otherwise, the seller
+will give a new ask slightly lower than the current OA.
+In the third phase, both OA and OB exist in the market.
+If OB is higher than or equal to x, the seller will submit an
+ask equal to OB.I f OA is lower than a, the seller will sub-
+mit no new ask. If OA is not too low and OB is not so high,
+the seller will compute its ask according to its eagerness.
+The seller computes the basic price and the target price,
+denoted as Pbasic and Ptarget, respectively. If there was a
+transaction in the last round, the seller would take the max-
+imum of the transaction price and the outstanding bid as
+the target price. If there was no transaction in the last
+round, the seller would take the maximum of the last out-
+standing ask and the outstanding bid as the target price.
+The basic price is given by the following:
+P basic ¼ Cik /C2 c2; ð6Þ
+where c2 is initially a random real number. 4 Intuitively, the
+basic price can give the seller a bit of proﬁt according to the
+reservation price.
+If there was a successful transaction in the last round,
+the seller would employ the following equation to calculate
+the target price because the seller believes that the transac-
+tion price of the last round is the possible transaction price
+in the current market and at the same time the target price
+should be not higher than the OB in the current round:
+P target ¼ maxðP t last þ h; OBcurrentÞ; ð7Þ
+where h is a small arbitrary positive real number, OBcurrent
+is the current outstanding bid, and Pt_last is the transaction
+3 For example, c1 can be located in [0.85, 1.0] to obtain higher asks. 4 For example, c2 can be located in [1.0, 1.5].
+388 H. Ma, H.-F. Leung / Electronic Commerce Research and Applications 6 (2007) 383–398
+
+price of the last round. Intuitively, the seller aims to
+achieve a transaction price which is higher than that of
+the last round. The value of h is the amount of the increase.
+If there was no transaction in the last round, the seller
+would employ the following equation:
+P target ¼ maxðOAlast /C0 b; OBcurrentÞ; ð8Þ
+where b is a small arbitrary positive real number, OAlast is
+the outstanding ask of the last round.
+The basic price gives an initial proﬁt for the seller. The
+target price gives the destination for the seller. The seller
+will not let the ask equal to the target price directly.
+Instead, the seller will compute the ask according to the
+feeling of eagerness and try to gain more proﬁt from the
+market. The size of the step, denoted as Sstep, is calculated
+by the following equation:
+Sstep ¼ ðP target /C0 P basicÞ/C2 F eager; P target P P basic;
+ðmaxðP target; Cik Þ/C0 P basicÞ/C2ð 1 /C0 F eagerÞ; P target < P basic:
+/C26
+ð9Þ
+The ﬁnal ask is calculated by the following equation:
+ask ¼ P basic þ Sstep: ð10Þ
+3.3.2. Bidding strategy for buyers
+There are also the same three phases in a round for buy-
+ers. Suppose buyer j is buying unit k in a round. In the ﬁrst
+phase, the buyer has no information other than its reserva-
+tion price Djk of unit k and the acceptable price range of the
+CDA market. The buyer tends to submit a low bid and
+computes the bid by the following equation:
+bid ¼ Djk /C0ð Djk /C0 P llÞ/C2 c3; ð11Þ
+where c3 is a random real number. 5
+If there exists OA and no OB, the buyer will calculate its
+bid using the following equation:
+bid ¼
+OA; OA 6 a;
+OA /C0ð OA /C0 P llÞ/C2 F eager; OA > a and OA 6 Djk ;
+Djk /C0ð Djk /C0 P llÞ/C2 F eager; OA > a and OA > Djk ;
+8
+><
+>:
+ð12Þ
+where a is a threshold in the heuristic rules for buyers. If
+OA is lower than or equal to a, this buyer will think the
+ask is low enough to be accepted directly. Otherwise, this
+buyer will compute its new bid by OA /C0 (OA /C0 Pll) · Feager
+or Djk /C0 (Djk /C0 Pll) · Feager in Eq. (12).
+When there exists OB and no OA, the buyer will submit
+no bid if the current OB is higher than x, another threshold
+in the heuristic rules for buyers. Otherwise, the buyer will
+submit its new bid slightly higher than the current OB.
+When there are already OB and OA, the buyer will ﬁrst
+judge whether the current OA is proﬁtable or not. If the
+current OA is lower than or equal to a, the buyer will think
+that it is proﬁtable and accept the OA directly. If the cur-
+rent OA is not proﬁtable and the current OB is higher than
+x, this buyer will not submit any new bid. Otherwise, the
+buyer will compute the bid by the following steps. First,
+the buyer will compute the basic price Pbasic by Eq. (13).
+Then the buyer will utilize Eq. (14) or Eq. (15) to calculate
+the target price Ptarget depending on whether there was a
+transaction in the last round. The size of the step from
+the basic price to the target price is computed by Eq.
+(16). Finally, the bid to be submitted is got by Eq. (17):
+P basic ¼ Djk /C2 c4; ð13Þ
+where c4 is initially a random real number. 6
+If there was a successful transaction in the last round,
+P target ¼ minðP t last /C0 h; OAcurrentÞ; ð14Þ
+where h is an arbitrary small positive real number which is
+the same h in Eq. (7), OAcurrent is the current outstanding
+ask, and Pt_last is the transaction price of the last round.
+If there was no successful transaction in the last round,
+P target ¼ minðOBlast þ b; OAcurrentÞ; ð15Þ
+where b is an arbitrary small positive real number which is
+the same b in Eq. (8), OBlast is the outstanding bid of the
+last round. The size of the step is calculated by the follow-
+ing equation:
+Sstep ¼ ðP target /C0 P basicÞ/C2 F eager; P target 6 P basic;
+ðminðP target; Djk Þ/C0 P basicÞ/C2ð 1 /C0 F eagerÞ; P target > P basic:
+/C26
+ð16Þ
+The ﬁnal bid is given by the following equation:
+bid ¼ P basic þ Sstep: ð17Þ
+4. Experimental evaluation
+We carry out experiments in two groups, including one
+group of experiments to simulate static CDA markets, and
+another to simulate dynamic CDA markets. The ultimate
+goal of the experiments is to evaluate the performance of
+agents using AA strategy in dynamic CDA markets which
+resemble CDA markets in practice where all the sellers or
+buyers are free to join and leave the markets. Through all
+the experimental results, it is demonstrated that agents
+using AA strategy perform signiﬁcantly better than agents
+adopting a number of other strategies in the dynamic CDA
+markets.
+Our ﬁrst step is to set up experiments which simulate
+static CDA markets. The reason is that the static market
+is a simple environment when compared with the dynamic
+market. We compare the performance of AA strategy with
+some commonly adopted ones in the static CDA markets.
+AA strategy is demonstrated to be superior to others. Then
+we set up experiments which simulate dynamic CDA mar-
+kets. In order to clearly evaluate the performance of AA
+strategy, we compare the performance of agents using
+5 Similarly to c1, c3 can, for instance, be located in [0.85, 1.0]. 6 Similarly to c2, c4 can, for instance, be located in [0.5, 1.0].
+H. Ma, H.-F. Leung / Electronic Commerce Research and Applications 6 (2007) 383–398 389
+
+AA strategy and agents adopting others one at a time in
+dynamic CDA markets. Through the experimental results,
+AA strategy is illustrated to be better than those being
+compared. Finally, we put agents using AA strategy and
+agents adopting other strategies together to compete in
+one dynamic CDA market.
+4.1. Experiments to simulate static CDA markets
+The settings of the experiments to simulate static CDA
+markets are as follows. First, each experiment is composed
+of several diﬀerent values of supply and demand. For each
+speciﬁc pair of supply and demand, 1000 runs are carried
+out. In each run, a seller is endowed with a number of units
+of goods whose reservation prices are independently drawn
+from a uniform distribution within [1.0, 1.5]. A buyer is
+endowed with a number of units of goods whose reserva-
+tion prices are independently drawn from a uniform distri-
+bution within [3.0, 3.5]. In order for the agents’ proﬁt to be
+comparable, we keep the reservation prices and the number
+of units of goods for diﬀerent kinds of agents the same.
+Second, the time period that an agent is allowed to elapse
+before submitting an ask or a bid is speciﬁed as a randomly
+distributed variable. Third, to measure how well an agent
+performs in a CDA, we evaluate its proﬁt. For a seller i,
+the total proﬁt on all s units sold in a run isPs
+k¼1ðP ik /C0 Cik Þ, where Pik is the transaction price. Simi-
+larly for a buyer j, the total proﬁt on all t units bought in
+a run is Pt
+k¼1ðDjk /C0 P jk Þ where again Pjk is the transaction
+price. In the following, an agent’s proﬁt is calculated as the
+sum of the total proﬁt in 1000 runs. In order to compute
+the value of the transaction rate and the transaction per-
+centage, the number of rounds, r, is selected ﬁrst. In our
+experiments, r is set to be 10. If r is smaller than 10, the
+simulation results become unstable. If r is larger than 10,
+the result is not sensitive to the changing market at the
+expense of increased computational time.
+Based on the above settings, we compare AA strategy
+with ZI-U [23], ZI-C [23], ZIP [24],G D [27], A-FL [30],
+and CP [25] strategies. These strategies represent the most
+widely cited strategies in the literature for agents participat-
+ing in CDAs. Our experiments are carried out to test seven
+kinds of sellers and seven kinds of buyers. To evaluate the
+behavior of each kind of sellers and buyers under diﬀerent
+conditions, we compare their proﬁts in three situations:
+supply equal to demand ( Figs. 1 and 2 ), supply larger than
+demand (Figs. 3 and 4 ), and supply less than demand ( Figs.
+5 and 6 ). In each ﬁgure, the horizontal axis shows the sup-
+ply or demand quantity and the vertical axis shows the
+proﬁt of agents using diﬀerent strategies. Each curve repre-
+sents the proﬁt of one kind of agents. The higher the proﬁt
+is, the better is the performance of the corresponding
+agents.
+For evaluating the performance of sellers, each kind of
+sellers is assumed to have 4–10 units of goods to sell. The
+buyers are all assumed to be ZI-C agents. For each pair
+of supply and demand, 1000 runs are carried out. Within
+28 35 42 49 56 63 700.2
+0.4
+0.6
+0.8
+1
+1.2
+1.4
+1.6
+1.8 x 10
+4
+quantity of supply and demand
+profit
+sellers
+ZI–U
+ZI–C
+ZIP
+GD
+CP
+A–FL
+AA
+Fig. 1. Performance of seven diﬀerent sellers in static markets. The supply
+and the demand increase from 28 to 70.
+28 35 42 49 56 63 70
+0.2
+0.4
+0.6
+0.8
+1
+1.2
+1.4
+1.6
+1.8
+2x 10
+4
+profit
+buyers
+quantity of supply and demand
+ZI–U
+ZI–C
+ZIP
+GD
+CP
+AF–L
+AA
+Fig. 2. Performance of seven diﬀerent buyers in static markets. The supply
+and the demand increase from 28 to 70.
+28 35 42 49 56 63 70500
+1000
+1500
+2000
+2500
+3000
+3500
+quantity of supply
+profit
+sellers
+ZI–U
+ZI–C
+ZIP
+GD
+CP
+A–FL
+AA
+Fig. 3. Performance of seven diﬀerent sellers in static markets. The supply
+increases from 28 to 70. The demand is 24.
+390 H. Ma, H.-F. Leung / Electronic Commerce Research and Applications 6 (2007) 383–398
+
+the 1000 runs, we put the same group of sellers to the mar-
+ket at the beginning of each run. Thus, the combination of
+sellers within 1000 runs is always the same. This means that
+all the sellers are not allowed to freely join or leave the mar-
+ket as they want. The performance of buyers is evaluated in
+a similar manner to that of the sellers.
+The performance of the agents using other six strategies
+is found to be statistically worse than that of the agents
+using AA strategy. ZIP agents behave worse than AA
+agents because they do not consider the adaptability in sev-
+eral consecutive rounds. CP agents resemble ZIP agents.
+GD agents show worse behavior because they focus on
+the history without considering the transaction price of
+the last round, the outstanding ask, and the outstanding
+bid in the current round. ZI-U and ZI-C agents submit ran-
+dom asks and bids, which prevent them from achieving a
+high proﬁt. A-FL agents can be adaptive but the capability
+of the long-term adaptability is lacking. As a result, their
+performance is not as good as that of AA agents.
+In order to further demonstrate how the long-term atti-
+tude aﬀects the overall performance of AA agents, we set
+up an additional set of experiments. We denote AA with-
+out the long-term attitude as AA-NL. Thus, there are alto-
+gether eight kinds of sellers, ZI-U, ZI-C, ZIP, GD, A-FL,
+CP, AA, and AA-NL and the buyers are all ZI-C agents.
+During each experiment, the number of units of goods
+and the distribution of reservation prices for these units
+are kept the same for all kinds of sellers. The number of
+units of ZI-C buyers is changing randomly every 100 runs,
+which leads to the ﬂuctuation of the supply and demand
+relationship within the 1000 runs. Similarly, we set up an
+experiment to compare the performance of AA buyers
+and that of AA-NL buyers. Figs. 7 and 8 demonstrate that
+AA agents gain more proﬁt than AA-NL agents.
+4.2. Experiments to simulate dynamic CDA markets
+While AA agents show a superior performance when
+compared with other agents in the simulated static CDA
+28 35 42 49 56 63 702500
+3000
+3500
+4000
+4500
+5000
+5500
+6000
+6500
+quantity of supply
+profit
+buyers
+ZI–U
+ZI–C
+ZIP
+GD
+CP
+A–FL
+AA
+Fig. 4. Performance of seven diﬀerent buyers in static markets. The supply
+increases from 28 to 70. The demand is 24.
+28 35 42 49 56 63 703500
+4000
+4500
+5000
+5500
+6000
+6500
+quantity of demand
+profit
+sellers
+ZI–U
+ZI–C
+ZIP
+GD
+CP
+A–FL
+AA
+Fig. 5. Performance of seven diﬀerent sellers in static markets. The supply
+is 24. The demand increases from 28 to 70.
+28 35 42 49 56 63 70500
+1000
+1500
+2000
+2500
+3000
+quantity of demand
+profit
+buyers
+ZI–C
+ZIP
+GD
+CP
+A–FL
+AA
+Fig. 6. Performance of six diﬀerent buyers in static markets. The supply is
+24. The demand increases from 28 to 70.
+4 6 8 105000
+6000
+7000
+8000
+9000
+10000
+11000
+12000
+13000
+14000
+the number of units of two buyers
+profit
+buyers
+AA
+AA–NL
+Fig. 7. Performance of AA buyers and AA-NL buyers.
+H. Ma, H.-F. Leung / Electronic Commerce Research and Applications 6 (2007) 383–398 391
+
+markets, CDA markets in practice are dynamic and the
+combination of sellers or buyers ﬂuctuates from time to
+time because agents can join and leave the market at any
+moment. This causes the supply and demand situation to
+be time-varying. Furthermore, one bidding strategy that
+succeeds in one speciﬁc environment may not work equally
+well in other environments. For all the above reasons, we
+set up experiments to compare the performance of AA
+agents with others in simulated dynamic CDA markets.
+4.2.1. Experiments to compare two kinds of agents
+The experimental setup for dynamic CDA markets is as
+follows. For evaluating sellers, we assume that there are
+ﬁve AA sellers and ﬁve another type of sellers in compari-
+son. Each seller has one unit of goods to sell. The rest of
+the sellers are selected randomly from a pool which consists
+of 70 sellers. In this pool, there are 10 AA, 10 ZI-U, 10 ZI-
+C, 10 ZIP, 10 GD, 10 CP, and 10 A-FL sellers, each of
+which has one unit of goods to sell. Therefore, except that
+the two kinds of sellers in comparison must have the same
+number of units of goods in every run, all the other sellers
+do not. Consequently, the combination of sellers is chang-
+ing from run to run. This simulates the dynamic joining
+and leaving of sellers except for the two kinds in compari-
+son. The buyers are all ZI-C buyers in order to be fair.
+Following the experiments for static CDA markets, we
+also divide the supply and demand relationships into sup-
+ply-larger-than-demand, supply-equal-to-demand, and
+supply-less-than-demand. For the case of supply-larger-
+than-demand, at the beginning of every run, more than
+40 sellers which are not in comparison are selected ran-
+domly from the pool. Thus the total number of units of
+goods desired to be traded by all sellers is larger than 50.
+In every 1000 runs, the number of units desired to be
+bought by buyers is changing from 10, 20, 30, 40, to 50,
+which is kept smaller than the supply. Similarly, for the
+case of supply-less-than-demand, less than 40 sellers not
+in comparison are selected randomly at the beginning of
+every run. Therefore, the supply is always smaller than
+50. The number of units of goods desired by buyers is
+changing from 60, 70, 80, 90, to 100, where the demand
+is higher than the supply. Finally for the case of supply-
+equal-to-demand, the number of units of goods desired
+by the sellers which are not in comparison and are ran-
+domly selected in each run is changing from 10, 20, 30,
+40, to 50, while the number of units of goods desired by
+4 6 8 100.7
+0.8
+0.9
+1
+1.1
+1.2
+1.3
+1.4 x 10
+4
+the number of units of two sellers
+profit
+sellers
+AA
+AA–NL
+Fig. 8. Performance of AA sellers and AA-NL sellers.
+60 70 80 90 100
+7000
+8000
+9000
+10000
+11000
+ZI–U sellers and AA sellers with various rivals
+AA
+ZI–U
+60 70 80 90 100
+7000
+8000
+9000
+10000
+11000
+ZI–C sellers and AA sellers with various rivals
+AA
+ZI–C
+60 70 80 90 100
+7000
+8000
+9000
+10000
+11000
+ZIP sellers and AA sellers with various competitors
+AA
+ZIP
+60 70 80 90 100
+7000
+8000
+9000
+10000
+11000
+CP sellers and AA sellers with various rivals
+AA
+CP
+60 70 80 90 100
+7000
+8000
+9000
+10000
+11000
+GD sellers and AA sellers with various rivals
+AA
+GD
+60 70 80 90 100
+7000
+8000
+9000
+10000
+11000
+A–FL sellers and AA sellers with various rivals
+AA
+A–FL
+a
+d e f
+b c
+Fig. 9. The comparison of performance of diﬀerent sellers with AA sellers in dynamic CDA markets when supply is smaller than demand. X-axis
+represents demand from 60 to 100. Y-axis represents the proﬁt of two sellers: (a) ZI-U and AA; (b) ZI-C and AA; (c) ZIP and AA; (d) CP and AA; (e) GD
+and AA; (f) A-FL and AA.
+392 H. Ma, H.-F. Leung / Electronic Commerce Research and Applications 6 (2007) 383–398
+
+the buyers is kept the same as that of all the sellers. Eval-
+uation of the buyers can be done in a similar manner.
+From Figs. 9–14 , it can be seen that the performance of
+AA agents is found to be always superior than any other
+kind of agents in the dynamic CDA markets. This demon-
+strates that (1) AA agents adapt to diﬀerent combinations
+of competitors; and (2) AA agents adapt to diﬀerent supply
+and demand relationships. ZI-U and ZI-C agents behave
+worse for the reason that they do not analyze the environ-
+ment and the other agents whom they are competing with.
+20 30 40 50 60
+5000
+6000
+7000
+8000
+9000
+10000
+ZI–U sellers and AA sellers with various rivals
+AA
+ZI–U
+20 30 40 50 60
+5000
+6000
+7000
+8000
+9000
+10000
+ZI–C sellers and AA sellers with various rivals
+AA
+ZI–C
+20 30 40 50 60
+5000
+6000
+7000
+8000
+9000
+10000
+ZIP sellers and AA sellers with various rivals
+AA
+ZIP
+20 30 40 50 60
+5000
+6000
+7000
+8000
+9000
+10000
+CP sellers and AA sellers with various rivals
+AA
+CP
+20 30 40 50 60
+5000
+6000
+7000
+8000
+9000
+10000
+GD sellers and AA sellers with various rivals
+AA
+GD
+20 30 40 50 60
+5000
+6000
+7000
+8000
+9000
+10000
+A–FL sellers and AA sellers with various rivals
+AA
+A–FL
+a
+d
+b
+e f
+c
+Fig. 10. The comparison of performance of diﬀerent sellers with AA sellers in dynamic CDA markets when supply is equal to demand. X-axis represents
+demand from 20 to 60. Y-axis represents the proﬁt of two sellers: (a) ZI-U and AA; (b) ZI-C and AA; (c) ZIP and AA; (d) CP and AA; (e) GD and AA; (f)
+A-FL and AA.
+10 20 30 40 50
+0
+1000
+2000
+3000
+4000
+5000
+ZI–U sellers and AA sellers with various rivals
+AA
+ZI–U
+10 20 30 40 50
+0
+1000
+2000
+3000
+4000
+5000
+ZI–C sellers and AA sellers with various rivals
+AA
+ZI–C
+10 20 30 40 50
+0
+1000
+2000
+3000
+4000
+5000
+ZIP sellers and AA sellers with various rivals
+AA
+ZIP
+10 20 30 40 50
+0
+1000
+2000
+3000
+4000
+5000
+CP sellers and AA sellers with various rivals
+AA
+CP
+10 20 30 40 50
+0
+1000
+2000
+3000
+4000
+5000
+GD sellers and AA sellers with various rivals
+AA
+GD
+10 20 30 40 50
+0
+1000
+2000
+3000
+4000
+5000
+A–FL sellers and AA sellers with various rivals
+AA
+A–FL
+ab c
+fed
+Fig. 11. The comparison of performance of diﬀerent sellers with AA sellers in dynamic CDA markets when supply is larger than demand. X-axis
+represents demand from 10 to 50. Y-axis represents the proﬁt of two sellers: (a) ZI-U and AAl; (b) ZI-C and AA; (c) ZIP and AA; (d) CP and AA; (e) GD
+and AA; (f) A-FL and AA.
+H. Ma, H.-F. Leung / Electronic Commerce Research and Applications 6 (2007) 383–398 393
+
+ZIP and GD agents always show a good performance. ZIP
+agents make use of many factors of the CDA market, such
+as the transaction price of the last round, the outstanding
+ask or the outstanding bid of the last round and the proﬁt
+margin. In addition, ZIP agents use an updating rule to
+adapt to the dynamic environments. However, they do
+not consider the history for longer than one round but only
+pay attention to the information of the last round. CP
+agents behave worse than ZIP agents. GD agents record
+a neither too long nor too short history and submit the
+10 20 30 40 50
+0
+1000
+2000
+3000
+4000
+5000
+ZI–U buyers and AA buyers with various rivals
+AA
+ZI–U
+10 20 30 40 50
+0
+1000
+2000
+3000
+4000
+5000
+ZI–C buyers and AA buyers with various rivals
+AA
+ZI–C
+10 20 30 40 50
+0
+1000
+2000
+3000
+4000
+5000
+ZIP buyers and AA buyers with various rivals
+AA
+ZIP
+10 20 30 40 50
+0
+1000
+2000
+3000
+4000
+5000
+CP buyers and AA buyers with various rivals
+AA
+CP
+10 20 30 40 50
+0
+1000
+2000
+3000
+4000
+5000
+GD buyers and AA buyers with various rivals
+AA
+GD
+10 20 30 40 50
+0
+1000
+2000
+3000
+4000
+5000
+A–FL buyers and AA buyers with various rivals
+AA
+A–FL
+ab c
+fed
+Fig. 12. The comparison of performance of diﬀerent buyers with AA buyers in dynamic CDA markets when supply is smaller than demand. X-axis
+represents supply from 10 to 50. Y-axis represents the proﬁt of two buyers: (a) ZI-U and AA; (b) ZI-C and AA; (c) ZIP and AA; (d) CP and AA; (e) GD
+and AA; and (f) A-FL and AA.
+20 30 40 50 60
+3000
+4000
+5000
+6000
+7000
+8000
+9000
+10000
+ZI–U buyers and AA buyers with various rivals
+20 30 40 50 60
+3000
+4000
+5000
+6000
+7000
+8000
+9000
+10000
+ZI–C buyers and AA buyers with various rivals
+AA
+ZI–C
+20 30 40 50 60
+3000
+4000
+5000
+6000
+7000
+8000
+9000
+10000
+ZIP buyers and AA buyers with various rivals
+AA
+ZIP
+20 30 40 50 60
+3000
+4000
+5000
+6000
+7000
+8000
+9000
+10000
+CP buyers and AA buyers with various rivals
+AA
+CP
+20 30 40 50 60
+3000
+4000
+5000
+6000
+7000
+8000
+9000
+10000
+GD buyers and AA buyers with various rivals
+AA
+GD
+20 30 40 50 60
+3000
+4000
+5000
+6000
+7000
+8000
+9000
+10000
+A–FL buyers and AA buyers with various rivals
+AA
+A–FL
+AA
+ZI– U a b c
+fed
+Fig. 13. The comparison of performance of diﬀerent buyers with AA buyers in dynamic CDA markets when supply is equal to demand. X-axis represents
+supply from 20 to 60. Y-axis represents the proﬁt of two buyers: (a) ZI-U and AA; (b) ZI-C and AA; (c) ZIP and AA; (d) CP and AA; (e) GD and AA; and
+(f) A-FL and AA.
+394 H. Ma, H.-F. Leung / Electronic Commerce Research and Applications 6 (2007) 383–398
+
+ask or bid which maximizes the expected utility. They can
+utilize the past successful asks and bids of all kinds of
+agents but cannot guarantee to be adaptive to the changes
+of supply and demand relationships as well as the dynamic
+joining and leaving of agents. A-FL agents work well in
+some situations, especially when it is hard for the agents
+to trade. However, there are many parameters to be
+adjusted to suit the market ﬂuctuation, which prevents
+the agents from being adaptive to dynamic environments.
+4.2.2. Experiments to compare all kinds of agents
+According to the experiments reported in the previous
+section, we observe that the performance of AA agents is
+superior when compared with a particular kind of agents
+at a time. Thus, we decide to design an experiment to have
+all kinds of agents together for performance comparison.
+So, at the beginning of each run, all the sellers or buyers
+are randomly selected while in the previous experiments,
+there are two kinds of sellers or buyers ﬁxed and the rest
+randomly selected. In particular, all the 100 sellers are
+selected randomly in each run from a pool of 140 sellers
+containing 20 AA, 20 ZI-U, 20 ZI-C, 20 ZIP, 20 GD, 20
+CP, and 20 A-FL sellers, where each seller has one unit
+of goods to sell. The combination of the sellers is diﬀerent
+in each run. This can simulate that all the sellers are free to
+join or leave the market as they want. All the sellers have
+the same probability of being selected from the pool.
+Therefore, in 1000 runs, all kinds of sellers in comparison
+should have almost the same number of units of goods to
+be traded. The buyers are all ZI-C buyers in order to be fair
+to diﬀerent kinds of sellers. To simulate diﬀerent supply
+and demand conditions, the number of ZI-C buyers is
+changing from 50, 60, 70, 80, 90, 100, 120, 140, 160, 180,
+to 200 every 1000 runs. The experiment setup for evaluat-
+ing buyers is similar to that of sellers.
+Figs. 15 and 16 clearly show that AA agents still give the
+best performance in the dynamic CDA markets under dif-
+ferent supply and demand conditions. This result reinforces
+again that AA agents are adaptive to dynamic market envi-
+ronments. In addition, ZIP and GD agents also gain a lot
+of proﬁt in this experiment, which is consistent to the
+experimental results in Section 4.2.1. In such a dynamic
+60 70 80 90 100
+5000
+6000
+7000
+8000
+9000
+10000
+ZI–U buyers and AA buyers with various rivals
+AA
+ZI–U
+60 70 80 90 100
+5000
+6000
+7000
+8000
+9000
+10000
+ZI–C buyers and AA buyers with various rivals
+AA
+ZI–C
+60 70 80 90 100
+5000
+6000
+7000
+8000
+9000
+10000
+ZIP buyers and AA buyers with various rivals
+AA
+ZIP
+60 70 80 90 100
+5000
+6000
+7000
+8000
+9000
+10000
+CP buyers and AA buyers with various rivals
+AA
+CP
+60 70 80 90 100
+5000
+6000
+7000
+8000
+9000
+10000
+11000
+GD buyers and AA buyers with various rivals
+AA
+GD
+60 70 80 90 100
+5000
+6000
+7000
+8000
+9000
+10000
+A–FL buyers and AA buyers with various rivals
+AA
+A–FL
+a b c
+fed
+Fig. 14. The comparison of performance of diﬀerent buyers with AA buyers in dynamic CDA markets when supply is larger than demand. X-axis
+represents supply from 60 to 100. Y-axis represents the proﬁt of two buyers: (a) ZI-U and AA; (b) ZI-C and AA; (c) ZIP and AA; (d) CP and AA; (e) GD
+and AA; (f) A-FL and AA.
+50 60 70 80 90 100 120 140 160 180 2000
+0.3
+0.6
+0.9
+1.2
+1.5
+1.8
+2.1
+2.4
+2.7
+3 x 10
+4
+demand=100 and supply=50~200
+profit of buyers
+buyers with changing combinations
+ZI–U
+ZI–C
+ZIP
+GD
+CP
+A–FL
+AA
+Fig. 15. Performance of diﬀerent kinds of buyers in dynamic CDA
+markets.
+H. Ma, H.-F. Leung / Electronic Commerce Research and Applications 6 (2007) 383–398 395
+
+CDA market, ZIP and GD agents take into account many
+factors of the market and beneﬁt from their adaptability to
+the environment.
+5. Conclusion, limitations and future work
+5.1. Conclusion
+This paper presents a formal model of a CDA protocol.
+A new bidding strategy, named AA strategy, is developed
+to guide an agent’s buying and selling behavior in a series
+of CDAs. AA strategy uses heuristic rules and a reasoning
+mechanism based on eagerness and two thresholds a and x
+to decide what bids or asks to accept or decline. Our eager-
+ness formulation is deﬁned based on both short-term and
+long-term attitudes, which reﬂects the real-time supply
+and demand conditions from an agent’s point of view.
+Two thresholds a and x are integrated within the heuristic
+rules, telling an agent what kind of asks or bids should be
+accepted or declined directly in the current market
+environment.
+We benchmark the performance of AA strategy against
+other six prominent alternatives in the literature. The
+experiments are composed of two groups: experiments
+to simulate static CDA markets, and experiments to sim-
+ulate dynamic CDA markets. The experimental results of
+the ﬁrst group show the superior performance of AA
+strategy in static market environments. Supported by
+the success in static markets, we carry out the second
+group of experiments to let agents using AA strategy
+compete with other kind of agents one by one in dynamic
+market environments. The results also illustrate that AA
+strategy can outperform any other strategy. Finally, all
+the bidding strategies are put together in one dynamic
+CDA market to compete, which again illustrates that
+AA strategy outperforms the others. These results demon-
+strate the eﬀectiveness of the use of an eagerness formula-
+tion based on two-level adaptive attitudes and the
+heuristic rules with two thresholds a and x. We view these
+as our main contribution. We also notice that in some
+cases, the performance of ZIP, A-FL, or GD agents is
+quite good when compared with that of AA agents. The
+reason is that ZIP, A-FL, or GD agents can make use
+of diﬀerent factors in the market and as a result behave
+adaptively to the dynamic market.
+5.2. Limitations and future work
+Our current research has the following limitations. First,
+in our current experiments, the reservation prices are ran-
+domly generated from a ﬁxed range for various agents at
+the beginning of the CDA markets. In view of the depreci-
+ation of goods over time, we think it is possible and prac-
+tical to adjust the reservation prices dynamically with the
+market situation in the future.
+Second, eagerness has been ﬁrstly introduced into CDAs
+and formed in our AA strategy. The aim of introducing
+eagerness is to enable an agent to behave adaptively
+according to the current market environment. There may
+exist other possible ways to express eagerness and guide
+agents’ behavior in such complex and dynamic markets.
+However, our proposed eagerness provides useful guidance
+and permits our agents using AA strategy to perform supe-
+riorly in the experiments.
+Third, we do not consider that supply and demand
+change abruptly in the current experiments. Nevertheless,
+in real life markets, sometimes there may be abrupt ﬂuctu-
+ation of the number of traders. Future research can explore
+the impact of these abrupt changes to agents through more
+experiments.
+In the future, we plan to further analyze the perfor-
+mance of AA strategy and reinforce AA strategy. We also
+aim to exploit more on adaptability which is essential for
+agents trading in a real CDA market. Moreover, we are
+interested in exploring the eﬀect of several important fac-
+tors on the performance of agents, such as making com-
+promise in bid determination and thresholds of asks and
+bids. All these factors are valuable and should be consid-
+ered by diﬀerent bidding strategies for agents in dynamic
+CDAs.
+Normally, bidding strategies which are used for CDAs,
+such as GD, ZIP, CP, A-FL, AA, and ZI-C are seldom
+applied to other types of auctions especially single-sided
+auctions due to the diﬀerences in information revelation
+and allocation processes. Bagnall and Toft [34] have tried
+to revise GD and ZIP strategy to be used in ﬁrst-price
+sealed-bid (FPSB) and second-price sealed-bid (SPSB) auc-
+tions. This demonstrates that it is possible and meaningful
+to utilize these adaptive strategies of CDAs into single-
+sided auctions, e.g., repeated English auctions, such that
+diﬀerent observations can be revealed both on auction pro-
+tocols’ side and on agents’ side.
+Finally, the basic ideas of eagerness can be easily
+extended to other auction protocols (e.g., multiple auc-
+tions, repeated Dutch auctions, repeated English auctions)
+50 60 70 80 90 100 120 140 160 180 200
+0.3
+0.6
+0.9
+1.2
+1.5
+1.8
+2.1
+2.4
+2.7
+3 x 10
+4
+supply=100 and demand=50~200
+profit of sellers
+sellers with changing combinations
+ZI–U
+ZI–C
+ZIP
+GD
+CP
+A–FL
+AA
+Fig. 16. Performance of diﬀerent kinds of sellers in dynamic CDA
+markets.
+396 H. Ma, H.-F. Leung / Electronic Commerce Research and Applications 6 (2007) 383–398
+
+because all these auctions are characterized by a series of
+repeated auctions.
+Acknowledgements
+We thank the chairs, anonymous reviewers, and audi-
+ence at our presentation at the 2005 IEEE International
+Conference on E-Technology, E-Commerce and E-Service
+(EEE’05), Hong Kong, China, for helpful input on an ear-
+lier version of this work. We would like to acknowledge
+Robert J. Kauﬀman (a co-editor of E-Commerce Research
+and Applications ), Jane Hsu and William Kwok-Wai Che-
+ung (co-editors of the special issue of the journal), and
+anonymous reviewers for useful comments. The work de-
+scribed in this paper was supported by a grant from the Re-
+search Grants Council of the Hong Kong Special
+Administrative Region, China (Project No. CUHK4346/
+02E).
+References
+[1] G. Xiong, T. Hashiyama, S. Okuma, An electricity supplier bidding
+strategy through q-learning, in: Proceedings of the Power Engineering
+Society Summer Meeting, vol. 3, 2002, pp. 1516–1521.
+[2] Y. Fujishima, D. McAdams, Y. Shoham, Speeding up ascending-bid
+auctions, in: IJCAI’99: Proceedings of the 16th International Joint
+Conference on Artiﬁcial Intelligence, Morgan Kaufmann Publishers
+Inc., San Francisco, CA, USA, 1999, pp. 554–563.
+[3] P.S.A. Reitsma, P. Stone, J.A. Csirik, M.L. Littman, Randomized
+strategic demand reduction: getting more by asking for less, in:
+AAMAS’02: Proceedings of the First International Joint Conference
+on Autonomous Agents and Multiagent Systems, ACM Press, New
+York, NY, USA, 2002, pp. 162–163.
+[4] H. Ma, H.-F. Leung, An adaptive attitude bidding strategy for agents
+in continuous double auctions, in: EEE’05: Proceedings of the 2005
+IEEE International Conference on E-Technology, E-Commerce and
+E-Service, IEEE Computer Society, Washington, DC, USA, 2005, pp.
+38–43.
+[5] P. Klemperer, Auctions: Theory and Practice, Princeton University
+Press, Princeton, NJ, USA, 2004.
+[6] N.R. Jennings, An agent-based approach for building complex
+software systems, Communications of the ACM 44 (4) (2001)
+35–41.
+[7] S. Murugesan, Negotiation by software agents in electronic market-
+place, in: TENCON’00: Proceedings of the 2000 IEEE Region 10
+Conference on Intelligent Systems and Technologies for the New
+Millennium, Kuala Lumpur, Malaysia, 2000, pp. 286–290.
+[8] H.S. Nwana, Software agents: an overview, Knowledge Engineering
+Review 11 (3) (1996) 1–40.
+[9] M. He, N.R. Jennings, H. Leung, On agent-mediated electronic
+commerce, IEEE Transactions on Knowledge and Data Engineering
+15 (4) (2003) 985–1003.
+[10] C. Wang, H.-F. Leung, Mobile agents for secure electronic commerce
+transactions with privacy protection of the customers, in: EEE’05:
+Proceedings of the 2005 IEEE International Conference on E-
+Technology, E-Commerce and E-Service, IEEE Computer Society,
+Washington, DC, USA, 2005, pp. 530–535.
+[11] K.-M. Lam, H.-F. Leung, An adaptive strategy for trust/honesty
+model in multi-agent semi-competitive environments, in: ICTAI’04:
+Proceedings of the 16th IEEE International Conference on Tools with
+Artiﬁcial Intelligence, IEEE Computer Society, Washington, DC,
+USA, 2004, pp. 416–423.
+[12] E. Schwartz, at on-line auctions, good and raw deals, in: New York
+Times, Circuit Section, March 1998.
+[13] W. Vickrey, Counterspeculation, auctions, and competitive sealed
+tenders, Journal of Finance 16 (1) (1961) 8–37.
+[14] T.W. Sandholm, Distributed rational decision making, in: G. Weiss
+(Ed.), Multiagent Systems: A Modern Approach to Distributed
+Artiﬁcial Intelligence, The MIT Press, Cambridge, MA, USA, 1999,
+pp. 201–258.
+[15] C. Preist, Commodity trading using an agent-based iterated double
+auction, in: AGENTS’99: Proceedings of the Third Annual Confer-
+ence on Autonomous Agents, ACM Press, New York, NY, USA,
+1999, pp. 131–138.
+[16] L. Hunsberger, B. Grosz, A combinatorial auction for collaborative
+planning, in: ICMAS’00: Proceedings of the Fourth International
+Conference on Multi-agent Systems, IEEE Computer Society,
+Washington, DC, USA, 2000, pp. 151–158.
+[17] T. Ito, M. Yokoo, A combinatorial auction protocol among versatile
+experts and amateurs, in: AAMAS’04: Proceedings of the Third
+International Joint Conference on Autonomous Agents and Multi-
+agent Systems, IEEE Computer Society, Washington, DC, USA,
+2004, pp. 378–385.
+[18] W.E. Walsh, M.P. Wellman, F. Ygge, Combinatorial auctions for
+supply chain formation, in: EC’00: Proceedings of the Second ACM
+Conference on Electronic Commerce, ACM Press, New York, NY,
+USA, 2000, pp. 260–269.
+[19] H. Hattori, T. Ozono, T. Shintani, Applying a combinatorial auction
+protocol to a coalition formation among agents in complex problems,
+in: AAMAS’03: Proceedings of the Second International Joint
+Conference on Autonomous Agents and Multiagent Systems, ACM
+Press, New York, NY, USA, 2003, pp. 1008–1009.
+[20] B. Hudson, T. Sandholm, Eﬀectiveness of query types and policies for
+preference elicitation in combinatorial auctions, in: AAMAS’04:
+Proceedings of the Third International Joint Conference on Auton-
+omous Agents and Multiagent Systems, IEEE Computer Society,
+Washington, DC, USA, 2004, pp. 386–393.
+[21] M. He, H.-F. Leung, Agents in e-commerce: state of the art,
+Knowledge and Information System 4 (3) (2002) 257–282.
+[22] P.R. Milgrom, R.J. Weber, A theory of auctions and competitive
+bidding, Econometrica 50 (5) (1982) 1089–1122.
+[23] D.K. Gode, S. Sunder, Allocative eﬃciency of markets with zero-
+intelligence traders: market as a partial substitute for individual
+rationality, Journal of Political Economy 101 (1) (1993) 119–137.
+[24] D. Cliﬀ, J. Bruten, Minimal-intelligence agents for bargaining
+behaviors in market-based environments, Technical Report HP-97-
+91, Hewlett–Packard Laboratories, Bristol, England, 1997.
+[25] C. Preist, M. van Tol, Adaptive agents in a persistent shout double
+auction, in: ICE’98: Proceedings of the First International Conference
+on Information and Computation Economies, ACM Press, New
+York, NY, USA, 1998, pp. 11–18.
+[26] S. Park, E.H. Durfee, W.P. Birmingham, An adaptive agent bidding
+strategy based on stochastic modeling, in: AGENTS’99: Proceedings
+of the Third Annual Conference on Autonomous Agents, ACM
+Press, New York, NY, USA, 1999, pp. 147–153.
+[27] S. Gjerstad, J. Dickhaut, Price formation in double auctions, Games
+and Economic Behavior 22 (1998) 1–29.
+[28] G. Tesauro, R. Das, High-performance bidding agents for the
+continuous double auction, in: EC’01: Proceedings of the Third
+ACM Conference on Electronic Commerce, ACM Press, New York,
+NY, USA, 2001, pp. 206–209.
+[29] G. Tesauro, J.L. Bredin, Strategic sequential bidding in auctions
+using dynamic programming, in: AAMAS’02: Proceedings of the
+First International Joint Conference on Autonomous Agents and
+Multiagent Systems, ACM Press, New York, NY, USA, 2002, pp.
+591–598.
+[30] M. He, H.-F. Leung, N.R. Jennings, A fuzzy-logic based bidding
+strategy for autonomous agents in continuous double auctions, IEEE
+Transactions on Knowledge and Data Engineering 15 (6) (2003)
+1345–1363.
+[31] K. Sim, A market-driven model for designing negotiation agents,
+Computational Intelligence 18 (4) (2002) 618–637.
+H. Ma, H.-F. Leung / Electronic Commerce Research and Applications 6 (2007) 383–398 397
+
+[32] M. Dumas, L. Aldred, G. Governatori, A. ter Hofstede, Probabilistic
+automated bidding in multiple auctions, Electronic Commerce
+Research 5 (1) (2005) 25–49.
+[33] M. Dumas, L. Aldred, G. Governatori, A. ter Hofstede, N. Russell, A
+probabilistic approach to automated bidding in alternative auctions, in:
+WWW’02: Proceedings of the 11th International Conference on World
+Wide Web, ACM Press, New York, NY, USA, 2002, pp. 99–108.
+[34] A. Bagnall, I. Toft, Autonomous adaptive agents for single seller
+sealed bid auctions, Autonomous Agents and Multi-agent Systems 12
+(3) (2006) 259–292.
+398 H. Ma, H.-F. Leung / Electronic Commerce Research and Applications 6 (2007) 383–398

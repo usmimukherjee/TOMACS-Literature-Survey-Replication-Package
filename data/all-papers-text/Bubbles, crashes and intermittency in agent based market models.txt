@@ -1,0 +1,1826 @@
+Eur. Phys. J. B 31, 421–437 (2003)
+DOI: 10.1140/epjb/e2003-00050-6
+ THE EUROPEAN
+PHYSICALJOURNALB
+Bubbles, crashes and intermittency in agent based market
+models
+I. Giardina1,2,a and J.-P. Bouchaud3,4
+1 S e r v i c ed eP h y s i q u eT h ´eorique, Centre d’´etudes de Saclay, Orme des Merisiers, 91191 Gif-sur-Yvette Cedex, France
+2 Dipartimento di Fisica, Universit`ad iR o m aL aS a p i e n z aa n dC e n t e rf o rS t a t i s t i c a lM e c h a n i c sa n dC o m p l e x i t y ,
+INFM Roma La Sapienza, Piazzale Aldo Moro 2, 00185 Roma, Italy
+3 S e r v i c ed eP h y s i q u ed el ’´Etat Condens´e, Centre d’´etudes de Saclay, Orme des Merisiers, 91191 Gif-sur-Yvette Cedex, France
+4 Science & Finance, CFM, 109-111 rue Victor-Hugo, 92532 Levallois Cedex, France
+Received 5 July 2002 / Received in ﬁnal form 9 December 2002
+Published online 14 February 2003 – c© EDP Sciences, Societ`a Italiana di Fisica, Springer-Verlag 2003
+Abstract. We deﬁne and study a rather complex market model, inspired from the Santa Fe artiﬁcial market
+and the Minority Game. Agents have diﬀerent strategies among which they can choose, according to their
+relative proﬁtability, with the possibility of not participating to the market. The price is updated according
+to the excess demand, and the wealth of the agents is properly accounted for. Only two parameters play
+a signiﬁcant role: one describes the impact of trading on the price, and the other describes the propensity
+of agents to be trend following or contrarian. We observe three diﬀerent regimes, depending on the value
+of these two parameters: an oscillating phase with bubbles and crashes, an intermittent phase and a stable
+‘rational’ market phase. The statistics of price changes in the intermittent phase resembles that of real
+price changes, with small linear correlations, fat tails and long range volatility clustering. We discuss how
+the time dependence of these two parameters spontaneously drives the system in the intermittent region.
+We analyze quantitatively the temporal correlation of activity in the intermittent phase, and show that the
+‘random time strategy shift’ mechanism that we proposed earlier allows one to understand the observed
+long ranged correlations. Other mechanisms leading to long ranged correlations are also reviewed. We
+discuss several other issues, such as the formation of bubbles and crashes, the inﬂuence of transaction costs
+and the distribution of agents wealth.
+PACS. 89.65.Gh Economics, business, and ﬁnancial markets
+1 Introduction
+It is now well known that the statistics of price changes in
+ﬁnancial markets exhibit interesting ‘stylized facts’, which
+are to some extent universal, i.e. independent of the type
+of market (stocks, currencies, interest rates, etc.) and of
+the epoch [1–4]. Price changes are in a good approxi-
+mation uncorrelated beyond a time scale of the order of
+tens of minutes (on liquid markets). Their distribution
+is strongly non Gaussian: they can be characterized by
+Pareto (power-law) tails with an exponent in the range
+3−5. Another striking feature is the intermittent nature
+of the ﬂuctuations: localized outbursts of the volatility,i.e.
+the amplitude of the price ﬂuctuations (averaged over a
+given time interval), can be identiﬁed. This fact, known as
+volatility clustering [2,3,5,6], can be analyzed more quan-
+titatively: the temporal correlation function of the daily
+volatility σt c a nb eﬁ t t e db ya ni n v e r s ep o w e ro ft h el a gτ,
+with a rather small exponent in the range 0.1 −0.3 [6–10].
+a e-mail: irene.giardina@roma1.infn.it
+This suggests that there is no characteristic time scale for
+volatility ﬂuctuations: outbursts of market activity can
+persist for short times (a few hours), but also for much
+longer times, months or even years. The slow decay of
+the volatility correlation function leads to a multifractal-
+like behaviour of price changes [10–14], and has important
+consequences for option pricing. Other stylized facts have
+been reported, such as the leverage eﬀect that leads to
+skewed distribution of price changes [15], or the apparent
+increase of inter-stock correlations in volatile periods.
+It is now very clear to many that these features are
+very diﬃcult to explain within the traditional frame-
+work of ‘rational expectations’, where all agents share
+the same information, have an inﬁnite computation power
+and act in a perfectly rational way (see e.g. the clear
+discussion in the introduction of references [16,17] and
+in [18]). Another route, much less formalized and still very
+much in an exploratory stage, is followed by an increas-
+ing number of academics. The aim is to assume as little
+as possible about agents preferences and abilities, and to
+
+422 The European Physical Journal B
+explore generic classes of models, with the hope of ﬁnding
+some plausible mechanisms that reproduce at least part
+of the stylized facts recalled above. In this endeavor, one
+should not be constrained by preexisting prejudices or es-
+tablished frameworks. The ‘grand uniﬁcation’ of diﬀerent
+mechanisms which would lead ﬁnally to a logically consis-
+tent and simultaneous understanding of all the empirical
+facts is deferred to later time s. Similarly, it is premature
+to ask for rigorous proofs, but leave space for hand waving
+arguments and numerical simulations.
+In this paper, we report [19] the results of an artiﬁcial
+market that bears some similarities with many previous
+attempts [20–38]. Although the detailed behaviour of our
+artiﬁcial market depends on the value of the diﬀerent pa-
+rameters entering the model, only a few market typologies
+are identiﬁed, and some qualitative features (such as the
+long range volatility correlations) are robust to parame-
+ter changes, at least in some regions of parameter space.
+We explain in particular that the general mechanism pro-
+posed in [39] is indeed responsible for volatility clustering
+in our model. We also discuss, in this context, other agent
+based models proposed so far in which this phenomenon
+has been observed. We identify several other interesting
+features (appearance of bubbles and crashes, inﬂuence of
+the price ﬁxing procedure and of wealth constraints, of
+transaction costs, etc.) that may be of some relevance to
+real markets.
+In our model, we have not included herding, or imita-
+tion eﬀects. Each agent acts independently of other agents.
+The correlations between their actions is entirely mediated
+by the price history itself. Direct herding might also be im-
+portant to account for the phenomenology of real markets
+(see [29,40–42] and references therein). We leave to a fu-
+ture study the extension of the present model to account
+for these herding eﬀects.
+The aftermath of our study (and of all other similar
+studies) is the following paradox: in order to get a ‘good
+looking’ price chart, one has to tune quite a bit the impor-
+tant parameters of the model. What are the mechanisms
+tuning the parameters in real markets to make them look
+all alike? There must be some generic self-organization
+mechanisms responsible for this selection. We discuss in
+Section 6.1, in view of our results, what could be the
+‘evolutionary’ driving forces relevant for this fundamen-
+tal issue.
+2 Set up of the model
+2.1 Basic ingredients
+In line with the original idea of the Santa Fe artiﬁcial mar-
+ket [21,22], which was later simpliﬁed and popularized as
+the Minority Game ( mg) [24,43,30,44,45], in our model
+agents do not follow a rational expectation paradigm but
+rather act inductively, adapting their behaviour to their
+past experience. As in the mg each agent has a certain
+ﬁxed number of strategies, each of which converts some
+information into a decision. We will assume a world where
+there are only two tradable assets: a stock, with ﬂuctuat-
+ing price, and a bond, yielding a certain (known) risk free
+rate ρ. The information on which the agents decide their
+action will be the past history of the price itself. The de-
+cision is to buy stocks (converting bonds in cash), to sell
+stocks, or to be inactive (i.e. to hold bonds). Each strategy
+is given a score, which is updated according to its perfor-
+mance. The strategy played at time t by a given agent is
+the one, among those available to him, which would have
+best performed in a recent past. We take proper account
+of the wealth balance of each agent, and proper market
+clearing (i.e. matching supply and demand) is enforced.
+2.2 Notations and deﬁnitions
+Each agent i, i ∈{ 1, ..., N} has S − 1 active strategies
+plus an inactive one. He owns, at time t,an u m b e rφi(t)
+of stocks and Bi(t) of bonds. The price of the stock is
+X(t), and therefore the total wealth of agent i is Bi(t)+
+φi(t)X(t). The dynamics of the model, betweent and t+1,
+is deﬁned by the following set of rules:
+– Information:
+We assume that all agents rely on thesame information
+It,g i v e nb yt h em last steps of the past history of the
+return time series (m is for ‘memory’). We choose the
+information to be qualitative and to only depend on
+the sign of the previous price changes:
+It = {χ(t − m), ··· ,χ (t − 1)}
+χ(t)=s i g n
+[
+log( X(t)
+X(t − 1)) − ρ
+]
+. (1)
+In this sense, our traders are ‘chartists’ on short time
+scales, and take their decision based on the past pat-
+tern of price changes. (We will add below the possibil-
+ity for the agents not to follow their systematic strate-
+gies, and act as ‘fundamental’ traders if the price is
+too far from a reference value, or even act at random.)
+A comment on the value of the time scale ‘1’ is in order
+here. Clearly, diﬀerent agents observe the price time
+series on diﬀerent time scales, from several minutes
+for intra day traders to months for long term pension
+funds. Here, we assume for simplicity that all agents
+coarse-grain the price time series using the same clock,
+and consider as meaningful price variations on – say –
+a day or a week. All the parameters below were chosen
+such as one time step roughly corresponds to a week of
+trading. One interesting outcome of our model is that
+even if all agents have the same intrinsic clock, a broad
+range of time scales is spontaneously generated.
+– Strategies:
+Each agent i is endowed with a certain number S of
+ﬁxed strategies, that convert information It into deci-
+sion ϵi(It)= ±1, 0 (buy, sell, inactive). For example,
+a ‘trend following’ strategy could be to choose ϵi =1
+as soon as there is a majority of +’s in the signal It.
+Another example is the inactive strategy, for which
+ϵi ≡ 0, ∀I.
+
+I. Giardina and J.-P. Bouchaud: Bubbles, crashes and intermittency in agent based market models 423
+Each agent is given the possibility to remain inactive,
+i.e. has an inactive strategy. The S − 1 other strate-
+gies are chosen at random in the space of all strate-
+gies (there are 2 2m
+of them), in order to model het-
+erogeneity in the agents capabilities. One can however
+give a bias to this random choice, and favor ‘trend
+following’ or ‘contrarian’ strategies. This is done by
+deﬁning the ‘magnetization’ M ∈ [−1, 1] of the string
+χ(1), ··· ,χ (m), deﬁned as:
+M = 1
+m
+m∑
+j=1
+χ(j), (2)
+and choose the corresponding decision to be ϵ=+ 1
+with probability (1 + PM )/2a n dϵ= −1w i t hp r o b -
+ability (1 − PM )/2. The parameter P ∈ [−1, 1] can
+be called the ‘polarization’ of the strategies. If P =1 ,
+trend following strategies are favored, whereasP = −1
+corresponds to contrarian strategies. The choiceP =0
+means no bias in the strategy space.
+– Decision and buy orders:
+Knowing the strategy used by agent i and the infor-
+mation It allows one to compute the decision ϵi(t)o f
+each agent. Depending on the value ofϵi(t), the agent
+buys/sells a quantity qi(t) proportional to his current
+belongings. More precisely, we set:
+qi(t)= gBi(t)
+X(t) for ϵi(t)=+ 1
+qi(t)= −gφi(t)f o r ϵi(t)= −1
+qi(t)=0 f o r ϵi(t)=0 . (3)
+This means that we consider ‘prudent’ investors who
+change their positions progressively: only a fraction g
+of the cash is invested in stock between t and t +1i f
+the signal is to buy, and the same fractiong of stock is
+sold if the signal is to sell. Typical values used below
+are g ∼ 1%.
+The normalized total order imbalance, which will be
+used to determine the change of price, is denotedQ(t):
+Q(t)= 1
+Φ
+N∑
+i=1
+qi(t)= Q+(t) − Q−(t), (4)
+where Φ is the total number of outstanding shares (that
+we assume to be constant),Q+ is the fractional volume
+of buy orders and Q− the fractional volume of sell
+orders.
+Agents sometimes choose to abandon their ‘chartist’
+strategies when the price reaches levels that they feel
+unreasonable: when the pri ce is too high, they are
+likely to sell, and vice versa. More precisely, we con-
+struct a long term average of past returns as:
+r(t)= 1 − α
+α
+∑
+t′<t
+αt−t′
+r(t′)
+r(t′)=l o g
+(X(t′+1 )
+X(t′)
+)
+, (5)
+where α< 1 deﬁnes the time scale T0 =1 / log(1/α)
+over which the averaging is done, andr(t)i st h ei n s t a n -
+taneous stock return. When
+ r is larger than a certain
+reference return ρ0, related to economy fundamentals,
+the stock can be deemed as overvalued and ‘fundamen-
+talists’ will sell ( ϵi = −1). Conversely, if
+ r<ρ 0,t h e
+stock is possibly undervalued, and ϵi =+ 1 .W em o d e l
+the occurrence of fundamental trading as stochastic,
+by assigning a certain probability pf for every agent
+to follow a fundamental strategy rather than a tech-
+nical (chartist) strategy. We want pf to increase with
+|
+r −ρ0|, and have chosen the following simple relation:
+pf =m i n
+(
+1,f |
+r − ρ0|
+ρ0
+)
+, (6)
+where f is a certain paramete r describing the conﬁ-
+dence of agents in fundamental information. Since pf
+increases when the price goes up too fast, fundamental-
+ists have a stabilizing role and give to the price a mean
+reverting component. In the following, we will assume
+that on the long run, the overall economy growth ρ0
+and the interest rate ρ are equal, and impose ρ0 = ρ,
+although in practice the two ﬂuctuate with respect to
+each other.
+In the above rule, we have again assumed that all
+agents use the same time scale to determine the past
+average trend. This is probably very far from reality,
+where one expects that thi s time scale could be very
+diﬀerent for diﬀerent agents.
+Finally, it can be useful to consider the inﬂuence of
+‘irrational’ traders, who take their decisions on the ba-
+sis of random coin tossing only. We deﬁne pi as the
+probability for an agent to take a random decision.
+In this case, the probability to be a fundamentalist is
+(1 − pi)pf .
+– Price formation and market clearing mechanism:
+Once the aggregate order imbalance Q(t)i sk n o w n ,
+we update the price following a simple linear rule
+[20,21,26,27,41]:
+r(t)= Q(t)
+λ , (7)
+where
+r(t)=l o g
+(X(t +1 )
+X(t)
+)
+≃ X(t +1 )
+X(t) − 1( 8 )
+is the logarithmic price return andλ is a measure of the
+‘stiﬀness’ of the market. There has been recent empiri-
+cal studies of this relation, which was shown to hold for
+individual stocks for small enough Q, on a suﬃciently
+large time interval [47]. For larger order imbalance, the
+price response appears to bend downward, a possible
+consequence of the structure of the order books. We
+have included this eﬀect, with no noticeable eﬀect on
+the qualitative results presented below.
+From a more microscopic point of view, i.e. on time
+scales smaller than the time unit that we have cho-
+sen, agents place orders of diﬀerent types in the mar-
+ket: market orders and limit orders. Market orders al-
+lows the order to be executed with certainty, but at
+
+424 The European Physical Journal B
+the current market price. Limit orders ensures a max-
+imum price for buy orders (and a minimum price for
+sell orders) but can be unexecuted, or only partially
+executed, depending on the history of the price. There-
+fore, in general, the order put down by an agent will
+be only partially ﬁlled. We assume that the fraction of
+unfulﬁlled orders is the same for all agents trying to
+buy (if the number of sold shares is insuﬃcient), or for
+all agents trying to sell in the opposite case.
+Market clearing is then ensured by the following rule:
+the global amount of sell orders is Q−(t), and the
+total number of shares that can be bought at price
+X(t +1 )i s :
+˜Q+(t)= Q+(t) X(t)
+X(t +1 ) · (9)
+The fraction of ﬁlled buy orders ϕ+ (resp. ﬁlled sell
+orders ϕ−) is therefore:
+ϕ+ =m i n
+(
+1, Q−
+˜Q+
+)
+ϕ− =m i n
+(
+1,
+˜Q+
+Q−
+)
+· (10)
+From these quantities, one determines the actual num-
+ber of shares δφi bought or sold by agent i:
+δφi(t)= gϕ+
+Bi(t)
+X(t +1 ) for ϵi(t) > 0
+δφi(t)= −gϕ−φi(t)f o r ϵi(t) < 0. (11)
+Note that ϕ+ and ϕ− are diﬀerent: they are deﬁned in
+a such a way that the total amount of sold shares is
+exactly the same as the total amount of bought shares
+at all times, as can be checked by inspection.
+Of course, the above rules are to some extent arbi-
+trary but are consistent and represent qualitatively, in
+a phenomenological way the results of a double-auction
+market in which the probability of being unexecuted
+is ﬁnite. Another rule, such that there are no unexe-
+cuted orders (and would correspond to a market with
+only market orders with a matching rule) would be to
+update the price in such a way that ˜Q+(t)= Q−(t).
+Interestingly, this leads to a very unrealistic dynamics
+where the price is not continuous but jumps up and
+down in a random way. This would indeed be the case
+in a market with no market makers and no limit orders:
+the lack of liquidity would lead to a totally unstable
+price process.
+– Wealth dynamics:
+We now have all the ingredients to update the number
+of stocks and bonds of agent i, i.e.:
+φi(t +1 )= φi(t)+ δφi(t)
+Bi(t +1 )= Bi(t)(1 +ρ) − δφi(t)X(t +1 ), (12)
+where the last line adds the interest gained on the
+bonds between t and t + 1 to the cash need to ﬁnance
+new stocks, or gained through stock selling. Note that
+there is an injection of wealth due to the positive inter-
+est rate ρ. We will discuss this further in the following.
+– Update of the scores:
+Each agent assigns scores to his strategies to measure
+their performance and uses at time t the best strat-
+egy, i.e. the one with highest scores. We need now to
+specify how the scores of the diﬀerent strategies are
+updated. The score of the αth strategy of agent i at
+time t is denoted Sα
+i (t), whereas the decision associ-
+ated to this strategy when the available information
+at time t is It is ϵα
+i (It). When the agent i decides
+at time t to trade, the price at which the trade takes
+place isX(t + 1). Therefore, thevirtual proﬁt he makes
+due to this trade is only known at time t +2a n di s
+ϵα
+i (It)[X(t +2 ) − X(t + 1)]. We choose to update the
+score of the active strategies proportionally to the rel-
+ative proﬁt, corrected by the interest rate1:
+Sα
+i (t +1 )=( 1 − β)Sα
+i (t)+ βϵα
+i (It−1)[r(t) − ρ],
+α =1 , ..., S− 1, (13)
+whereas the score of the inactive strategy is identically
+zero. The parameter β ≤ 1 deﬁnes a memory time: the
+performance of the strategies is only computed using
+the recent part of the history. More precisely, the per-
+formance is evaluated over a periodT ∼ 1/|log(1 −β)|
+and is longer the smaller the value of β.T h es h o r t -
+est memory corresponds to β = 1, when scores are
+evaluated on the basis of the last performance of the
+strategy performance2.
+Note that the update of the scores is not weighted by
+the actual transaction volume: good decisions are val-
+ued independently of the current wealth of the agent.
+Therefore, the score of the strategy is not proportional
+to the actual proﬁt and loss curve.
+One should keep in mind that for any β ⁄=0o n l yt h e
+best strategy α∗(t) is played by the agent at time t.
+Nevertheless, he updates the scores of all strategies as
+if they had been played. In other words, market im-
+pact is neglected here, since the very fact of using a
+given strategy inﬂuences the price itself. The history of
+the price would have been diﬀerent if a diﬀerent strat-
+egy had been played. We do not take into account the
+market impact for two reasons: ﬁrst, the update of the
+score is delayed as compared to the action itself (see
+Eq. (13)) – therefore, the main source of systematic
+bias discussed in the context of the Minority Game
+in, e.g. [46], is removed. Second, market impact is in
+practice very hard to estimate for traders themselves
+(although some recent studies start addressing this is-
+sue [47–49]), and strategies are often backtested under
+the assumption that the market impact is small.
+A related point is that of the virtual proﬁt computed
+above. Taking proﬁt means closing one’s position, at a
+1 A similar rule for the update of scores was recently consid-
+ered in [38].
+2 Following equation (13), for β = 0 all scores are equal
+and time independent. According to our algorithm, each agent
+chooses at random the strategy to use. The value β =0i s
+pathological: for any ﬁnite (even if small) value of β there are
+ﬁnite diﬀerences among the scores of the various strategies,
+and consequently a best strategy can be identiﬁed.
+
+I. Giardina and J.-P. Bouchaud: Bubbles, crashes and intermittency in agent based market models 425
+3000 4000 5000 6000 7000 800 0
+0
+5
+10
+15
+3000 4000 5000 6000 7000 800 0
+0
+5
+10
+15
+3000 4000 5000 6000 7000 8000
+0
+5
+10
+15
+P=0
+P=0
+P=-0.2
+Stable
+Intermittent
+Periodic
+Fig. 1. Typical price charts in the three regimes: oscillatory, intermittent, stable (eﬃcient). The parameters are:S =3 , m =5 ,
+g =0 .005, f =0 .05, N = 1001, β =1 0−2 and 1 − α =1 0−4. The top graph corresponds to g/λ =0 .1, the two bottom graphs
+to g/λ =0 .6.
+price that is not known in advance. Again there will be
+some market impact and the actual price of the trans-
+action is on average less than the current price. This
+eﬀect is well known to active market participants and,
+as mentioned above, has been recently the subject of
+some studies. A way to model this is to add a transac-
+tion cost to the above update of the score, independent
+of whether one buys or sells. (This cost should also be
+taken into account in the above wealth balance.)
+2.3 Summary of the parameters and main results
+The model contains a rather large number of parameters:
+the interest rate ρ, the memory length used for technical
+trading m, the ‘polarization’ of strategies P, the fraction
+of invested wealth g, the time scale used to trigger funda-
+mental trading α, the propensity of fundamental trading
+f and the fraction of irrational agents pi, the stiﬀness of
+the market λ, and the memory time of agents when the
+score of the strategies are updated, β. As we shall see,
+the most important parameters are g/λ and the polar-
+ization P, which determine the qualitative behaviour of
+price changes. The other parameters inﬂuence the quanti-
+tative results, but do not in general modify the qualitative
+features, apart from special cases which will be explicitly
+discussed in the following sections. As the values of g/λ
+and P are varied, we observe the appearance of three qual-
+itatively diﬀerent regimes (see Fig. 1):
+– An Oscillatory Regime , corresponding to ‘weak cou-
+pling’: g/λ ≲ 0.4, and P ≥ 0, where speculative
+bubbles are formed, and ﬁnally collapse in sudden
+crashes induced by the fundamentalist behaviour. In
+this regime, markets are not eﬃcient, and a large frac-
+tion of the orders is (on average) unfulﬁlled.
+– An Intermittent regime (g/λ /greaterorsimilar0.4, P ≥− |P0|)w h e r e
+the ‘stylized’ facts of liquid markets are well repro-
+duced: the market is eﬃcient (although some persistent
+or antipersistent correlations survive), the returns fol-
+low a power law distribution, and volatility clustering
+is present.
+– A Stable regime , which arises if the polarization P
+is suﬃciently negative (predominance of contrarian
+strategies). In this case, the ﬂuctuations of the price
+are mild and mean reverting (see Fig. 1c), as one would
+expect in a ‘rational market’ where the trading price
+is always close to the fundamental price.
+A (rather schematic) phase diagram of the model in the
+plane (g/λ,P ) for a ﬁxed value of all the other parameters
+is shown in Figure 2. This qualitative phase diagram is the
+central result of our study.
+3 Kinematics of the model: fully random
+strategies
+Before embarking to analyze the inﬂuence of strategies,
+it is important to calibrate the bare version of our model
+where agents take purely random, uncorrelated decisions
+at each instant of time. In this case, the price ﬂuctua-
+tions will only reﬂect the wealth constraints. We show in
+
+426 The European Physical Journal B
+0.00 0.20 0.40 0.60 0.8 0
+g/λ
+−0.10
+−0.05
+0.00
+0.05
+0.10
+ P
+Periodic
+Intermittent
+Stable (anticorrelated)
+Intermittent
+(correlated)
+(Random Walk)
+Fig. 2. Phase diagram of the model. The region g/λ > 0.4, P> −|P0| corresponds to an intermittent regime, with small linear
+correlations but strong volatility ﬂuctuations. The dashed lines correspond to crossover regions, where a mixed behaviour is
+observed.
+9000 10000 11000 12000 1300 0
+ Time
+10
+11
+12
+13
+14
+15 Log price
+1 10 100 1000
+0.01
+0.02
+0.03
+0.04
+Fig. 3. Behaviour of the price as a function of time for purely random strategies. Inset: Variogram of the price ﬂuctuations,
+and Ornstein-Uhlenbeck ﬁt.
+Figure 3 the price chart for some values of the param-
+eters. The log-price perform s a mean reverting random
+walk around the fundamental price Xf (t)=e x p (ρt). In
+the inset we show the log-price variogram, deﬁned as:
+V(τ)=
+⟨(
+log X(t + τ)
+X(t) − ρτ
+)2⟩
+, (14)
+together with an Ornstein-Uhlenbeck ﬁt:
+V(τ)= V∞ (1 − exp(−τ/τ 0)), (15)
+that describes a mean reverting random walk with a re-
+verting timeτ0, and mean square excursion from the mean
+equal to V∞. For small τ, the behaviour of V(τ) is lin-
+ear in τ, as for a free random walk, indicating that ran-
+dom trading leads, as expected, to unpredictable price
+changes. However, on larger time scales, the limitation
+
+I. Giardina and J.-P. Bouchaud: Bubbles, crashes and intermittency in agent based market models 427
+of wealth and of stocks (agents cannot borrow nor short
+sell stocks) prevents the price from wandering inﬁnitely
+far from the fundamental price, and leads to a mean-
+reverting behaviour. This mechanism will also operate for
+more complicated trading rules and will be discussed again
+in Section 5.
+It is simple to understand how these quantities depend
+on the parameters g,λ . From the price ﬁxing mechanism,
+one can write a Langevin equation for the price that reads:
+r(t)= dl o gX
+dt = g
+2λφ
+(B(t)
+X − φ + ξ(t)
+)
+, (16)
+where B(t) is the average of an agent wealth in bonds, φ
+the average number of stocks per agent, andξ is a random
+binomial variable measuring the small oﬀset from a perfect
+50–50 division between buyers and sellers. The variance
+of ξ(t) is therefore of order N −1. Equation (16) indeed
+describes a mean reverting process aroundB(t): when the
+price is too high, the demand goes down due to budget
+constraints and the price goes down, and vice versa.T h e
+long term increase of price is only due, in our model, to
+the continuous injection of cash through the interest rate.
+Equation (16) deﬁnes a mean reverting process, that
+allows one to obtain in particular:
+τ0 ∝ λφ
+g V∞ ∝ g
+Nλφ , (17)
+in agreement with numerical results. The short ti-
+me volatility of the market, for τ ≪ τ0,i sg i v e nb y
+σ2 = V∞/τ0 ∝ g2/N λ2φ2,a n di ss m a l lf o r‘ s t i ﬀ e r ’m a r -
+kets, or if the fraction of invested wealth is smaller, as ex-
+pected. Also, the volatility decreases when the number of
+agents increases. For a market with 104 participants such
+that g = 10%, this formula gives a reasonable volatility of
+1% per week, when the market stiﬀness is λ ∼ 0.1. How-
+ever, in this case, the return time is also of the order of a
+week and the total variability of prices is 1%, both being
+far too small compared to reality.
+Let us ﬁnally note that from the simulations, the mar-
+ket liquidity, measured as the fractionc of fulﬁlled orders,
+improves when the market stiﬀness λ decreases. For ex-
+ample, we ﬁnd c =0 .9f o rg =1 % ,λ =1 ,a n dc =0 .98
+for g =1 % ,λ =0 .1.
+4 The oscillatory regime
+This regime is characterized by the presence of regular
+bubbles followed by rapid ‘crashes’. The period of the bub-
+bles is a function of the model parameters. In Figure 4 we
+show the dependence of the period on g/λ,f o rs o m eﬁ x e d
+values of the other parameters. The period decreases as
+g/λ increases, and vanishes when the market enters the
+intermittent regime. On the same plot, we have also shown
+the fraction c of fulﬁlled orders, which is very low in the
+oscillatory phase and increases with g/λ.
+0.0 0.2 0.4 0.6 0.8 1.0
+g/λ
+0
+1000
+2000
+3000
+4000
+ T
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+ c
+Fig. 4. Period T of the oscillations (open circles, left scale),
+and fraction c of fulﬁlled orders (black squares, right scale), as
+a function of g/λ. All other parameters are as in Figure 1.
+4.1 A qualitative discussion
+We want to understand the mechanism underlying the cre-
+ation and persistence of bubbles, and their ﬁnal collapse.
+To answer this question, one has to look back at
+equation (7) that describes the price dynamics. Since
+the strategies are randomly distributed among agents,
+we can expect that at the beginning of the game one
+half of the agents is willing to buy and the other half
+to sell. The price increment is therefore r = δX/X ∼
+gλ−1N/(2Φ)[B/X − Φ]. Since in general B/X ⁄= Φ,t h e
+price rises or decreases. Suppose that the initial condi-
+tions are such that it increases. If g/λ is small, both the
+wealth and number of shares of the agents change quite
+slowly, and therefore B/X − Φ will keep a constant sign
+for a while. This will generate a history of price of the
+form ..,1, 1, 1, 1, 1... (see Eq. (1)). This is the initial stage
+of the bubble. Now, the population of agents fall into two
+categories: those who have at least one strategy such that
+..,1, 1, 1, 1, 1 sends a buy signal, and those who do not
+have such a strategy availabl e. The buy-strategies keep
+being rewarded, while the sell ones keep loosing points:
+agents who can buy will continue buying, while agents who
+cannot will soon become inactive since all active strate-
+gies have a negative score. In this way the bubble is self-
+sustained and the price keeps increasing. This ‘majority’
+mechanism was discussed in the context of the Minority
+Game in [36,38]. However, the buying power of the buy-
+ers decreases, because the price increases and the available
+cash decreases. Hence, the relative return of the stock over
+the risk-free rate diminishes, and the score of the buying
+strategies only become marg inally positive (because the
+initial large gains are forgotten, only the recent past is in-
+cluded in the calculation of the scores). Since the average
+past return exceeds the reference rateρ0, a certain fraction
+of agents become fundamentalist and act contrarily to the
+main trend, i.e. sell. As soon as their action is such that
+the price drops, the history will change to ..,1, 1, 1, 1, −1.
+
+428 The European Physical Journal B
+At this point, one half of the active agents still receive a
+buy signal, but the other half receive a sell signal (since
+strategies are random, and for now unbiased – P =0 ) .
+Now, these selling agents have a lot of stocks, since they
+have been buying for a long time, whereas the still buying
+agents have a poor buying power. This obviously results
+in a series of −1, and an ‘anti-bubble’ is created. This
+anti-bubble has a large initial negative slope because the
+system starts in a highly unb alanced state. There is no
+symmetry between a bubble and an antibubble because of
+the presence of a non zero interest rate, which is a source
+of cash and favors, on average, positive trends. Once again,
+it is the presence of fundamentalist agents which at some
+point triggers the end of the descending trend, and re-
+establish a bubble. The precise time at which the bubble
+collapses is random, and the way the collapse is triggered
+is very similar to a nucleation process (see next section).
+One interesting quantity is the fraction of fulﬁlled or-
+ders. In the oscillating regime, one understands from the
+above arguments that the unbalance between buy orders
+and sell orders is in general very large, leading to great
+amount of unfulﬁlled orders. The fraction c of fulﬁlled or-
+ders increases with g/λ: see Figure 4. As will be discussed
+below, this is a driving force to escape from this oscillat-
+ing regime, which obviously does not look at all like real
+markets.
+The eﬀect of the polarization P, which can be appre-
+ciated in the phase diagram of Figure 2, is quite easy to
+understand in the light of this microscopic analysis: a pos-
+itive value ofP increases the average number of trend fol-
+lowers and therefore is almost irrelevant for the bubble
+dynamics which is based on an endogenous trend follow-
+ing behaviour. On the other handP< 0 acts contrarily to
+the bubble creation forcing a percentage of agents to act
+against the trend. Interestingly enough, as it can be seen
+from the phase diagram, even a smallP< 0i sa b l et op r e -
+vent the appearance of a bubble. As a function of|P |,t h e
+transition between an oscillating behaviour and a stable
+behaviour is ﬁrst-order like, in the sense that the period
+of the oscillation is still ﬁnite when the transition occurs.
+The above mechanism also allows us to understand
+t h er o l eo ft h ep a r a m e t e r sf or the fraction of irrational
+agents pi. The numerical simulations indicate that increas-
+ing the value of these parameters may at ﬁrststabilize the
+oscillating phase, while one would intuitively expect an
+opposite behaviour since fundamentalists/irrational play-
+ers reduce the relative number of trend followers. This
+eﬀect can be explained in the following way. We have seen
+that, as the price increases during the bubble, the available
+cash of active players and therefore their buying power de-
+creases bringing the bubble to saturation. However, each
+active agent has a certain probability proportional tof to
+become a fundamentalist and sell, increasing his wealth
+in cash. The buying pressure can then stay higher for a
+longer period of time, determining more stable bubbles.
+Of course, as f increases substantially, its other eﬀect of
+nucleating opposite trends becomes the most important
+one, and the system behaves much as if the polarization
+parameter P was strongly negative, and thus prevents the
+appearance of bubbles. Finally, the presence of irrational
+agents who buy or sell randomly, and therefore statisti-
+cally drop out of the order imbalance, can be seen as
+reducing the eﬀective value of g, and thus – somewhat
+surprisingly – stabilizing the oscillating regime. On the
+other hand, in this regime the properties of the system
+behaviour do not depend signiﬁcantly on the memory β.
+Indeed, during the bubble even a very short memory is
+enough to select the buying strategy as the best one be-
+cause buying strategies win at each step of time. A similar
+argument holds for selling strategies during the crash.
+We now turn to a mathematical transcription of the
+above discussion, that allows us to characterize more ac-
+curately the shape of the bubbles in our model.
+Note ﬁnally that, when each agent has a small number
+of strategies, the oscillating regime tends to die out for
+very long times, since the amplitude of the bubbles pro-
+gressively decreases. This is due to the fact that agents
+that have a buying strategy during the bubble tend to
+underperform on the long run. Their wealth is, at long
+times, insuﬃcient to sustain the bubble. In order to de-
+termine the oscillation period more precisely, we have ar-
+tiﬁcially given to each agent both its initial strategy and
+its perfect mirror image. This prevents the appearance
+of two groups with systematically diﬀerent wealths, with-
+out changing the basic mechanism leading to bubbles and
+crashes.
+4.2 A mean-ﬁeld description
+In this section we try to describe the bubble-crash dynam-
+ics by means of some mean-ﬁeld equations. As we shall see,
+this will enable us to understand the precise mechanism
+of the bubble saturation and the consequent crash occur-
+rence.
+We start by deﬁning the relevant mean-ﬁeld variables:
+the average amount B of bonds and the average stock
+amount φ hold by active agents. It is also useful to deﬁne
+the number of buyers/sellers Nb,N s. Note that since only
+part of the agents are active during the bubble-crash dy-
+namics φ is diﬀerent from Φ/N, the average stock amount
+per agent. Besides, since active players may act as trend
+followers but also as fundamentalists,φ m a yv a r yi nt i m e .
+Our aim is to write some evolution equations for these
+average quantities and for the price. In the following we
+shall consider the continuous time limit of equations (7),
+(12) and (5). We have:
+r(t)= dl o gX
+dt = 1
+λQ(t) (18)
+r(t)= 1
+T0
+∫ t
+0
+dτ exp(−t − τ
+T0
+)r(τ), (19)
+where T0 =1 / ln(1/α) (see Eq. (5)). On the other hand
+the precise expression of the global action Q(t)a sw e l la s
+the wealths dynamics is not the same during the whole
+bubble-crash cycle and to write down appropriate equa-
+tions it is necessary to distinguish diﬀerent regimes where
+
+I. Giardina and J.-P. Bouchaud: Bubbles, crashes and intermittency in agent based market models 429
+the agents behaviour can be considered as homogeneous in
+time. In general we can assume that during the bubble all
+the active players are buyers, except for a small percent-
+age of fundamentalists who start selling when the price
+increases too much. On the contrary, during the crash all
+active agents become sellers while the fundamentalists will
+eventually act as buyers. In the following, we shall consider
+the case where the parameters g/λ and f are very small.
+4.2.1 Beginning of the bubble:
+ r(t) <ρ
+At the beginning of the bubble the price starts increas-
+ing but is still lower than the fundamental reference value
+exp(ρt). This implies that all active agents, including the
+fundamentalists, are buyers. The total number of buyers
+is therefore given by all the agents who have at least one
+buying strategy, plus a stochastic contribution given by
+the fundamentalists:
+Nb = N
+(
+1 − 1
+2s
+)
++ N
+2s pf, (20)
+where s = S − 1. On the other hand, the active sellers
+rapidly disappear as the score of the corresponding strat-
+egy deteriorates. The price rises without transaction, but
+since g/λ is small, it does so rather slowly. since all players
+who have not a buying strategy prefer to remain inactive.
+In this context, it is evident that no transaction can be re-
+alized at all since there is a complete unbalance between
+oﬀer and demand, and the parameter ϕ+, which deter-
+mines the fraction of fulﬁlled orders, is therefore identi-
+cally zero. The evolution equations are in this case very
+simple (see Eqs. (7, 12)):
+r(t)= g
+λNb
+B
+ΦX (21)
+and:
+dB
+dt = ρB dφ
+dt =0 . (22)
+The initial rate of growth of the bubble r0 is therefore
+given by:
+r0 ≈ g
+λ
+B0N
+X0Φ
+(
+1 − 1
+2s
+)
+, (23)
+where B0 = B(t = t0)a n dX0 = X(t = t0), and t0 is the
+start date of the bubble. This gives a good approximation,
+as can be seen from Figure 5. Since the value of X0 just
+after the crash is small, the buying power is high and r0
+is much larger than ρ.T h ev a l u eo f
+r(t) therefore steadily
+increases.
+4.2.2 Saturation of the bubble:
+ r(t) >ρ
+In this regime the fundamentalist players start acting con-
+trarily to the main trend and take their proﬁt, thereby
+reestablishing some trading activity. We now have:
+Nb = N(1 − 1
+2s )(1 − pf ) Ns = Npf (24)
+18000 19000 20000 2100014
+16
+18
+20
+22
+Fig. 5. Bubble-crash dynamics in the oscillatory regime for
+g/λ =0 .005, and ρ =0 .001, f =0 .005, α =0 .9999. The
+straight line corresponds to numerical data, the dashed lines
+to the mean-ﬁeld approximations (see text), and the dotted line
+to the best exponential ﬁt in the bubble saturation regime.
+and the return and wealths evolution equations now read
+r(t)= g
+λΦ
+(
+Nb
+B
+X − Ns
+N Φ
+)
+(25)
+dB
+dt = ρB − (1 − pf)gϕ+B + pf gφX (26)
+dφ
+dt =( 1 − pf )gϕ+
+B
+X − pf gφ (27)
+w h e r ew eh a v ea s s u m e dt h a tϕ+ = pfΦX/NbB ≪ 1, which
+is consistent when f ≪ 1. In this limit, the equations
+simplify signiﬁcantly, since all terms containingpf can be
+neglected. Introducing the buying power Υ = B/X,o n e
+has:
+r ≈ gN
+λΦ (1 − 1
+2s )Υ dΥ
+dt ≈ (ρ − r)Υ, (28)
+from which one extracts:
+dr
+dt =( ρ − r)r −→r(t)= ρ
+1 − Aexp(−ρt), (29)
+with A =( r0 − ρ)/r0 > 0. This shows that r(t) tends for
+long times to the overall growth rate of the economy. This
+is expected since a faster growth cannot be sustained be-
+cause of budget constraints: the buying power would then
+tend to zero. We also ﬁnd that r(t) tends to ρ exponen-
+tially, with a decay rate γ equal to ρ itself. A better ap-
+proximation for γ can be obtained by retaining the small
+terms dropped in the above analysis. In Figure 5 we show
+the curve obtained from equation (29) with the value ofγ
+estimated analytically together with the best exponential
+ﬁt of the data, and ﬁnd very good agreement.
+In this limit whereρT0 ≫ 1, one can show that
+r(t)−ρ
+hardly varies during the bubble period, and is approxi-
+mately equal to Aρ. We show in Figure 6 the time evolu-
+tion of various quantities during this bubble.
+
+430 The European Physical Journal B
+18000 18500 19000 195000.001
+0.0015
+0.002
+0.0025
+0.003
+18000 18500 19000 19500
+t
+0
+10
+20
+30
+40
+50
+60
+70
+Fig. 6. Upper graph: Behaviour ofr(t) (note the ﬂuctuations)
+and
+ r(t) as a function of t in the bubble-saturation regime
+(respectively, straight and dashed lines). Lower graph: For
+the same time-interval, the buying power B/X (straight line)
+and φ (dashed line). Same values of parameters as in Figure 5.
+The knowledge ofγ also allows us to estimate the time
+of occurrence of the crash. We know that the bubble is
+sustained because buying strategies keep being rewarded
+when the price keeps increasing. Nevertheless, we have
+seen that during the bubble saturation the average re-
+turn approaches the reference value ρ,t h u sa l s ot h ep e r -
+formance of buying strategies (i.e. their scores relative to
+the risk free rate) will increase less as time goes on; a small
+drop of price might then be enough to both trigger some
+strong selling strategies and favor the inactive strategy, re-
+ducing the buying pressure. In the absence of ﬂuctuations,
+the average role of the fundamentalists is to renormalize
+the values ofA and γ in equation (29) above. The number
+of fundamentalists is however a stochastic Poisson pro-
+cess, and ﬂuctuates around the average value Npf with
+variance σf =
+√
+Npf . One therefore expects that when
+r(t) − ρ becomes of the order of gσf /λN,o n eo fs u c h
+positive ﬂuctuations will bring the instantaneous return
+below ρ and the price history will therefore change from
+1, 1, 1, ...,1t o1 , 1, 1, ...,−1, from which a sudden wave of
+sell orders triggers the crash. A reasonable estimate of the
+bubble end-time t⋆ is therefore given by:
+ρAexp (−γ(t⋆ − t0)) ≈ g
+λ
+√
+ pf
+N , (30)
+or
+t⋆ − t0 ≈ 1
+2γ log
+(Aλ2ρ2NγT 0
+fg 2
+)
+(31)
+which indeed has the correct order of magnitude and
+qualitative behaviour, increasing with decreasingg/λ (see
+Fig. 4). Note also that as f → 0, the bubbles have an
+inﬁnite lifetime, as we have seen in our simulations. Some
+fundamentalist behaviour is needed to nucleate a crash.
+4.2.3 Crash
+At the beginning of the crash all the fundamentalists act
+as sellers since one still has
+ r(t) >ρ .T h u s
+Nb =0 Ns = N
+(
+1 − 1
+2s
+)
++ Npf
+1
+2s (32)
+and the initial slope of the crash is now given by:
+r⋆ ≈− g
+λ
+N
+Φ
+(
+1 − 1
+2s
+)
+· (33)
+When at some point
+ r(t) becomes smaller than ρ
+the fundamentalists start acting again contrarily to the
+main trend driving back the price toward the fundamen-
+tal value Xf (t). We may expect a saturation eﬀect as in
+the previous regime, which would enable an asymptotic
+expansion. However, as it can be seen from the ﬁgures,
+the crash period is much shorter than the bubble one and
+the crash stops much before any asymptotic regime set in.
+The reason for this asymmetry is the interest rate that
+‘reﬁlls’ the buying power in the bubble regime, that has
+no counterpart in the crash regime. The crash ends in the
+same way as the bubble does, through a nucleation pro-
+cess when r(t) −ρ becomes of the order of the ﬂuctuations
+(which are in this case much larger).
+5 The intermittent regime
+5.1 Results from the simulation
+Upon increasing the parameterg/λ, the oscillating regime
+disappears and gives rise to an interesting market be-
+haviour, where diﬀerent market ‘states’ coexist: bubbles
+and crashes, periods of very small activity, and periods of
+very large activity, intermixed with each another. A typ-
+ical chart of the returns and of the volume as a function
+of time is plotted in Figure 7. From visual inspection, it
+is quite clear that the return time series exhibits volatility
+clustering. We now turn to a more quantitative analy-
+sis of the price series statistics. The data we analyze be-
+low corresponds to N = 10 000 agents, with ‘unpolarized’
+strategies P =0 ,a n df o rg/λ =0 .75, deep in the intermit-
+tent regime (see Fig. 2). Other parameters are identical to
+those in Figure 1. We note that the qualitative eﬀects we
+report below have not been seen to depend onN,a tl e a s t
+up to N = 10 000 which is the largest size we have inves-
+tigated. Strong size eﬀects, reported in the Lux-Marchesi
+model [29] for instance, seem to be absent in our case.
+However, we expect that whenN becomes comparable to
+the total number of strategies (i.e. 22m
+), the phenomenol-
+ogy will change since many agents will share exactly the
+same strategies.
+
+I. Giardina and J.-P. Bouchaud: Bubbles, crashes and intermittency in agent based market models 431
+10000 15000 2000 0
+−0.1
+0.0
+0.1
+Return
+10000 15000 20000
+0.73
+0.75
+0.77
+ Volume
+Fig. 7. Time series of the returns, truncated to ±10% (top panel), and of the fraction of active agents (bottom panel), for
+g/λ =0 .75.
+1 10 100 100 0
+ τ
+0.01
+0.1
+1
+ V(τ)
+Fig. 8. Variogram of the price as a function of the time lag,
+together with an Ornstein-Uhlenbeck (mean-reverting) ﬁt.
+First, we look at the price variogram, deﬁned by equa-
+tion (14). This is shown in Figure 8, together with an
+Ornstein-Uhlenbeck ﬁt. The saturation time τ0 is of the
+order of 100; taking the unit time in our model to be the
+week, this corresponds to one or two years, with a volatil-
+ity of roughly 20% per year, which is quite reasonable.
+As explained in Section 3 the saturation is a direct conse-
+quence of the bounded wealth of agents. Is there a similar
+mean-reverting trend in real markets? The analysis of the
+variogram of the Dow-Jones index, for example, in the pe-
+riod 1950–2000, shows no convincing sign of saturation on
+the scale of the year, although a slight bend down wards
+for longer time lag is visible, but the data become noisy.
+There has been reports in the literature of a systematic
+mean-reverting eﬀects on the scale of 5–10 years, perhaps
+related to the mechanism discussed here. Remember that
+the fundamental price in our model has zero volatility. The
+short time volatility is the result of pure trading, which
+leads to a random walk like behaviour of the price; the
+saturation occurs because of insuﬃcient resources to sus-
+tain a large diﬀerence between the fundamental price and
+the speculative price.
+The two other quantities that we have systematically
+studied are the volume variogram and the absolute return
+variogram. The variogram of a time dependent quantity
+is deﬁned as:
+V(τ)=
+⟨
+(O(t + τ) − O(t))2
+⟩
+· (34)
+We have considered the cases where O(t)i se q u a lt o
+the fraction of active agents (deﬁning Vv)a n dw h e r e
+O(t)= |r(t)| (deﬁning Vσ). We show these two quanti-
+ties in Figure 9 as a function of √
+τ, together with a ﬁt
+inspired from the theory explained in the next section:
+V(τ)|SQRT = V∞
+(
+1 − exp
+(
+−
+√
+ τ
+τ0
+))
+. (35)
+Note that the short time behaviour of the above function
+is √
+τ, in contrast with the regular (linear) behaviour of
+the Ornstein-Uhlenbeck form. We will explain the origin
+of this singularity below, and explain why equation (35)
+ﬁts very well the volume variogram. Note also that|r(t)| is
+only a noisy proxy for the true quantity of interest, namely
+the volatility. Since the ‘measurement’ noise is expected
+to be uncorrelated at diﬀerent instants of time, we use a
+
+432 The European Physical Journal B
+0 1 02 03 04 0
+τ
+1/2
+0
+0.0002
+0.0004
+0.0006
+0.0008
+Vv(τ)
+ Data
+ MG fit
+ Power−law, α=0.036
+0 1 02 03 04 0
+τ
+1/2
+0.016
+0.018
+0.020
+0.022
+0.024
+Vσ(τ)
+ Data
+ MG fit
+ Power−law, α=0.32
+Fig. 9. Variogram of the volume (top panel) and of the absolute return (bottom panel) as a function of the time lag, together
+with the ﬁts given by equations (35, 37). The parameters of the ﬁt are given in the text.
+slightly modiﬁed ﬁt (which is also useful to deal with real
+market data):
+V(τ)|SQRT = V∞
+(
+1 − exp
+(
+−
+√
+ τ
+τ0
+))
++ V0 (1 − δτ,0).
+(36)
+We have also used a power-law ﬁt
+V(τ)|PWR = V∞
+(
+1 −
+( τ
+τ0
+)−α)
+, (37)
+which has been advocated in many empirical studies of
+the volatility, with α ∼ 0.1 − 0.3 [8,10].
+As can be seen from Figure 9, the two ﬁts are of compa-
+rable quality. The relevant parameters of the ﬁt are, forVv,
+τ0 ≈ 46 using equation (35) and τ0 ≈ 1a n dα ≈ 0.0365
+using equation (37), and for Vσ, one ﬁnds τ0 ≈ 7.4a n d
+V0/V∞ ≈ 2.2 using equation (36) and τ0 ≈ 0.017 and
+α ≈ 0.325 using equation (37). Note that the value of α
+found for Vv(τ) is signiﬁcantly smaller that that forVσ(τ),
+as also found for real market data. The reason for this will
+be explained in the next section.
+We have also studied the distribution of returns. Not
+surprisingly, this distribution is found to be highly kurtic,
+which is expected since the volatility is ﬂuctuating. The
+tail of the distribution can be ﬁtted by a power-law, with
+an exponent µ ≈ 3.5, similar to the value reported in [50]:
+see Figure 10. Note that the negative tail is slightly fatter
+than the positive tail. We also show a Student-t distribu-
+tion with a tail index µ = 4, that ﬁts quite well the whole
+distribution.
+The role of a non zero polarization of strategies P is,
+for small enough P, to induce some correlations (or anti-
+correlations) in the returns. For P< 0, as was the case
+10
+−2
+10
+−1
+10
+0
+r
+10
+−4
+10
+−3
+10
+−2
+10
+−1
+10
+0
+P
+>
+(r)
+g/λ=0.5
+ Positive returns
+ Negative returns
+ Power−law µ=3.4
+ Student−t
+Fig. 10. Distribution of returns for g/λ =0 .5. A power-law
+tail with µ =3 .4 and a Student-t distribution with a tail index
+µ = 4 are shown for comparison.
+for the oscillating regime, there is a ﬁrst-order (discon-
+tinuous) transition toward a stable market, with small,
+strongly anticorrelated ﬂuctuations that track the funda-
+mental price. This transition occurs for rather small val-
+ues of |P |≈ 0.03. For P> 0, on the other hand, the
+intermittent phase survives but the variogram of price
+ﬂuctuations shows signiﬁcant positive correlations. For
+suﬃciently large P, the oscillating phase reappears in a
+continuous way.
+
+I. Giardina and J.-P. Bouchaud: Bubbles, crashes and intermittency in agent based market models 433
+The conclusion of this section is that volatility cluster-
+ing appears for large values of g/λ. Qualitatively similar
+eﬀects are seen for diﬀerent choices of m (memory time
+for the strategies), β (memory time for the scores), and S
+(number of strategies per agent), provided g/λ is large
+enough to be in the intermittent phase. A crucial ingredi-
+ent, however, is the existence of an inactive strategy,i.e.,
+the fact that the volume of activity is allowed to ﬂuctuate.
+We have not been able to obtain long term volatility corre-
+lations of the type reported in Figure 9 when all strategies
+are active. This observation has motivated us to propose a
+simple mechanism for non trivial volume (and volatility)
+ﬂuctuations [39,19], that we discuss now in the present
+context.
+5.2 A simple mechanism for long-ranged volume
+correlations
+5.2.1 Random time strategy shifts
+In the above model, as in the Minority Game, scores are
+attributed by agents to their possible strategies, as a func-
+tion of their past performance. In particular, the inactive
+strategy is adopted when the score of all active strategies
+are negative.
+In the intermittent regime we have seen that the mar-
+ket is ‘quasi-eﬃcient’: the autocorrelation of the price in-
+crements is close to zero. To a ﬁrst approximation no strat-
+egy can on the long run be proﬁtable. This implies that
+the strategy scores locally behave, as a function of time,
+as random walks. This very fact enables us to explain the
+ﬂuctuations of volume. Let us consider for simplicity the
+case S = 2 (one active strategy and one inactive strat-
+egy per agent). Since the switch between two strategies
+occurs when their scores cross, the activity of an agent is
+determined by the survival time of the active strategy over
+the inactive one, that is by the return time of a random
+walk (the score of the active strategy) to zero. The inter-
+esting point is that these return times are well known to
+be power-law distributed. This leads immediately to the
+non trivial behaviour of the activity variogram shown in
+Figure 9. The same argument was used to explain the vol-
+ume ﬂuctuations in the Minority Game with an inactive
+strategy, in the eﬃcient phase [39].
+More formally, let us deﬁne the quantity θi(t)t h a ti s
+e q u a lt o1i fa g e n ti is active at time t, and 0 if inactive.
+The total activity is given by v(t)= ∑
+i θi(t), and the
+activity variogram is given by
+Vv(t, t′)=
+⟨
+[v(t) − v(t′)]2⟩
+= Cv(t, t)+ Cv(t′,t ′) − 2Cv(t, t′). (38)
+where Cv(t′,t ) denotes the volume correlation function.
+One can consider two extreme cases which lead to the
+same result, up to a multiplicative constant: (a) agents fol-
+low completely diﬀerent strategies and have independent
+activity patterns, i.e. ⟨θiθj ⟩∝ δi,j or (b) agents follow
+very similar strategies, in which case θi = θj.I nb o t h
+cases, Cv(t, t′) is proportional to ⟨θi(t)θi(t′)⟩and can be
+exactly expressed in terms of the distribution P(s)o ft h e
+survival timess of the active strategies [51,39]. For an un-
+conﬁned random walk, the return time distribution P(s)
+decays as s−3/2 for large s. Note that thiss−3/2 behaviour
+is super-universal and only requires short range correla-
+tion in the score increments, not even a ﬁnite second mo-
+ment [52,53]. However, in our model, the ﬁnite memory
+with which the scores are updated (i.e. the value of β< 1
+in Eq. (13)) leads to a truncation of the s−3/2 beyond a
+time τ0 ≃ 1/ log(1 − β). Without this truncation, the vol-
+ume v(t) would never become a stationary process, i.e.
+Cv(t, t′) would still depend on botht and t′at long times,
+a phenomenon called ‘aging’ in the physics literature [54].
+For ﬁnite τ0, one can show analytically that [39,19]:
+Vv(t + τ,t )= Vv(τ) ∝
+√
+ τ
+τ0
+τ ≪ τ0. (39)
+The formula given by equation (35), was found to repro-
+duce very well the crossover f rom this exact short time
+singular behaviour to the saturation regime.
+The interesting conclusion is the following: the very
+fact that agents compare the performance of two strategies
+on a random signal leads to a multi-time scale behaviour
+of the volume ﬂuctuations. This argument accounts very
+accurately for our numerical data both for the Minority
+Game and the present market model (see Fig. 9) [39,19],
+and also reproduces quite well the empirical variogram of
+activity in real markets [39].
+5.2.2 Volume and volatility
+Let us now discuss the relation between volume and
+volatility. In real markets, the two are known to be corre-
+lated; more precisely, it has recently been shown in [55]
+that the long run correlations in volatility come from
+the long range correlation in the volume of activity (see
+also [56]). In our artiﬁcial market, a scatter plot of the
+logarithm of the absolute return, log |r(t)| versus the vol-
+ume of activityv(t) shows nearly no correlations when the
+volume has small ﬂuctuations around its average value
+ v,
+but is strongly correlated withv(t)w h e nv(t)h a sl a r g ee x -
+cursions above
+ v. This means that periods of high activity
+are also periods of large volatilities. One therefore expects
+that the structure of temporal correlations of the volume
+discussed above is also reﬂected in the volatility. If the
+relation between |r(t)| and v(t) was linear, or weakly non
+linear, one would in fact expect exactly the same shape
+for the variogram. The fact that this relation is highly
+non linear, i.e., nearly no correlations for v(t) ≈
+ v,a n d
+a roughly exponential relation for v(t) >
+ v, adds an in-
+stantaneous noise contribution proportional to 1 − δτ,0 to
+the variogram of absolute returns, and leads to a strong
+distortion of the shape of the relaxation. The fact that the
+eﬀective power-law α, deﬁned in equation (37), is larger
+for |r(t)| than for v(t) can be understood in details in the
+context of the multifractal random walk model of Bacry
+et al. [10].
+
+434 The European Physical Journal B
+1 10 100 1000 10000 10000 0
+ Time lag
+0.35
+0.40
+0.45
+0.50
+0.55
+ Variogram
+ Lux−Marchesi
+ Absolute return variogram 
+ Data (Lux−Marchesi)
+ Random time shift mechanism
+ Power−law fit, α=0.09
+Fig. 11. Variogram of the absolute returns as a function of
+the time lag in the Lux-Marchesi model with parameters as
+in [32]. We compare with the ﬁt suggested by the random time
+strategy shift mechanism (Eq. (35)) and a power-law ﬁt equa-
+tion (37), as suggested by multifractal models [10]. Data: cour-
+tesy of Thomas Lux.
+5.2.3 Other mechanisms for long-ranged correlations
+Recently, many agent based models have been proposed
+to account for the stylized fa cts of ﬁnancial markets, in
+particular volatility clustering and long range dependence
+[31,32,37,57–60]. From the analysis of these models, one
+can distinguish three main mechanisms for this long-range
+dependence:
+– Subordination of the strategies to performance. This
+is the mechanism explained above: as soon as each
+agent has diﬀerent strategie s with diﬀerent levels of
+activities, and that the choice between these strate-
+gies is subordinated to their performance, one expects
+to see long range dependence of the type described
+above, whenever these strategies lead to identical long
+term performance. A similar mechanism is found in
+the models of [32,57,58], where agents switch between
+diﬀerent trading styles (e.g. fundamentalists/chartists)
+as a function of their percei ved performance and of
+herding eﬀects. The basic prediction of this scenario is
+the short time square root singularity of the volume
+variogram. This prediction is very well obeyed in the
+Lux-Marchesi model, as shown in Figure 11.
+– Subordination of the volatility to the price. In many
+models, the level of activity depends on the diﬀerence
+between the current price and a fundamental price. For
+example, in the model cons idered by Bornholdt [59],
+the volatility is a growing function of the absolute dif-
+ference of these prices. In the model recently studied
+by Alfarano and Lux [60], on the contrary, the volatil-
+ity is a decreasing function of this diﬀerence. In these
+models, the price is mean reverting toward the funda-
+mental price. Calling y(t) = log( X(t)/Xf (t)), where
+Xf is the fundamental price, a schematic equation for
+y(t)i s :
+dy
+dt = −κy + σ(y)ξ(t), (40)
+where ξ is a white noise and σ(y) a certain function.
+The corresponding temporal correlation function of the
+volatility can, for some speciﬁc forms of σ(y), be ex-
+actly computed, and generically leads to a non expo-
+nential decay that can mimic long term dependence.
+Empirically, one can indeed detect, on the Dow Jones
+index over a century, some correlation between the
+volatility and the diﬀerence between the current level
+and the average level of the index. However, we have
+checked using empirical data that that volatility clus-
+tering exists even when the level of market is neither
+particularly overvalued nor undervalued.
+– Heterogeneity of the agents time scales. Another mech-
+anism, close in spirit to the ‘HARCH’ model [61] or
+the cascade models proposed recently [9–13], comes
+from the diﬀerent time horizons used by the agents
+to set up their strategies. For example, in the model
+of Raberto et al. [37], agents place orders at a distance
+from the current price proportional to a sliding average
+of the past volatility. The time scale used by the dif-
+ferent agents is uniformly distributed between 10 day
+and 100 days. Correspondingly, this induces a non ex-
+ponential decay of the volatility correlation function
+when τ ≤ 100.
+All these three mechanisms are expected to play a role
+in real markets. More precise statistical tests will hopefully
+allow one to distinguish between them and estimate their
+relative contribution to the long-range dependence eﬀects.
+5.3 Crashes: the role of memory and the dynamical
+freezing of the choice mechanism
+We have also observed the following two interesting eﬀects
+in the intermittent phase:
+– The frequency of bubbles/crashes decreases when the
+time horizon m of the strategies is increased.
+– Just after a crash that follows a speculative bubble,
+the volatility is anomalously small.
+First, how do bubbles form in this intermittent regime?
+The price ﬂuctuations are almost without correlations. In
+this context it happens with probability 1/2m+1 that at a
+certain time step the m-bit past price history is (1,1,....1)
+and simultaneously the buying power of buyers is larger
+than that of sellers. In this case, at the next time step the
+price again increases and the past history is mapped onto
+itself. Also, since g/λ is large, the price change is substan-
+tial and the score of the buying strategies increases fast,
+thereby creating a bubble that will terminate in the same
+way as we described in Section 4. Thus, we expect an aver-
+age frequency of 1/2m+1 for the bubble/crash occurrences,
+which one can easily verify in our model.
+
+I. Giardina and J.-P. Bouchaud: Bubbles, crashes and intermittency in agent based market models 435
+The second question concer ns the period of very low
+volatility which systematically follows the crashes. In our
+simple model, we observe the presence of well deﬁned cy-
+cles in the post-crash dynamics, which may vary for dif-
+ferent numerical runs, but are identical for all the crashes
+in the same simulation. The presence of these cycles obvi-
+ously limits the amplitude of price ﬂuctuations and reduce
+the volatility. Cycles occur because during the crash, the
+scores of selling strategies suddenly accumulate a large ex-
+cess and are thus used for some time after the crash irre-
+spective of their more recent performance. Thus all agents
+keep using the very same strategies. Since the number of
+possible past histories is ﬁnite (2 m), the dynamics is de-
+terministic and the system must enter a cycle.
+Finally, let us mention what happens when tuning the
+memory β of the scores update. In general we observe in
+this regime an oscillatory transient before the intermittent
+behaviour takes over, which lasts approximately 5000 time
+units. At values of β very close to zero ( β ∼ 10−5), we
+have observed longer transients eﬀects, while already for
+β ∼ 10−4 we recover the usual dynamical trend. We have
+also observed that small values of β tend to reduce the
+number of occasional bubbles and crashes. This can be
+explained by recalling the mechanism of bubble (crash)
+formation. As described previously in this section, during
+the intermittent dynamics bubbles are formed by appro-
+priate statistical ﬂuctuations. However, in order for a bub-
+ble to sustain in time, it is crucial that buying strategies
+emerge as the best performing ones. When β is small the
+performance of each strategy is evaluated on a very long
+period and the recent past count relatively little. Thus
+even the ﬂuctuations due to fundamentalist players may
+change the performance balance and the bubble cannot
+self-sustain.
+6 Market eﬃciency and stability
+6.1 Dynamical evolution of the parameters
+and self-organization
+As discussed above, our model ap r i o r iinvolves a large
+number of parameters. However, the precise value of most
+of them is not crucial. The only two important parameters
+are the ratio g/λ, that measures the impact of trading on
+prices, and P, that measures the tendency of the agents
+for trend following ( P> 0) versus contrarian strategies
+(P< 0). For small values of g/λ, the volatility of price
+changes is very small, and, as we have discussed in section
+4, bubbles form in such a way that very visible trends
+appear. Furthermore, for small g/λ, these bubbles have a
+very long lifetime. This means that the agents will nat-
+urally increase the fraction of the wealth they invest in
+this market, since the perceived risk is small. Henceg will
+spontaneously increase. Simultaneously, small g/λ’s lead
+to rather small execution rates: see Figure 4. Therefore,
+the microstructure of the market will evolve such as to
+make λ smaller, so that the market becomes more liquid.
+Both eﬀects lead to an increase of the ratio g/λ,a n dt h e
+corresponding destruction of clear trends. This scenario
+therefore suggests that g/λ enters the intermittent region,
+where the market becomes ‘quasi-eﬃcient’ ( i.e. returns
+are uncorrelated on short time scales), but where interest-
+ing statistical anomalies appear. The ratiog/λ then stops
+growing, since the market becomes very volatile, without
+clear trends. The agents therefore limit their investment.
+The above scenario is somewhat related to that proposed
+in the context of the Minority Game in [44]: increasing
+the number of players leads to a more eﬃcient game, but
+reduces the incentive for new players to enter, such as a
+‘marginally eﬃcient’ state is reached.
+T h er o l eo ft h ep a r a m e t e rP is quite interesting. If
+agents were on average only slightly contrarian, the be-
+haviour of the market would be completely diﬀerent, with
+boring small mean reverting ﬂuctuations around the fun-
+damental price, that we have here modeled as a determin-
+istic growth Xf (t)=e x p (ρt). If this fundamental price
+was itself randomly ﬂuctuating, our model market would
+be very close to the standard ‘eﬃcient market’ picture,
+where rational agents syste matically correct past excess
+returns such as to lock the market price to the fundamen-
+tal price. The fact that human psychology seems to favor
+mimetic, trend following strategies seems to keep the mar-
+ket in the intermittent region of the phase diagram shown
+in Figure 2.
+6.2 Distribution of agents’ wealth
+We have also studied the distribution of the wealth of the
+agents in our model. Interesting, for small values ofg,t h e
+distribution is very uniform across agents: since the level
+of speculative investment is small, the redistribution eﬀect
+through trading dominates the random speculative gains.
+When g increases, however, a Pareto like distribution of
+wealth, with very unequal agents, sets in, as expected from
+the analysis of [62].
+6.3 The eﬀect of ﬁnite transaction costs
+An interesting question in the context of ﬁnancial mar-
+kets is to understand how the introduction of transaction
+costs (as the Tobin tax for example) might stabilize the
+behaviour of these markets. We have studied a generaliza-
+tion of our model in which a non zero proportional fee is
+paid at each transaction. As we shall see, this drives the
+system toward a much more sta ble regime. Transaction
+costs play a similar role to a negative polarization (more
+contrarian) strategies.
+The equations to be modiﬁed are the ones concerning
+the update of cash, that accounts for the extra cost:
+equation (12) is changed into:
+Bi(t +1 )= Bi(t)(1 +ρ) − δφi(t)X(t +1 )
+− ν|δφi(t)X(t +1 )|. (41)
+
+436 The European Physical Journal B
+0246 8
+ν (%)
+0
+1000
+2000
+3000
+4000
+5000
+T
+g/λ=0.1
+g/λ=0.005
+01234
+ν (%)
+0.0
+0.2
+0.4
+0.6
+0.8 Active fraction
+g/λ=0.75
+Fig. 12. Evolution of the period T of the oscillations as a
+function of the transaction cost parameter ν,f o rg/λ =0 .005
+and g/λ =0 .1. Inset: Evolution of the fraction of active agents
+as a function of ν for g/λ =0 .75.
+Similarly, we adopt a modiﬁed update for the strategies
+scores (see 13):
+Sα
+i (t +1 )=( 1 − β)Sα
+i (t)
++ β (ϵα
+i (It−1)[r(t) − ρ] − ν|ϵα
+i (It−1)|) . (42)
+Let us ﬁrst discuss the small g/λ regime, where bub-
+bles appear in the absence of transaction costs. Scores
+of the buying strategies grow most rapidly at the start
+of the bubble, where the return r(t0) is maximum. When
+the transaction costs are such thatν>r (t0) −ρ, the bub-
+ble will never start. Since the initial growth of the bubble
+is proportional to g/λ, we expect that bubbles are more
+robust to costs for larger g/λ’s. If a bubble is formed, is
+bound to collapse earlier for ν> 0, since the performance
+of the buying strategy is systematically reduced. Hence the
+frequency of the oscillations will increase withν.W es h o w
+in Figure 12 that this is indeed the case. (Note however
+that as ν increases, some bubbles do not form, and one
+observes a mixed behaviour with on and oﬀ oscillations.)
+In the intermittent phase, the introduction of transaction
+costs favors the inactive strategy, and we observe a decay
+of the average fraction of active agents asν increases (see
+Fig. 12). Large values of transaction costs drive the system
+toward a more stable regime, that still however exhibits
+long-range volume ﬂuctuations of the type described in
+the previous section.
+The above discussion suggest s that transaction costs
+would stabilize the markets. However, since the values of
+g/λ that corresponds to realistic markets is rather large,
+these costs would have to be substantial (a few percent per
+trade) in order to really aﬀect the markets. This conclusion
+could be read backward: a small tax, of the order of a
+few basis points ( i.e. 10−4), would probably not change
+dramatically the behaviour of markets, and would simply
+add to already existing costs (brokerage, bid-ask spreads
+and market impact). Of course, deﬁnite statements about,
+say, the Tobin tax, would need a more realistic model.
+7 Summary and conclusion
+In this paper, we have presented a detailed study of a
+rather complex market model, inspired from the Santa Fe
+artiﬁcial market and the Minority Game. Agents have dif-
+ferent strategies among which they can choose, according
+to their relative proﬁtability, with the possibility of not
+participating to the market. The price is updated accord-
+ing to the excess demand, and the wealth of the agents is
+properly accounted for. The set up of the model involves
+quite a large number of parameters. Fortunately, only two
+of them play a signiﬁcant role: one describes the impact of
+trading on the price, and the other describes the propen-
+sity of agents to be trend following or contrarian.
+The main result of our study is the appearance of three
+diﬀerent regimes, depending on the value of these two pa-
+rameters: an oscillating phase with bubbles and crashes,
+an intermittent phase and a stable ‘rational’ market phase.
+The statistics of price changes in the intermittent phase
+resembles that of real price changes, with small linear cor-
+relations, fat tails and long range volatility clustering. We
+have discussed how the time dependence of these parame-
+ters could spontaneously lead the system in the intermit-
+tent region. We have analyzed quantitatively the temporal
+correlation of activity in the intermittent phase, and have
+shown that the ‘random time strategy shift’ mechanism
+proposed in an earlier paper [39] allows to understand
+these long ranged correlations. Other mechanisms leading
+to volatility clustering have been reviewed.
+We have discussed several interesting issues that our
+model allows to address, such as the detailed mechanism
+for bubble formation and crashes, the inﬂuence of transac-
+tion costs, the distribution of agents wealth, and the role
+of a limited amount of capital on the long time ﬂuctua-
+tions of the price.
+Many extensions of the model could be thought of,
+for example, the diversity of time horizons used by the
+diﬀerent agents, the introduction of time dependent fun-
+damental factors, or a larger number of tradable assets. A
+more interesting path, in our mind, would be to simplify
+the model suﬃciently as to be able to analytically predict
+the phase diagram of Figure 2, and reach a similar level
+of understanding as in the Minority Game (for some work
+in this direction, see [36]).
+We thank M. M´ezard, who participated to the early stages
+of this work, for discussions. We have beneﬁted from many
+conversations with S. Bornholdt, A. Cavagna, D. Challet,
+D .F a r m e r ,T .L u x ,M .M a r s i l ia n dM .P o t t e r s .W et h a n k
+Thomas Lux for providing some data on the Lux-Marchesi
+model.
+
+I. Giardina and J.-P. Bouchaud: Bubbles, crashes and intermittency in agent based market models 437
+References
+1. D.M. Guillaume, M.M. Dacorogna, R.D. Dav´ e, U.A.
+M¨uller, R.B. Olsen, O.V. Pictet, Finance and Stochastics
+1, 95 (1997)
+2. R. Mantegna, H.E. Stanley, An Introduction to Econo-
+physics (Cambridge University Press, 1999)
+3. J.-P. Bouchaud, M. Potters, Th´eorie des Risques Fi-
+nanciers (Al´ea-Saclay, 1997); Theory of Financial Risks
+(Cambridge University Press, 2000)
+4. For a review, see J.D. Farmer, Physicists attempt to scale
+the ivory towers of ﬁnance ,i nC o m p u t .S c i .E n g i n e e r i n g ,
+November 1999, reprinted in Int. J. Theo. Appl. Fin. 3,
+311 (2000)
+5. A. Lo, Econometrica 59, 1279 (1991)
+6. Z. Ding, C.W.J. Granger, R.F. Engle, J. Empirical Finance
+1, 83 (1993)
+7. R. Cont, M. Potters, J.-P. Bouchaud, Scaling in stock
+market data: stable laws and beyond ,i n Scale invari-
+ance and beyond , edited by B. Dubrulle, F. Graner, D.
+Sornette (EDP Sciences, 1997); M. Potters, R. Cont, J.-P.
+Bouchaud, Europhys. Lett. 41, 239 (1998)
+8 .Y .L i u ,P .C i z e a u ,M .M e y e r ,C . - K .P e n g ,H . E .S t a n l e y ,
+Physica A 245 437 (1997); P. Cizeau, Y. Liu, M. Meyer,
+C.-K. Peng, H.E. Stanley, Physica A 245, 441 (1997)
+9. A. Arn´eodo, J.-F. Muzy, D. Sornette, Eur. Phys. J. B 2,
+277 (1998)
+1 0 . J . - F .M u z y ,J .D e l o u r ,E .B a c r y ,E u r .P h y s .J .B17, 537
+(2000); Physica A 299, 284 (2001)
+11. S. Ghashghaie, W. Breymann, J. Peinke, P. Talkner, Y.
+Dodge, Nature, 381 767 (1996)
+12. B.B. Mandelbrot, Fractals and Scaling in Finance
+(Springer, 1997)
+13. A. Fisher, L. Calvet, B.B. Mandelbrot, Multifractality of
+DEM/$ rates, Cowles Foundation Discussion Paper 1165
+14. J.P. Bouchaud, M. Meyer, M. Potters, Eur. Phys. J. B13,
+595 (1999)
+15. J.-P. Bouchaud, A. Matacz, M. Potters, Phys. Rev. Lett.
+87, 228701 (2001)
+16. C. Hommes, Quantitative Finance 1, 149 (2001)
+17. C. Chiarella, X-Z. He, Quantitative Finance 1, 509 (2001)
+18. For an introduction and references, see the very interest-
+ing book of R. Schiller, Irrational Exuberance (Princeton
+University Press, 2000)
+19. I. Giardina, J.P. Bouchaud,Proceedings of the Prague Con-
+ference on Application of Physics to Economic Modelling,
+February 2001,P h y s i c aA299, 28 (2001)
+20. A. Beja, M.B. Goldman, J. Finance 35, 235 (1980)
+21. R.G. Palmer, W.B. Arthur, J.H. Holland, B. LeBaron, P.
+Taylor, Physica D 75, 264 (1994), see also B. LeBaron,
+Quantitative Finance 1, 254 (2001)
+22. W.B. Arthur, Am. Ec. Assoc. Papers Proc. 84, 406 (1994)
+23. M. Levy, H. Levy, S. Solomon, Microscopic Simulation of
+Financial Markets (Academic Press, San Diego, 2000)
+24. D. Challet, Y.-C. Zhang, Physica A 246, 407 (1997)
+25. P. Bak, M. Paczuski, M. Shubik, Physica A246, 430 (1997)
+26. J.-P. Bouchaud, R. Cont, Eur. Phys. J. B 6, 543 (1998)
+27. J.D. Farmer, Market Force, Ecology and Evolution ,e - p r i n t
+adap-org/9812005, Int. J. Theo. Appl. Fin. 3, 425 (2000)
+2 8 . G .I o r i ,I n t .J .M o d .P h y s .C10, 149 (1999)
+29. E. Samanidou, E. Zschischang, D. Stauﬀer, T. Lux, in Mi-
+croscopic models for Economic Dynamics ,e d i t e db yF .
+Schweitzer, Lecture Notes in Physics (Springer, Berlin,
+2002)
+30. D. Challet, M. Marsili, Y.-C. Zhang, Physica A, 276, 284
+(2000). D. Challet, M. Marsili, R. Zecchina, Int. J. Theo.
+Appl. Fin. 3, 451 (2000), Phys. Rev. Lett. 84 1824 (2000)
+31. T. Lux, M. Marchesi, Nature 397, 498 (1999)
+32. T. Lux, M. Marchesi, Int. J. Theo. Appl. Fin.3, 675 (2000)
+33. J.D. Farmer, S. Joshi, J. Economic Behaviour and Organ-
+isation, 49, 149 (2002)
+34. P. Jeﬀeries, M. Hart, P.M. Hui, N.F. Johnson, Int. J. Theo.
+Appl. Fin. 3, 443 (2000)
+35. P. Jeﬀeries, N.F. Johnson, M. Hart, P.M. Hui, Eur. Phys.
+J. B 20, 493 (2001)
+36. M. Marsili, Physica A, 299, 93 (2001)
+37. M. Raberto, S. Cincotti, S.M. Focardi, M. Marchesi, Phys-
+ica A 299, 320 (2001)
+38. J.V. Andersen, D. Sornette, preprint cond-mat/0205423
+39. J.P. Bouchaud, I. Giardina, M. M´ezard, Quantitative Fi-
+nance 1, 212 (2001)
+40. A. Orl´ean, J. Economic Behavior and Organisation28, 257
+(1995)
+4 1 . J . - P .B o u c h a u d ,R .C o n t ,E u r .J .P h y s .B6, 543 (1998)
+42. J.-P. Bouchaud, Quantitative Finance 1, 105 (2000)
+43. A. Cavagna, Phys. Rev. E 59, R3783 (1999); A. Cavagna,
+J.P. Garrahan, I. Giardina, D. Sherrington, Phys. Rev.
+Lett. 83, 4429 (1999); J.P. Garrahan, E. Moro, D.
+Sherrington, Phys. Rev. E 62, R9 (2000)
+44. D. Challet, A. Chessa, M. Marsili, Y.C. Zhang, Quantita-
+tive Finance 1, 168 (2001)
+45. M. Marsili, R. Mulet, F. Ricci-Tersenghi, R. Zecchina,
+Phys. Rev. Lett 87, 208701 (2001)
+46. M. Marsili, D. Challet, Adv. Complex Systems 4,5
+(2001)
+47. V. Plerou, P. Gopikrishnan, X. Gabaix, H.E. Stanley Phys.
+Rev. E 66, 027104 (2002)
+48. J.D. Farmer, F. Lillo, R. Mantegna, in preparation
+49. J.P. Bouchaud, M. M´ezard, M. Potters, in preparation
+50. V. Plerou, P. Gopikrishnan, L.A. Amaral, M. Meyer, H.E.
+Stanley, Phys. Rev. E 60, 6519 (1999)
+51. C. Godr`eche, J.M. Luck, J. Stat. Phys. 104, 489 (2001)
+52. E. Sparre-Andersen, Math. Scand. 1, 263 (1953)
+53. U. Frisch, in Scale invariance and beyond ,e d i t e db yB .
+Dubrulle, F. Graner, D. Sornette (EDP Sciences, 1997)
+54. for a review, see J.P. Bouchaud, L. Cugliandolo, J.
+Kurchan, M. M´ezard, Out of Equilibrium dynamics in
+spin-glasses and other glassy systems ,i n Spin-glasses and
+Random Fields , edited by A.P. Young (World Scientiﬁc,
+1998), and references therein
+55. V. Plerou, P. Gopikrishnan, L.A. Amaral, X. Gabaix, H.E.
+Stanley, Phys. Rev. E. 62, R3023 (2000)
+56. G. Bonnano, F. Lillo, R. Mantegna, Physica A 280, 136
+(2000)
+57. M. Youssefmir, B. Huberman, J. Economic Behaviour and
+Organisation 32, 101 (1997)
+58. A. Kirman, Quarterly J. Economics 108, 137 (1993), and
+in preparation
+59. S. Bornholdt, Int. J. Mod. Phys. C 12, 667, (2001)
+60. S. Alfarano, T. Lux, working paper, WEHIA 2002
+61. U.A. Muller, M.M. Dacorogna, R. Dav´e, R. B. Olsen, O.V.
+Pictet, J. Empirical Finance 4, 213 (1997)
+62. J.P. Bouchaud, M. M´ezard, Physica A 282, 536 (2000)

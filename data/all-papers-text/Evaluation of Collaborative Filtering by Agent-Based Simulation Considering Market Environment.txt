@@ -1,0 +1,608 @@
+EVALUATION OF COLLABORATIVE FILTERING BY AGENT-BASED 
+SIMULATION CONSIDERING MARKET ENVIRONMENT 
+ 
+Takashi Umeda 
+Tokyo Institute of Technology 
+   umeda,ichikawa@cs.dis.titech.ac.jp 
+ 
+Manabu Ichikawa 
+Tokyo Institute of Technology 
+ 
+Yuhsuke Koyama 
+Tokyo Institute of Technology 
+ 
+Hiroshi Deguchi 
+Tokyo Institute of Technology 
+   koyama,deguchi@dis.titech.ac.jp  
+ 
+METHODOLOGY OF THIS RESEARCH ABSTRACT 
+  
+Recommendation algorithms are usually evaluated by 
+cross-validation or human-subject experiments. 
+We propose a new evaluation approach for collaborative 
+filtering, a kind of recommendation algorithm through 
+agent-based simulation. We modeled a virtual E-commerce 
+market where we evaluated the collaborative filtering 
+algorithm. Our findings were as follows: 1) the number of 
+neighbors is a key parameter and there is a trade-off due to 
+market circumstances, 2) a bigger number of neighbors 
+performed better, with a tendency that was independent of the 
+degree of clustering of consumer preferences, 3) if there were 
+any high-frequency purchasers, a smaller number of 
+neighbors performed better. 
+In cross-validation (Sarwar 2001), data is divided into a 
+test portion and a training portion and researchers measure the 
+error between the test data and the estimated values computed 
+with the training portion. This method is convenient to use 
+when there is sufficient available data. However, it is difficult 
+to evaluate the recommendation algorithms considering the 
+market environment in cases where consumer behavior is very 
+complex in accordance with thei r attributes, characteristics, 
+and taste in items. It is even impossible to use this method 
+when the market environmen t changes frequently, for 
+example, new items are dynamically and constantly added and 
+consumer preferences dynamical ly change according to the 
+website recommendations. 
+ 
+INTRODUCTION 
+ 
+Electronic-commerce (EC) websites have been increasing 
+in number and market size around the world. In 2007, Japan’s 
+business to consumer EC market size amounted to 5.3 trillion 
+yen (Ministry of Economy, Trade and Industry 2008). Some EC 
+websites employ a system for recommending items to 
+consumers, but these systems might not be working 
+effectively. To optimize the system parameters, we need some 
+virtual evaluation environments. 
+A human-subject experiment (Zhang 2002) is a good 
+approach for evaluating algor ithms considering the market 
+environment. However, an experimental trial takes a long time 
+and it is not easy to attract many subjects. 
+Consequently, an appropriate evaluation method is 
+needed. We propose a new evaluation method, an agent-based 
+simulation (ABS). The ABS method has the advantage of 
+modeling agent heterogeneity and the interaction among 
+agents. We created a model containing recommendation 
+algorithms, consumer decision-making algorithms, item 
+characteristics, and their rela tion to consumer preferences.  
+This model is able to estimate the optimal parameter settings 
+in the algorithms and the accuracy of recommendations 
+considering the market envi ronment and changes in the 
+environment. Furthermore, in cases where it is difficult to 
+obtain past purchase data, researchers can easily evaluate the 
+recommendation algorithms under various assumptions. Table 
+1 summarizes the characteristics of the evaluation 
+methodologies. 
+In this paper, we propose a simulation model for 
+evaluating and designing recommendation algorithms 
+considering the market environment. This model is a business 
+simulation able to provide useful knowledge for people 
+engaged in web marketing, web systems or EC business. As 
+an application of the model, evaluation and parameter 
+optimization is performed for a us er-based approach that is a 
+kind of collaborative filtering algorithm, the popular 
+recommendation algorithm used on many websites. 
+ 
+ 
+214 | Developments in Business Simulation and Experiential Learning, V olume 36, 2009
+
+RELATED WORK 
+ 
+RECOMMENDATION ALGORITHMS 
+ In this section, we briefly present some of the research 
+related to information filtering and recommender systems. 
+Recommender systems can be broadly categorized into two 
+types: content-based filtering and collaborative filtering. In 
+content-based filtering, recommendations are made by using 
+information about the item, such as the category, tag, and 
+description. When using this method, additional information 
+on the item must be obtained manually. So, it would be 
+difficult to apply content-based filtering when there are items 
+for which additional information is not supplied. In 
+collaborative filtering, the recommender system uses the item 
+ratings by users to generate recommendations, and it is 
+typically content agnostic. So, it is advantageous to 
+recommend a set of items from a large number of items 
+regardless of whether or not additional information is supplied. 
+The model that we propose is useful for evaluation and 
+parameter optimization for collaborative filtering. 
+Collaborative filtering systems can be further categorized 
+into memory-based and model-based algorithms. 
+memory-based algorithms generate ratings predictions for 
+users based on their past ratings. In addition, the 
+memory-based method is categorized into user-based 
+(Resenick 1994; Herlocker 1999) and item-based (Sarwar 
+2001) methods. The former is  calculated as the weighted 
+average of the ratings given by other users where the weight is 
+proportional to the similarity between users. The latter method 
+is calculated as the weighted average of the ratings given by 
+the subject user where the weight is proportional to the 
+similarity between items. In contrast to memory-based 
+algorithms, model-based algorithms try to model the users 
+based on their past ratings and then use these models to 
+predict the ratings on unseen items. Examples of this approach 
+are methods using the Bayesian network (Breese 1998), LSH 
+(Abhinandan 2007), probabilistic latent semantic indexing 
+(pLSI) (Hofman 1999; Hofman 2004), the Markov decision 
+process (Shani 2002; Shani 2005) and clustering (Breese 
+1998). Both the memory-based and model-based approach are 
+used for business applications, for example, on the online 
+retail book store, Amazon.com (Linden 2003) and the online 
+news website, Google News (Abhinandan 2007). 
+Table 1  Comparison of methodologies 
+ 
+Methodology Ease of use Market environment Changes in 
+environment 
+Cross-validation OK NG NG 
+Human-subject experiments NG OK Depends 
+ABS OK OK OK 
+ 
+ 
+Figure 1 Category of recommendation  
+ 
+ 
+ Our model can be applied to various approaches for the 
+collaborative filtering mentioned above. In this paper, we 
+focus on the “user-based approach”, which is the basic one in 
+collaborative filtering algorithms. Evaluation and parameter 
+optimization is performed. 
+In introducing and deploying a recommender system 
+using collaborative filtering, some problems have been 
+pointed out, namely in terms of cold start and gray sheep. The 
+cold-start problem is a pheno menon whereby the quality of 
+recommendations deteriorates soon after introducing the 
+recommender system due to insufficient rating data 
+(Balabanovic 1997). In the gray sheep problem, the 
+recommender system is unable to classify some users due to 
+their unusual preferences (Burke 2002). Later, we duplicate 
+the above market environmen t, and analyze these two 
+problems in the user-based approach. 
+ 
+CONSUMER BEHAVIOR ON THE E-COMMERCE 
+WEBSITE 
+ In economics and marketing science, research is 
+conducted on consumer behavi or on E-commerce websites. 
+215 | Developments in Business Simulation and Experiential Learning, V olume 36, 2009
+
+Nelson (1970) suggests that good s can be classified as either 
+search products or experience products. Search products are 
+those that “the consumer can ev aluate by inspection prior to 
+purchase”, for example, PC s and cameras. Experience 
+products are those that “are not evaluated prior to purchase”, 
+for example, books, CD/DVDs and movies. King (1994) 
+found that consumers assessing a search product are more 
+likely to use own-based decision-making process compared to 
+consumers assessing an expe rience product, and that 
+consumers evaluating an experience product rely more on 
+other-based and hybrid decision-making processes compared 
+to consumers assessing a search product. Furthermore, it was 
+verified that recommendations for experience products were 
+significantly more influential than recommendations for 
+search products (Senecal 2004). 
+ According to the findings of one survey, it is effective to 
+make recommendations for books, software, and CD/DVDs, 
+but not effective for home electronics (Hotlink 2008). 
+ In this paper, we focus on recommendations using 
+collaborative filtering for experience products such as books, 
+CD/DVDs, movies, etc. 
+Figure 3 Overview of model 
+ 
+Figure 3 Simulation process 
+ 
+ 
+MODEL 
+ 
+ OUTLINE OF THE MODEL 
+Our model contains a virtual EC website and several 
+consumers (Figure 2). The EC website uses the 
+recommendation system. This system records the entire 
+purchasing history for every consumer and makes 
+recommendations on items for each consumer. Each item sold 
+on the EC website belongs to one category. Each consumer 
+has a preference for each category as well as several 
+parameters that are used to decide what he buys. 
+In each time step, consumers are given recommendations 
+on items from the EC website in accordance with their 
+preferences or past recommended items and some of the 
+consumers buy an item (Figure 3). 
+ 
+216 | Developments in Business Simulation and Experiential Learning, V olume 36, 2009
+
+ASSUMPTIONS OF THE MODEL  
+ This model makes the following assumptions: A set of items bought by consumer u
+ US until time t is 
+defined as follows: z An item belongs to one category. An item 
+cannot belong to more than two categories. 
+z Items in this model ar e experience products, 
+for example, books, software and movies. This 
+model cannot be applied for search products 
+because consumer preferences and item 
+attributes in the search product market must be 
+modeled differently from the case of 
+experience products. 
+z Recommendations are generated by 
+collaborative filtering. Content-based filtering 
+is not intended. 
+z The category preference of each consumer is 
+initially given and is not dynamically changed. 
+However, customer evaluation of each item 
+can be dynamically changed. 
+ 
+ABSTRACT DEFINITION OF THE MODEL 
+z Item 
+A set of times is defined as follows: 
+TS = {1,2,….,q } 
+ 
+The EC website has a set of items defined as follows: 
+IS = {1,2,….,l } 
+ 
+A set of categories is defined as follows: 
+CS = {1,2,…,m } 
+ 
+Each item i
+ IS belongs to a category and the category of 
+an item i
+ IS is defined as ICi. The number of items i 
+ IS 
+sold until time t is defined as soldi,t . 
+ 
+z Consumer 
+A set of consumers is defined as follows: 
+US = {1,2,…., n} 
+ 
+Consumer has a preference for each category and the 
+preference of consumer u
+ US for category c 
+ CS is defined 
+as follows: 
+ 
+ 
+This value is given initially. The preference list of 
+consumer u
+ US is defined as follows: 
+PFu = (pfu,1 pfu,2 pfu,3 ……pf u,m) 
+ 
+The decision by consumer u
+ US to buy an item at time t 
+is defined as follows. “null” represents not buying an item. 
+ 
+ 
+The probability that Decf ( u, t ) is an element of IS is 
+represented by probu and is called “purchasing probability of 
+consumer u”. In this model, the size of the purchase volume is 
+represented not by the size of purchase volume per term but 
+by the purchasing probability. 
+BIu,t = {Decf(u,j) | j = 1,2,3,….,t } 
+ 
+A set of items that is not bought by consumer u
+ US at 
+time t
+ TS is defined as follows: 
+ 
+ 
+z Recommendation system 
+The rating value for item i by consumer u at time  t  is 
+defined as follows: 
+ 
+ 
+The system recommends the set of items for which the 
+estimated rating is high at every term. We defined 
+collaborative filtering as the recommendation method using 
+not the metadata, for example, the item category, but rather 
+the rating data by the consumer. Also, we distinguish 
+collaborative filtering from content-based filtering. Here, the 
+recommendation system performing collaborative filtering is 
+defined as follows: 
+ 
+ 
+CONCRETE DEFINITION OF THE MODEL 
+z Recf – Recommendation model  
+ In Recf, the collaborative filtering algorithm, especially 
+for user-based collaborative f iltering (Herlock er 1999), is 
+modeled for the recommendation model. We define wt
+u, j as 
+the similarity between consumer u and consumer j. wt
+u,j is 
+computed as follows. This is th e cosine of two vectors that 
+represent the rating of items by consumer u and j. 
+ 
+ 
+We define NEu,ne as the set of top-ne consumers who have 
+preferences similar to consumer u. The user contained in 
+NEu,ne is called the  neighbor of u and ne is the  number of 
+neighbors. The estimated rating of consumer u for the 
+non-purchased item i
+ NIu,t ,evt
+u,i , is computed as follows: 
+ 
+The recommended items for consumer u at time t are the 
+set of top-r items that have a high estimated rating value, evt
+u,i . 
+r and ne are operational parameters. 
+ 
+z Decf – Decision making on what to purchase by 
+consumer 
+Each consumer purchases an item with probability probu 
+and does not purchase an item with probability 1- probu. In the 
+case of purchasing an item, each consumer selects the item 
+from the non-purchased items, NIu,t. We defined evalu,t(i) as 
+217 | Developments in Business Simulation and Experiential Learning, V olume 36, 2009
+
+the evaluation value of consumer u for the item, computed as 
+follows. This value is computed for all items not purchased by 
+consumer u,NIu,t. 
+ 
+w1, w2 and w3  are elements of the criteria for decision 
+making on which item to buy. w1 is the degree of emphasis on 
+the category of an item, w2 is the degree of emphasis on a 
+recommendation from the EC website, and w3 is the degree of 
+emphasis on the popularity of an item. Based on these 
+evaluation values, the probability that consumer u will buy 
+item i
+ NIu,t at time t, Pu,t(i), is defined as follows: 
+ 
+ 
+ EVALUATION METRICS FOR THE 
+RECOMMENDATION SYSTEM 
+In evaluating the recommendation algorithms, “precision” 
+and “recall” are usually used as evaluation metrics (Herlocker 
+1999). In other cases, novelty, serendipity and diversity are 
+proposed as evaluation metrics (Herlocker 2004). These 
+metrics are mainly used in human-subject experiments, but 
+they cannot be applied for simulation-based methodology. So, 
+in this research, we use “precision” for the evaluation metrics. 
+Here, a set is defined in order to define the evaluation 
+metrics. FIu is a set of items favored by consumer u. 
+ 
+Precision is defined as the number of times a consumer 
+expresses interest in the recommended items. Precision for 
+consumer u at time t is defined as follows: 
+ 
+ 
+ 
+SETTING OF PARAMETERS 
+ 
+The common parameters for each market environment are 
+shown in Table 2. 
+ 
+FREQUENCY OF PURCHASING: 2 CASES 
+z Homogeneous: The parameter prob called ‘probability of 
+purchasing’ for each consumer agent is 0.5. 
+z Heterogeneous: There are 20% “high-frequency 
+purchasers” and 80% “low-frequency purchasers”. The 
+parameter prob for high-frequency purchasers is 0.8 and 
+that for low-frequency purchasers is 0.2. 
+ 
+PURCHASING CRITERIA: 2 CASES 
+z Preference-conscious type : The parameter ( w1,w2,w3) 
+for each consumer agent is (0.9,0.1,0.0) 
+z Trend-chasing type: The model contains some trends and 
+trend chasers. The parameter ( w1, w2, w3) for a 
+trend-chaser is (0.5,0.1,0.4 ) and that for the rest is 
+(0.9,0.1,0.0). We assume that  the share of trend-chasers 
+is 30%. Such agents are likely common in the retail 
+Table 2  Setting of parameters 
+Parameter Value 
+q Time period 50
+m Number of categories 10
+probu Frequency of purchasing {homogeneous, heterogeneous}
+(w1,w2,w3) Purchasing criteria { preference-conscious type, trend-chasing type}
+ Distribution of preferences {Simple-cluster type, Multi-cluster type}
+ne Number of neighbors {5,15,25,35,45}
+l Number of items 2000
+n Number of consumers 1000
+r Number of recommended items 10
+ 
+Figure 4 ‘Simple-cluster’ and ‘Multi-cluster’ types (numbers indicate the categories that each agent likes) 
+ 
+218 | Developments in Business Simulation and Experiential Learning, V olume 36, 2009
+
+music market. 
+ 
+DISTRIBUTION OF PREFERENCES: 2 CASES 
+ 
+z Simple-cluster type : In this case, consumer preferences 
+are highly clustered. For example, there is a group 
+consisting of consumer agents that like Category 1, a 
+group consisting of consumer agents that like Category 
+2,….as shown in Figure 4 
+z Multi-cluster type: Consumer agents like two categories 
+at random as shown in Figure 4. In this situation, we 
+can’t cluster consumers and find similar consumers. This 
+is called “Gray sheep problem” (Burke 2002). 
+ 
+We selected four important market environments (Table 
+3). In each market environment, we show the results from 
+changing the value of ne (number of neighbors). Note that this 
+parameter has a significant effect on the quality of 
+recommendation (Balabanovic 1997). 
+ 
+EXPERIMENTAL RESULTS 
+ 
+EFFECT OF DISTRIBUTION OF PREFERENCES 
+Figures 5 and 6 show the time evolution for the average 
+precision in market environment 1 and 2 where we changed 
+the number of neighbors, ne, from 5 to 45 in increments of 10. 
+From these figures, we can see that precision is independent 
+of ne when distribution of preferences is the simple-cluster 
+type. Whereas precision is high at ne = 25, 35, and 45 when 
+distribution of preferences is the multi-cluster type. It can also 
+be seen from the results that when the distribution of 
+preferences is the multi-cluster type, the precision value is 
+lower than that when the distribution of preferences is the 
+simple-cluster type.  
+ 
+Table 3  Setting of scenarios 
+Market 
+environment Distribution of preferences Frequency of purchasing Purchasing criteria 
+1 Simple-cluster type homogeneous preference-conscious
+2 Multi-cluster type homogeneous preference-conscious
+3 Simple-cluster type heterogeneous preference-conscious
+4 Multi-cluster type heterogeneous preference-conscious
+ 
+Figure 6 Market environment 1 (average precision calculated for all consumers) 
+ 
+ 
+Figure 6 Market environment 2 (average precision calculated for all consumers) 
+219 | Developments in Business Simulation and Experiential Learning, V olume 36, 2009
+
+EFFECT OF FREQUENCY OF PURCHASING 
+Figures 7 through 10 show the time evolution for the 
+average precision in market environments 3 and 4 where we 
+changed the number of neighbors, ne, from 5 to 45 in 
+increments of 10. The precision in Figs. 7–9 is calculated for 
+high-frequency purchasers and that in Figs. 8–10 for 
+low-frequency purchasers. 
+From Figures 7 and 8, we can see that the precision is 
+high at ne = 5 in market environment 3. From Figs. 9 and 10, 
+the precision value is high at ne = 15 in market environment 
+4.  
+ 
+Figure 9 Market environment 3 (average precision calculated for high-frequency purchasers) 
+ 
+ 
+Figure 9 Market environment 3 (average precision calculated for low-frequency purchasers) 
+ 
+ 
+Figure 9 Market environment 4 (average precision calculated for high-frequency purchasers) 
+220 | Developments in Business Simulation and Experiential Learning, V olume 36, 2009
+
+DISCUSSION 
+From these results, we draw two important conclusions. 
+The first is that the number of neighbors should be bigger in 
+the basic market environment re gardless of the clustering of 
+consumer preferences becaus e the collaborative filtering 
+algorithms provide high quality in cases where ne is high. We 
+believe that the reason for this  is that the algorithms can 
+discover the similar consumer s with accuracy. The second 
+conclusion is that if there ar e any high-frequency purchasers, 
+the number of neighbors should be smaller than that in basic 
+market environment. The reason for this is that a large number 
+of ratings by low-frequency purchasers prevent the 
+recommendation system from finding the neighbors when the 
+number of neighbors is bigger. 
+ 
+CONCLUSIONS 
+ 
+ We proposed a new evaluation approach for collaborative 
+filtering, a kind of recommendation algorithm acquired 
+through agent-based simulation. We modeled a virtual 
+E-commerce market where we evaluated the collaborative 
+filtering algorithm. Our findings were as follows: 1) the 
+number of neighbors is a key parameter and there is a 
+trade-off due to market circum stances, 2) a bigger number of 
+neighbors performed better, with a tendency that was 
+independent of the degree of clustering of consumer 
+preferences, and 3) if there were any high-frequency 
+purchasers, a smaller number of neighbors performed better. 
+ 
+REFERENCES 
+Figure 10 Market environment 4 (average precision calculated for low-frequency purchasers) 
+ 
+ 
+Table 4 summary of results (ne* : optimal value of ne ) 
+    Frequency of purchasing 
+  homogeneous heterogeneous 
+Simple-cluster  ------ ne* = 25,35,45 Distribution of  
+preferences 
+Multi-cluster ne* = 5 ne* = 15 
+ 
+Abhinandan D.,Mayur D.,Ashutosh G.,Shyam 
+R.(2007)."Google News  Personalization: Scalable 
+Online Collaborative Filtering". Proc.of the 16th International 
+World Wide Web Conference, 271-280 
+Balabanovic, M. and 
+Shoham,Y .(1997).”Fab:Content-based,collaborative 
+recommendation”. Communication of the ACM, V ol.40, No.3, 
+66-72 
+Breese,J.S.,Heckerman,D.and Kadie,C.(1998).”Empirical analysis 
+of predictive algorithms for collaborative filtering”. Proc. 14th 
+Conf. on Uncertainty in Artificial Intelligence, 43-52 
+Burke,R.(2002).”Hybrid recommender system: survey and 
+experiments, User-Modeling and User-Adapted Interactions”. 
+V ol.12, No.4,331-370 
+Herlocker,J.L.,Konstan,J.A.,Borchers,A.and Riedl,J. (1999).”An 
+algorithmic framework for performing collaborative filtering”. 
+Proc. 22 nd Annual ACM SIGIR Conf.onResearch and 
+Development in Information Retrieval, 230-237 
+Herlocker,J.,Konstan,J., Terveen,L., and 
+Riedl,J.(2004). ”Evaluating collaborative filtering 
+recommender systems, ACM Transactions on Information 
+Systems”. Vol.22, No.1, 5-53  
+Hofman,T. and Puzicha,J.(1999).”Latent class models for 
+collaborative filtering “, Proc. 16 th Int’l Joint Conf. on 
+Artificial Inteligence, 688-963 
+Hofman,T.(2004).”Latent semantic models for collaborative 
+filtering”, ACM Trans. On Information systems, V ol.22, No.1, 
+89-115 
+Hotlink(2008).”Research about Privacy Information Protect Law 
+“.http://www.hottolink.co.jp/entry160.html 
+221 | Developments in Business Simulation and Experiential Learning, V olume 36, 2009
+
+Sarwar,B.,Karypis ,G .,Konstan.J. and Riedl,J.(2001).”Item-based 
+collaborative filtering recommendation algorithms”, Proc.of 
+the 10
+King, M.F., Balasubramanian, S.K.(1994).”The effects of expertise, 
+end goal, and product type on adoption of preference 
+formation strategy”. Journal of the Academy of Marketing 
+Science, V ol.22, No.2, 146-159 
+th International World Wide Web Conference, 285-295 
+Senecal, S., Nantel,J.(2004).”The Influence of online product 
+recommendations on consumers’ online choises”. Journal of 
+Retailing, Vol.80, 159-169 
+Linden,G ., Smith,B.,and York,J.(2003). ”Amazon.com 
+recommendations: Item-to-Item collaborative filtering”, IEEE 
+Internet Computing, V ol.4, No.1 
+Ministry of Economy, Trade and Industry (2008). ”Market research 
+about E-commerce in Japan”. 
+http://www.meti.go.jp/press/20080818002/20080818002.html 
+Shani,G .,Brafman,R.I.and Heckerman,D.(2002).”An MDP-based 
+recommender system”. Uncertaintly in Artificial Inteligence, 
+V ol.18, 453-460 
+Shani,G .,Heckerman,D.and Brafman,R.I.(2005).”An MDP-based 
+recommender system”. Journal of Machine Learning Research, 
+V ol.6, 1265-1295 
+Nelson, P.(1970).”Information and consumer behavior”. Journal of 
+Political Economy,V ol.78,No.2,311-329 
+Nelson, P. (1974).”Advertising as information”. Journal of Political 
+Economy, vol.83, No.4, 729-754 
+Zhang,T. and Iyengar,VS.(2002).”Recommender Systems using 
+linear classifiers”. Journal of Machine Learning Research, 
+V ol.2, 313-334 Resenick,P.,lacovou,N.,Suchak,M.,Bergstrom,P.and 
+Riedl,J.(1994). ”GroupLens:An open architecture for 
+collaborative filtering of news”. Proc. Conf.on Computer 
+Supported Co-operative Work, 175-186 
+Appendix: The list of variables and parameters in this paper 
+ 
+Expression Meaning 
+IS A set of items 
+CS A set of categories 
+US A set of consumers 
+soldi,t The number of items i sold until time t 
+BIu,t A set of items bought by a consumer u until time t 
+FIu A set of items favored by consumer u 
+NIu,t A set of items that are not bought by consumer u at time t 
+ICi The category of the item i 
+(pfu1,pfu2,…pf um) preference list of consumer u 
+Recf(u,t) The recommended item for consumer u at time t 
+Decf(u,t) The item that bought by consumer u at time t 
+w1 The degree of emphasizing on the category of an item 
+w2 The degree of emphasizing on recommendation from the EC 
+Website 
+w3 The degree of emphasizing the popularity of an item 
+Elements for criteria of 
+decision making whether to 
+buy or not 
+probu Purchasing probability of consumer u 
+vt
+u,i The rating value for item i by  consumer u at time t 
+evt
+u,i The estimated rating value for item i by consumer u at time t 
+wuj The similarity between consumer u and j 
+ne The number of neighbors 
+NEu,ne A set of the neighbors of consumer u 
+m The number of categories 
+l The number of items 
+n The number of consumers 
+ 
+222 | Developments in Business Simulation and Experiential Learning, V olume 36, 2009

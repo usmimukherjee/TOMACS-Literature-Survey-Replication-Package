@@ -1,0 +1,122 @@
+# Create an Excalidraw file representing the SLR methodology diagram
+
+import json
+
+# Basic helper to create rectangle elements
+def rect(id, x, y, w, h, text):
+    return {
+        "id": id,
+        "type": "rectangle",
+        "x": x,
+        "y": y,
+        "width": w,
+        "height": h,
+        "angle": 0,
+        "strokeColor": "#1e1e1e",
+        "backgroundColor": "#ffffff",
+        "fillStyle": "solid",
+        "strokeWidth": 1,
+        "roughness": 0,
+        "opacity": 100,
+        "groupIds": [],
+        "frameId": None,
+        "roundness": {"type": 3},
+        "seed": 1,
+        "version": 1,
+        "versionNonce": 1,
+        "isDeleted": False,
+        "boundElements": [],
+        "updated": 0,
+        "link": None,
+        "locked": False,
+        "text": text,
+        "fontSize": 16,
+        "fontFamily": 1,
+        "textAlign": "center",
+        "verticalAlign": "middle",
+    }
+
+# Basic arrow
+def arrow(id, x1, y1, x2, y2):
+    return {
+        "id": id,
+        "type": "arrow",
+        "x": x1,
+        "y": y1,
+        "width": x2 - x1,
+        "height": y2 - y1,
+        "angle": 0,
+        "strokeColor": "#1e1e1e",
+        "backgroundColor": "transparent",
+        "fillStyle": "solid",
+        "strokeWidth": 1,
+        "roughness": 0,
+        "opacity": 100,
+        "groupIds": [],
+        "frameId": None,
+        "roundness": None,
+        "seed": 1,
+        "version": 1,
+        "versionNonce": 1,
+        "isDeleted": False,
+        "boundElements": [],
+        "updated": 0,
+        "link": None,
+        "locked": False,
+        "points": [[0,0],[x2-x1,y2-y1]],
+        "lastCommittedPoint": None,
+        "startBinding": None,
+        "endBinding": None,
+        "startArrowhead": None,
+        "endArrowhead": "arrow"
+    }
+
+elements = []
+
+# Layout positions
+x = 100
+y = 100
+w = 260
+h = 80
+gap = 120
+
+elements.append(rect("search", x, y, w, h, "Search Strategy\n(Population + Intervention)\n7 Databases"))
+elements.append(rect("candidates", x, y+gap, w, h, "102 Candidate Studies"))
+elements.append(rect("screen1", x, y+2*gap, w, h, "Duplicate Removal\n102 → 99"))
+elements.append(rect("screen2", x, y+3*gap, w, h, "Irrelevant Domain Filter\n99 → 77"))
+elements.append(rect("screen3", x, y+4*gap, w, h, "Title Filter\n77 → 72"))
+elements.append(rect("screen4", x, y+5*gap, w, h, "Abstract Screening\n72 → 69"))
+elements.append(rect("screen5", x, y+6*gap, w, h, "Eligibility Criteria\n69 → 67"))
+elements.append(rect("final", x, y+7*gap, w, h, "67 Primary Studies"))
+elements.append(rect("extract", x+400, y+3*gap, w, h, "Data Extraction\nMethodology / Validation / Challenges"))
+elements.append(rect("coding", x+400, y+5*gap, w, h, "Grounded Theory Coding\nOpen → Axial → Selective"))
+elements.append(rect("output", x+400, y+7*gap, w, h, "Taxonomy & Findings\nRQ1–RQ3"))
+
+# Arrows vertical
+elements.append(arrow("a1", x+w/2, y+h, x+w/2, y+gap))
+elements.append(arrow("a2", x+w/2, y+gap+h, x+w/2, y+2*gap))
+elements.append(arrow("a3", x+w/2, y+2*gap+h, x+w/2, y+3*gap))
+elements.append(arrow("a4", x+w/2, y+3*gap+h, x+w/2, y+4*gap))
+elements.append(arrow("a5", x+w/2, y+4*gap+h, x+w/2, y+5*gap))
+elements.append(arrow("a6", x+w/2, y+5*gap+h, x+w/2, y+6*gap))
+elements.append(arrow("a7", x+w/2, y+6*gap+h, x+w/2, y+7*gap))
+
+# arrows to right pipeline
+elements.append(arrow("b1", x+w, y+3*gap+h/2, x+400, y+3*gap+h/2))
+elements.append(arrow("b2", x+400+w/2, y+3*gap+h, x+400+w/2, y+5*gap))
+elements.append(arrow("b3", x+400+w/2, y+5*gap+h, x+400+w/2, y+7*gap))
+
+excalidraw = {
+    "type": "excalidraw",
+    "version": 2,
+    "source": "chatgpt",
+    "elements": elements,
+    "appState": {"viewBackgroundColor": "#ffffff"},
+    "files": {}
+}
+
+path = "/mnt/data/ABMS_SLR_Methodology.excalidraw"
+with open(path, "w") as f:
+    json.dump(excalidraw, f)
+
+path

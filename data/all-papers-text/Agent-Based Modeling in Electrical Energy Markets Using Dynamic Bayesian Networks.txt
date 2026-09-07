@@ -1,0 +1,1001 @@
+4744 IEEETRANSACTIONSONPOWERSYSTEMS,VOL.31,NO.6,NOVEMBER2016
+Agent-BasedModelinginElectricalEnergyMarkets
+Using Dynamic Bayesian Networks
+Kaveh Dehghanpour, Student Member , IEEE, M. Hashem Nehrir, Life Fellow, IEEE ,
+JohnW. Sheppard, Fellow, IEEE, and Nathan C. Kelly, Student Member , IEEE
+Abstract— Due to uncertainties in generation and load, optimal
+decision making in electrical energy markets is a complicated
+and challenging task. Participating agents in the market have to
+estimate optimal bidding strategies based on incomplete public
+information and private assessment of the future state of the
+market, to maximize their expected proﬁt at different time scales.
+In this paper, we present an agent-based model to address the
+problem of short-term strategic bidding of conventional genera-
+tion companies (GenCos) in a power pool. Based on the proposed
+model, each GenCo agent develops a private probabilistic model
+of the market (using dynamic B ayesian networks), employs an
+online learning algorithm to tr ain the model (sparse Bayesian
+learning), and infers the future state of the market to estimate
+the optimal bidding function. We show that by using this mul-
+tiagent framework, the agents will be able to predict and adapt
+to approximate Nash equilibrium of the market through time
+using local reasoning and inco mplete publicly available data.
+The model is implemented in MATLAB and is tested on four test
+case systems: two generic systems with 5 and 15 GenCo agents,
+and two IEEE benchmarks (9-b us and 30-bus systems). Both
+the day-ahead (DA) and hour-ahead (HA) bidding schemes are
+implemented. The results show a drop in market power in the
+15-agent system compared to 5-agent system, along with a Pareto
+superior equilibrium in the HA scheme compared to the DA
+scheme, which corroborates the validity of the proposed decision
+making model. Also, the simulations show that introduction of
+an HA decision making stage as an uncertainty containment tool,
+leads to a more stable and less volatile price signal in the market,
+which consequently results in ﬂatter and improved proﬁt curves
+for the GenCos.
+Index Terms— Dynamic Bayesian networks, multiagent systems,
+Nash equilibrium, sparse Bayesian learning, strategic bidding.
+I. INTRODUCTION
+U
+NBUNDLING of the electrical power supply industry
+and the introduction of market-based energy manage-
+ment logic into power systems has created an interactive
+system of decision-making-agents that seek to optimize their
+ManuscriptreceivedJuly01,2015;re visedOctober19,2015andDecember
+10, 2015; accepted January 20, 2016. Date of publication February 26, 2016;
+dateofcurrentversionOctober18,2016.ThisworkwassupportedbytheU.S .
+DepartmentofEnergy,OfﬁceofScience,BasicEnergySciences,underAwar d
+#DE-FG02-11ER46817.Paperno.TPWRS-00937-2015.
+K. Dehghanpour, M. H. Nehrir, and N. Kelly are with the Depart-
+ment of Electrical and Computer Engineering, Montana State Univer-
+sity, Bozeman, MT 59717 USA (e-mail: hnehrir@ece.montana.edu;
+Kaveh.dehghanpour@msu.montana.edu;kellyna4@gmail.com).
+J.W.SheppardiswiththeDepartmentofComputerScience,MontanaState
+University, Bozeman, MT 59715 USA (e-mail: john.sheppard@cs.montana.
+edu).
+Colorversionsofoneormoreoftheﬁguresinthispaperareavailableonlin e
+at http://ieeexplore.ieee.org.
+DigitalObjectIdentiﬁer10.1109/TPWRS.2016.2524678
+localobjectives.Inthiscontext,inoligopolisticmarkets(i.e.,a
+marketwithafewdominantﬁrms ),privately-ownedgeneratio n
+companies(GenCos)trytomaximizetheirexpectedproﬁtfrom
+salesofenergytotheconsumersbybiddingstrategicallyinthe
+market.Thus,GenCosexercisemarketpowertoaffectthestate
+of the energy market to their beneﬁt.
+However, power markets are abounded with uncertainty: in-
+termittent renewable energy resources, and variable electrical
+loadaretwomainsourcesofuncer tainty.Moreover,eachagent,
+by affecting the outcome of the market, is a source of uncer-
+taintytoitscompetitors.Hence,theproblemofoptimaldecision
+making by participating agents in the market turns out to be a
+complex issue that has attracted considerablescientiﬁcinterest
+in the past decade.
+Strategic bidding in pool-based energy markets has been
+studied in the literature using the concepts of game theory.
+It has been shown that the oligopolistic energy markets can
+be modelled using bi-level optimization problems [1], [2]. At
+the top level, GenCos pursue the maximization of their proﬁt
+functions, while at the lower level the Independent System
+Operator (ISO) agent solves a social welfare maximization
+problem to clear the market. Thus, the higher level optimiza-
+tion problems are constrained by the lower level problem.
+If the lower level problem is convex it can be replaced by
+its Karush-Kuhn-Tucker optimality conditions (KKT), which
+resultsinanEquilib riumProblemwithEquilibriumConstraints
+(EPEC), which is a system of coupled Mathematical Programs
+with Equilibrium Constraints (MPEC) [3], [4]. The solution of
+EPEC would be the Nash Equilibrium (NE) [5] of the energy
+market, which is a strategy proﬁle of the agents from which
+none has any incentive to deviate unilaterally. The EPEC has
+beendescribed analyticallyasaStackelberggamewithseveral
+leaders (GenCos) and one common follower (ISO) [6]. Many
+papersarededicatedto solvingthissystem of nestedoptimiza-
+tion problems. Different approaches have been employed to
+simplifyandﬁndtheequilibriumofthemarket:diagonalization
+[7],[8],binaryexpansion[9],[10],particleswarmoptimization
+[11], variational inequality techniques [12], [13], information
+gap decision theory [14], polynomial equations [15], and the
+penalty interior point algorithm [6] are some of the tools that
+have been used in previous works. While these papers provide
+invaluable analytic a li n s i g h to ne n e r g ym a r k e t s ,t h e yd on o t
+study the details of agent-based temporal learning process
+under uncertainty and incomplete information that leads to the
+market equilibrium.
+Several papers have addressed the application of multiagent
+system (MAS) theory to energy markets. A remarkable review
+is presented in [16], in which the shortcomings of analytical
+0885-8950 © 2016 IEEE. Personaluse ispermitted, butrepublication/redistribution requiresIEEE permission.
+See http://www.ieee.org/publications_standards/publications/rights/index.htmlfor more information.Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:47 UTC from IEEE Xplore.  Restrictions apply.
+
+DEHGHANPOUR et al.:AGENT-BASEDMODELINGINELECTRICALENERGYMARKETSUSINGDYNAMICBAYESI ANNETWORKS 4745
+approaches are pointed out. In[17], a rule-based naïve rein-
+forcement learning (RL) algorithm is employed for each agent
+to search separately for optimal bidding strategies. In [18], an
+RL-based day-ahead (DA) bidding procedure for GenCos is
+proposed, based on discrete Markov decision processes. This
+method has been applied in [19] to study the effects of water
+shortage on electric power generation. Another RL scheme is
+introduced in [20] to study the dynamics of forward and spot
+markets. The effects of initialbelief of the agents employing
+RL on the outcome of energy market is studied in [21]. As an-
+other RL-based technique, Q-learning is used in [22] to im-
+plement an agent-based model for energy markets. An inter-
+esting recently published work employs a multi-layer agent-
+based model to study the energy markets, considering the un-
+certainbehaviorofcompetitors[23].Thispaper reliesonprob-
+abilistic scenario generation and stochastic programming. Sto-
+chastic programming is also used in [24] in combination with
+a branch-and-bound method for uncertainty assessment in the
+market. Agent-based optimal decision making in energy mar-
+ketsusingnumericalsensitivityanalysisisproposedin[25].
+Previous works on agent-based decisionm a k i n gi ne n e r g y
+markets have mostly relied on reinforcement learning and sto-
+chastic programming to develop agent-level decision making
+models [26]. However, a shortcoming of these works is their
+dependence on discretizing the space of states and actions of
+agents. This on one hand, might lead to suboptimal solutions
+and on the other hand, introduces a limitation on applicability
+andscalabilityofthemodels.Oneshortcomingofthemethods
+thatarebasedonstochasticprogrammingistheirdependenceon
+probabilitydensityfunctionstha tarenon-stationaryandhardto
+obtain [27]. Also, the integration of forecasting tools has been
+mostly ignored.
+In this paper, we present a novel probabilistic model for
+GenCos' optimal decision making in energy markets. The
+agent-based reasoning apparatus is based on a Dynamic
+Bayesian Network (DBN) representation [28] where Sparse
+BayesianLearning(SBL)isemployedformodeltraining.DBNs
+provide a natural and efﬁcient framework to study reasoning
+underuncertainty;DBNscanbescaledtoincludealargenumber
+ofrandomvariables,ifnecessary.Thus,theyhavebeenadopted
+hereformodelingagents'behaviorinelectricalenergymarkets.
+The presented DBN-based model constitutes thebelief system
+of agents on the state of the market. This belief system is up-
+datedconstantlythroughparticipationintheDAandHAenergy
+markets. Each agent, using its private belief system develops
+offercurvesaccordingtoaLinear SupplyFunctionEquilibrium
+(LSFE) model [29], [30], which provides an efﬁcient and
+realisticmodelofbehaviorofGenCosinthemarket.
+Twosourcesofuncertaintyareconsideredinthispaper:elec-
+tricalload,andGenCocompetitorsbehavior.Theelectricalde-
+mand side is assumed to be inelastic. Real load data from the
+Pennsylvania-NewJersey-Maryland(PJM)marketisfedtothe
+marketmodeltosimulatethetemp oralchangesofelectricalde-
+mand[31].Torepresentandpre dictthe behaviorofcompeting
+GenCos, a Residual Demand Curve (RDC) [32], [33], is em-
+ployed. Since the agents do not have access to the cost func-
+tions and decisions made by competitors, they have to rely on
+incomplete publiclyavailabledata (whichis assumed tobethe
+aggregate demand and supply curves published by the ISO) to
+construct their individual RDC. Both the load and RDC pre-
+dictionfunctionalitiesareinteg ratedintotheDBN-basedbelief
+system of the agents.
+The DBN-based decision making model provides adaptive
+agentbehaviorthroughvariable anduncertainconditionsinthe
+market. An advantage of the proposed model is that it is based
+oncontinuous-valuedvariables;hence,complexitiespertaining
+todiscretizationandthepossibilityofsuboptimalsolutions are
+avoided.AnotheradvantageoftheDBN-basedmodelisthatthe
+introduced probabilistic decision making tool is free and inde-
+pendentofanyassumptionsonprobabilitydensityfunctionsof
+the variables of the energy market; hence, avoiding the short-
+coming of stochastic programming.
+To summarize, the main contributions of this paper are as
+follows:
+—To provide an agent-based decision making tool for en-
+ergymarkets,usingprobabili sticgraphicalmodels.Specif-
+ically,adynamicBayesiannet workisselectedasthetool
+thatis mostﬁtforthetaskofmodelingthebeliefsystems
+ofGenCos,asexplainedlaterinthepaper(SectionIII).
+—To avoid discretization of decision/action space, we have
+employed sparse Bayesian learning to train the dynamic
+Bayesian networks for each agent. Also, using the pro-
+posedbeliefsystem,particle-basedsamplingis employed
+for forecasting.
+Therestofthepaperisconstructedasfollows.InSectionII,
+the basics of the agent-based m odel are explained. In
+Section III the DBN-based belief system of GenCo agents,
+along with learning and inference schemes are described.
+Simulation results are presented and discussed in Section IV.
+Conclusion are reported in Sections V.
+II. STRUCTURE OF THEAGENT-BASED SYSTEM
+The energy market under study is formulated into a hierar-
+chical multiagent system, as shown in Fig. 1. At the top level,
+GenCo agents compete with each other to supply the inelastic
+demandbysubmittingoptimalbid dingfunctions.Thereisnodi-
+rectcommunicationlinkamongGenCocompetitors,andanyin-
+teractionamongthemtakesplacethroughmarketoutcomeand
+thus, is indirect by nature. At the bottom level, the ISO agent
+clearsthemarket based on the received bidding functions.The
+details of the agents' functions are discussed below. Also, the
+DA/HA bidding procedure of the GenCo agents is introduced
+for market modeling.
+A. Genco Agents Model
+The cost function of the th GenCo agent is modeled
+asaquadraticfunctionofitsoutputpower ,asgivenin(1).
+Fixedcostelementsareignored.Also,thepowerproductionof
+theGenCoisboundedbyitsmaximumpowercapacity ,
+whichdeﬁnesthefeasibleoperationalregionoftheGenCo.
+(1)
+Themarginalcostfunctionofthe thagent istherefore,
+a linear function of output power:
+(2)
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:47 UTC from IEEE Xplore.  Restrictions apply.
+
+4746 IEEETRANSACTIONSONPOWERSYSTEMS,VOL.31,NO.6,NOVEMBER2016
+Fig. 1. Structure of the multiagent market model.
+InapurelycompetitivemarkettheGenCosactasprice-takers
+andbidtheirmarginalcostfunctionstothemarket[34],whereas
+in an oligopolistic market, GenCo agents submit bidding func-
+tions that deviate from their marginal cost curves, in order to
+maximizetheirexpectedproﬁt. Price-makingGenCosexercise
+some levels of market power. In this paper we have adopted
+LSFE model for GenCos' bidding procedure. Thus, the sub-
+mittedbiddingfunction totheISOagentisalinearfunc-
+tion of outputpower of the GenCo, as follows:
+(3)
+where,thecoefﬁcients ,and areassignedbythe thGenCo,
+tomaximizeitsexpectedproﬁtlevel.Therefore,thegoalofthe
+strategic bidding problem is to optimally parameterize the bid-
+dingfunctionsoftheGenCos.Inthispaper,wehaveusedwhat
+is known as intercept-parameterization [21] (i.e., the slope of
+is kept equal to the slope of ,a n dt h ei n -
+tercept with the price axis is modiﬁed). The merits of inter-
+cept-parameterization are discussed in [6]. Hence, is
+determined as follows:
+(4)
+where, parameter in (4) determines the level of deviation
+of from , and is referred to asstrategic pa-
+rameter. Thus, the objective of each GenCo agent would be to
+maximizeitsproﬁtlevel ateachroundofbiddingbymod-
+ifyingthestrategicparamete r,subjecttopowerconstraints:
+(5)
+where, istheenergyprice,whichisafunctionofboththe th
+GenCo'sstrategicparameter and vector of strategicparameters
+of competitors .
+ToprovideabaseforindividualGenCo'sself-schedulingbe-
+havior,theconceptofRDCisemployed.RDCprovidesamea-
+sure of dependence of market status merely based on a single
+player'sactionsbyﬁxingthebehaviorofcompetitors.Usingthe
+aggregate supply function of the market and the demand level,
+each GenCo can construct its individual RDC as discussed in
+[35];andsincethebasicassumptioninthispaperisthattheonly
+published data to GenCos is the aggregate supply and demand
+functionsofthemarketateachr ound,weareabletoemploythe
+concept of RDC. Note that RDCcan only be constructed after
+the market is cleared; thus, the agents have access to RDCs of
+thepreviousroundsofauction.Asapartoftheoptimaldecision
+makingprocess,onegoalofthelearningmodelproposedinthis
+paperistopredicttheRDCforthefutureroundofbidding.
+The RDC of theth agent is a decreasing nonlinear function
+of the generated output power. However, in order to be able
+to employ RDCs in the agents' belief systems, they have to be
+parameterized.Forthatpurpose,simplelinearregressionisused
+topresentalinearestimationofRDC,denotedby .
+(6)
+The slope of linearized RDC is negative .B yi n -
+tersecting and ,theapproximateclearingprice
+anddispatchedgenerationlevelforthe thagent are
+obtained (note that the approximation is due to using a linear
+representation for the RDC).
+(7)
+(8)
+By inserting (7) and (8) into (5) and simplifying it, we can
+formulate asaqua draticconcavefunctionin .Thevalue
+of the strategic variable for theth agent at which the unique
+maximum proﬁt level is achieved is denoted by ,
+whichalongwith areobtainedbysolving .The
+results are as follows:
+(9)
+(10)
+As can be seen from (9), as the sensitivity of the market price
+to the actions of theth agent (i.e., approaches zero, the
+GenCobecomesaprice-taker,andtherefore, convergesto
+zero, resulting in truthful bidding. This is in accordance with
+our expectation.
+While (9) provides a deterministic relationship between the
+optimal value of strategic variable and model parameters, it
+cannotbeuseddirectlyforGenCo decisionmaking.Thereason
+forthisisthattheactualRDCisnonlinear;thus,usingparame-
+tersofitslinearapproximation(i.e., ,and )toobtain ,
+leadstoadditionalnumericaler rors.Toovercomethisproblem,
+we have introduced the optimal strategic parameter as another
+random variable inside the belief system of each agent (refer
+to Section III). Numerical experiments show that employing
+probabilisticinferencetoobtainestimationsofoptimalvalueof
+strategicparameterreducesnu mericalerrorsco nsiderably.
+WiththisintroductiononGenCoagents'models,thestep-by-
+stepalgorithmperformedseparatelyby each agentisasfollows:
+1) After the market is cleared at time:
+• Construct the RDC for the latest round of auction
+using publicly available aggregate demand and supply
+functions.
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:47 UTC from IEEE Xplore.  Restrictions apply.
+
+DEHGHANPOUR et al.:AGENT-BASEDMODELINGINELECTRICALENERGYMARKETSUSINGDYNAMICBAYESI ANNETWORKS 4747
+• UsetheconstructedRDCtoobtaintheoptimalvalueof
+the strategic parameter by creating a proﬁt curve as a
+function of .
+• Use linear regression to parameterize the RDC and ob-
+tain ,a n d .
+• Use the obtained values of ,a n d
+system demand at time (denoted by ), to update
+agent data history.
+• Employ the updated data history and perform SBL to
+updatetheDBN-basedbeliefsystem(SectionIII).
+2) DA/HA optimal bidding for the future round of market at
+time :
+• Perform probabilistic particle-based forward sampling
+over the DBN-based belief system (Section III) to pre-
+dictthevaluesofvariables( ,optimal
+,and )forthefutureroundofDA/HA
+auction.
+• Constructthebiddingfunctionusingthepredictedvalue
+for the optimal strategic parameter. Submit the bidding
+function to the ISO agent.
+We will show that using the procedure above, each agent is
+able to maximize its proﬁt in real-time with acceptable errors.
+Therefore,thisdistributedsystemof interactivedecisionmakers
+approachesa Nash equilibrium (i.e.,each player isable to pre-
+dict its best response to competitors).
+B. ISO Agent Model
+The task of the ISO agent is to perform an optimal gener-
+ation resource allocation to supply the electrical demand on
+an hour-by-hour basis. Hence, the ISO runs an economic dis-
+patchingproblemtomaximizeso cialwelfare(heretominimize
+total production cost) based on the received bidding functions
+from GenCo agents.
+(11)
+Inthispaper,theISOagentusesthelambda-iterationmethod
+[36] to solve the economic dispatching problem. The inputs
+of the ISO agent are GenCo agents' bidding curves and the
+real-time electrical demand. Note that the ISO agent does not
+haveaccesstoGenCoagents'actualmarginalcostfunctions.As
+mentionedearlier,fortheelectri caldemand,actualhourlydata
+(normalized by maximum available generation capacity) from
+thePJMmarketisemployed[31].Afternormalization,theload
+signalisfeddirectlytothe modelinsimulations.
+WhentheGenCossubmittheiroffers,theISOsolves(11)for
+real-time load to clear the market. Then it publishes (publicly)
+theenergyprice,aggregatesuppl ycurve,andreal-timedemand.
+DetailsofindividualGenCos'biddingfunctionsarenotexposed
+t oc o m p e t i t o r s .S i n c ew eh a v eignored the effects of the trans-
+mission system on the energy market, the energy price is the
+same for all GenCo agents.
+C. DA/HA Bidding Procedures
+Note that the bidding process in the market takes place on
+twodistinctbutcloselyrelatedtimescales:DAmarketandHA
+market. Hence, we need to study the overall behavior of the
+energymarketonthesetwoscales.ThemechanismsofHA/DA
+stagesofenergymarketshaveb eendescribed in[37]and [38].
+Asdemonstratedintheseworks,astheGenCosmovecloserto
+real-timetheyneedtocompensatethepowermismatchcreated
+bytheerrorsofforecastingtool sintheDAstage.Inthispaper,
+westudytheinteractionandeffectsofintroducingtheHAstage
+intotheenergymarket,usingtheproposedDBN-baseddecision
+making model.
+GenCoagentsemploytwoprivatedatabasestokeeptheirbe-
+liefsystemsupdated:theDAdatabaseandtheHAdatabase.The
+DAdatabaseisdecomposedinto24sections,witheachsection
+corresponding to a certain hour in the day. This has been done
+because of the high correlation among the load samples with
+a 24-hour time difference, which makes the daily load proﬁle
+semi-periodic.Hence,decisi onmakingforacertainhourofthe
+day in the DA market is based on the data history of thesame
+hour on previous days (in this study, up to the past 300 days).
+Notethatweekly,seasonal,and annualtrendsofelectricalload
+are ignored in this paper. The HA database is composed of the
+HA data history of the previous hours of the market up to the
+most recent hours.
+Ateachhouroftheday,eachGenCoagentsu bmitstwobid-
+dingfunctionstothemarket:onebiddingfunctionissubmitted
+to participate in the next incoming hour of the same day (i.e.,
+HA bidding), and the second bidding function is submitted for
+participationintheenergymarketofthatsamehourinthenext
+day(i.e.,DAbidding).Notethatthemarketisclearedusingthe
+predicted value of the load for each stage.
+According to [38], the total amount of payment that theth
+GenCo receives in a multistage market (i.e., a market with
+both DA and HA stages) is as follows:
+(12)
+where, ,and arethescheduledpowerofthe th
+unitinDA,HA,andrealtimemarkets,respectively; ,
+and are theenergy pricescorresponding to these different
+stages.Ontheotherhand,thepaymentamountinasingle-stage
+market(i.e.,DAstageonly)ismodiﬁedasfollows:
+(13)
+III. DBN-BASED OPTIMAL DECISION MAKING
+Probabilistic graphicalmodels(PGMs) offerusefultools for
+representing and analyzing statistical relationships and depen-
+dencies among random variables. Bayesian networks, Markov
+networks, Hidden Markov Models (HMM), etc. [28] are a few
+variationsofPGMsthathavebeenstudiedandusedindifferent
+applications. A thorough introduction on PGMs can be found
+in [39].
+DBNsareacategoryofdirectedPGMsthatareabletocapture
+thetemporalevolutionofrandomv ariables;thus,theyareoften
+a good ﬁt to model systems with discrete-time stochastic pro-
+cesses[28].DBNscanbethoughtofasageneralizationofboth
+staticBayesiannetworksandH MMs:whilestaticBayesiannet-
+worksareaclassofmultivariatedirectedPGMs,theyareunable
+torepresenttime-dependencyof randomvariables,andarecon-
+sequentlynotﬁttomodelrandomprocesses.Ontheotherhand,
+HMMs are a category of DBNs in which the dynamic nature
+of themodelispreserved;however,HMMsareconventionally
+best ﬁt to model univariate systems (i.e., one random variable
+for the hidden state chain andone for the output chain). DBNs
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:47 UTC from IEEE Xplore.  Restrictions apply.
+
+4748 IEEETRANSACTIONSONPOWERSYSTEMS,VOL.31,NO.6,NOVEMBER2016
+Fig. 2. DBN-based belief system of GenCo agents.
+provide a general framework that address the shortcomings of
+static Bayesian networks and HMMs.
+WemodelthebeliefsystemofeachGenCousingDBNs.The
+belief system embodies each agent's probabilistic perception
+of its environment, which is the energy market (including the
+competitors,theISOagent,anduncertaindemand).Thus,each
+GenCodevelopsaDBN-basedprivatemodelofthemarketand
+keepsitupdatedateachtimest ep.TheDBN-basedmodelsare
+thenusedbyeachagenttopredictthefuturestateofthemarket
+and act accordingly.
+ADBNiscomposedofseveralverticesthatrepresentrandom
+variables, and directed edges among them, which represent
+probabilistic dependencies. A directed edge starts at a parent
+vertex and ends in a child vertex (Fig. 2). The parameter of
+the model associated with a particular parent-child structure is
+equaltotheconditionalprobabilitydistributionfunction(PDF)
+of the random variable corresponding to the child node, given
+the values of random variables corresponding to its parents.
+Also, the DBN spans time to model the temporal changes
+in variables (the same as HMM). To develop a DBN-based
+model we have to address three issues: structure learning (i.e.,
+determining hidden/observable random variables, edges and
+theirdirection),parameterlearni ng(i.e.,ﬁndingtheconditional
+PDFs corresponding to parent-child structures), and inference
+over future events (i.e., prediction).
+A. Structure Selection
+Since the number of variables considered in the proposed
+DBN-basedbeliefsystemislow,thestructureofthemodelisse-
+lectedbasedonexperimentsandusingstatisticalmeasuressuch
+asmutualinformation(MI).However,ifinfuturedevelopments
+ofthemodel,thenumberofvariablesgrowstobelarge,athor-
+ough structure learning algorithm should be implemented. The
+proposedstructureisdepictedi nFig.2.Ascanbeseen,thepro-
+posed DBN is a ﬁrst-order Markov model with four variables
+at each time slice. The transition time step can be 1 hour or 24
+hours,dependingonthebiddinghorizonbeingHAorDA.This
+meansthatforDAbiddingatacertainhourofthefutureday,the
+data history of that same hour on previous days are employed.
+On the other hand for HA bidding, the data for previous hours
+is used as the training set.
+Fig. 3. Local parent-child structures within the DBN.
+The random variables at each time slice of the belief system
+of th agentare: (electricaldemand), (interceptof agent's
+linearizedRDCwithpriceaxis), (slopeofagent'slinearized
+RDC), and (optimal value of strategic parameter). As
+showninFig.2,theelectricaldemandisnotaffectedbymarket
+conditions (i.e., price-insensitivity); therefore, the value of
+l o a da tt h ef u t u r et i m es l i c eis affected only by
+the demand level at present time slot . Note that each
+agent employs its private DBN-based belief system in the
+decision-making process.
+Since to the best of our knowledge, this structure has the
+bestperformanceamongthecandidates,andtheGenCosareas-
+sumedtoberationalagents(i.e.,thechancesofmakingmistakes
+areignored),allGenCoswillusethesamestructurefordecision
+making.
+B. Parameter Learning
+Nowthatthestructureofthegraphicalmodelisselected,the
+problem of parameterization should be addressed. Each local
+parent-child structure of the DBN (Fig. 3) represents a condi-
+tional PDF that has to be determined online. Note that all of
+thevariablesofthemodelareconsideredtobecontinuous;that
+is,tomaintainmodelprecisionan davoiddifﬁcultiespertaining
+to discretization, we keep the original continuous nature of the
+system.
+As mentioned previously, Sparse Bayesian Learning (SBL)
+[40] is employed to parametrize the DBN-based belief system.
+Thus, when the database of the agents are updated (i.e., when
+ISO publishes data to agents), SBL is applied to each of the
+localstructuresinFig.3,fortheindividualbeliefsystemofeach
+separateagenttokeeptheoverallbeliefsystemsupdated.
+SBLisakernel-basedlearning algorithmwhichisalsoknown
+as“relevancevectormachine”[4 0].ThegoalinSBListocalcu-
+latetheweightsofthekernelfunctions,whichforthisprojectare
+selectedtobeGaussians.AgreatadvantageofSBLisits“spar-
+sity”—only a subset of kernels have non-zero weights. As the
+learningprocessevolves,anincreasingnumberofkernelstend
+to have weights with practicallyzero value. Therefore, using a
+pruningoperation,wecanomitthekernelsthatarenotrelevant
+to the learning process. The deletion of irrelevant kernels is a
+mechanismwithinSBL thatpreventsoverﬁtting.
+Given our training set in which is the set of
+explanatoryvariables(i.e.,parents)and isthetargetvariable
+(i.e., child variable), the kernel-based representation of target
+variable is shown below:
+(14)
+Here 's are the weights of the kernel functions ,
+and is a noise process, which is assumed to be a zero mean
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:47 UTC from IEEE Xplore.  Restrictions apply.
+
+DEHGHANPOUR et al.:AGENT-BASEDMODELINGINELECTRICALENERGYMARKETSUSINGDYNAMICBAYESI ANNETWORKS 4749
+Gaussian process with variance . Using this model, the ob-
+jectiveofSBListoestimatetheweightsofthekernelfunctions
+and the variance of the noise process. Note that the likelihood
+of the dataset can be written as a Gaussian function (since we
+haveassumedthatthedistributionofnoiseisGaussian):
+(15)
+where is called the design matrix:
+...
+...
+...
+...
+... (16)
+The prior distributions over the weights are selected to be
+independent zero-mean Gaussians:
+(17)
+where, is the vector of hyperparameters, and is equal to the
+setofinversevariancesofthekernelweights.As getslarger
+andlargerduringthelearningprocess,thecorrespondingkernel
+function gets more and more irrelevant and can be eliminated.
+To make predictions, we will be needing the posterior of the
+unknown parameters and hyperparameters given the observed
+targetvector.Theposteriorisdecomposedusingthechainrule,
+as follows:
+(18)
+The ﬁrst term on the right hand side of (18) is the posterior
+distributionovertheweightsand canbecalculatedanalytically.
+Using Bayes rule, the posterior is formulated into a Gaussian
+distribution with covariance matrix and mean vector [40].
+Thesecondtermontherighthandsideof(18)can bereplaced
+with a delta function that is nonzero only at the most prob-
+able values for the hyperparameters ( and ). Values
+of and havebeencalculatedusi ngexpectation-maxi-
+mization-basedrecursiveestima tions,tomaximizethemarginal
+likelihoodfunction(differentu pdaterulesarediscussedin[40].)
+Thus, the parameter of a local structure in the DBN-based be-
+lief system with child variable , and its parents is a
+Gaussian distribution,obtained as follows:
+(19)
+C. Inference
+After the conclusion of the learning procedure at each time
+step, the agents perform probabilistic inference over variables
+of a future time slice. In other words, they predict the future
+stateofthemarkettoestimatetheoptimalvalueofthestrategic
+variableforthefutureroundofauction(nexthourornextday).
+Inthispaper,inferenceisaccomplishedusingaparticle-based
+forward sampling method [39]. The values of the variables at
+the current time slice are initialized as evidence (primary par-
+ticles). Then, using the learned model parameters (i.e., condi-
+tional PDFs) we move along the directed edges of the DBN to
+obtainparticlesofthefutureti meslice.Thisprocessisrepeated
+500 times. The mean of obtained particles is used as the pre-
+dicted values for the variables in the future time slice. When
+Fig. 4. GenCo's agent-based model.
+theGenCosobtainanestimationof throughprob-
+abilistic inference, they modifytheir bidding function accord-
+ingly and submit it to the ISO agent.
+D. The Decision Making Process
+The DBN-based decision making process involves the two
+functionalitiesoflearningandpre diction(i.e.,inference).Upon
+receiving the latest data samples from the most recent round
+of auction, ﬁrst, each agent updates the conditional probability
+densityfunctionscorrespondingtoparent-childstructuresofthe
+DBNs, employing SBL. These updated conditional PDFs rep-
+resent the statistical afﬁnities among the variables (i.e.,
+,a n d ). The ﬁnal goal of the decision making problem is
+to ﬁnd or estimate the optimal course of action for the future
+round of auction, at the HA or the DA look-ahead windows.
+Hence, the updated conditional PDFs are used to achieve this
+goal. Given the latest samples for the variables at the current
+timestep,thefuturesamplesforth evariablesareextractedusing
+aforwardsamplingmethod,employingthelearnedconditional
+PDFs. Considering the structure of the DBN (Fig. 2), the cur-
+rentsamplesofvariables serveasinputstothedecision
+makingprocessandareusedtogeneratethepredictedsamples
+for the same variables. Finally, the predicted samples for the
+inputvariables(attime )areemployedtoestimatetheop-
+timal course of action for the incoming round of auction (i.e.,
+strategicparameter, ).Thesamplingprocessisperformedre-
+peatedly,asexplainedintheprevioussubsection,andthemean
+of the samples for the strategic parameter, ,i su s e da st h e
+forecastedoptimalaction,whichdeterminesthedeviationfrom
+the marginal cost curve when bidding in the market. The al-
+gorithmic overview of the overall decision making process is
+presented in Section II of the paper. The agent-based decision
+makingprocessisillustratedinFig.4,foroneGenCoagent.
+IV. NUMERICAL EXPERIMENTS ANDRESULTS
+The proposed decision making model is tested in MATLAB
+environmentforfourtestcases:twogenericsystemswith5and
+15 GenCo agents, corresponding to energy markets with high
+andlowmarketshareconcentration,andtwoIEEEbenchmarks
+(9-busand30-bussystems).BothHAandDAbiddingschemes
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:47 UTC from IEEE Xplore.  Restrictions apply.
+
+4750 IEEETRANSACTIONSONPOWERSYSTEMS,VOL.31,NO.6,NOVEMBER2016
+are implemented in all the test cases. Thus, the behavior of the
+proposed model on different time scales and different market
+concentration levels is studied.
+After the market is cleared, real-time optimal values of
+strategic parameters of each agent are obtained using real time
+RDC for each GenCo. The results are then compared with
+DBN-based DA/HA predictions to assess the performance of
+the decision making model.
+A. Case Study I
+Considering an HA bidding scheme for the system with 5
+agents (cost parameters given in Table II, Appendix I), the
+optimal real-time value of strategic parameter for one of the
+agents is depicted in Fig. 5(a), along with its DBN-based
+estimation. As can be seen, theDBN-based estimation fol-
+lows the real-time optimal value with satisfactory precision
+(mean absolute error (MAE) of 3.83%). This implies that the
+DBN-based belief system can be employed for prediction of
+the result of HA market and optimal acting accordingly. Also,
+the results of the prediction of the other three variables of the
+belief system and their real-time values are
+shown in Fig. 5(b), (c), and (d), respectively. The MAE level
+of predictions forthese variables are below 3%.
+The rest of the GenCo agents in the system show similar
+performance. As the real-time average optimal value of the
+strategicparameterapproach eszero,theMAE increases(since
+the error normalizer tends to shrink to near zero values). This
+implies that, for agents that are not exercising market power
+(i.e.,notangibledeviationfrommarginalcost),theDBN-based
+decision making procedure becomes less reliable. However,
+practically the average error values of prediction for all
+the agents are similar and around $0.3/MWh.
+Since the actions of all the agents are nearly optimal, the
+systemapproachesNE.Thus,th eDBN-basedbeliefsystemen-
+ables the GenCos to predict the real-time market equilibrium
+and modifytheir actions tomaximize their proﬁt.
+B. Case Study II
+The decision making model is also tested on the 15-agent
+system for a DA bidding scheme (cost parameters given in
+TableII,AppendixI).Asmenti onedbefore,forDAbiddingon
+a certain hour of the next day, the agents use the data history
+of the same hour on previous days to train their DBN-based
+private belief systems. Hence, each agent has 24 DBNs cor-
+responding to each hour of the day. In Fig. 6(a), the result
+of prediction of is presented for one of the agents, on a
+certain hour of the day. The spikes on the curve correspond
+to an increase in the DA load proﬁle for that hour of the day
+(Fig. 6(b)). This implies that,as the demand increases, the
+GenCo's incentive to deviate from its marginal cost curve
+grows. The proﬁt proﬁle of the agent is depicted in Fig. 6(c).
+As shown here, the DBN-based strategic bidding leads to an
+increaseinthereal-timeproﬁt levelandapproximatelyreaches
+t h er e a l - t i m em a x i m u mp o s s i b l ep r o ﬁ t .T h eD B N - b a s e dD A
+demand prediction outcome is shown in Fig. 6(b). Compared
+to HA load estimation with MAE of 2.34%, the MAE level of
+DA load forecasting increases to 7%.
+Here again, all the agents show similar performance in
+prediction and decision-making; and since each agent is maxi-
+mizingitsproﬁtatthesametimewithacceptableprecision,the
+Fig. 5. Comparing the outcome of the DBN-based decision making with op-
+timal real-time outcome of the market for one GenCo agent (HA bidding—
+system with 5 agents). (a) Strategic parameter, (b) Alpha parameter, (c) Beta
+parameter, (d) Actual demand level.
+DBN-baseddistributeddecision-makinghasledthemultiagent
+system to approach its NE.
+C. Case Study III
+The proposed decision making model is tested on the IEEE
+9-bussystem(consistingofthreeagents),asillustratedinFig.7.
+ThecostdataforthethreeGenCoagentsinthissystemarepro-
+videdintheAppendixI[41].Theﬁnaloutputvariable(i.e.,the
+strategic parameter) of the DBN for one of the agents of this
+system (with /MWh, /MWh ,a n d
+MW)asafunctionoftimeisdepictedinFig.8.TheMAE
+levelis4.95%and11.24%fortheHAandDAlook-aheadtimes,
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:47 UTC from IEEE Xplore.  Restrictions apply.
+
+DEHGHANPOUR et al.:AGENT-BASEDMODELINGINELECTRICALENERGYMARKETSUSINGDYNAMICBAYESI ANNETWORKS 4751
+Fig. 6. Comparing the outcome of the DBN-based decision making with
+optimal real-time outcome of the market for one GenCo agent (DA bidding—
+system with 15 agents). (a) Strategic parameter, (b) Actual demand level,
+(c) Proﬁt level.
+Fig. 7. Structure of IEEE 9-bus system.
+Fig. 8. Comparing the outcome of DBN-based decision making with optimal
+real-timevaluesofthemarketforoneagentinIEEE9-bussystem.
+TABLE I
+DETAILS OF THEDECISION MAKING PROCESS
+Fig. 9. Structure of IEEE 30-bus system [42].
+respectively.NotethatFig.8showstheoptimalcourseofaction
+to be taken by the agent at each time step for the HA and DA
+cases. Hence, the agent determines its bidding function based
+on the predicted value of the strategic parameter at each time
+step. To further clarify the decision making process, we have
+shown the samples of the variables for the agent in Table I, at
+handpredictionsfor h.Thesamplesat
+time areusedforupdatingtheDBN andforecastingthevalues
+ofthevariablesattime .Theactualvaluesofthevariables
+at time are given in the last row of the table. As can be
+seen, the HA predicted values for time are close to their
+actualreal-timevaluesthatareobtainedaftermarketclearance
+at that speciﬁc time.
+D. Case Study IV
+The DBN-based decision making scheme is implemented
+on the IEEE 30-bus system, shown in Fig. 9; the data for the
+system is given in [42]. The cost parameters of the generators
+(GenCos) are given in Table II, Appendix I [43]. In Fig. 10(a),
+and Fig. 10(b) the results of the DBN-based prediction of the
+strategic parameter for the DA and HA stages are shown, for
+one of the agents. The MAE of estimation is 10% and 15%
+for the HA and DA markets, respectively. Note that while the
+MAE has increased compared to the previous two test cases
+(due to lower mean value of strategic parameter), the absolute
+value of the error is in the same range (around $0.1/MWh to
+$0.3/MWh).Asexpected,theaccu racyoftheDBN-baseddeci-
+sionmakingprocedureintheHA stagehasimprovedcompared
+totheDAstage.Theotherﬁveag entsshowsimilaraccuracyin
+estimatingtheiroptimalst rategicbiddingfunctions.
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:47 UTC from IEEE Xplore.  Restrictions apply.
+
+4752 IEEETRANSACTIONSONPOWERSYSTEMS,VOL.31,NO.6,NOVEMBER2016
+Fig.10. ComparingtheoutcomeoftheDBN-baseddecisionmakingwithop-
+timalreal-time outcomeofthemarketfor oneGenCo agent(DA andHA mar-
+kets—IEEE30-bussystem).(a)Strategicparameter(DA),(b)Strategicpa ram-
+eter (HA).
+E. Comparing the DA and HA Bidding Schemes
+Since the uncertainty pertaining to load prediction is dimin-
+ished in the HA decision-making, the equilibrium of the HA
+market is Pareto superior for the GenCos,compared to the DA
+market.Thus,theGenCoscanma ke additionalproﬁtbymodi-
+fyingtheirDAbiddingfunctionsontheHAstage(astheymove
+closer to real-time dispatching). We have compared the proﬁt
+levels of theGenCo agents in case studiesI and IV for theDA
+and markets. In the 5-agent system of case study I,
+an average annual proﬁt level growth of $90,000 is observed
+for each agent in the market, compared to the DA
+market.
+The results of the simulation in the forth case study (IEEE
+30-bus system) show that introducing the HA stage into the
+marketleadstomorestableandlessvolatileprices,asdepicted
+inFig.11.Also,theHAstagereducesthevolatilityoftheproﬁt
+streams of the GenCos. Compared to the single-stage market
+(i.e.,DAonly),themeantotalproﬁtoftheagentsforthemulti-
+stagecase hasincreasedfrom$8,800to$10,000in
+a period of 60 hours. Hence, a multistage procedure is capable
+ofdecreasingtheriskandimprovingthestabilityoftheenergy
+market.
+F . Market Power Analysis
+As the number of competing GenCos grow (keeping the
+total generation capacity ﬁxed), the average share of each
+GenCo, i.e., market concentration (which is measured by
+Hirschmann-Herﬁndahl Index (HHI)) falls [38]. In our study,
+the value of HHI for the 5-agent system is 0.2, while it drops
+to 0.072 when the number of GenCos increases to 15. On
+the other hand, the average value of the optimal strategic pa-
+rameter decreases from $1.886/MWh, to $0.835/MWh, as the
+numberofGenCosgrowsfrom5to15;thisindicatesadropin
+Fig.11. Comparingtheenergypriceinsingle-stageandmultistageenergy mar-
+kets (IEEE 30-bus system).
+Fig.12. Comparingenergypricesinsystemswith5and15agents.
+Fig. 13. Sensitivity of an agent's market power to inelastic electrical demand
+level.
+GenCos'incentivetoexercisemarketpower.InFig.12,energy
+prices of the 5-agent and 15-agent systems are compared. In
+addition to an increase in average price in the 5-agent system
+($32.95/MWh compared to $16.44/MWh for the 15-agent
+system), the standard deviation of the energy price has also
+grown($2.37/MWh,comparedto$1.24/MWhforthe15-agent
+system), suggesting higher price volatility for the system with
+lower number of GenCos. Thus, the model conﬁrms the ex-
+pecteddropinmarketpowerexerciseasthenumberofGenCos
+grow. Also, in both systems, the average correlation level of
+electricaldemandandtheoptimals trategicvariableishighand
+almost the same (0.729 in the 15-agent system, and 0.765 in
+the 5-agent model). The scatter diagram of optimal strategic
+parameter and electrical demand for one of the GenCos in the
+IEEE 30-bus system is shown in Fig. 13. The cost parameters
+of this agent are: /MWh, /MWh ,
+and MW,asshowninTableIIintheAppendix.As
+expected, an increase in electrical demand results in excessive
+market power exercise by GenCos.
+The agent-based model shows two sources of volatility
+in the energy market: the errors in load forecasting, and the
+low number of GenCo agents. While the former is caused by
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:47 UTC from IEEE Xplore.  Restrictions apply.
+
+DEHGHANPOUR et al.:AGENT-BASEDMODELINGINELECTRICALENERGYMARKETSUSINGDYNAMICBAYESI ANNETWORKS 4753
+limitation of forecasting tools in containing the uncertainty of
+thesystem(asshownincomparingsingle-stageandmultistage
+markets),thelattercorresponds todirectmarketpowerexercise
+by dominant ﬁrms in the market.
+V. CONCLUSION
+Inthispaper,anagent-basedoptimaldecisionmakingtoolis
+designedusingdynamicBayesiannetworks.Employingsparse
+Bayesianlearning,eachagenttra insitsprivatebeliefsystemto
+predicttheoptimalcourseofact iontobetakeninfuturerounds
+ofthemarket.Thisdistributeddecision-makingmodelistested
+inMATLABonmarketswithhighandlowshareconcentrations
+(5 and 15 GenCos) and on two distinct time scales (HA/DA).
+Also, the model was tested on two IEEE benchmarks (9-bus
+and30-bussystems).Numericalresultsshowthat,byusingthe
+proposed decision making model, the agents are able to pre-
+dict themarket equilibrium in advance, with acceptable errors.
+Thus,basedontheproposedprobabilisticmodel,themultiagent
+system approaches Nash equilibrium through distributed de-
+cision-making under incomplete information. The DBN-based
+belief system can be expanded easily to model more complex
+decision-making situations.
+APPENDIX I
+COST DATA FORGENCO AGENTS OFCASE STUDIES
+TABLE II
+DATA FORCASE STUDIES
+REFERENCES
+[1] T. Li and M. Shahidehpour, “Strategic bidding of transmission-con-
+strained GENCOs with incomplete information,”IEEE Trans. Power
+Syst., vol. 20, no. 1, pp. 437–447, Feb. 2005.
+[2]J.D.W eberandT.J.Overbye,“At wo-leveloptimizationproblemfor
+analysisofmarketbiddingstrategies,”in Proc. IEEE Power Eng. Soc.
+Summer Meeting,Jul.18–22,1999,vol.2,pp.682–687.
+[ 3 ]Z .Q .L u o ,J .S .P a n g ,a n dD .R a l p h, Mathematical Programs With
+Equilibrium Constraints . New York, NY: Cambridge Univ. Press,
+1996.
+[4] S.A.Gabriel,A.J.Conejo,J.D.Fuller,B.F.Hobbs,andC.Ruiz , Com-
+plementarity Modeling in Energy Markets. NewYork,NY:Springer,
+2013.
+[5] M.E.KhodayarandM.Shahidehpour,“Optimalstrategiesformultiple
+participants in electricity markets,”IEEE Trans. Power Syst., vol. 29,
+no. 2, pp. 986–987, Mar. 2014.
+[6] B.F.Hobbs,C.B.Metzler,andJ.S.Pang,“Strategicgaminganalysis
+forelectricpowersystems:AnMPEC approach,” IEEE Trans. Power
+Syst., vol. 15,no.2, pp. 638–645, May 2000.
+[7] E.G.Kardakos,C.K.Simoglou,andA.G.Bakirtzis,“Short-termelec-
+tricity market simulation for pool-based multi-period auctions,”IEEE
+Trans. Power Syst.,vol.28,no.3,pp.2526–2535,Aug.2013.
+[8] X.HuandD.Ralph,“UsingEPECstomodelbi-levelgamesinrestruc-
+turedelectricitymarketswithlocationalprices,” Oper. Res.,vol.5,no.
+5, pp. 809–827, Sep. 2007.
+[9] M.V.Pereira,S.Granville,M.H.C.Fampa,R.Dix,andL.A.Barrsos,
+“Strategic bidding under uncertainty: A binary expansion approach,”
+IEEE Trans. Power Syst.,vol.20,no.1,pp.180–188,Feb.2005.
+[10] A. G. Bakirtzis, N. P. Ziogos, A. C. Tellidou, and G. A. Bakirtzis,
+“Electricity producer offering strategies in day-ahead energy market
+with step-wise offers,”IEEE Trans. Power Syst. ,v o l .2 2 ,n o .4 ,p p .
+1804–1818, Nov. 2007.
+[11] G. Zhang, G. Zhang, Y. Gao, and J. Lu, “Competitive strategic bid-
+ding optimization in electricity markets using bi-level programming
+and swarm technique,”IEEE Trans. Ind. Electron., vol. 58, no. 6, pp.
+2138–2146, Jun. 2011.
+[12] I. Atzeni, L. O. Ordonez, G. Scutari, D. P. Palomar, and J. R. Fonol-
+losa, “Noncooperative day-ahead bidding strategies for demand-side
+expected cost minimization with real-time adjustment: A GNEP ap-
+proach,” IEEE Trans. Signal Process. , vol. 62, no. 9, pp. 2397–2412,
+May 1, 2014.
+[13] J.Y.WeiandY.Smeers,“Spatialoligopolisticelectricitymodelswi th
+Cournotgeneratorsandregulatedtransmissionprices,” Oper. Res.,vol.
+47, no. 1, pp. 102–112, 1999.
+[14] M.Kazemi,B.Mohammadi-Ivatloo,andM.Ehsan,“Risk-constrained
+strategic bidding of GenCos considering demand response,” IEEE
+Trans. Power Syst.,vol.30,no.1,pp.376–384,Jan.2015.
+[15] Y. Yang, Y. Zhang, F. Li, and H. Chen, “Computing all Nash equi-
+libria of multiplayer games in electricity markets by solving polyno-
+mial equations,” IEEE Trans. Power Syst. , vol. 27, no. 1, pp. 81–91,
+Feb. 2012.
+[16] A. Weidlich and D. Veit, “A critical survey of agent-based whole-
+sale electricity market models,” Energy Econ. ,v o l .3 0 ,n o .4 ,p p .
+1728–1759, 2008.
+[17] J.BowerandD.W.Bunn,“Model-basedcomparisonsofpoolandbi-
+lateralmarkets forelectricity,” Energy J.,pp.1–29,2000.
+[18] V.Nanduri andT.K.Das,“Areinforcementlearningmodeltoassess
+marketpowerunderauction-basedenergypricing,” IEEE Trans. Power
+Syst., vol. 22,no. 1, pp. 85–95, Feb. 2007.
+[19] V. Nanduri and I. Saavedra-Antonilez, “A competitive Markov deci-
+sionprocessmodelfortheenergy-water-climatechangenexus,” Appl.
+Energy, vol. 111, pp. 186–198, Nov. 2013.
+[20] J.J. Sanchez, D. W. Bunn, E. Centeno, and J. Barquin, “Dynamics in
+forward and spot electricity markets,”IEEE Trans. Power Syst. , vol.
+24, no. 2, pp. 582–591, May 2009.
+[21] A. Banal-Estanol and A. R. Micola, “Behavioural simulations in spot
+electricity markets,”Eur. J. Oper. Res. , vol. 214, no. 1, pp. 147–159,
+Oct. 2011.
+[ 2 2 ]N .P .Y u ,C .C .L i u ,a n dJ .P r i c e ,“ E v a l u a t i o no fm a r k e tr u l e su s i n ga
+multi-agent system method,”IEEE Trans. Power Syst.,vol.25,no.1,
+pp. 470–479, Feb. 2010.
+[23] M. Shaﬁe-khah and J. P. S. Catalao, “A stochastic multi-layer agent-
+based model to study electricity market participants behavior,”IEEE
+Trans. Power Syst.,vol.30,no.2,pp.867–881,Mar.2015.
+[24] M.Shaﬁe-khah,M.P.Moghaddam,andM.K.Sheikh-El-Eslami,“De-
+velopment of a virtual power market model to investigate strategic
+andcollusivebehaviorofmarketplayers,” Energy Policy,vol.61,pp.
+717–728, Oct. 2013.
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:47 UTC from IEEE Xplore.  Restrictions apply.
+
+4754 IEEETRANSACTIONSONPOWERSYSTEMS,VOL.31,NO.6,NOVEMBER2016
+[25] M. Mahvi and M. M. Ardehali, “Optimal bidding strategy in a com-
+petitive electricity market based on agent-based approach and numer-
+icalsensitivityanalysis,” Energy,vol.36,no.11,pp.6367–6374,Nov.
+2011.
+[26] R.S.SuttonandG.B.Andrew , Reinforcement Learning: An Introduc-
+tion. Cambridge,MA,USA:MITPress,1998,vol.1,no.1.
+[27] L. Fan, J. Wang, R. Jiang, and Y. Guan, “Min-max regret bidding
+strategy for thermal generator considering price uncertainty,”IEEE
+Trans. Power Syst.,vol.29,no.5,pp.2169–2179,Sep.2014.
+[28] K. P. Murphy, “Dynamic Bayesian networks: Representation, infer-
+enceandlearning,”Ph.D.dissertatio n,Univ.California,Berkeley,CA,
+USA, 2002.
+[29] M. Ventosa, A. Baillo, A. Ramos, and M. Rivier, “Electricity market
+modeling trends,” Energy Policy, vol. 33, no. 7, pp. 897–913, 2005.
+[30] A. G. Petoussis, X. P. Zhang, S. G. Petoussis, and K. R. Gofrey, “Pa-
+rameterization of linear supply functions in nonlinear AC electricity
+marketequilibriummodels—PartI:Literaturereviewandequilibrium
+algorithm,” IEEE Trans. Power Syst.,vol.28,no.2,pp.650–658,May
+2013.
+[31] “PJMmarketdata,”[Online].Available:http://www.pjm.com.
+[32] G.Aneiros,J.M.Vilar,R.Cao,andA.M.S.Roque,“Functionalpre-
+diction for residual demand in electricity spot markets,”IEEE Trans.
+Power Syst.,vol.28,no.4,pp.4201–4208,Nov.2013.
+[33] A. Baillo, M. Ventosa, M. Rivier, and A. Ramos, “Optimal offering
+strategies for generation companies operating in electricity spot
+markets,” IEEE Trans. Power Syst. , vol. 19, no. 2, pp. 745–753,
+May 2004.
+[34] F. Wen and A. K. David, “Optimal bidding strategies and modeling
+ofimperfectinformationamongcompetitivegenerators,” IEEE Trans.
+Power Syst.,vol.16,no.1,pp.15–21,Feb.2001.
+[35] S. Vazquez, P. Rodilla, and C. Batlle, “Residual demand models for
+strategicbiddinginEuropeanpowerexchanges:revisitingthemethod-
+ology in the presence of a large penetration of renewables,”Electr.
+Power Syst. Res.,vol.108, pp.178–184,2014.
+[36] A. J. Wood and B.F. Wollenberg, Power Generation, Operation, and
+Control. New York, NY, USA: Wiley,1996.
+[37] A. Botterud, Z. Zhou, J. Wang, J. Sumaili, H. Keko, J. Mendes, R.
+J. Bessa, and V. Miranda, “Demand dispatch and probabilistic wind
+power forecasting in unit commitment and economic dispatch: A
+case study of Illinois,”IEEE Trans. Sustain. Energy, vol.4,no. 1,pp.
+250–261, Jan. 2013.
+[38] D. R. Biggar and M. R. Hesamzadeh, The Economics of Electricity
+Markets. New York, NY,USA: Wiley, 2014.
+[39] D. Koller and N. Friedman, Probabilistic Graphical Models: Princi-
+ples and Techniques. Cambridge,MA,USA:MITPress,2009.
+[40] M.E.Tipping,“SparseBayesianlearningandtherelevancevectorma-
+chine,” J. Mach. Learn. Res.,vol.1,pp.211–244,2001.
+[41] Y.Liu,H.Xin,Z.Qu,andD.Gan,“Adistributedsolutiontoreal-time
+economic dispatch problem under power ﬂow congestion,” inProc.
+2015 IEEE Power and Energy Soc. General Meeting ,2015,pp.1–5.
+[42] “IEEE30-bussystemdata,”[Online].Available:http://www.al-roo mi.
+org/component/content/article?id=25:30-bus-system.
+[43] “CostparametersforGenCoagentsoftheIEEE30-bussystem,”[On-
+line].Available:http://een.iust.ac.ir/profs/jadid/SCPM.pdf.
+Kaveh Dehghanpour (S’14) received the B.S. and
+M.S.degreesfromtheUniver sityofTehran,Tehran,
+Iran,in2011,and2013,respectively.Heiscurrently
+pursuing the Ph.D. degree in the Electrical and
+ComputerEngineeringDepartmentatMontanaState
+University, Bozeman, MT,USA. His research inter-
+ests include electrical energy markets, multi-agent
+systems, and machine learning.
+M. Hashem Nehrir (S’68–M’71–SM’89–F’10–LF’
+13) received the B.S., M.S., and Ph.D. degrees from
+Oregon State University, Corvallis, OR, USA, in 1
+969, 1971, and 1978, respectively, all in electrical
+engineering.
+HeisaProfessorwiththeDepartmentofElectrical
+and Computer Engineering,Montana State Univer-
+sity, Bozeman, MT, USA. His research interests in-
+clude modeling and control of power systems, alter-
+native energy power generation systems, and appli-
+cationofintelligentcontrolstopowersy stems.Heis
+the author of three textbooks and an authoror coauthor of numerous technical
+papers.
+John W. Sheppard (M’86–SM’97–F’07)re ceiveda
+B.S. in Computer Science from Southern Methodist
+University in 1983 and an M.S. and Ph.D. in Com-
+puterSciencefromJohnsHopkins Universityin1990
+and 1997 respectively.
+HeisaCollegeofEngineeringDi stinguishedPro-
+fessorofComputerScienceatM ontanaStateUniver-
+s i t y .H ei sa l s oa nA d j u n c tP r o fessor in the Depart-
+mentofComputerScienceatJo hnsHopkinsUniver-
+sity. He performs research inprobabilistic graphical
+m o d e l s ,B a y e s i a nm e t h o d s ,distributed evolutionary
+optimization, and integrated system health management.
+Nathan C. Kelly (S’14)receivedtheB.Sc.degreein
+electrical engineering from Michigan State Univer-
+sity,EastLansing,MI ,USA,in2009.Heiscurrently
+workingtowardstheM .Sc.degreeinelectricalengi-
+neering at MontanaState University, Bozeman, MT,
+USA.
+His research interests are in renewable power
+systems.
+Authorized licensed use limited to: Dalhousie University. Downloaded on August 26,2026 at 18:56:47 UTC from IEEE Xplore.  Restrictions apply.
